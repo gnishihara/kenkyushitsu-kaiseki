@@ -1,0 +1,578 @@
+---
+title: "Redundancy Analysis"
+author: "Greg Nishihara"
+date: today
+date-format: "YYYY / MM / DD"
+slide-number: true
+transition: slide
+progress: true
+fig-align: center
+format: revealjs
+editor: 
+  markdown: 
+    wrap: 72
+bibliography: references.bib
+execute: 
+  cache: true
+---
+
+# Redundancy Analysis
+
+```{r}
+#| include: false
+#| cache: false
+set.seed(2023)
+library(tidyverse)
+library(vegan)
+library(lubridate)
+library(broom)
+library(ggvegan)
+library(lemon)
+library(scales)
+library(showtext)
+library(magick)
+library(ggforce)
+library(patchwork)
+library(plot3D)
+library(ggpubr)
+Sys.setlocale("LC_TIME", "en_US.UTF-8") 
+font_add_google("Noto Sans JP","notosans")
+theme_pubr(base_size = 20, base_family = "notosans") |> theme_set()
+showtext_auto()
+```
+
+```{r}
+make_mat_row = function(x) {
+  x |> format(digits = 2, nsmall =2) |> str_c(collapse = " & ") 
+}
+make_mat_col = function(x) {
+  x |> format(digits = 2, nsmall =2) |> str_c(collapse = " \\\\ ") 
+}
+make_mat = function(x) {
+  x = apply(x, 1, make_mat_row)
+  x = str_c(x, collapse = "\\\\")
+    str_glue("\\begin{{bmatrix}}",
+           "{x}",
+           "\\end{{bmatrix}}")
+}
+
+```
+
+## What is RDA {.smaller}
+
+::: columns
+::: {.column width="50%"}
+
+Redundancy analysis (RDA)^[冗長性分析] a canonical ordination^[制約付き序列化] method and is one type of *asymmetric canonical analysis*^[非対称直接傾度分析] that is used to analyze two data tables simultaneously.
+In RDA we are interested in how the environmental data $(\mathbf{X})$ influences ordination of the observation data $(\mathbf{Y})$.
+Recall that PCA is an unconstrained ordination^[制約なし序列化].
+:::
+::: {.column width="50%"}
+```{r}
+#| fig-align: center
+image_read_svg("~/Pictures/Images/rda-pca-image.svg")
+```
+:::
+:::
+
+## Asymmetric canonical analysis {.smaller}
+
+::: columns
+::: {.column width="50%"}
+**RDA (Redundancy analysis)**
+
+
+- Each canonical axis corresponds to a direction that is most related to linear combinations^[線型結合] of variables in $\mathbf{X}$.
+- Two ordinations
+  - Linear combinations of $\mathbf{Y}$.
+  - Linear combinations of $\mathbf{\hat{Y}}$.
+- Preserves the Euclidean distance^[ユークリッド距離] among objects.
+:::
+::: {.column width="50%"}
+**CCA (Canonical correspondence analysis)**^[正準対応分析]
+
+- Simlar to RDA, except CCA preserves the $\chi^2$ distance between objects
+
+**LDA (Linear discriminant analysis)**^[線形判別分析]
+
+- $\mathbf{Y}$ is divided in to $k$ groups described by a factor.
+- Searches for the linear combinations in $\mathbf{X}$ that can explain the groups by maximizing the dispersion of the centroids of groups.
+:::
+:::
+
+## Approaches to analyze community data
+
+1. Use DCA to choose RDA or CCA.
+  - If the length of the first DCA axis > 4 use CCA.
+  - If the length of the first DCA axis > 3 use RDA.
+  - If the length is between 3 and 4, use either CCA or RDA.
+2. If you transform the $\mathbf{Y}$,
+  - Do not apply DCA.
+  - Choose RDA for the analysis.
+3. Use distance-based RDA.
+
+## RDA preparation
+
+- Each variable in $\mathbf{Y}$ and $\mathbf{X}$ should be centered (i.e., have means of zero).
+- Each variable in $\mathbf{Y}$ and $\mathbf{X}$ should be standardized (i.e., divide by the standard deviation).
+- Check for multi-collinearity among $\mathbf{X}$.
+
+:::aside
+In otherwords, determine the z-score $(z = (x - \overline{x}) \big/ s)$.
+:::
+
+## RDA Algorithm
+
+1. Multiple regression $\mathbf{Y} \sim \mathbf{X}$
+2. PCA on the expected value of $\mathbf{Y}$ determined from the multiple regression (i.e., $\mathbf{\hat{Y}}$)
+3. PCA on the residuals of the multiple regression $\mathbf{Y_{res}} = \mathbf{Y} - \mathbf{\hat{Y}}$
+
+# Numerical examples
+
+## Observation data $(\mathbf{Y})$
+
+The presence-absence community matrix^[在不在群集行列] is a series of zeros and ones to indicate absence and presence, respectively.
+```{r}
+#| include: false
+data = read_rds("_data/alldata_species_arikawa.rds")
+data = data |> 
+  mutate(season = fct_relabel(season, ~c("SF", "WS")),
+         station = fct_relabel(station, ~str_replace(unique(station), "\\.", "0")))
+seaweed = data |> 
+  select(!matches("mean$|year|season|station|month"))
+envdata = data |> select(matches("mean$|year|season|station|month"))
+```
+
+```{r}
+#| eval: false
+data = read_rds("alldata_species_arikawa.rds")
+data = data |> 
+  mutate(season = fct_relabel(season, ~c("SF", "WS")),
+         station = fct_relabel(station, ~str_replace(unique(station), "\\.", "0")))
+seaweed = data |> 
+  select(!matches("mean$|year|season|station|month"))
+envdata = data |> select(matches("mean$|year|season|station|month"))
+```
+
+The dimensions of the matrix (rows and columns).
+
+```{r}
+#| echo: true
+#| output-location: column
+seaweed |> dim() 
+```
+
+Example of some data points.
+
+```{r}
+#| echo: true
+#| attr-output: "style='font-size: 0.4em'"
+seaweed[3:5, 3:5]
+```
+
+
+## Hellinger transform {.smaller}
+
+If we are interested in changes of relative species occurrence, then one good transformation is the Hellinger transform.
+The Hellinger transform is the square root of each element in a row divided by its row-sum.
+
+$$
+y\prime_{ij} = \sqrt{\frac{y_{ij}}{\sum y_{i}}}
+$$
+
+```{r}
+#| echo: true
+Y = decostand(seaweed, "hellinger")
+```
+
+```{r}
+#| echo: true
+Y[3:5, 3:5]
+```
+
+```{r}
+#| echo: true
+sqrt(seaweed[3:5, 3:5] / rowSums(seaweed)[3:5])
+```
+
+
+## Standardize environmental data {.smaller}
+
+The environmental variables should be standardized (i.e, find the z-score).
+
+$$
+z = \frac{x - \bar{x}}{s}
+$$
+where $x$ is the value, $\bar{x}$ is the mean value of $x$, and $s$ is the standard deviation of $x$.
+This data is already standardized.
+
+```{r}
+#| echo: true
+envdata |> print(n = 3)
+```
+
+
+::: aside
+```{r}
+#| eval: false
+envdata |> mutate(across(matches("mean$", scale)))
+```
+:::
+
+## Check length of first axis {.smaller}
+
+::: columns
+::: {.column width="50%"}
+If the length of the first axis is > 4.5, then use CCA not RDA (Leps & Smilauer 2003).
+:::
+::: {.column width="50%"}
+  -  \> 4 CCA: `cca()`
+  -  3 ~ 4: `rda()` or `cca()`
+  -  < 3 RDA: `rda()`
+:::
+:::
+
+```{r}
+#| echo: true
+#| output-location: column
+#| attr-output: "style='font-size: 0.4em'"
+decorana(Y)
+```
+
+::: {.callout-note}
+If the Hellinger transform is applied, then it is simpler to use `rda()` and not worry about the `dca()`.
+:::
+
+## Null Model 
+
+Define the null model and the full model of the multiple linear regression component.
+
+```{r}
+#| echo: true
+nullmodel = Y ~ 1
+fullmodel = Y ~ pla_100g_day_mean + 
+  temp_range_mean +
+  season + 
+  competing_A_mean +
+  herbivorous_A_mean +
+  sed_day_mean +
+  depth_mean
+```
+
+## Forward selection {.smaller}
+
+Use forward selection to eliminate unnecessary environmental variables.
+Removing variables will affect the scores and loadings.
+
+Fit the null model. 
+
+```{r}
+#| echo: true
+rdamodel0 = rda(formula(nullmodel), data = envdata)
+```
+
+Fit the full model.
+
+```{r}
+#| echo: true
+rdamodelf = rda(formula(fullmodel), data = envdata)
+```
+
+Run the forward selection.
+
+```{r}
+#| echo: true
+rdamodel = ordiR2step(rdamodel0, # null
+                     scope = formula(fullmodel), # full
+                     R2permutations = 2^15,
+                     trace = FALSE) # change to TRUE to see the selection process!
+```
+
+## Results
+
+```{r}
+#| include: false
+#| attr-output: "style='font-size: 0.4em'"
+rdamodel
+```
+
+```{r}
+#| fig-align: center
+info = image_read("~/Pictures/rda-result-screenshot.png") 
+colors = viridis::viridis(4, 1, 0, 0.8)
+blnk = image_blank(100, 435, color = "white")
+image_append(c(info, blnk)) |> 
+  image_annotate("(A)", gravity = "east", location = "+0-180", size = 40, color = colors[1]) |> 
+  image_annotate("(B)", gravity = "east", location = "+0-80", size = 40, color = colors[2]) |> 
+  image_annotate("(C)", gravity = "east", location = "+0+30", size = 40, color = colors[3]) |> 
+  image_annotate("(D)", gravity = "east", location = "+0+150", size = 40, color = colors[4]) |> 
+  image_draw()
+rect(xleft = 5, xright = 820, ybottom = 10, ytop = 70, border = colors[1],   lwd = 5)
+rect(xleft = 5, xright = 500, ybottom = 80, ytop = 210, border = colors[2],   lwd = 5)
+rect(xleft = 5, xright = 600, ybottom = 220, ytop = 300, border = colors[3],  lwd = 5)
+rect(xleft = 5, xright = 800, ybottom = 310, ytop = 420, border = colors[4],  lwd = 5)
+```
+
+::: {.r-stack}
+::: {.fragment .fade-out}
+::: columns
+::: {.column width="50%"}
+ - \(A) RDA model selected by `ordiR2step()`.
+:::
+::: {.column width="50%"}
+ - \(B) The variance and proportions explained by the constrained and unconstrained parts of the model.
+:::
+:::
+
+:::
+::: {.fragment}
+::: columns
+::: {.column width="50%"}
+ - \(C) The eigenvalues of the constrained components. These are the eigenvalues of the PCA run on the residuals.
+:::
+::: {.column width="50%"}
+ - \(D) The eigenvalues of the unconstrained components. These are the eigenvalues of the PCA run on the expected values.
+:::
+:::
+:::
+:::
+
+## Variance inflation factor
+
+
+Use the variance inflation factor (VIF)^[分散拡大係数] to check for multi-collinearity^[多重共線性].
+If it is larger than 10, then variable is can be removed from the model.
+
+```{r}
+#| echo: true
+vif.cca(rdamodel)
+```
+
+## Redundancy analysis model
+
+Solve for the eigenvalues $(\mathbf{\lambda_k})$ and eigenvectors $(\mathbf{u_k})$ of the 
+redundancy analysis model.
+
+$$
+\left(\mathbf{S_{YX}}\mathbf{S_{XX}^{-1}}\mathbf{S_{YX}^\prime} - \mathbf{\lambda_k}\mathbf{I}\right)\mathbf{u_k}=0
+$$
+
+where, 
+$\mathbf{S_{YX}}$ is the covariance matrix of $\mathbf{Y}$ and $\mathbf{Y}$,
+$\mathbf{S_{XX}^{-1}}$ is the covariance matrix of $\mathbf{X},
+and $\mathbf{I}$ is the identity matrix.
+
+## Find the solution
+
+First standardize the Y and X matrices.
+
+```{r}
+#| echo: true
+Y = iris[, 1:2]
+X = iris[, 3:4]
+X = apply(X, 2, scale)
+Y = apply(Y, 2, scale)
+```
+
+Next, fit the `rda()` version for comparison.
+```{r}
+#| echo: true
+rdaout = rda(Y~X)
+```
+
+Then find $\mathbf{\hat{Y}}$ multivariate linear regression $\mathbf{Y} \sim \mathbf{X}$.
+
+```{r}
+#| echo: true
+sxxinv = solve(t(X) %*% X)
+syx = t(Y) %*% X
+syxtr = t(syx)
+Yhat = X %*% sxxinv %*% syxtr
+Yres = Y - Yhat
+```
+
+## Confirm the eigenvalues
+
+Calculate the eigenvalues for the PCA part.
+
+```{r}
+#| echo: true
+# PCA part
+svd(Yres)$d^2 / (nrow(Y) -1)
+rdaout$CA$eig
+```
+
+Calculate the eigenvalues for the RDA part.
+
+```{r}
+#| echo: true
+# RDA part
+svd(Yhat)$d^2 / (nrow(Y) - 1)
+rdaout$CCA$eig
+```
+
+## Confirm the eigenvectors
+
+```{r}
+#| echo: true
+svd(Yres)$v
+rdaout$CA$v
+```
+
+```{r}
+#| echo: true
+svd(Yhat)$v
+rdaout$CCA$v
+```
+
+## Calcualte inertias
+
+```{r}
+#| echo: true
+n = nrow(Y)
+constrained = sum(svd(Yhat)$d^2 / (n - 1))
+unconstrained = sum(svd(Yres)$d^2 / (n - 1))
+total = constrained + unconstrained
+
+tibble(type = c("Total", "Constrained", "Unconstrained"),
+       Inertia = c(total, constrained, unconstrained)) |> 
+  mutate(Proportion = Inertia / total)
+```
+
+```{r}
+#| echo: true
+rdaout
+```
+
+
+## Confirm the site scores
+
+```{r}
+#| echo: true
+rdascores = scores(rdaout, scaling = 0, display = "sites") |> as_tibble()
+eigscores = Y %*% svd(Yhat)$v %*% diag(1/svd(Yhat)$d)  |> as_tibble()
+ggplot() + 
+  geom_point(aes(x = V1, y = V2, color = "EIG"), data = eigscores, size = 3) +
+  geom_point(aes(x = RDA1, y = RDA2, color = "RDA"), data = rdascores, size = 1) +
+  scale_color_viridis_d(end = 0.8)
+```
+
+## Confirm the environmental variables
+
+```{r}
+#| echo: true
+variables = str_remove_all(colnames(Y), "[a-z|\\.]")
+rdavariables = scores(rdaout, scaling = 0, display = "bp") |> as_tibble()
+temp = t(X) %*% svd(Yhat)$u
+svdvariables = apply(temp, 1, \(x) x / sqrt(sum(x^2))) |> t() |> as_tibble()
+rdavariables = rdavariables |> mutate(variables = variables, .before = 1)
+svdvariables = svdvariables |> mutate(variables = variables, .before = 1)
+full_join(rdavariables, svdvariables, by = "variables")
+```
+
+
+## Bayesian method
+
+```{r}
+#| echo: true
+Y = iris[, 1:2]
+X = iris[, 3:4]
+X = apply(X, 2, scale)
+Y = apply(Y, 2, scale)
+```
+
+Next, fit the `rda()` version for comparison.
+```{r}
+#| echo: true
+rdaout = rda(Y~X)
+```
+
+Then find $\mathbf{\hat{Y}}$ multivariate linear regression $\mathbf{Y} \sim \mathbf{X}$.
+
+```{r}
+#| echo: true
+sxxinv = solve(t(X) %*% X)
+syx = t(Y) %*% X
+syxtr = t(syx)
+Yhat = X %*% sxxinv %*% syxtr
+Yres = Y - Yhat
+```
+
+
+```{r}
+library(brms)
+
+iris_tib = iris |> as_tibble()
+iris_tib = iris_tib |> 
+  rename_with(~str_remove_all(., "[a-z|\\.]"), .cols = matches("Leng|Wid")) 
+
+iris_tib = iris_tib |> mutate(across(-Species, \(x) scale(x)[,1]))
+
+bmod = bf(mvbind(SL, SW) ~ PL + PW) + set_rescor(T)
+bout = brm(bmod, data = iris_tib, chains = 4, cores = 4)
+```
+
+
+```{r}
+Yresb = predictive_error(bout)
+Yhatb = posterior_predict(bout)
+
+pcaeigs = apply(Yresb, 1, \(x) { svd(x)$d^2 / (149) })
+rdaeigs = apply(Yhatb, 1, \(x) { svd(x)$d^2 / (149) })
+
+apply(pcaeigs, 1, tidybayes::mean_hdci)
+rdaout$CA$eig
+
+apply(rdaeigs, 1, tidybayes::mean_hdci)
+rdaout$CCA$eig
+
+```
+
+## Confirm the eigenvalues
+
+Calculate the eigenvalues for the PCA part.
+
+```{r}
+#| echo: true
+# PCA part
+svd(Yres)$d^2 / (nrow(Y) -1)
+rdaout$CA$eig
+```
+
+Calculate the eigenvalues for the RDA part.
+
+```{r}
+#| echo: true
+# RDA part
+svd(Yhat)$d^2 / (nrow(Y) - 1)
+rdaout$CCA$eig
+```
+
+## Confirm the eigenvectors
+
+```{r}
+#| echo: true
+svd(Yres)$v
+rdaout$CA$v
+```
+
+```{r}
+#| echo: true
+svd(Yhat)$v
+rdaout$CCA$v
+```
+
+## Calcualte inertias
+
+```{r}
+#| echo: true
+n = nrow(Y)
+constrained = sum(svd(Yhat)$d^2 / (n - 1))
+unconstrained = sum(svd(Yres)$d^2 / (n - 1))
+total = constrained + unconstrained
+
+tibble(type = c("Total", "Constrained", "Unconstrained"),
+       Inertia = c(total, constrained, unconstrained)) |> 
+  mutate(Proportion = Inertia / total)
+```
+

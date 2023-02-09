@@ -1,0 +1,210 @@
+---
+title: "全国の地図"
+format: 
+  html:
+    html-math-method: katex
+reference-location: margin
+citation-location: margin
+bibliography: references.bib
+---
+
+```{r}
+#| include: false
+Sys.setlocale("LC_TIME", "en_US.UTF-8") # This is to set the server time locate to en_US.UTF-8
+```
+
+## 必要なパッケージ
+
+```{r}
+library(tidyverse)　# Essential package
+library(ggpubr)     # Publication-oriented figures
+library(kableExtra) # Tables
+library(magick)     # Imagemagick R API
+library(patchwork)  # Simplified figure tiling
+library(ggspatial)  # Essential for map-making with ggplot
+library(sf)         # Essential for map data manipulation
+library(showtext)   # I want to use google fonts in the figures
+library(mapdata)    # Rough maps
+library(ggsflabel)  # Map labelling functions
+```
+
+Noto Sans のフォントが好きなので、ここで [Google Fonts](https://fonts.google.com/) からアクセスします。
+
+```{r}
+#| eval: false
+font_add_google("Noto Sans JP", "notosans-jp") # Japanese sans-serif font
+font_add_google("Noto Sans", "notosans")       # English sans-serif font
+```
+
+Noto Fonts 類のフォントは研究室のサーバにインストール済みなので、次のコードで準備する。
+
+```{r}
+font_add("notosans-jp", 
+         regular = "NotoSansCJKjp-Regular.otf",
+         bold = "NotoSansCJKjp-Bold.otf")
+font_add("notosans", 
+         regular = "NotoSans-Regular.ttf",
+         bold = "NotoSans-Bold.ttf",
+         bolditalic = "NotoSans-BoldItalic.ttf",
+         italic = "NotoSans-Italic.ttf")
+```
+
+サーバにインストールされているフォント名の検索は次のコードでできます。
+
+```{r}
+#| eval: false
+font_files() |> as_tibble() |> 
+  select(file, family, face, ps_name) |> 
+  filter(str_detect(ps_name, "NotoSans-[Reg|Bold|Ital]|NotoSansCJKjp")) |> 
+  print(n = 50)
+```
+
+
+`ggplot` のデフォルトテーマも設定し、フォント埋め込みも可能にします。
+ここでデフォルトを設定すると、毎回 `theme_pubr()` を `ggplot`のチェインにたさなくていい。
+
+```{r}
+theme_pubr(base_size = 10, base_family = "notosans-jp") |> theme_set()
+showtext_auto() # Automatically embed the Noto Sans fonts into the ggplots.
+```
+
+
+## シェープファイルの読み込み
+
+シェープファイル (shapefile) は地図データのことです。
+基本的の拡張子は `shp`, `shx`, `dbf`　ですが、その他に `prj` と `xml` もあります。
+
+研究室用にダウンロードした [国土交通省・国土数値情報ダウンロードサービス](https://nlftp.mlit.go.jp/ksj/index.html) のシェープファイルは `~/Lab_Data/Japan_map_data/Japan` に入っています。
+
+ところが、情報量が多くて全国の地図には適していません。
+とてもおもいです。
+ここでは、`mapdata` の地図データを用います。
+まずはデータを `SpatialPolygon` に変換し、CRS を JGD2011 に設定します。
+
+CRSには **地理座標系** と **投影座標系** の2種類があります。
+座標系にはEPSGコードもつけられています。
+
+```{r crs}
+# HTML 用テーブル
+tibble(`EPSG Code` = c(4326,6668,6677),
+       `CRS` = c("WGS84", "JGD2011", "JGD2011 / Japan Plane Rectangular CS IX"),
+       `Units` = c("degrees", "degrees", "meters")) |> 
+  kbl() |> 
+  kable_styling(bootstrap_options = c("hover"))
+```
+
+`maps` パッケージから地図を準備する。
+
+```{r}
+jpn = map("japan", fill = TRUE, plot = FALSE)
+```
+
+データを ポリゴンに変換し、CRSを適応する。
+
+```{r}
+jpn = maptools::map2SpatialPolygons(jpn, IDs = jpn$names)
+jpn = jpn |> st_as_sf() |> st_set_crs(6668)
+```
+
+ポリゴンの解像度を減らす。
+
+```{r}
+jpn = jpn |> 
+  rmapshaper::ms_simplify(keep = 0.04, keep_shapes = F) |>
+  st_union()
+```
+
+地図データを確認する。
+
+```{r}
+color = RColorBrewer::brewer.pal(9, "Blues")[2]
+jpn |> 
+  ggplot() + geom_sf() + 
+  theme(panel.background = element_rect(fill = color),
+        panel.grid.major = element_line(color = "white", size = 0.5))
+```
+
+地図の座標を UTM (Universal Transverse Mercator) に変換する。
+```{r}
+jpn |> 
+  st_transform("+proj=utm +zone=54 +datum=WGS84 +units=km") %>% 
+  ggplot() + 
+  geom_sf(color = NA, fill = "black") + 
+  theme(panel.background = element_rect(fill = color),
+        panel.grid.major = element_line(color = "white", size = 0.5))
+```
+
+
+## 公開用地図の作成
+
+```{r}
+fudai       = c(40.04152543512538, 141.90348502302353)
+hirota      = c(39.02402594131857, 141.78725806724896)
+matsushima  = c(38.34549669653925, 141.0807915733725)
+mie         = c(34.50235994784464, 136.85048430773975)
+naruto      = c(34.22374792321184, 134.60913287860734)
+kamigoto    = c(32.98827976845565, 129.11838896005543)
+tokunoshima = c(27.763718381600228, 128.97442879693742)
+katuren     = c(26.297604704320968, 127.8515917134318)
+chinen      = c(26.175546599376673, 127.83566562706314)
+ishigaki    = c(24.380846276132317, 124.17950044492075)
+okinawa     = c(26.297604704320968, 127.8515917134318)
+upper       = c(33.94130434786708, 130.16535814817098)
+lower       = c(28.354532974308754, 129.78718537187962)
+```
+
+
+GPS データの tibble と 座標を準備する。
+
+```{r}
+gps_info = rbind(fudai, hirota, matsushima, mie, naruto, kamigoto, tokunoshima,
+                 okinawa, ishigaki) |> 
+  as_tibble(.name_repair = ~c("lat", "long")) |> 
+  mutate(label = 
+           factor(c("Fudai", "Hirota", "Matsushima", 
+                    "Mie", "Naruto", "Kamigoto", 
+                    "Tokunoshima", "Okinawa (Chinen and Katsuren)", "Ishigaki")))
+
+gps_info = gps_info |> mutate(label2 = str_to_sentence(label)) 
+gps_info = gps_info |> st_as_sf(coords = c("long", "lat"), crs = st_crs(jpn))
+
+```
+
+ここで作図をします。
+
+```{r}
+ggplot() +
+  geom_sf(fill = "grey50", data = jpn, size = 0) +
+  geom_sf_text_repel(aes(label = label), 
+               data = gps_info,
+               color = "black",
+               family = "notosans", 
+               fontface = "bold",
+               seed = 2020,
+               vjust   = c(1,1,1,
+                           1,1,0,
+                           1,1,1), 
+               hjust   = c(0,0,0,
+                           0,0,1,
+                           0,0,0),
+               nudge_x = c(1, 1, 0.5,
+                           1, 1,-0.5,
+                           1, 1, 1),
+               nudge_y = c( 1, 1, -1,
+                           -1,-1, 1,
+                            1, 1, 1),
+               size = 5)  + 
+  geom_sf(data = gps_info, size = 3) +
+  geom_sf(data = gps_info, size = 2, color = "white") +
+  coord_sf(crs = 6668) +
+  theme(panel.background = element_rect(fill = "lightblue", color =NA),
+        panel.border  = element_rect(fill = NA, color =NA),
+        plot.background =  element_rect(fill = "lightblue", color =NA),
+        axis.title = element_blank(),
+        axis.line = element_blank(),
+        axis.text = element_blank(),
+        axis.ticks = element_blank())
+```
+
+
+

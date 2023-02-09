@@ -1,0 +1,238 @@
+---
+title: "記述統計"
+format: 
+  html:
+    html-math-method: katex
+    
+---
+
+```{r}
+#| echo: false
+#| message: false
+#| warnings: false
+library(tidyverse)
+library(flextable)
+```
+
+## Rスクリプトの準備
+
+Rコードは上から下へと実行します。スクリプトの冒頭には少なくともタイトル、作者名、作成日をコメントとして入れましょう。コメントは `#` の後に 1 つの半角スペースを入れてから書いてください。
+
+```{r}
+#| fenced: true
+# 記述統計量の求め方
+# Greg Nishihara
+# 2022 May 01
+```
+
+## データの準備
+
+実際の解析の場合、データはエクセルやCSV（コンマ区切り）ファイルから読み込みます。クラウド（Google sheet）からの読み込みも可能です。ここでは、直接スクリプトに書き込みます。
+
+長崎市気象台から2022年5月1日から14日までの日ごとの平均気温は次の通りです。
+
+```{r}
+temperature = c(16.3, 16.9, 17.1, 17.3, 20.0, 
+                21.1, 21.4, 20.6, 19.7, 21.0, 
+                20.6, 21.1, 20.0, 19.4)
+```
+
+`c()` は複数値を一つのベクトル [^vector] に concatenate（連結）するために使います。`c()` の結果は `temperature` というオブジェクトに書き込みました。
+
+::: callout-important
+Rの変数名と関数名には、文字・数字・ドット・アンダースコアをつきますが、先頭の 1 文字は文字かドットじゃないといけません。
+
+次のような名前はOKです。
+
+```{r}
+#| eval: false
+
+temperature     = c(16.3, 16.9)
+Temperature     = c(16.3, 16.9)
+.temperature    = c(16.3, 16.9)
+temp.erature    = c(16.3, 16.9)
+tem_pera_ture   = c(16.3, 16.9)
+temperature2022 = c(16.3, 16.9)
+```
+:::
+
+## 平均値や標準偏差などの求め方
+
+平均値 $\overline{x}$ は次のように定義できます。
+
+$$
+\overline{x} = \frac{1}{N}\sum_{n = 1}^{N} x_n
+$$
+
+$x_n$ はインデクス $n$ の値です。値は合計 $N$ あります。
+
+平均値は `mean()` 関数で求めます。`mean()` には処理したいベクトルを渡してください。
+
+```{r}
+mean(temperature)
+```
+
+分散 $s^2=Var(x)$ は次のように定義します。
+
+$$
+s^2 = Var(x) = \frac{1}{N}\sum_{n = 1}^{N} \left(x_n-\overline{x} \right)^2
+$$
+
+標準偏差は分散の平方根 $(s = \sqrt{s^2})$ です。
+
+分散と標準偏差はそれぞれ、`var()`と `sd()` で求めます。
+
+```{r}
+var(temperature) # 分散
+sd(temperature)  # 標準偏差
+```
+
+専用の標準誤差の関数はありませんが、関数を組み合わせて、求めまれます。
+
+標準誤差 (SE) は次の式で求めます。
+
+$$
+\text{SE} =s / \sqrt{N}
+$$
+
+```{r}
+sd(temperature) / sqrt(length(temperature))
+```
+
+`length()` 関数はベクトルのサイズ（要素の数）を求めてくれます。その結果を `sqrt()` に直接渡します。標準偏差をこの結果で割れば、標準誤差が求められます。このコードを分解すると、次のようになります。
+
+```{r}
+s = sd(temperature) # 標準偏差
+s
+n = length(temperature) # データ数
+n
+sqrtn = sqrt(n) # データ数の平方根
+sqrtn
+s / sqrtn # 標準誤差
+```
+
+## 中央値と中央絶対偏差
+
+中央値 (median, $\tilde{x}$ ) と中央絶対偏差 (MAD, median absolute deviation) も記述統計量の一種です。中央値は次のアルゴリズムで求めます。
+
+1.  データを小さい順に並べる。
+2.  データ数が奇数のとき、中央値は $(n+1)/2$ 番目の値です。
+3.  データ数が偶数のとき、中央値は $n/2$ と $(n/2)+1$ 番目のデータの平均値です。
+
+```{r}
+median(temperature)
+```
+
+このとき、データ数は奇数あるので、7番目の値が中央値です。
+
+```{r}
+#| echo: false
+
+tibble(n = 1:length(temperature),
+       temperature = sort(temperature)) |> 
+  flextable() |> 
+  color(i = ~ n == 7, color = "red") |> 
+  bold(i = ~ n == 7)
+```
+
+
+中央絶対偏差は次のように定義します。
+
+$$
+\text{MAD}=\text{median}\left(|x_n - \tilde{x}|\right)
+$$
+
+```{r}
+median(abs(temperature - median(temperature)))
+```
+
+::: callout-note
+中央絶対偏差と標準偏差はデータのばらつきの度合を説明するときに使います。標準偏差は外れ値の大きく影響されますが、中央絶対偏差は外れ値の影響にロバスト (robust)　です。
+:::
+
+## 外れ値の影響
+
+標準偏差と中央絶対偏差における外れ値の影響を調べてみましょう。
+まずは、中央絶対偏差用の関数を定義します。
+
+```{r}
+mad = function(x) {
+  median(abs(x - median(x)))
+}
+```
+
+`temperature` に外れ値を追加します。
+
+```{r}
+outlier = 25
+temperature_with_outlier = c(temperature, outlier)
+```
+外れ値のないときの標準偏差と中央絶対偏差は次の通りです。
+
+```{r}
+sd(temperature)   # 標準偏差
+mad(temperature)  # 中央絶対偏差
+```
+
+
+```{r}
+sd(temperature_with_outlier)   # 標準偏差
+mad(temperature_with_outlier)  # 中央絶対偏差
+```
+
+外れ値が存在するときに、標準偏差の値が大きく変わりましたが、
+中央絶対偏差の変化は比較的に小さいです。
+
+::: callout-note
+ばらつきを示す指標は、標準偏差と中央絶対偏差以外に、平均絶対偏差 (mean absolute deviation) や四分位偏差 (quartile deviation) もあります。平均絶対偏差は次の式で求めます。
+$$
+\text{MAD}_\text{mean} = \frac{1}{N}\sum_{n=1}^N |x_n - \overline{x}|
+$$
+四分位偏差は次の式で求めます。
+$$
+IQR = \frac{1}{2}(Q_3 - Q1)
+$$
+$Q_3$ は第3四分位数、$Q_1$ は第1四分位数を示します。
+
+```{r}
+mad2 = function(x) {
+  mean(abs(x - mean(x)))
+}
+iqrdev = function(x) {
+  as.numeric(diff(quantile(x, probs = c(0.25, 0.75))))
+}
+
+mad2(temperature_with_outlier)   # 平均絶対偏差
+iqrdev(temperature_with_outlier) # 四分位偏差
+
+```
+
+:::
+
+## 偏差の結果
+
+```{r}
+#| echo: false 
+
+tibble(temperature = 
+         c(temperature, temperature_with_outlier)) |> 
+  mutate(group = c(rep("なし", 14),
+                   rep("あり", 15))) |> 
+  group_by(group) |> 
+  summarise(sd = sd(temperature),
+            mad = mad(temperature),
+            mad2 = mad2(temperature),
+            iqrdev = iqrdev(temperature)) |> 
+  flextable() |> 
+  set_header_labels(
+    group = "外れ値",
+    sd = "標準偏差",
+    mad = "中央絶対偏差",
+    mad2 = "平均絶対偏差",
+    iqrdev= "四分位偏差"
+  ) |> width(width = c(2,5,5,5,5))
+  
+  
+  
+```
+

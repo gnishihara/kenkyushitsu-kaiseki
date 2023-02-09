@@ -1,0 +1,1243 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.2.335">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>データ解析（研究室用） - ggplot の図</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1.6em;
+  vertical-align: middle;
+}
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { color: #008000; } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { color: #008000; font-weight: bold; } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<script src="site_libs/quarto-html/quarto.js"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 20,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit"
+  }
+}</script>
+
+
+<link rel="stylesheet" href="styles.css">
+</head>
+
+<body class="nav-sidebar docked">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+  <nav class="quarto-secondary-nav" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+    <div class="container-fluid d-flex justify-content-between">
+      <h1 class="quarto-secondary-nav-title">ggplot の図</h1>
+      <button type="button" class="quarto-btn-toggle btn" aria-label="Show secondary navigation">
+        <i class="bi bi-chevron-right"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse sidebar-navigation docked overflow-auto">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header">
+    <div class="sidebar-title mb-0 py-0">
+      <a href="./">データ解析（研究室用）</a> 
+    </div>
+      </div>
+      <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Search"></div>
+        </div>
+      </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-expanded="true">Introduction</a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-expanded="true">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./index.html" class="sidebar-item-text sidebar-link">研究室と講義の R コード</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./about.html" class="sidebar-item-text sidebar-link">About</a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-expanded="true">Rの基礎</a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-expanded="true">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./part01.html" class="sidebar-item-text sidebar-link">R の基本操作</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./part02.html" class="sidebar-item-text sidebar-link">R 関数の基本</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./part03.html" class="sidebar-item-text sidebar-link">Tidyverse</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./part04.html" class="sidebar-item-text sidebar-link">データの操作</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./part05.html" class="sidebar-item-text sidebar-link active">ggplot の図</a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" aria-expanded="true">Linear models</a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" aria-expanded="true">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./linearmodels.html" class="sidebar-item-text sidebar-link">ノンパラメトリック法</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./ttest.html" class="sidebar-item-text sidebar-link">2群の比較：t 検定</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./anova.html" class="sidebar-item-text sidebar-link">一元配置分散分析</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./anova2.html" class="sidebar-item-text sidebar-link">多数群の比較：二元配置分散分析</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./glm.html" class="sidebar-item-text sidebar-link">線形モデル</a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" aria-expanded="true">Multivariate</a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" aria-expanded="true">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./pca.html" class="sidebar-item-text sidebar-link">Principal Component Analysis</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./rda.html" class="sidebar-item-text sidebar-link">Redundancy Analysis</a>
+  </div>
+</li>
+      </ul>
+  </li>
+    </ul>
+    </div>
+</nav>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#図の詳細設定" id="toc-図の詳細設定" class="nav-link active" data-scroll-target="#図の詳細設定">図の詳細設定</a></li>
+  <li><a href="#ggplot2-について" id="toc-ggplot2-について" class="nav-link" data-scroll-target="#ggplot2-について"><code>ggplot2</code> について</a></li>
+  <li><a href="#aesthetics-エステティクとは" id="toc-aesthetics-エステティクとは" class="nav-link" data-scroll-target="#aesthetics-エステティクとは">Aesthetics （エステティク）とは</a>
+  <ul class="collapse">
+  <li><a href="#色透明度" id="toc-色透明度" class="nav-link" data-scroll-target="#色透明度">色・透明度</a></li>
+  <li><a href="#大きさ形状" id="toc-大きさ形状" class="nav-link" data-scroll-target="#大きさ形状">大きさ・形状</a></li>
+  <li><a href="#グループ化" id="toc-グループ化" class="nav-link" data-scroll-target="#グループ化">グループ化</a></li>
+  <li><a href="#座標始点終点" id="toc-座標始点終点" class="nav-link" data-scroll-target="#座標始点終点">座標、始点・終点</a></li>
+  </ul></li>
+  <li><a href="#geom-の種類" id="toc-geom-の種類" class="nav-link" data-scroll-target="#geom-の種類">geom の種類</a></li>
+  <li><a href="#geom-の種類-1" id="toc-geom-の種類-1" class="nav-link" data-scroll-target="#geom-の種類-1">geom の種類</a></li>
+  <li><a href="#ggplot2-の付属パッケージ" id="toc-ggplot2-の付属パッケージ" class="nav-link" data-scroll-target="#ggplot2-の付属パッケージ"><code>ggplot2</code> の付属パッケージ</a></li>
+  <li><a href="#データを読み込んだら可視化しよう" id="toc-データを読み込んだら可視化しよう" class="nav-link" data-scroll-target="#データを読み込んだら可視化しよう">データを読み込んだら、可視化しよう</a></li>
+  <li><a href="#軸タイトルの関数" id="toc-軸タイトルの関数" class="nav-link" data-scroll-target="#軸タイトルの関数">軸タイトルの関数</a></li>
+  <li><a href="#論文用に変える" id="toc-論文用に変える" class="nav-link" data-scroll-target="#論文用に変える">論文用に変える</a></li>
+  <li><a href="#月の順序をなおす" id="toc-月の順序をなおす" class="nav-link" data-scroll-target="#月の順序をなおす">月の順序をなおす</a></li>
+  <li><a href="#図を保存する" id="toc-図を保存する" class="nav-link" data-scroll-target="#図を保存する">図を保存する</a></li>
+  <li><a href="#保存の結果" id="toc-保存の結果" class="nav-link" data-scroll-target="#保存の結果">保存の結果</a></li>
+  <li><a href="#図のフォントを拡大してpngファイルを修正する" id="toc-図のフォントを拡大してpngファイルを修正する" class="nav-link" data-scroll-target="#図のフォントを拡大してpngファイルを修正する">図のフォントを拡大して、PNGファイルを修正する</a></li>
+  <li><a href="#研究室のワークフロー" id="toc-研究室のワークフロー" class="nav-link" data-scroll-target="#研究室のワークフロー">研究室のワークフロー</a></li>
+  <li><a href="#保存の結果-1" id="toc-保存の結果-1" class="nav-link" data-scroll-target="#保存の結果-1">保存の結果</a></li>
+  <li><a href="#データを追加してプロット" id="toc-データを追加してプロット" class="nav-link" data-scroll-target="#データを追加してプロット">データを追加してプロット</a></li>
+  <li><a href="#複数パネルのプロット" id="toc-複数パネルのプロット" class="nav-link" data-scroll-target="#複数パネルのプロット">複数パネルのプロット</a></li>
+  <li><a href="#複数プロットの結合" id="toc-複数プロットの結合" class="nav-link" data-scroll-target="#複数プロットの結合">複数プロットの結合</a></li>
+  <li><a href="#複数プロットの結合の結果" id="toc-複数プロットの結合の結果" class="nav-link" data-scroll-target="#複数プロットの結合の結果">複数プロットの結合の結果</a></li>
+  <li><a href="#線と点説明変数は離散型変数の場合" id="toc-線と点説明変数は離散型変数の場合" class="nav-link" data-scroll-target="#線と点説明変数は離散型変数の場合">線と点（説明変数は離散型変数の場合）</a></li>
+  <li><a href="#ボーグラフ" id="toc-ボーグラフ" class="nav-link" data-scroll-target="#ボーグラフ">ボーグラフ</a></li>
+  <li><a href="#ボーグラフ横向き並び替える" id="toc-ボーグラフ横向き並び替える" class="nav-link" data-scroll-target="#ボーグラフ横向き並び替える">ボーグラフ（横向き・並び替える）</a></li>
+  <li><a href="#ヒストグラム" id="toc-ヒストグラム" class="nav-link" data-scroll-target="#ヒストグラム">ヒストグラム</a></li>
+  <li><a href="#ヒストグラムパネル" id="toc-ヒストグラムパネル" class="nav-link" data-scroll-target="#ヒストグラムパネル">ヒストグラム・パネル</a></li>
+  <li><a href="#時系列" id="toc-時系列" class="nav-link" data-scroll-target="#時系列">時系列</a></li>
+  <li><a href="#時系列-1" id="toc-時系列-1" class="nav-link" data-scroll-target="#時系列-1">時系列</a></li>
+  <li><a href="#時系列軸のカスタムラベル" id="toc-時系列軸のカスタムラベル" class="nav-link" data-scroll-target="#時系列軸のカスタムラベル">時系列軸のカスタムラベル</a></li>
+  <li><a href="#時系列-2" id="toc-時系列-2" class="nav-link" data-scroll-target="#時系列-2">時系列</a></li>
+  <li><a href="#箱ひげ図" id="toc-箱ひげ図" class="nav-link" data-scroll-target="#箱ひげ図">箱ひげ図</a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title d-none d-lg-block">ggplot の図</h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+</header>
+
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>── Attaching packages ─────────────────────────────────────── tidyverse 1.3.2 ──
+✔ ggplot2 3.4.0     ✔ purrr   1.0.1
+✔ tibble  3.1.8     ✔ dplyr   1.1.0
+✔ tidyr   1.3.0     ✔ stringr 1.5.0
+✔ readr   2.1.3     ✔ forcats 1.0.0
+── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──
+✖ dplyr::filter() masks stats::filter()
+✖ dplyr::lag()    masks stats::lag()</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(lubridate)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>
+Attaching package: 'lubridate'
+
+The following objects are masked from 'package:base':
+
+    date, intersect, setdiff, union</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(readxl)</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggpubr)</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(showtext)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Loading required package: sysfonts
+Loading required package: showtextdb</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(patchwork)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<section id="図の詳細設定" class="level2">
+<h2 class="anchored" data-anchor-id="図の詳細設定">図の詳細設定</h2>
+<p><code>showtext</code> パッケージを使って、システムフォントを使えるようにします。 使用可能なフォントは次のように調べます。</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co">#! eval: false</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="fu">font_files</span>() <span class="sc">|&gt;</span> <span class="fu">as_tibble</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 720 × 6
+   path                                       file  family face  version ps_name
+   &lt;chr&gt;                                      &lt;chr&gt; &lt;chr&gt;  &lt;chr&gt; &lt;chr&gt;   &lt;chr&gt;  
+ 1 /home/gnishihara/.local/share/fonts/Unkno… Font… Fonti… Bold… "1.000" Fontin…
+ 2 /home/gnishihara/.local/share/fonts/Unkno… Font… Fonti… Ital… "1.000" Fontin…
+ 3 /home/gnishihara/.local/share/fonts/Unkno… Font… Fonti… Regu… "1.000" Fontin…
+ 4 /home/gnishihara/.local/share/fonts/Unkno… Font… Fonti… Smal… "1.000" Fontin…
+ 5 /home/gnishihara/.local/share/fonts/Unkno… EB_G… EB Ga… Ital… "Versi… EBGara…
+ 6 /home/gnishihara/.local/share/fonts/Unkno… EB_G… EB Ga… Regu… "Versi… EBGara…
+ 7 /home/gnishihara/.local/share/fonts/Unkno… Font… Fonti… Smal… "Versi… Fontin…
+ 8 /home/gnishihara/.local/share/fonts/Unkno… Font… Fontin Bold  "Versi… Fontin…
+ 9 /home/gnishihara/.local/share/fonts/Unkno… Font… Fontin Ital… "Versi… Fontin…
+10 /home/gnishihara/.local/share/fonts/Unkno… Font… Fontin Regu… "Versi… Fontin…
+# … with 710 more rows</code></pre>
+</div>
+</div>
+<p>Google の Noto シリーズのフォントを使いたいので、<code>filter()</code> にかけます。</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="fu">font_files</span>() <span class="sc">|&gt;</span> <span class="fu">as_tibble</span>() <span class="sc">|&gt;</span> </span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="fu">str_detect</span>(ps_name, <span class="st">"NotoSansCJK|NotoSansSymbol"</span>)) <span class="sc">|&gt;</span> </span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(file, face, ps_name) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 17 × 3
+   file                           face    ps_name                   
+   &lt;chr&gt;                          &lt;chr&gt;   &lt;chr&gt;                     
+ 1 NotoSansCJKjp-Black.otf        Regular NotoSansCJKjp-Black       
+ 2 NotoSansCJKjp-Bold.otf         Regular NotoSansCJKjp-Bold        
+ 3 NotoSansCJKjp-DemiLight.otf    Regular NotoSansCJKjp-DemiLight   
+ 4 NotoSansCJKjp-Light.otf        Regular NotoSansCJKjp-Light       
+ 5 NotoSansCJKjp-Medium.otf       Regular NotoSansCJKjp-Medium      
+ 6 NotoSansCJKjp-Regular.otf      Regular NotoSansCJKjp-Regular     
+ 7 NotoSansCJKjp-Thin.otf         Regular NotoSansCJKjp-Thin        
+ 8 NotoSansSymbols-Black.ttf      Regular NotoSansSymbols-Black     
+ 9 NotoSansSymbols-Bold.ttf       Bold    NotoSansSymbols-Bold      
+10 NotoSansSymbols-ExtraBold.ttf  Regular NotoSansSymbols-ExtraBold 
+11 NotoSansSymbols-ExtraLight.ttf Regular NotoSansSymbols-ExtraLight
+12 NotoSansSymbols-Light.ttf      Regular NotoSansSymbols-Light     
+13 NotoSansSymbols-Medium.ttf     Regular NotoSansSymbols-Medium    
+14 NotoSansSymbols-Regular.ttf    Regular NotoSansSymbols-Regular   
+15 NotoSansSymbols-SemiBold.ttf   Regular NotoSansSymbols-SemiBold  
+16 NotoSansSymbols-Thin.ttf       Regular NotoSansSymbols-Thin      
+17 NotoSansSymbols2-Regular.ttf   Regular NotoSansSymbols2-Regular  </code></pre>
+</div>
+</div>
+<p>フォントファイルのファイル名は <code>file</code> 変数にあります。 その変数を使って、<code>font_add()</code> 関数で用意します。</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="fu">font_add</span>(<span class="at">family =</span> <span class="st">"notosans"</span>, </span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>         <span class="at">regular =</span> <span class="st">"NotoSansCJKjp-Regular.otf"</span>,</span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>         <span class="at">bold =</span> <span class="st">"NotoSansCJKjp-Black.otf"</span>,</span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>         <span class="at">symbol =</span> <span class="st">"NotoSansSymbols-Regular.ttf"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>図のデフォルトテーマをここで設定します。 <code>base_size</code> はフォントの大きさ。 <code>base_family</code> は <code>font_add()</code> で定義した <code>family</code> です。</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="fu">theme_gray</span>(<span class="at">base_size =</span> <span class="dv">10</span>, <span class="at">base_family =</span> <span class="st">"notosans"</span>) <span class="sc">|&gt;</span> <span class="fu">theme_set</span>()</span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a><span class="fu">showtext_auto</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>論文用のテーマは <code>ggpubr</code> パッケージの <code>theme_pubr()</code> をおすすめします。</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="fu">theme_pubr</span>(<span class="at">base_size =</span> <span class="dv">10</span>, <span class="at">base_family =</span> <span class="st">"notosans"</span>) <span class="sc">|&gt;</span> <span class="fu">theme_set</span>()</span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a><span class="fu">showtext_auto</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="ggplot2-について" class="level2">
+<h2 class="anchored" data-anchor-id="ggplot2-について"><code>ggplot2</code> について</h2>
+<ul>
+<li><code>ggplot2</code> の関数は <code>+</code> でつなげる</li>
+<li><code>ggplot()</code> はベースレイヤー</li>
+<li><code>geom_*()</code> はプロットレイヤー</li>
+<li><code>scales_*()</code> でエステティク (aesthetics) を調整</li>
+<li><code>theme()</code> や <code>theme_()</code> で書式を調整</li>
+<li><code>facet_wrap()</code> や <code>facet_grid()</code> は多変量データのプロットのパネル分け</li>
+</ul>
+</section>
+<section id="aesthetics-エステティクとは" class="level2">
+<h2 class="anchored" data-anchor-id="aesthetics-エステティクとは">Aesthetics （エステティク）とは</h2>
+<section id="色透明度" class="level3">
+<h3 class="anchored" data-anchor-id="色透明度">色・透明度</h3>
+<ul>
+<li><code>color</code>：点と線の色</li>
+<li><code>fill</code>：面の色</li>
+<li><code>alpha</code>：透明度（0 – 1 の値）</li>
+</ul>
+</section>
+<section id="大きさ形状" class="level3">
+<h3 class="anchored" data-anchor-id="大きさ形状">大きさ・形状</h3>
+<ul>
+<li><code>size</code>：点と文字の大きさ、線の太さ</li>
+<li><code>shape</code>：点の形</li>
+<li><code>linetype</code>：線の種類</li>
+</ul>
+</section>
+<section id="グループ化" class="level3">
+<h3 class="anchored" data-anchor-id="グループ化">グループ化</h3>
+<ul>
+<li><code>group</code>：点や線のグループ化</li>
+</ul>
+</section>
+<section id="座標始点終点" class="level3">
+<h3 class="anchored" data-anchor-id="座標始点終点">座標、始点・終点</h3>
+<ul>
+<li><code>x</code>, <code>y</code></li>
+<li><code>xmin</code>, <code>ymin</code></li>
+<li><code>xend</code>, <code>yend</code></li>
+</ul>
+</section>
+</section>
+<section id="geom-の種類" class="level2">
+<h2 class="anchored" data-anchor-id="geom-の種類">geom の種類</h2>
+<p><strong>散布図</strong></p>
+<ul>
+<li><code>geom_point()</code></li>
+<li><code>geom_jitter()</code></li>
+</ul>
+<p><strong>折れ線グラフ</strong></p>
+<ul>
+<li><code>geom_path()</code></li>
+<li><code>geom_line()</code></li>
+<li><code>geom_step()</code></li>
+</ul>
+<p><strong>面グラフ</strong> * <code>geom_ribbon()</code> * <code>geom_area()</code> * <code>geom_polygon()</code></p>
+<p><strong>ヒートマップ・コンター図</strong> * <code>geom_tile()</code> * <code>geom_raster()</code> * <code>geom_rect()</code> * <code>geom_contour()</code></p>
+<p><strong>エラーバー</strong> * <code>geom_error()</code> * <code>geom_linerange()</code> * <code>geom_pointrange()</code> * <code>geom_crossbar()</code></p>
+</section>
+<section id="geom-の種類-1" class="level2">
+<h2 class="anchored" data-anchor-id="geom-の種類-1">geom の種類</h2>
+<p><strong>曲線など</strong></p>
+<ul>
+<li><code>geom_smooth()</code></li>
+<li><code>geom_curve()</code></li>
+<li><code>geom_segment()</code></li>
+<li><code>geom_abline()</code></li>
+<li><code>geom_hline()</code></li>
+<li><code>geom_vline()</code></li>
+</ul>
+<p><strong>文字列</strong></p>
+<ul>
+<li><code>geom_text()</code></li>
+<li><code>geom_label()</code></li>
+</ul>
+<p><strong>ヒストグラム・密度曲線</strong> * <code>geom_histogram()</code> * <code>geom_freqpoly()</code> * <code>geom_density()</code> * <code>geom_bin2d()</code> * <code>geom_hex()</code> * <code>geom_dotplot()</code></p>
+<p><strong>棒グラフ・箱ひげ図</strong> * <code>geom_bar()</code> * <code>geom_col()</code> * <code>geom_boxplot()</code> * <code>geom_violin()</code></p>
+</section>
+<section id="ggplot2-の付属パッケージ" class="level2">
+<h2 class="anchored" data-anchor-id="ggplot2-の付属パッケージ"><code>ggplot2</code> の付属パッケージ</h2>
+<p><strong>研究室が使っているパッケージ</strong></p>
+<ul>
+<li><code>ggpubr</code>: <code>theme_pubr()</code>, <code>ggarrange()</code></li>
+<li><code>ggrepel</code>: <code>geom_text_repel()</code></li>
+<li><code>lemon</code>: <code>facet_rep_grid()</code>, <code>facet_rep_wrap()</code></li>
+<li><code>showtext</code>: システムフォントの埋め込み</li>
+</ul>
+<p><a href="https://exts.ggplot2.tidyverse.org/">ggplot2 extensions</a></p>
+</section>
+<section id="データを読み込んだら可視化しよう" class="level2">
+<h2 class="anchored" data-anchor-id="データを読み込んだら可視化しよう">データを読み込んだら、可視化しよう</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>filename <span class="ot">=</span> <span class="st">"Table 2.xlsx"</span></span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>col_names <span class="ot">=</span> <span class="fu">c</span>(<span class="st">"month"</span>, <span class="st">"temperature1"</span>, <span class="st">"sd1"</span>, <span class="st">"empty"</span>,<span class="st">"temperature2"</span>, <span class="st">"sd2"</span>)</span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>exceldata <span class="ot">=</span> <span class="fu">read_excel</span>(filename, <span class="at">sheet =</span> <span class="dv">1</span>, <span class="at">skip =</span> <span class="dv">2</span>, <span class="at">col_name =</span> col_names)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(exceldata) <span class="sc">+</span> <span class="fu">geom_point</span>(<span class="fu">aes</span>(<span class="at">x =</span> month, <span class="at">y =</span> temperature1))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="part05_files/figure-html/unnamed-chunk-9-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<p>横軸の順序がおかしいですね。軸タイトルも変えたほうがいいですね。</p>
+</section>
+<section id="軸タイトルの関数" class="level2">
+<h2 class="anchored" data-anchor-id="軸タイトルの関数">軸タイトルの関数</h2>
+<p>軸タイトルや図のタイトルは <code>labs()</code> 関数でします。</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>xlabel <span class="ot">=</span> <span class="st">"Month"</span></span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>ylabel <span class="ot">=</span> <span class="st">"'Temperature ('*degree*'C)'"</span> <span class="co"># plotmath expression see ?plotmath</span></span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(exceldata) <span class="sc">+</span> </span>
+<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="fu">aes</span>(<span class="at">x =</span> month, <span class="at">y =</span> temperature1)) <span class="sc">+</span> </span>
+<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> xlabel, </span>
+<span id="cb17-6"><a href="#cb17-6" aria-hidden="true" tabindex="-1"></a>       <span class="at">y =</span> <span class="fu">parse</span>(<span class="at">text =</span> ylabel),</span>
+<span id="cb17-7"><a href="#cb17-7" aria-hidden="true" tabindex="-1"></a>       <span class="at">title =</span> <span class="st">"Monthly mean water temperature"</span>) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="part05_files/figure-html/unnamed-chunk-10-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+</section>
+<section id="論文用に変える" class="level2">
+<h2 class="anchored" data-anchor-id="論文用に変える">論文用に変える</h2>
+<p>学術論文に記載する図の場合、図から余計なかざりを外します。 研究室では <code>ggpubr</code> の <code>theme_pubr()</code> 関数を使っています。</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>xlabel <span class="ot">=</span> <span class="st">"Month"</span></span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>ylabel <span class="ot">=</span> <span class="st">"'Temperature ('*degree*'C)'"</span> <span class="co"># plotmath expression see ?plotmath</span></span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(exceldata) <span class="sc">+</span> </span>
+<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="fu">aes</span>(<span class="at">x =</span> month, <span class="at">y =</span> temperature1)) <span class="sc">+</span> </span>
+<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="fu">parse</span>(<span class="at">text =</span> xlabel), </span>
+<span id="cb18-6"><a href="#cb18-6" aria-hidden="true" tabindex="-1"></a>       <span class="at">y =</span> <span class="fu">parse</span>(<span class="at">text =</span> ylabel))  <span class="sc">+</span></span>
+<span id="cb18-7"><a href="#cb18-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_pubr</span>(<span class="at">base_size =</span> <span class="dv">10</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="part05_files/figure-html/unnamed-chunk-11-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+</section>
+<section id="月の順序をなおす" class="level2">
+<h2 class="anchored" data-anchor-id="月の順序をなおす">月の順序をなおす</h2>
+<p>もう気づいたと思いますが、横軸の月の順序が間違っています。 <code>factor()</code> で、<code>month</code> 変数を整えます。</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="co"># element_text() size is in points (pt)</span></span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a><span class="co"># 1 pt = 0.35 mm</span></span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a>xlabel <span class="ot">=</span> <span class="st">"Month"</span></span>
+<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a>ylabel <span class="ot">=</span> <span class="st">"'Temperature ('*degree*'C)'"</span> <span class="co"># plotmath expression see ?plotmath</span></span>
+<span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-6"><a href="#cb19-6" aria-hidden="true" tabindex="-1"></a>levels <span class="ot">=</span> month.abb</span>
+<span id="cb19-7"><a href="#cb19-7" aria-hidden="true" tabindex="-1"></a>levels <span class="ot">=</span> <span class="fu">str_c</span>(levels, <span class="fu">ifelse</span>(levels <span class="sc">==</span> <span class="st">"May"</span>, <span class="st">""</span>, <span class="st">"."</span>))</span>
+<span id="cb19-8"><a href="#cb19-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-9"><a href="#cb19-9" aria-hidden="true" tabindex="-1"></a>exceldata <span class="sc">|&gt;</span> </span>
+<span id="cb19-10"><a href="#cb19-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">month =</span> <span class="fu">factor</span>(month, <span class="at">levels =</span> levels)) <span class="sc">|&gt;</span> </span>
+<span id="cb19-11"><a href="#cb19-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>() <span class="sc">+</span> </span>
+<span id="cb19-12"><a href="#cb19-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="fu">aes</span>(<span class="at">x =</span> month, <span class="at">y =</span> temperature1)) <span class="sc">+</span> </span>
+<span id="cb19-13"><a href="#cb19-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="fu">parse</span>(<span class="at">text =</span> xlabel), </span>
+<span id="cb19-14"><a href="#cb19-14" aria-hidden="true" tabindex="-1"></a>       <span class="at">y =</span> <span class="fu">parse</span>(<span class="at">text =</span> ylabel))  <span class="sc">+</span></span>
+<span id="cb19-15"><a href="#cb19-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_pubr</span>(<span class="at">base_family =</span> <span class="st">"notosans"</span>) <span class="sc">+</span></span>
+<span id="cb19-16"><a href="#cb19-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">text =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">10</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="part05_files/figure-html/unnamed-chunk-12-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<div class="cell">
+<div class="cell-output cell-output-stderr">
+<pre><code>Linking to ImageMagick 6.9.11.60
+Enabled features: fontconfig, freetype, fftw, heic, lcms, pango, webp, x11
+Disabled features: cairo, ghostscript, raw, rsvg</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Using 32 threads</code></pre>
+</div>
+</div>
+</section>
+<section id="図を保存する" class="level2">
+<h2 class="anchored" data-anchor-id="図を保存する">図を保存する</h2>
+<p>図は PDF と PNG 形式で保存しましょう。</p>
+<p><strong>PDFファイル</strong> <code>ggsave()</code> は最後の表示した図を書き出しします。 <code>width</code> と <code>height</code> を指定したら必ず単位も指定しましょう (<code>units = "mm"</code>)。 PDFファイルにシステムフォントを埋め込むなら、<code>device = cairo_pdf</code>も渡しましょう。</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>wh <span class="ot">=</span> <span class="fu">list</span>(<span class="at">width =</span> <span class="dv">80</span>, <span class="at">height =</span> <span class="dv">80</span>) <span class="co"># 図の縦横幅</span></span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>pdffile <span class="ot">=</span> <span class="st">"temperature_plot.pdf"</span></span>
+<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a><span class="fu">ggsave</span>(pdffile, <span class="at">width =</span> wh<span class="sc">$</span>width, <span class="at">height =</span> wh<span class="sc">$</span>height, <span class="at">units =</span> <span class="st">"mm"</span>, <span class="at">device =</span> cairo_pdf)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p><strong>PNGファイル</strong> 直接PNGファイルに保存する場合は、画像の解像度 (<code>dpi = 300</code>) も必要です。</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>pngfile <span class="ot">=</span> <span class="st">"temperature_plot.png"</span></span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ggsave</span>(pngfile, <span class="at">width =</span> wh<span class="sc">$</span>width, <span class="at">height =</span> wh<span class="sc">$</span>height, <span class="at">units =</span> <span class="st">"mm"</span>, <span class="at">dpi =</span> <span class="dv">300</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<hr>
+</section>
+<section id="保存の結果" class="level2">
+<h2 class="anchored" data-anchor-id="保存の結果">保存の結果</h2>
+<div class="cell">
+<div class="cell-output-display">
+<p><img src="part05_files/figure-html/unnamed-chunk-16-1.png" class="img-fluid" width="505"></p>
+</div>
+</div>
+<ul>
+<li><code>wh = list(width = 80, height = 80)</code> は同じだが、図は似ていません。</li>
+<li>モニターでみたとき、PDF の解像度は 96 です。つまり、<code>dpi = 300</code> のPNGファイルはPDFの約 3 倍の大きさです。</li>
+</ul>
+</section>
+<section id="図のフォントを拡大してpngファイルを修正する" class="level2">
+<h2 class="anchored" data-anchor-id="図のフォントを拡大してpngファイルを修正する">図のフォントを拡大して、PNGファイルを修正する</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>DPI <span class="ot">=</span> <span class="dv">300</span></span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>scale <span class="ot">=</span> DPI <span class="sc">/</span> <span class="dv">96</span></span>
+<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a>exceldata <span class="sc">|&gt;</span> </span>
+<span id="cb24-4"><a href="#cb24-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">month =</span> <span class="fu">factor</span>(month, <span class="at">levels =</span> levels)) <span class="sc">|&gt;</span> </span>
+<span id="cb24-5"><a href="#cb24-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>() <span class="sc">+</span> </span>
+<span id="cb24-6"><a href="#cb24-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="fu">aes</span>(<span class="at">x =</span> month, <span class="at">y =</span> temperature1)) <span class="sc">+</span> </span>
+<span id="cb24-7"><a href="#cb24-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="fu">parse</span>(<span class="at">text =</span> xlabel), </span>
+<span id="cb24-8"><a href="#cb24-8" aria-hidden="true" tabindex="-1"></a>       <span class="at">y =</span> <span class="fu">parse</span>(<span class="at">text =</span> ylabel))  <span class="sc">+</span></span>
+<span id="cb24-9"><a href="#cb24-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_pubr</span>(<span class="at">base_family =</span> <span class="st">"notosans"</span>) <span class="sc">+</span></span>
+<span id="cb24-10"><a href="#cb24-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">text =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">10</span> <span class="sc">*</span> scale))</span>
+<span id="cb24-11"><a href="#cb24-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-12"><a href="#cb24-12" aria-hidden="true" tabindex="-1"></a>pngfile <span class="ot">=</span> <span class="st">"temperature_plot.png"</span></span>
+<span id="cb24-13"><a href="#cb24-13" aria-hidden="true" tabindex="-1"></a>wh <span class="ot">=</span> <span class="fu">list</span>(<span class="at">width =</span> <span class="dv">80</span>, <span class="at">height =</span> <span class="dv">80</span>)</span>
+<span id="cb24-14"><a href="#cb24-14" aria-hidden="true" tabindex="-1"></a><span class="fu">ggsave</span>(pngfile, <span class="at">width =</span> wh<span class="sc">$</span>width, <span class="at">height =</span> wh<span class="sc">$</span>height, <span class="at">units =</span> <span class="st">"mm"</span>, <span class="at">dpi =</span> DPI)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="cell-output-display">
+<p><img src="part05_files/figure-html/panel-1.png" class="img-fluid" width="505"></p>
+</div>
+</div>
+</section>
+<section id="研究室のワークフロー" class="level2">
+<h2 class="anchored" data-anchor-id="研究室のワークフロー">研究室のワークフロー</h2>
+<p>PNGファイルのDPIをいじるのが面倒なので、PDFをPNGに変換するのが楽です。 月の頭文字をチックラベルにします。さらに、<code>lemon</code> パッケージの <code>geom_pointline()</code>を使ってみました。</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(lemon)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>
+Attaching package: 'lemon'</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>The following object is masked from 'package:purrr':
+
+    %||%</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a>xlabel <span class="ot">=</span> <span class="st">"Month"</span></span>
+<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a>ylabel <span class="ot">=</span> <span class="st">"'Temperature'~(degree*C)"</span> <span class="co"># plotmath expression see ?plotmath</span></span>
+<span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a>levels <span class="ot">=</span> month.abb</span>
+<span id="cb28-4"><a href="#cb28-4" aria-hidden="true" tabindex="-1"></a>levels <span class="ot">=</span> <span class="fu">str_c</span>(levels, <span class="fu">ifelse</span>(levels <span class="sc">==</span> <span class="st">"May"</span>, <span class="st">""</span>, <span class="st">"."</span>))</span>
+<span id="cb28-5"><a href="#cb28-5" aria-hidden="true" tabindex="-1"></a>labels <span class="ot">=</span> <span class="fu">str_sub</span>(month.abb, <span class="dv">1</span>, <span class="dv">1</span>)</span>
+<span id="cb28-6"><a href="#cb28-6" aria-hidden="true" tabindex="-1"></a><span class="co"># 図の結果は plot1 にいれます。</span></span>
+<span id="cb28-7"><a href="#cb28-7" aria-hidden="true" tabindex="-1"></a>plot1 <span class="ot">=</span>   exceldata <span class="sc">|&gt;</span> <span class="fu">mutate</span>(<span class="at">month =</span> <span class="fu">factor</span>(month, <span class="at">levels =</span> levels)) <span class="sc">|&gt;</span> </span>
+<span id="cb28-8"><a href="#cb28-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>() <span class="sc">+</span> </span>
+<span id="cb28-9"><a href="#cb28-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="fu">aes</span>(<span class="at">x =</span> month, <span class="at">y =</span> temperature1)) <span class="sc">+</span></span>
+<span id="cb28-10"><a href="#cb28-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_x_discrete</span>(<span class="at">name =</span> xlabel, <span class="at">labels =</span> labels) <span class="sc">+</span></span>
+<span id="cb28-11"><a href="#cb28-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_y_continuous</span>(<span class="at">name =</span> <span class="fu">parse</span>(<span class="at">text =</span> ylabel), <span class="at">breaks =</span> <span class="fu">seq</span>(<span class="dv">21</span>, <span class="dv">29</span>, <span class="at">by =</span> <span class="dv">1</span>)) <span class="sc">+</span></span>
+<span id="cb28-12"><a href="#cb28-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_pubr</span>(<span class="at">base_family =</span> <span class="st">"notosans"</span>) <span class="sc">+</span></span>
+<span id="cb28-13"><a href="#cb28-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">text =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">10</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>まず、PDFファイルを保存します。システムフォントをPDFファイルに入れるためには <code>device = cairo_pdf</code> を渡します。</p>
+<div class="cell">
+
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a>wh <span class="ot">=</span> <span class="fu">list</span>(<span class="at">width =</span> <span class="dv">80</span>, <span class="at">height =</span> <span class="dv">80</span>) <span class="co"># 図の縦横幅</span></span>
+<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a>pdffile <span class="ot">=</span> <span class="st">"temperature_plot.pdf"</span></span>
+<span id="cb29-3"><a href="#cb29-3" aria-hidden="true" tabindex="-1"></a><span class="fu">ggsave</span>(pdffile, <span class="at">width =</span> wh<span class="sc">$</span>width, <span class="at">height =</span> wh<span class="sc">$</span>height, <span class="at">units =</span> <span class="st">"mm"</span>, <span class="at">device =</span> cairo_pdf)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>ImageMagick のAPIを使って、PDFをPNGに変換します。 この方法だと、DPIのややこしい変換は不要です。</p>
+<p>つぎに <code>magick</code> パッケージを読み込みます。</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(magick) <span class="co"># imagemagick パッケージ</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>つづいて、PDF ファイルを 600 DPI で読み込む。</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a>img <span class="ot">=</span> <span class="fu">image_read_pdf</span>(pdffile, <span class="at">density =</span> <span class="dv">600</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>PDFファイルをPNGファイルに書き出す。</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb32"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a>img <span class="sc">|&gt;</span> <span class="fu">image_write</span>(pngfile)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="保存の結果-1" class="level2">
+<h2 class="anchored" data-anchor-id="保存の結果-1">保存の結果</h2>
+<div class="cell">
+<div class="cell-output-display">
+<p><img src="part05_files/figure-html/panel2-1.png" class="img-fluid" width="505"></p>
+</div>
+</div>
+<p>このとき、フォントサイズは 10 pt にしました：<code>theme(text = element_text(size = 10))</code>。</p>
+</section>
+<section id="データを追加してプロット" class="level2">
+<h2 class="anchored" data-anchor-id="データを追加してプロット">データを追加してプロット</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb33"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a>xlabel <span class="ot">=</span> <span class="st">"Month"</span></span>
+<span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a>ylabel <span class="ot">=</span> <span class="st">"'Temperature'~(degree*C)"</span> <span class="co"># plotmath expression see ?plotmath</span></span>
+<span id="cb33-3"><a href="#cb33-3" aria-hidden="true" tabindex="-1"></a>levels <span class="ot">=</span> month.abb</span>
+<span id="cb33-4"><a href="#cb33-4" aria-hidden="true" tabindex="-1"></a>levels <span class="ot">=</span> <span class="fu">str_c</span>(levels, <span class="fu">ifelse</span>(levels <span class="sc">==</span> <span class="st">"May"</span>, <span class="st">""</span>, <span class="st">"."</span>))</span>
+<span id="cb33-5"><a href="#cb33-5" aria-hidden="true" tabindex="-1"></a>labels <span class="ot">=</span> <span class="fu">str_sub</span>(month.abb, <span class="dv">1</span>, <span class="dv">1</span>)</span>
+<span id="cb33-6"><a href="#cb33-6" aria-hidden="true" tabindex="-1"></a>exceldata <span class="sc">|&gt;</span> <span class="fu">mutate</span>(<span class="at">month =</span> <span class="fu">factor</span>(month, <span class="at">levels =</span> levels)) <span class="sc">|&gt;</span> </span>
+<span id="cb33-7"><a href="#cb33-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>() <span class="sc">+</span> </span>
+<span id="cb33-8"><a href="#cb33-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_pointline</span>(<span class="fu">aes</span>(<span class="at">x =</span> month, <span class="at">y =</span> temperature1, <span class="at">color =</span> <span class="st">"Group 1"</span>, <span class="at">shape =</span> <span class="st">"Group 1"</span>, <span class="at">group =</span> <span class="dv">1</span>)) <span class="sc">+</span></span>
+<span id="cb33-9"><a href="#cb33-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_pointline</span>(<span class="fu">aes</span>(<span class="at">x =</span> month, <span class="at">y =</span> temperature2, <span class="at">color =</span> <span class="st">"Group 2"</span>, <span class="at">shape =</span> <span class="st">"Group 2"</span>, <span class="at">group =</span> <span class="dv">1</span>)) <span class="sc">+</span></span>
+<span id="cb33-10"><a href="#cb33-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_x_discrete</span>(<span class="at">name =</span> xlabel, <span class="at">labels =</span> labels) <span class="sc">+</span></span>
+<span id="cb33-11"><a href="#cb33-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_y_continuous</span>(<span class="at">name =</span> <span class="fu">parse</span>(<span class="at">text =</span> ylabel), <span class="at">breaks =</span> <span class="fu">seq</span>(<span class="dv">15</span>, <span class="dv">30</span>, <span class="at">by =</span> <span class="dv">5</span>), <span class="at">limits =</span> <span class="fu">c</span>(<span class="dv">15</span>, <span class="dv">30</span>)) <span class="sc">+</span></span>
+<span id="cb33-12"><a href="#cb33-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_color_viridis_d</span>(<span class="st">""</span>, <span class="at">option =</span> <span class="st">"turbo"</span>, <span class="at">begin =</span> <span class="dv">0</span>, <span class="at">end =</span> <span class="fl">0.5</span>) <span class="sc">+</span></span>
+<span id="cb33-13"><a href="#cb33-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_shape_discrete</span>(<span class="st">""</span>) <span class="sc">+</span></span>
+<span id="cb33-14"><a href="#cb33-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_pubr</span>(<span class="at">base_family =</span> <span class="st">"notosans"</span>) <span class="sc">+</span></span>
+<span id="cb33-15"><a href="#cb33-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">text =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">10</span>),</span>
+<span id="cb33-16"><a href="#cb33-16" aria-hidden="true" tabindex="-1"></a>        <span class="at">legend.position =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">0</span>),</span>
+<span id="cb33-17"><a href="#cb33-17" aria-hidden="true" tabindex="-1"></a>        <span class="at">legend.justification =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">0</span>),</span>
+<span id="cb33-18"><a href="#cb33-18" aria-hidden="true" tabindex="-1"></a>        <span class="at">legend.background =</span> <span class="fu">element_blank</span>(),</span>
+<span id="cb33-19"><a href="#cb33-19" aria-hidden="true" tabindex="-1"></a>        <span class="at">legend.title =</span> <span class="fu">element_blank</span>())</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="part05_files/figure-html/unnamed-chunk-25-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<p>]</p>
+</section>
+<section id="複数パネルのプロット" class="level2">
+<h2 class="anchored" data-anchor-id="複数パネルのプロット">複数パネルのプロット</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb34"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a>xlabel <span class="ot">=</span> <span class="st">"Petal width (cm)"</span></span>
+<span id="cb34-2"><a href="#cb34-2" aria-hidden="true" tabindex="-1"></a>ylabel <span class="ot">=</span> <span class="st">"Sepal width (cm)"</span></span>
+<span id="cb34-3"><a href="#cb34-3" aria-hidden="true" tabindex="-1"></a>iris <span class="sc">|&gt;</span> <span class="fu">group_nest</span>(Species) <span class="sc">|&gt;</span> </span>
+<span id="cb34-4"><a href="#cb34-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">L =</span> <span class="fu">c</span>(<span class="st">"A"</span>, <span class="st">"B"</span>, <span class="st">"C"</span>)) <span class="sc">|&gt;</span> </span>
+<span id="cb34-5"><a href="#cb34-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">Species =</span> <span class="fu">sprintf</span>(<span class="st">"italic('I.')~italic('%s')~'(%s)'"</span>,  Species, L)) <span class="sc">|&gt;</span> </span>
+<span id="cb34-6"><a href="#cb34-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">unnest</span>(data) <span class="sc">|&gt;</span> </span>
+<span id="cb34-7"><a href="#cb34-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>() <span class="sc">+</span> </span>
+<span id="cb34-8"><a href="#cb34-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="fu">aes</span>(<span class="at">x =</span> Petal.Width, <span class="at">y =</span> Sepal.Width, <span class="at">color =</span> Species)) <span class="sc">+</span></span>
+<span id="cb34-9"><a href="#cb34-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_text</span>(<span class="fu">aes</span>(<span class="at">x =</span> <span class="dv">3</span>, <span class="at">y =</span> <span class="dv">5</span>, <span class="at">label =</span> Species), <span class="at">parse =</span> <span class="cn">TRUE</span>, <span class="at">vjust =</span> <span class="dv">1</span>, <span class="at">hjust =</span> <span class="dv">1</span>,</span>
+<span id="cb34-10"><a href="#cb34-10" aria-hidden="true" tabindex="-1"></a>            <span class="at">family =</span> <span class="st">"notosans"</span>, <span class="at">size =</span><span class="dv">3</span>,  <span class="at">check_overlap =</span> <span class="cn">TRUE</span>) <span class="sc">+</span></span>
+<span id="cb34-11"><a href="#cb34-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_x_continuous</span>(<span class="at">name =</span> xlabel, <span class="at">breaks =</span> <span class="fu">seq</span>(<span class="dv">0</span>, <span class="dv">3</span>), <span class="at">limits =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">3</span>)) <span class="sc">+</span></span>
+<span id="cb34-12"><a href="#cb34-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_y_continuous</span>(<span class="at">name =</span> ylabel, <span class="at">breaks =</span> <span class="fu">seq</span>(<span class="dv">0</span>, <span class="dv">5</span>), <span class="at">limits =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">5</span>)) <span class="sc">+</span></span>
+<span id="cb34-13"><a href="#cb34-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_color_viridis_d</span>(<span class="st">""</span>, <span class="at">option =</span> <span class="st">"turbo"</span>, </span>
+<span id="cb34-14"><a href="#cb34-14" aria-hidden="true" tabindex="-1"></a>                      <span class="at">begin =</span> <span class="dv">0</span>, <span class="at">end =</span> <span class="fl">0.5</span>, <span class="at">labels =</span> scales<span class="sc">::</span><span class="fu">parse_format</span>()) <span class="sc">+</span></span>
+<span id="cb34-15"><a href="#cb34-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">guides</span>(<span class="at">color =</span> <span class="st">"none"</span>) <span class="sc">+</span></span>
+<span id="cb34-16"><a href="#cb34-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_rep_grid</span>(<span class="at">cols =</span> <span class="fu">vars</span>(Species)) <span class="sc">+</span></span>
+<span id="cb34-17"><a href="#cb34-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_pubr</span>(<span class="at">base_family =</span> <span class="st">"notosans"</span>) <span class="sc">+</span></span>
+<span id="cb34-18"><a href="#cb34-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">text =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">10</span>),</span>
+<span id="cb34-19"><a href="#cb34-19" aria-hidden="true" tabindex="-1"></a>        <span class="at">strip.background =</span> <span class="fu">element_blank</span>(),</span>
+<span id="cb34-20"><a href="#cb34-20" aria-hidden="true" tabindex="-1"></a>        <span class="at">strip.text =</span> <span class="fu">element_blank</span>())</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="part05_files/figure-html/unnamed-chunk-26-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+</section>
+<section id="複数プロットの結合" class="level2">
+<h2 class="anchored" data-anchor-id="複数プロットの結合">複数プロットの結合</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb35"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a>xlabel1 <span class="ot">=</span> <span class="st">"Petal width (cm)"</span></span>
+<span id="cb35-2"><a href="#cb35-2" aria-hidden="true" tabindex="-1"></a>ylabel1 <span class="ot">=</span> <span class="st">"Sepal width (cm)"</span></span>
+<span id="cb35-3"><a href="#cb35-3" aria-hidden="true" tabindex="-1"></a>xlabel2 <span class="ot">=</span> <span class="st">"Petal length (cm)"</span></span>
+<span id="cb35-4"><a href="#cb35-4" aria-hidden="true" tabindex="-1"></a>ylabel2 <span class="ot">=</span> <span class="st">"Sepal length (cm)"</span></span>
+<span id="cb35-5"><a href="#cb35-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb35-6"><a href="#cb35-6" aria-hidden="true" tabindex="-1"></a>iris2 <span class="ot">=</span> iris <span class="sc">|&gt;</span> </span>
+<span id="cb35-7"><a href="#cb35-7" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">Species =</span> <span class="fu">sprintf</span>(<span class="st">"italic('I.')~italic('%s')"</span>,  Species))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb36"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a>plot1 <span class="ot">=</span> </span>
+<span id="cb36-2"><a href="#cb36-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(iris2) <span class="sc">+</span> </span>
+<span id="cb36-3"><a href="#cb36-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="fu">aes</span>(<span class="at">x =</span> Petal.Width, <span class="at">y =</span> Sepal.Width, <span class="at">color =</span> Species)) <span class="sc">+</span></span>
+<span id="cb36-4"><a href="#cb36-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_x_continuous</span>(<span class="at">name =</span> xlabel1, <span class="at">breaks =</span> <span class="fu">seq</span>(<span class="dv">0</span>, <span class="dv">8</span>), <span class="at">limits =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">8</span>)) <span class="sc">+</span></span>
+<span id="cb36-5"><a href="#cb36-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_y_continuous</span>(<span class="at">name =</span> ylabel1, <span class="at">breaks =</span> <span class="fu">seq</span>(<span class="dv">0</span>, <span class="dv">8</span>), <span class="at">limits =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">8</span>)) <span class="sc">+</span></span>
+<span id="cb36-6"><a href="#cb36-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_color_viridis_d</span>(<span class="st">""</span>, <span class="at">option =</span> <span class="st">"turbo"</span>, </span>
+<span id="cb36-7"><a href="#cb36-7" aria-hidden="true" tabindex="-1"></a>                      <span class="at">begin =</span> <span class="dv">0</span>, <span class="at">end =</span> <span class="fl">0.5</span>, <span class="at">labels =</span> scales<span class="sc">::</span><span class="fu">parse_format</span>()) <span class="sc">+</span></span>
+<span id="cb36-8"><a href="#cb36-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_pubr</span>(<span class="at">base_family =</span> <span class="st">"notosans"</span>) <span class="sc">+</span></span>
+<span id="cb36-9"><a href="#cb36-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">text =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">10</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb37"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a>plot2 <span class="ot">=</span> </span>
+<span id="cb37-2"><a href="#cb37-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(iris2) <span class="sc">+</span> </span>
+<span id="cb37-3"><a href="#cb37-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="fu">aes</span>(<span class="at">x =</span> Petal.Length, <span class="at">y =</span> Sepal.Length, <span class="at">color =</span> Species)) <span class="sc">+</span></span>
+<span id="cb37-4"><a href="#cb37-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_x_continuous</span>(<span class="at">name =</span> xlabel2, <span class="at">breaks =</span> <span class="fu">seq</span>(<span class="dv">0</span>, <span class="dv">8</span>), <span class="at">limits =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">8</span>)) <span class="sc">+</span></span>
+<span id="cb37-5"><a href="#cb37-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_y_continuous</span>(<span class="at">name =</span> ylabel2, <span class="at">breaks =</span> <span class="fu">seq</span>(<span class="dv">0</span>, <span class="dv">8</span>), <span class="at">limits =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">8</span>)) <span class="sc">+</span></span>
+<span id="cb37-6"><a href="#cb37-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_color_viridis_d</span>(<span class="st">""</span>, <span class="at">option =</span> <span class="st">"turbo"</span>, </span>
+<span id="cb37-7"><a href="#cb37-7" aria-hidden="true" tabindex="-1"></a>                      <span class="at">begin =</span> <span class="dv">0</span>, <span class="at">end =</span> <span class="fl">0.5</span>, <span class="at">labels =</span> scales<span class="sc">::</span><span class="fu">parse_format</span>()) <span class="sc">+</span></span>
+<span id="cb37-8"><a href="#cb37-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_pubr</span>(<span class="at">base_family =</span> <span class="st">"notosans"</span>) <span class="sc">+</span></span>
+<span id="cb37-9"><a href="#cb37-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">text =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">10</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="複数プロットの結合の結果" class="level2">
+<h2 class="anchored" data-anchor-id="複数プロットの結合の結果">複数プロットの結合の結果</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb38"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a>plot1 <span class="sc">+</span> plot2 <span class="sc">+</span> <span class="fu">plot_layout</span>(<span class="at">ncol =</span> <span class="dv">2</span>, </span>
+<span id="cb38-2"><a href="#cb38-2" aria-hidden="true" tabindex="-1"></a>                            <span class="at">nrow =</span> <span class="dv">1</span>, </span>
+<span id="cb38-3"><a href="#cb38-3" aria-hidden="true" tabindex="-1"></a>                            <span class="at">guides =</span> <span class="st">"collect"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="part05_files/figure-html/unnamed-chunk-30-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+</section>
+<section id="線と点説明変数は離散型変数の場合" class="level2">
+<h2 class="anchored" data-anchor-id="線と点説明変数は離散型変数の場合">線と点（説明変数は離散型変数の場合）</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb39"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a>ylabel <span class="ot">=</span> <span class="st">"Petal length (cm)"</span></span>
+<span id="cb39-2"><a href="#cb39-2" aria-hidden="true" tabindex="-1"></a>iris2 <span class="sc">|&gt;</span> <span class="fu">group_by</span>(Species) <span class="sc">|&gt;</span> </span>
+<span id="cb39-3"><a href="#cb39-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">PL =</span> <span class="fu">mean</span>(Petal.Length),</span>
+<span id="cb39-4"><a href="#cb39-4" aria-hidden="true" tabindex="-1"></a>            <span class="at">sd =</span> <span class="fu">sd</span>(Petal.Length)) <span class="sc">|&gt;</span> </span>
+<span id="cb39-5"><a href="#cb39-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">lower =</span> PL <span class="sc">-</span> sd,</span>
+<span id="cb39-6"><a href="#cb39-6" aria-hidden="true" tabindex="-1"></a>         <span class="at">upper =</span> PL <span class="sc">+</span> sd) <span class="sc">|&gt;</span> </span>
+<span id="cb39-7"><a href="#cb39-7" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>() <span class="sc">+</span> </span>
+<span id="cb39-8"><a href="#cb39-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="fu">aes</span>(<span class="at">x =</span> Species, <span class="at">y =</span> PL, <span class="at">group =</span> <span class="dv">1</span>)) <span class="sc">+</span></span>
+<span id="cb39-9"><a href="#cb39-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="fu">aes</span>(<span class="at">x =</span> Species, <span class="at">y =</span> PL), <span class="at">size =</span> <span class="dv">2</span>, <span class="at">color =</span> <span class="st">"white"</span>) <span class="sc">+</span></span>
+<span id="cb39-10"><a href="#cb39-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="fu">aes</span>(<span class="at">x =</span> Species, <span class="at">y =</span> PL), <span class="at">size =</span> <span class="dv">1</span>) <span class="sc">+</span></span>
+<span id="cb39-11"><a href="#cb39-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_errorbar</span>(<span class="fu">aes</span>(<span class="at">x =</span> Species, <span class="at">ymin =</span> lower, <span class="at">ymax =</span> upper),</span>
+<span id="cb39-12"><a href="#cb39-12" aria-hidden="true" tabindex="-1"></a>                <span class="at">width =</span> <span class="fl">0.0</span>) <span class="sc">+</span>  </span>
+<span id="cb39-13"><a href="#cb39-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_x_discrete</span>(<span class="at">name =</span> <span class="st">"Species"</span>, <span class="at">labels =</span> scales<span class="sc">::</span><span class="fu">parse_format</span>()) <span class="sc">+</span></span>
+<span id="cb39-14"><a href="#cb39-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_y_continuous</span>(<span class="at">name =</span> ylabel, <span class="at">breaks =</span> <span class="fu">seq</span>(<span class="dv">0</span>, <span class="dv">8</span>), <span class="at">limits =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">8</span>)) <span class="sc">+</span></span>
+<span id="cb39-15"><a href="#cb39-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_pubr</span>(<span class="at">base_family =</span> <span class="st">"notosans"</span>) <span class="sc">+</span></span>
+<span id="cb39-16"><a href="#cb39-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">text =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">10</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="part05_files/figure-html/unnamed-chunk-31-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+</section>
+<section id="ボーグラフ" class="level2">
+<h2 class="anchored" data-anchor-id="ボーグラフ">ボーグラフ</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb40"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a>ylabel <span class="ot">=</span> <span class="st">"Petal length (cm)"</span></span>
+<span id="cb40-2"><a href="#cb40-2" aria-hidden="true" tabindex="-1"></a>iris2 <span class="sc">|&gt;</span> <span class="fu">group_by</span>(Species) <span class="sc">|&gt;</span> </span>
+<span id="cb40-3"><a href="#cb40-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">PL =</span> <span class="fu">mean</span>(Petal.Length),</span>
+<span id="cb40-4"><a href="#cb40-4" aria-hidden="true" tabindex="-1"></a>            <span class="at">sd =</span> <span class="fu">sd</span>(Petal.Length)) <span class="sc">|&gt;</span> </span>
+<span id="cb40-5"><a href="#cb40-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">lower =</span> PL <span class="sc">-</span> sd,</span>
+<span id="cb40-6"><a href="#cb40-6" aria-hidden="true" tabindex="-1"></a>         <span class="at">upper =</span> PL <span class="sc">+</span> sd) <span class="sc">|&gt;</span> </span>
+<span id="cb40-7"><a href="#cb40-7" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>() <span class="sc">+</span> </span>
+<span id="cb40-8"><a href="#cb40-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_col</span>(<span class="fu">aes</span>(<span class="at">x =</span> Species, <span class="at">y =</span> PL, <span class="at">fill =</span> Species)) <span class="sc">+</span></span>
+<span id="cb40-9"><a href="#cb40-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_errorbar</span>(<span class="fu">aes</span>(<span class="at">x =</span> Species, <span class="at">ymin =</span> lower, <span class="at">ymax =</span> upper),</span>
+<span id="cb40-10"><a href="#cb40-10" aria-hidden="true" tabindex="-1"></a>                <span class="at">width =</span> <span class="fl">0.01</span>) <span class="sc">+</span>  </span>
+<span id="cb40-11"><a href="#cb40-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_x_discrete</span>(<span class="at">name =</span> <span class="st">"Species"</span>, <span class="at">labels =</span> scales<span class="sc">::</span><span class="fu">parse_format</span>()) <span class="sc">+</span></span>
+<span id="cb40-12"><a href="#cb40-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_y_continuous</span>(<span class="at">name =</span> ylabel, <span class="at">breaks =</span> <span class="fu">seq</span>(<span class="dv">0</span>, <span class="dv">8</span>), <span class="at">limits =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">8</span>)) <span class="sc">+</span></span>
+<span id="cb40-13"><a href="#cb40-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_viridis_d</span>(<span class="st">""</span>, <span class="at">option =</span> <span class="st">"turbo"</span>, </span>
+<span id="cb40-14"><a href="#cb40-14" aria-hidden="true" tabindex="-1"></a>                      <span class="at">begin =</span> <span class="dv">0</span>, <span class="at">end =</span> <span class="fl">0.5</span>, <span class="at">labels =</span> scales<span class="sc">::</span><span class="fu">parse_format</span>()) <span class="sc">+</span></span>
+<span id="cb40-15"><a href="#cb40-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">guides</span>(<span class="at">fill =</span> <span class="st">"none"</span>) <span class="sc">+</span></span>
+<span id="cb40-16"><a href="#cb40-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_pubr</span>(<span class="at">base_family =</span> <span class="st">"notosans"</span>) <span class="sc">+</span></span>
+<span id="cb40-17"><a href="#cb40-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">text =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">10</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="part05_files/figure-html/unnamed-chunk-32-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+</section>
+<section id="ボーグラフ横向き並び替える" class="level2">
+<h2 class="anchored" data-anchor-id="ボーグラフ横向き並び替える">ボーグラフ（横向き・並び替える）</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb41"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a>ylabel <span class="ot">=</span> <span class="st">"Petal length (cm)"</span></span>
+<span id="cb41-2"><a href="#cb41-2" aria-hidden="true" tabindex="-1"></a>iris2 <span class="sc">|&gt;</span> <span class="fu">group_by</span>(Species) <span class="sc">|&gt;</span> </span>
+<span id="cb41-3"><a href="#cb41-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">PL =</span> <span class="fu">mean</span>(Petal.Length),</span>
+<span id="cb41-4"><a href="#cb41-4" aria-hidden="true" tabindex="-1"></a>            <span class="at">sd =</span> <span class="fu">sd</span>(Petal.Length)) <span class="sc">|&gt;</span> </span>
+<span id="cb41-5"><a href="#cb41-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">lower =</span> PL <span class="sc">-</span> sd,</span>
+<span id="cb41-6"><a href="#cb41-6" aria-hidden="true" tabindex="-1"></a>         <span class="at">upper =</span> PL <span class="sc">+</span> sd) <span class="sc">|&gt;</span> </span>
+<span id="cb41-7"><a href="#cb41-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> <span class="fu">fct_reorder</span>(Species, PL, <span class="at">.desc =</span> T))) <span class="sc">+</span> </span>
+<span id="cb41-8"><a href="#cb41-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_col</span>(<span class="fu">aes</span>(<span class="at">y =</span> PL, <span class="at">fill =</span> Species)) <span class="sc">+</span></span>
+<span id="cb41-9"><a href="#cb41-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_errorbar</span>(<span class="fu">aes</span>(<span class="at">ymin =</span> lower, <span class="at">ymax =</span> upper),</span>
+<span id="cb41-10"><a href="#cb41-10" aria-hidden="true" tabindex="-1"></a>                <span class="at">width =</span> <span class="fl">0.1</span>) <span class="sc">+</span>  </span>
+<span id="cb41-11"><a href="#cb41-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_x_discrete</span>(<span class="at">name =</span> <span class="st">"Species"</span>, <span class="at">labels =</span> scales<span class="sc">::</span><span class="fu">parse_format</span>()) <span class="sc">+</span></span>
+<span id="cb41-12"><a href="#cb41-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_y_continuous</span>(<span class="at">name =</span> ylabel, <span class="at">breaks =</span> <span class="fu">seq</span>(<span class="dv">0</span>, <span class="dv">8</span>), <span class="at">limits =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">8</span>)) <span class="sc">+</span></span>
+<span id="cb41-13"><a href="#cb41-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_viridis_d</span>(<span class="st">""</span>, <span class="at">option =</span> <span class="st">"turbo"</span>, </span>
+<span id="cb41-14"><a href="#cb41-14" aria-hidden="true" tabindex="-1"></a>                      <span class="at">begin =</span> <span class="dv">0</span>, <span class="at">end =</span> <span class="fl">0.5</span>, <span class="at">labels =</span> scales<span class="sc">::</span><span class="fu">parse_format</span>()) <span class="sc">+</span></span>
+<span id="cb41-15"><a href="#cb41-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">guides</span>(<span class="at">fill =</span> <span class="st">"none"</span>) <span class="sc">+</span></span>
+<span id="cb41-16"><a href="#cb41-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_pubr</span>(<span class="at">base_family =</span> <span class="st">"notosans"</span>) <span class="sc">+</span></span>
+<span id="cb41-17"><a href="#cb41-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">text =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">10</span>))<span class="sc">+</span> </span>
+<span id="cb41-18"><a href="#cb41-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">coord_flip</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="part05_files/figure-html/unnamed-chunk-33-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+</section>
+<section id="ヒストグラム" class="level2">
+<h2 class="anchored" data-anchor-id="ヒストグラム">ヒストグラム</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb42"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a>xlabel <span class="ot">=</span> <span class="st">"Petal length (cm)"</span></span>
+<span id="cb42-2"><a href="#cb42-2" aria-hidden="true" tabindex="-1"></a>ylabel <span class="ot">=</span> <span class="st">"Frequency"</span></span>
+<span id="cb42-3"><a href="#cb42-3" aria-hidden="true" tabindex="-1"></a>iris2 <span class="sc">|&gt;</span> </span>
+<span id="cb42-4"><a href="#cb42-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>() <span class="sc">+</span> </span>
+<span id="cb42-5"><a href="#cb42-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_histogram</span>(<span class="fu">aes</span>(<span class="at">x =</span> Petal.Length, <span class="at">fill =</span> Species)) <span class="sc">+</span></span>
+<span id="cb42-6"><a href="#cb42-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_x_continuous</span>(<span class="at">name =</span> xlabel) <span class="sc">+</span></span>
+<span id="cb42-7"><a href="#cb42-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_y_continuous</span>(<span class="at">name =</span> ylabel) <span class="sc">+</span></span>
+<span id="cb42-8"><a href="#cb42-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_viridis_d</span>(<span class="st">""</span>, <span class="at">option =</span> <span class="st">"turbo"</span>, </span>
+<span id="cb42-9"><a href="#cb42-9" aria-hidden="true" tabindex="-1"></a>                      <span class="at">begin =</span> <span class="dv">0</span>, <span class="at">end =</span> <span class="fl">0.5</span>, <span class="at">labels =</span> scales<span class="sc">::</span><span class="fu">parse_format</span>()) <span class="sc">+</span></span>
+<span id="cb42-10"><a href="#cb42-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_pubr</span>(<span class="at">base_family =</span> <span class="st">"notosans"</span>) <span class="sc">+</span></span>
+<span id="cb42-11"><a href="#cb42-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">text =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">10</span>),</span>
+<span id="cb42-12"><a href="#cb42-12" aria-hidden="true" tabindex="-1"></a>        <span class="at">legend.position =</span> <span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">1</span>),</span>
+<span id="cb42-13"><a href="#cb42-13" aria-hidden="true" tabindex="-1"></a>        <span class="at">legend.justification =</span> <span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">1</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>`stat_bin()` using `bins = 30`. Pick better value with `binwidth`.</code></pre>
+</div>
+<div class="cell-output-display">
+<p><img src="part05_files/figure-html/unnamed-chunk-34-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+</section>
+<section id="ヒストグラムパネル" class="level2">
+<h2 class="anchored" data-anchor-id="ヒストグラムパネル">ヒストグラム・パネル</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb44"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true" tabindex="-1"></a>xlabel <span class="ot">=</span> <span class="st">"Petal length (cm)"</span></span>
+<span id="cb44-2"><a href="#cb44-2" aria-hidden="true" tabindex="-1"></a>ylabel <span class="ot">=</span> <span class="st">"Frequency"</span></span>
+<span id="cb44-3"><a href="#cb44-3" aria-hidden="true" tabindex="-1"></a>iris2 <span class="sc">|&gt;</span> </span>
+<span id="cb44-4"><a href="#cb44-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>() <span class="sc">+</span> </span>
+<span id="cb44-5"><a href="#cb44-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_histogram</span>(<span class="fu">aes</span>(<span class="at">x =</span> Petal.Length, <span class="at">fill =</span> Species),</span>
+<span id="cb44-6"><a href="#cb44-6" aria-hidden="true" tabindex="-1"></a>                 <span class="at">binwidth =</span> <span class="fl">0.1</span>, <span class="at">center =</span> <span class="dv">0</span>) <span class="sc">+</span></span>
+<span id="cb44-7"><a href="#cb44-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_x_continuous</span>(<span class="at">name =</span> xlabel, <span class="at">limits =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">10</span>)) <span class="sc">+</span></span>
+<span id="cb44-8"><a href="#cb44-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_y_continuous</span>(<span class="at">name =</span> ylabel) <span class="sc">+</span></span>
+<span id="cb44-9"><a href="#cb44-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_viridis_d</span>(<span class="st">""</span>, <span class="at">option =</span> <span class="st">"turbo"</span>, </span>
+<span id="cb44-10"><a href="#cb44-10" aria-hidden="true" tabindex="-1"></a>                      <span class="at">begin =</span> <span class="dv">0</span>, <span class="at">end =</span> <span class="fl">0.5</span>, <span class="at">labels =</span> scales<span class="sc">::</span><span class="fu">parse_format</span>()) <span class="sc">+</span></span>
+<span id="cb44-11"><a href="#cb44-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_rep_wrap</span>(<span class="at">facets =</span> <span class="fu">vars</span>(Species)) <span class="sc">+</span></span>
+<span id="cb44-12"><a href="#cb44-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_pubr</span>(<span class="at">base_family =</span> <span class="st">"notosans"</span>) <span class="sc">+</span></span>
+<span id="cb44-13"><a href="#cb44-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">text =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">10</span>),</span>
+<span id="cb44-14"><a href="#cb44-14" aria-hidden="true" tabindex="-1"></a>        <span class="at">legend.position =</span> <span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">1</span>),</span>
+<span id="cb44-15"><a href="#cb44-15" aria-hidden="true" tabindex="-1"></a>        <span class="at">legend.justification =</span> <span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">1</span>),</span>
+<span id="cb44-16"><a href="#cb44-16" aria-hidden="true" tabindex="-1"></a>        <span class="at">strip.background =</span> <span class="fu">element_blank</span>(),</span>
+<span id="cb44-17"><a href="#cb44-17" aria-hidden="true" tabindex="-1"></a>        <span class="at">strip.text =</span> <span class="fu">element_blank</span>())</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: Removed 6 rows containing missing values (`geom_bar()`).</code></pre>
+</div>
+<div class="cell-output-display">
+<p><img src="part05_files/figure-html/unnamed-chunk-35-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+</section>
+<section id="時系列" class="level2">
+<h2 class="anchored" data-anchor-id="時系列">時系列</h2>
+<p>データは (https://covid.ourworldindata.org/data/owid-covid-data.csv)。</p>
+<div class="cell" data-hash="part05_cache/html/unnamed-chunk-36_6ad6a4d388429c96efbc3e2720545af4">
+<div class="sourceCode cell-code" id="cb46"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb46-1"><a href="#cb46-1" aria-hidden="true" tabindex="-1"></a>covid <span class="ot">=</span> <span class="fu">read_csv</span>(<span class="st">"https://covid.ourworldindata.org/data/owid-covid-data.csv"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Rows: 255834 Columns: 67
+── Column specification ────────────────────────────────────────────────────────
+Delimiter: ","
+chr   (4): iso_code, continent, location, tests_units
+dbl  (62): total_cases, new_cases, new_cases_smoothed, total_deaths, new_dea...
+date  (1): date
+
+ℹ Use `spec()` to retrieve the full column specification for this data.
+ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb48"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb48-1"><a href="#cb48-1" aria-hidden="true" tabindex="-1"></a>covid2 <span class="ot">=</span> covid <span class="sc">|&gt;</span> </span>
+<span id="cb48-2"><a href="#cb48-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(continent, date) <span class="sc">|&gt;</span> </span>
+<span id="cb48-3"><a href="#cb48-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">tc =</span> <span class="fu">sum</span>(total_cases_per_million, <span class="at">na.rm=</span>T),</span>
+<span id="cb48-4"><a href="#cb48-4" aria-hidden="true" tabindex="-1"></a>            <span class="at">td =</span> <span class="fu">sum</span>(total_deaths_per_million, <span class="at">na.rm=</span> T)) <span class="sc">|&gt;</span> </span>
+<span id="cb48-5"><a href="#cb48-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">drop_na</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>`summarise()` has grouped output by 'continent'. You can override using the
+`.groups` argument.</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb50"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb50-1"><a href="#cb50-1" aria-hidden="true" tabindex="-1"></a>xlabel <span class="ot">=</span> <span class="st">"Date"</span></span>
+<span id="cb50-2"><a href="#cb50-2" aria-hidden="true" tabindex="-1"></a>ylabel <span class="ot">=</span> <span class="st">"COVID cases per million"</span></span>
+<span id="cb50-3"><a href="#cb50-3" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(covid2) <span class="sc">+</span></span>
+<span id="cb50-4"><a href="#cb50-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_path</span>(<span class="fu">aes</span>(<span class="at">x=</span>date, <span class="at">y =</span> tc, <span class="at">color =</span> continent))<span class="sc">+</span></span>
+<span id="cb50-5"><a href="#cb50-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_x_date</span>(<span class="at">name =</span> xlabel) <span class="sc">+</span></span>
+<span id="cb50-6"><a href="#cb50-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_y_continuous</span>(<span class="at">name =</span> ylabel) <span class="sc">+</span></span>
+<span id="cb50-7"><a href="#cb50-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_color_viridis_d</span>(<span class="st">""</span>, <span class="at">option =</span> <span class="st">"turbo"</span>, <span class="at">begin =</span> <span class="dv">0</span>, <span class="at">end =</span> <span class="fl">0.8</span>) <span class="sc">+</span></span>
+<span id="cb50-8"><a href="#cb50-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_pubr</span>(<span class="at">base_family =</span> <span class="st">"notosans"</span>) <span class="sc">+</span></span>
+<span id="cb50-9"><a href="#cb50-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">text =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">10</span>),</span>
+<span id="cb50-10"><a href="#cb50-10" aria-hidden="true" tabindex="-1"></a>        <span class="at">legend.position =</span> <span class="fu">c</span>(<span class="dv">0</span>,<span class="dv">1</span>),</span>
+<span id="cb50-11"><a href="#cb50-11" aria-hidden="true" tabindex="-1"></a>        <span class="at">legend.justification =</span> <span class="fu">c</span>(<span class="dv">0</span>,<span class="dv">1</span>),</span>
+<span id="cb50-12"><a href="#cb50-12" aria-hidden="true" tabindex="-1"></a>        <span class="at">strip.background =</span> <span class="fu">element_blank</span>(),</span>
+<span id="cb50-13"><a href="#cb50-13" aria-hidden="true" tabindex="-1"></a>        <span class="at">strip.text =</span> <span class="fu">element_blank</span>())</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="part05_files/figure-html/unnamed-chunk-37-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+</section>
+<section id="時系列-1" class="level2">
+<h2 class="anchored" data-anchor-id="時系列-1">時系列</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb51"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb51-1"><a href="#cb51-1" aria-hidden="true" tabindex="-1"></a>xlabel <span class="ot">=</span> <span class="st">"Date"</span></span>
+<span id="cb51-2"><a href="#cb51-2" aria-hidden="true" tabindex="-1"></a>ylabel <span class="ot">=</span> <span class="st">"COVID cases per million"</span></span>
+<span id="cb51-3"><a href="#cb51-3" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(covid2) <span class="sc">+</span></span>
+<span id="cb51-4"><a href="#cb51-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_path</span>(<span class="fu">aes</span>(<span class="at">x=</span>date, <span class="at">y =</span> tc, <span class="at">color =</span> continent))<span class="sc">+</span></span>
+<span id="cb51-5"><a href="#cb51-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_x_date</span>(<span class="at">name =</span> xlabel, <span class="at">date_labels =</span> <span class="st">"%Y-%m-%d"</span>) <span class="sc">+</span></span>
+<span id="cb51-6"><a href="#cb51-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_y_continuous</span>(<span class="at">name =</span> ylabel, </span>
+<span id="cb51-7"><a href="#cb51-7" aria-hidden="true" tabindex="-1"></a>                     <span class="at">breaks =</span> <span class="dv">10</span><span class="sc">^</span><span class="fu">seq</span>(<span class="sc">-</span><span class="dv">2</span>,<span class="dv">7</span>), <span class="at">limits =</span> <span class="fu">c</span>(<span class="fl">0.01</span>, <span class="dv">10</span><span class="sc">^</span><span class="dv">7</span>),</span>
+<span id="cb51-8"><a href="#cb51-8" aria-hidden="true" tabindex="-1"></a>                     <span class="at">trans =</span> <span class="st">"log10"</span>, <span class="at">labels =</span> scales<span class="sc">::</span><span class="fu">label_math</span>(<span class="at">format =</span> log10)) <span class="sc">+</span></span>
+<span id="cb51-9"><a href="#cb51-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_color_viridis_d</span>(<span class="st">""</span>, <span class="at">option =</span> <span class="st">"turbo"</span>, <span class="at">begin =</span> <span class="dv">0</span>, <span class="at">end =</span> <span class="fl">0.8</span>) <span class="sc">+</span></span>
+<span id="cb51-10"><a href="#cb51-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">guides</span>(<span class="at">color =</span> <span class="fu">guide_legend</span>(<span class="at">ncol =</span> <span class="dv">2</span>)) <span class="sc">+</span></span>
+<span id="cb51-11"><a href="#cb51-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_pubr</span>(<span class="at">base_family =</span> <span class="st">"notosans"</span>) <span class="sc">+</span></span>
+<span id="cb51-12"><a href="#cb51-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">text =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">10</span>),</span>
+<span id="cb51-13"><a href="#cb51-13" aria-hidden="true" tabindex="-1"></a>        <span class="at">legend.position =</span> <span class="fu">c</span>(<span class="fl">0.5</span>,<span class="dv">0</span>),</span>
+<span id="cb51-14"><a href="#cb51-14" aria-hidden="true" tabindex="-1"></a>        <span class="at">legend.justification =</span> <span class="fu">c</span>(<span class="dv">0</span>,<span class="dv">0</span>),</span>
+<span id="cb51-15"><a href="#cb51-15" aria-hidden="true" tabindex="-1"></a>        <span class="at">legend.background =</span> <span class="fu">element_blank</span>(),</span>
+<span id="cb51-16"><a href="#cb51-16" aria-hidden="true" tabindex="-1"></a>        <span class="at">strip.background =</span> <span class="fu">element_blank</span>(),</span>
+<span id="cb51-17"><a href="#cb51-17" aria-hidden="true" tabindex="-1"></a>        <span class="at">strip.text =</span> <span class="fu">element_blank</span>())</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: Transformation introduced infinite values in continuous y-axis</code></pre>
+</div>
+<div class="cell-output-display">
+<p><img src="part05_files/figure-html/unnamed-chunk-38-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+</section>
+<section id="時系列軸のカスタムラベル" class="level2">
+<h2 class="anchored" data-anchor-id="時系列軸のカスタムラベル">時系列軸のカスタムラベル</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb53"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb53-1"><a href="#cb53-1" aria-hidden="true" tabindex="-1"></a>gnn_date <span class="ot">=</span> <span class="cf">function</span>() {</span>
+<span id="cb53-2"><a href="#cb53-2" aria-hidden="true" tabindex="-1"></a>  <span class="cf">function</span>(x) {</span>
+<span id="cb53-3"><a href="#cb53-3" aria-hidden="true" tabindex="-1"></a>    m <span class="ot">=</span> <span class="fu">format</span>(x, <span class="st">"%b"</span>)</span>
+<span id="cb53-4"><a href="#cb53-4" aria-hidden="true" tabindex="-1"></a>    m <span class="ot">=</span> <span class="fu">str_sub</span>(m, <span class="at">start =</span> <span class="dv">1</span>, <span class="at">end =</span> <span class="dv">1</span>)</span>
+<span id="cb53-5"><a href="#cb53-5" aria-hidden="true" tabindex="-1"></a>    y <span class="ot">=</span> <span class="fu">format</span>(x, <span class="st">"%Y"</span>)</span>
+<span id="cb53-6"><a href="#cb53-6" aria-hidden="true" tabindex="-1"></a>    <span class="fu">ifelse</span>(<span class="fu">duplicated</span>(y), m, <span class="fu">sprintf</span>(<span class="st">"%s</span><span class="sc">\n</span><span class="st">%s"</span>, m,y))</span>
+<span id="cb53-7"><a href="#cb53-7" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb53-8"><a href="#cb53-8" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="時系列-2" class="level2">
+<h2 class="anchored" data-anchor-id="時系列-2">時系列</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb54"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb54-1"><a href="#cb54-1" aria-hidden="true" tabindex="-1"></a>xlabel <span class="ot">=</span> <span class="st">"Date"</span></span>
+<span id="cb54-2"><a href="#cb54-2" aria-hidden="true" tabindex="-1"></a>ylabel <span class="ot">=</span> <span class="st">"COVID cases per million"</span></span>
+<span id="cb54-3"><a href="#cb54-3" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(covid2) <span class="sc">+</span></span>
+<span id="cb54-4"><a href="#cb54-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_path</span>(<span class="fu">aes</span>(<span class="at">x=</span>date, <span class="at">y =</span> tc, <span class="at">color =</span> continent))<span class="sc">+</span></span>
+<span id="cb54-5"><a href="#cb54-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_x_date</span>(<span class="at">name =</span> xlabel, <span class="at">date_breaks =</span> <span class="st">"months"</span>, <span class="at">labels =</span> <span class="fu">gnn_date</span>()) <span class="sc">+</span></span>
+<span id="cb54-6"><a href="#cb54-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_y_continuous</span>(<span class="at">name =</span> ylabel, </span>
+<span id="cb54-7"><a href="#cb54-7" aria-hidden="true" tabindex="-1"></a>                     <span class="at">breaks =</span> <span class="dv">10</span><span class="sc">^</span><span class="fu">seq</span>(<span class="sc">-</span><span class="dv">2</span>,<span class="dv">7</span>, <span class="at">by =</span> <span class="dv">2</span>), <span class="at">limits =</span> <span class="fu">c</span>(<span class="fl">0.01</span>, <span class="dv">10</span><span class="sc">^</span><span class="dv">7</span>),</span>
+<span id="cb54-8"><a href="#cb54-8" aria-hidden="true" tabindex="-1"></a>                     <span class="at">trans =</span> <span class="st">"log10"</span>, <span class="at">labels =</span> scales<span class="sc">::</span><span class="fu">label_math</span>(<span class="at">format =</span> log10)) <span class="sc">+</span></span>
+<span id="cb54-9"><a href="#cb54-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_color_viridis_d</span>(<span class="st">""</span>, <span class="at">option =</span> <span class="st">"turbo"</span>, <span class="at">begin =</span> <span class="dv">0</span>, <span class="at">end =</span> <span class="fl">0.8</span>) <span class="sc">+</span></span>
+<span id="cb54-10"><a href="#cb54-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">guides</span>(<span class="at">color =</span> <span class="fu">guide_legend</span>(<span class="at">ncol =</span> <span class="dv">2</span>)) <span class="sc">+</span></span>
+<span id="cb54-11"><a href="#cb54-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_pubr</span>(<span class="at">base_family =</span> <span class="st">"notosans"</span>) <span class="sc">+</span></span>
+<span id="cb54-12"><a href="#cb54-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">text =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">10</span>),</span>
+<span id="cb54-13"><a href="#cb54-13" aria-hidden="true" tabindex="-1"></a>        <span class="at">legend.position =</span> <span class="fu">c</span>(<span class="fl">0.5</span>,<span class="dv">0</span>),</span>
+<span id="cb54-14"><a href="#cb54-14" aria-hidden="true" tabindex="-1"></a>        <span class="at">legend.justification =</span> <span class="fu">c</span>(<span class="dv">0</span>,<span class="dv">0</span>),</span>
+<span id="cb54-15"><a href="#cb54-15" aria-hidden="true" tabindex="-1"></a>        <span class="at">legend.background =</span> <span class="fu">element_blank</span>(),</span>
+<span id="cb54-16"><a href="#cb54-16" aria-hidden="true" tabindex="-1"></a>        <span class="at">strip.background =</span> <span class="fu">element_blank</span>(),</span>
+<span id="cb54-17"><a href="#cb54-17" aria-hidden="true" tabindex="-1"></a>        <span class="at">strip.text =</span> <span class="fu">element_blank</span>())</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: Transformation introduced infinite values in continuous y-axis</code></pre>
+</div>
+<div class="cell-output-display">
+<p><img src="part05_files/figure-html/unnamed-chunk-40-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+</section>
+<section id="箱ひげ図" class="level2">
+<h2 class="anchored" data-anchor-id="箱ひげ図">箱ひげ図</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb56"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb56-1"><a href="#cb56-1" aria-hidden="true" tabindex="-1"></a>covid2 <span class="ot">=</span> covid <span class="sc">|&gt;</span> </span>
+<span id="cb56-2"><a href="#cb56-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(date <span class="sc">&gt;=</span> lubridate<span class="sc">::</span><span class="fu">ymd</span>(<span class="st">"2021-01-01"</span>)) <span class="sc">|&gt;</span> </span>
+<span id="cb56-3"><a href="#cb56-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="fu">str_detect</span>(location, <span class="st">"Indonesia|Japan|South Korea|Taiwan|China"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb57"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb57-1"><a href="#cb57-1" aria-hidden="true" tabindex="-1"></a>xlabel <span class="ot">=</span> <span class="st">"Country"</span></span>
+<span id="cb57-2"><a href="#cb57-2" aria-hidden="true" tabindex="-1"></a>ylabel <span class="ot">=</span> <span class="st">"Daily cases per million"</span></span>
+<span id="cb57-3"><a href="#cb57-3" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(covid2) <span class="sc">+</span></span>
+<span id="cb57-4"><a href="#cb57-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_boxplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> <span class="fu">fct_reorder</span>(location, new_cases_per_million, mean, <span class="at">na.rm=</span>T, <span class="at">.desc=</span>T), </span>
+<span id="cb57-5"><a href="#cb57-5" aria-hidden="true" tabindex="-1"></a>                   <span class="at">y =</span> new_cases_per_million, <span class="at">fill =</span> location)) <span class="sc">+</span> </span>
+<span id="cb57-6"><a href="#cb57-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_x_discrete</span>(<span class="at">name =</span> xlabel) <span class="sc">+</span></span>
+<span id="cb57-7"><a href="#cb57-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_y_continuous</span>(<span class="at">name =</span> ylabel, </span>
+<span id="cb57-8"><a href="#cb57-8" aria-hidden="true" tabindex="-1"></a>                     <span class="at">breaks =</span> <span class="dv">10</span><span class="sc">^</span><span class="fu">seq</span>(<span class="sc">-</span><span class="dv">3</span>,<span class="dv">3</span>, <span class="at">by =</span> <span class="dv">1</span>), <span class="at">limits =</span> <span class="dv">10</span><span class="sc">^</span><span class="fu">c</span>(<span class="sc">-</span><span class="dv">3</span>, <span class="dv">3</span>),</span>
+<span id="cb57-9"><a href="#cb57-9" aria-hidden="true" tabindex="-1"></a>                     <span class="at">trans =</span> <span class="st">"log10"</span>, <span class="at">labels =</span> scales<span class="sc">::</span><span class="fu">label_math</span>(<span class="at">format =</span> log10)) <span class="sc">+</span></span>
+<span id="cb57-10"><a href="#cb57-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_color_viridis_d</span>(<span class="st">""</span>, <span class="at">option =</span> <span class="st">"turbo"</span>,  <span class="at">begin =</span> <span class="dv">0</span>, <span class="at">end =</span> <span class="fl">0.8</span>) <span class="sc">+</span></span>
+<span id="cb57-11"><a href="#cb57-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">guides</span>(<span class="at">fill =</span> <span class="fu">guide_legend</span>(<span class="at">ncol =</span> <span class="dv">2</span>)) <span class="sc">+</span></span>
+<span id="cb57-12"><a href="#cb57-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_pubr</span>(<span class="at">base_family =</span> <span class="st">"notosans"</span>) <span class="sc">+</span></span>
+<span id="cb57-13"><a href="#cb57-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">text =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">10</span>),</span>
+<span id="cb57-14"><a href="#cb57-14" aria-hidden="true" tabindex="-1"></a>        <span class="at">legend.position =</span> <span class="fu">c</span>(<span class="dv">0</span>,<span class="dv">0</span>),</span>
+<span id="cb57-15"><a href="#cb57-15" aria-hidden="true" tabindex="-1"></a>        <span class="at">legend.justification =</span> <span class="fu">c</span>(<span class="dv">0</span>,<span class="dv">0</span>),</span>
+<span id="cb57-16"><a href="#cb57-16" aria-hidden="true" tabindex="-1"></a>        <span class="at">legend.background =</span> <span class="fu">element_blank</span>(),</span>
+<span id="cb57-17"><a href="#cb57-17" aria-hidden="true" tabindex="-1"></a>        <span class="at">legend.title =</span> <span class="fu">element_blank</span>(),</span>
+<span id="cb57-18"><a href="#cb57-18" aria-hidden="true" tabindex="-1"></a>        <span class="at">strip.background =</span> <span class="fu">element_blank</span>(),</span>
+<span id="cb57-19"><a href="#cb57-19" aria-hidden="true" tabindex="-1"></a>        <span class="at">strip.text =</span> <span class="fu">element_blank</span>())</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: Transformation introduced infinite values in continuous y-axis</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: Removed 506 rows containing non-finite values (`stat_boxplot()`).</code></pre>
+</div>
+<div class="cell-output-display">
+<p><img src="part05_files/figure-html/unnamed-chunk-42-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    target: function(trigger) {
+      return trigger.previousElementSibling;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  function tippyHover(el, contentFn) {
+    const config = {
+      allowHTML: true,
+      content: contentFn,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start'
+    };
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+</div> <!-- /content -->
+
+
+
+</body></html>

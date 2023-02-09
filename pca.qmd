@@ -1,0 +1,1058 @@
+---
+title: "Principal Component Analysis"
+author: "Greg Nishihara"
+date: today
+date-format: "YYYY / MM / DD"
+slide-number: true
+transition: slide
+progress: true
+fig-align: center
+format: revealjs
+editor: 
+  markdown: 
+    wrap: 72
+bibliography: references.bib
+execute: 
+  cache: true
+---
+
+# Redundancy Analysis
+
+```{r}
+#| include: false
+#| cache: false
+set.seed(2023)
+library(tidyverse)
+library(vegan)
+library(lubridate)
+library(broom)
+library(ggvegan)
+library(lemon)
+library(scales)
+library(showtext)
+library(magick)
+library(ggforce)
+library(patchwork)
+library(plot3D)
+library(ggpubr)
+Sys.setlocale("LC_TIME", "en_US.UTF-8") 
+font_add_google("Noto Sans JP","notosans")
+theme_pubr(base_size = 20, base_family = "notosans") |> theme_set()
+showtext_auto()
+```
+
+```{r}
+make_mat_row = function(x) {
+  x |> format(digits = 2, nsmall =2) |> str_c(collapse = " & ") 
+}
+make_mat_col = function(x) {
+  x |> format(digits = 2, nsmall =2) |> str_c(collapse = " \\\\ ") 
+}
+make_mat = function(x) {
+  x = apply(x, 1, make_mat_row)
+  x = str_c(x, collapse = "\\\\")
+    str_glue("\\begin{{bmatrix}}",
+           "{x}",
+           "\\end{{bmatrix}}")
+}
+
+```
+
+
+Principal component analysis (PCA) is a method to find new variables
+(i.e., principal components) that are linear functions of the original
+variables. The new variable should successively maximizes variance and
+should not be correlated with each other. The principal components are
+found by eigenanalysis [@jolliffe2016; @hotelling1933; @pearson1901].
+
+## Principal component analysis (PCA)
+
+PCA[^1] is the eigenanalysis[^2] of the $p\times p$ variance --
+covariance matrix[^3] $\Sigma$
+
+[^1]: 主成分分析
+
+[^2]: 固有値解析
+
+[^3]: 分散共分散行列
+
+$$
+\mathbf{\Sigma} = \frac{\mathbf{Y_c}^\top \mathbf{Y_c}}{n-1} 
+$$
+
+::: aside
+$\mathbf{Y}_c$ is the column-centered matrix of the orignal data
+$\mathbf{Y}$. $n$ is the number of rows in $\mathbf{Y}_c$.
+:::
+
+## Definition of $\mathbf{Y_c}$
+
+```{r}
+nr = 4
+c1 = sample(1:6, size = nr, replace = TRUE)
+c2 = sample(1:6, size = nr, replace = TRUE)
+c3 = sample(1:6, size = nr, replace = TRUE)
+Y = cbind(c1, c2, c3)
+Ybar = apply(Y, 2, mean)
+Ybar = matrix(Ybar, ncol = ncol(Y), nrow = nr, byrow = TRUE)
+Yc = Y - Ybar
+```
+
+::: {style="font-size:50%;"}
+$$
+\overbrace{`r make_mat(Yc)`}^{\mathbf{Y_c}} =
+\overbrace{`r make_mat(Y)`}^{\mathbf{Y}} -
+\overbrace{`r make_mat(Ybar)`}^{\overline{\mathbf{Y}}}
+$$
+:::
+
+$\mathbf{Y}$ is the original data,
+$\overline{\mathbf{Y}}$ is the column-means of $\mathbf{Y}$.
+
+## Decomposition of $\mathbf{Y_c}$
+
+The eigenanalysis of $\Sigma$ is defined as the following: 
+
+$$
+\frac{\mathbf{Y_c}^\top \mathbf{Y_c}}{n-1}  = \mathbf{\Sigma} = \mathbf{V}_{pca}\mathbf{L}\mathbf{V}_{pca}^\top
+$$
+
+where,
+$\mathbf{V}_{pca} = \begin{bmatrix}\mathbf{v_1} & \mathbf{v_2} & \cdots & \mathbf{v_p}\end{bmatrix}$
+is a matrix of $p$ eigenvectors^[固有ベクトル] and $\mathbf{L}$ is a diagonal matrix of the eigenvalues^[固有値]. 
+Each $\mathbf{v_i}$ is also known as the $i$th principal
+component^[主成分].
+
+## Eigenvalue
+
+The eigenvalue matrix is a $p\times p$ diagonal matrix^[対角行列].
+
+$$
+\mathbf{L} = 
+\begin{bmatrix}
+\lambda_1 & 0 & 0 & \cdots & 0 \\
+0 & \lambda_2  & 0 & \cdots & 0 \\
+\vdots  &   & \ddots  & \   & \vdots  \\
+0 & 0 & 0 & \cdots & \lambda_p \\
+\end{bmatrix}
+$$
+
+::: aside
+Recall that $p$  is the number of variables (i.e., columns) in $\mathbf{Y_c}$
+:::
+
+## Singular value decomposition
+
+Instead of solving
+ $\frac{\mathbf{Y_c}^\top \mathbf{Y_c}}{n-1} = \mathbf{\Sigma} = \mathbf{V}_{pca}\mathbf{L}\mathbf{V}_{pca}^\top$ (i.e., eigenanalysis^[固有値解析]), it
+is easier to do a singular value decomposition (SVD)^[特異値分解].
+
+$$
+\mathbf{Y_c} = \mathbf{U}\mathbf{D}\mathbf{V}_{svd}^\top
+$$ 
+
+## SVD
+
+$$
+\mathbf{Y_c} = \mathbf{U}\mathbf{D}\mathbf{V}_{svd}^\top
+$$ 
+
+$\mathbf{U}$ is the left singular vectors^[左特異値ベクトル] of $\mathbf{Y_c}$ and are the eigenvectors of $\mathbf{Y_c}\mathbf{Y_c}^\top$.
+
+## SVD
+
+$$
+\mathbf{Y_c} = \mathbf{U}\mathbf{D}\mathbf{V}_{svd}^\top
+$$ 
+
+$\mathbf{D}$ is a diagonal matrix of the singular values^[特異値]. 
+
+## SVD
+
+$$
+\mathbf{Y_c} = \mathbf{U}\mathbf{D}\mathbf{V}_{svd}^\top
+$$ 
+
+$\mathbf{V}_{svd}$ is the right singular vectors^[右特異値ベクトル] of $\mathbf{Y_c}$ and are the eigenvectors of $\mathbf{Y_c}^\top\mathbf{Y_c}$.
+
+::: aside
+Note that $\mathbf{V}_{pca} \approx \mathbf{V}_{sda}$.
+:::
+
+## Solving for $\mathbf{L}$
+
+To find the eigenvalue, we must solve for $\mathbf{\Sigma}$.
+
+
+$$
+\mathbf{\Sigma} = \frac{\mathbf{Y_c}^\top \mathbf{Y_c}}{n-1 }
+$$
+
+$$
+\mathbf{Y_c} = \mathbf{U}\mathbf{D}\mathbf{V}_{svd}^\top
+$$
+
+## Substitute $\mathbf{Y_c}$ in to $\mathbf{\Sigma}$
+
+$$
+\begin{aligned}
+\mathbf{\Sigma} &= \frac{\mathbf{Y_c}^\top \mathbf{Y_c}}{n-1 }\\
+& \mathbf{Y_c} = \mathbf{U}\mathbf{D}\mathbf{V}_{svd}^\top \\
+\mathbf{\Sigma} &= \frac{(\mathbf{U}\mathbf{D}\mathbf{V}_{svd}^\top )^\top (\mathbf{D}\mathbf{S}\mathbf{V}_{svd}^\top )}{n-1 } \\
+\mathbf{\Sigma} &= \frac{\mathbf{V}_{svd}\mathbf{D}^\top\mathbf{U}^\top \mathbf{U} \mathbf{D} \mathbf{V}_{svd}^\top}{n-1 }\\
+\end{aligned}
+$$
+
+
+## Substitute $\mathbf{Y_c}$ in to $\mathbf{\Sigma}$ {.smaller}
+
+Since $\mathbf{U}^\top\mathbf{U}=1$,
+
+$$
+\mathbf{\Sigma} = 
+\frac{\mathbf{V}_{svd}\mathbf{D}^\top \mathbf{D} \mathbf{V}_{svd}^\top}{n-1 } = 
+\mathbf{V}_{pca}\mathbf{L}\mathbf{V}_{pca}^\top
+$$
+
+and  $\mathbf{V}^\top\mathbf{V}=1$,
+
+$$
+\mathbf{\Sigma} =
+\frac{\mathbf{D}^\top\mathbf{D}}{n-1} = \mathbf{L}
+$$
+
+or more simply, $\lambda_i = \frac{d_i^2}{n-1}$.
+
+## Visualize what we want to do {.smaller}
+
+```{r}
+set.seed(2023)
+SIGMA = cov(iris[1:50, c(1,2)])
+MU = c(0, 0)
+Y = MASS::mvrnorm(50, mu = MU, Sigma = SIGMA)
+colnames(Y) = c("O1", "O2")
+svdout = svd(Y)
+ab = svdout$d
+ab = ab^2 / (nrow(Y) -1) * 5
+
+
+nm = dim(Y)
+rotmat =  1 * svdout$v 
+
+Z = Y %*% rotmat
+
+slope = rotmat[2,1] / rotmat[1,1]
+dset = bind_cols(as_tibble(Y), as_tibble(Z))
+col = viridis::viridis(6, end = 0.9) |> rev()
+rot_text = sprintf("'Rotation angle : '*theta == %0.1f*degree", (acos(rotmat[2,2]) / pi * 180 ))
+
+dset = 
+  bind_cols(as_tibble(Y), as_tibble(Z)) |> 
+  mutate(start0   = atan2(O2, O1),
+         end0     = atan2(V2, V1),
+         r = sqrt(O2^2 + O1^2))
+```
+
+```{r}
+#| fig-align: center
+ggplot(dset) + 
+  geom_abline(slope = slope, color = col[1], linetype = "dashed") +
+  geom_abline(slope = 0, color = col[2], linetype = "dashed") +
+  geom_ellipse(aes(x0 = 0, y0 = 0, 
+                   a = ab[1], b = ab[2],
+                   angle = acos(rotmat[2,2]), 
+                   color = "Original"), alpha = 0.2) +
+  geom_ellipse(aes(x0 = 0, y0 = 0, 
+                   a = ab[1], b = ab[2],
+                   angle = 0,
+                   color = "Rotated"),  alpha = 0.2) +
+  geom_arc(aes(x0 = 0, y0 = 0, r = 1, 
+               start =  acos(rotmat[2,2]),
+               end   =  pi/2), 
+           alpha = 0.5,
+           arrow = arrow(angle = 10, length = unit(10, "pt"))) +
+  geom_point(aes(x = V1, y = V2, color = "Rotated"), size = 2) +
+  geom_point(aes(x = O1, y = O2, color = "Original"), size = 2) +
+  scale_color_manual(values = col) +
+  scale_fill_manual(values = col) +
+  scale_x_continuous("Major axis") +
+  scale_y_continuous("Minor axis") +
+  annotate("text", x = 0, y = 1.25,
+           family = "notosans", 
+           label = rot_text, parse = T) +
+  coord_fixed(ylim = c(-1.5,1.5), xlim = c(-1.5, 1.5)) +
+  theme(legend.title = element_blank(),
+        legend.position = c(0, 0),
+        legend.justification = c(0, 0),
+        legend.background = element_blank())
+```
+
+The rotation angle $\theta$ can also be determined from the rotation
+vector as follows:
+$\mathbf{V}_\text{svd} = \begin{bmatrix} \cos\theta & -\sin\theta\\ \sin\theta & \cos\theta\\ \end{bmatrix}$.
+
+## Computation mechanics
+
+```{r}
+svdout = svd(Yc)
+d = diag(svdout$d) |> round(digits = 3)
+u = svdout$u |> round(digits = 3)
+v = svdout$v |> round(digits = 3) |> t()
+ud = u %*% d
+```
+
+::: {style="font-size:50%;"}
+Apply SVD to the previous example results in the following equation.
+
+$$
+\overbrace{`r make_mat(Yc)`}^{\mathbf{Y_c}} = 
+\overbrace{`r make_mat(u)` }^{\mathbf{U}}\times
+\overbrace{`r make_mat(d)` }^{\mathbf{D}}\times
+\overbrace{`r make_mat(v)` }^{\mathbf{V}^\top}
+$$
+:::
+
+```{r}
+#| fig-align: center
+image_read_svg("~/Pictures/Images/svd01.svg") |> 
+  image_resize(geometry = "1000x")
+```
+
+## Example 1: determine $\mathbf{Y_c}$
+
+Calculate the centered data matrix.
+
+```{r}
+#| echo: true
+#| output-location: column
+Y = iris[1:50, 1:2]
+colnames(Y) = colnames(iris)[1:2] |> 
+  str_remove_all("[a-z|\\.]+") 
+nm = dim(Y)
+Ybar = apply(Y, 2, mean)
+Ybar = matrix(Ybar, ncol = nm[2], 
+              nrow = nm[1],
+              byrow = TRUE)
+Yc = Y - Ybar
+Yc |> head()
+```
+
+## Example 1: SVD
+
+Calculate the eigenvectors, eigenvalues, and singular values using
+`svd()`.
+
+```{r}
+#| echo: true
+svdout = svd(Yc)
+umat = svdout$u  # Left singular vectors
+vmat = svdout$v  # Right singular vectors (i.e., eigenvectors)
+d = svdout$d     # Singular values
+n = nm[1]        # Data rows
+p = nm[2]        # Data columns (i.e., variables)
+```
+
+## Example 1: eigenvalues
+
+Recall that,
+
+$$
+\lambda_i = \frac{d_i^2} {n-1}
+$$
+
+```{r}
+#| echo: true
+# lambda = ((diag(d) %*% t(diag(d))) / (n - 1)) |> diag()
+lambda = d^2 / (n - 1)
+```
+
+Therefore, the eigenvalues are
+`r str_c(format(lambda, digits = 3), collapse = " and ")`.
+
+## Example 1: eigenvectors
+
+```{r}
+#| echo: true
+rownames(vmat) = colnames(Yc)
+colnames(vmat) = str_glue("PC{1:p}")
+```
+
+The eigenvectors are:
+
+```{r}
+#| echo: true
+#| output-location: column
+vmat
+```
+
+## Example 1: mechanics of rotating $\mathbf{Y_c}$
+
+```{r}
+#| fig-align: center
+slope = apply(vmat, 2, \(x) x[2]/x[1])
+theta = pi/2 - (vmat[2,2] |> acos())
+rot = (vmat[1,1] |> acos()) / pi * 180
+rot = 90 - (vmat[2,2] |> acos()) / pi * 180 # In R plots, 0deg is at the top.
+rotlab = paste("'Rotation'==", format(rot, digits = 1, nsmall = 1), "*degree~", "'clock wise'")
+slope = tibble(slope, axs = c("Axis 1", "Axis 2"))
+rotmat = function(theta) {
+  c(cos(theta), sin(theta), -sin(theta), cos(theta)) |> 
+    matrix(ncol = 2)
+}
+theta0 = sort(c(acos(vmat[2,2]), seq(0, pi/2, length = 25)))
+slope0 = tan(theta0)
+
+dset = tibble(theta = theta0) |> 
+  mutate(variances = map(theta, function(x, data) {
+    x = rotmat(x)
+    z = as.matrix(data) %*% x
+    z = apply(z, 2, var)
+    names(z) = c("Major", "Minor") 
+    as_tibble(t(z))
+  }, data = Yc)) |> 
+  unnest(variances) |> 
+  pivot_longer(-theta)
+
+p1 =  ggplot(as_tibble(Yc)) +
+  geom_abline(intercept = rep(0, length(slope0)), 
+              slope = slope0, color = "white") +
+  geom_arc(aes(x0 = 0, y0 = 0, r = 1.4, start = 0, end = theta),
+           arrow = arrow(15, unit(10, "pt"))) +
+  geom_vline(xintercept = 0, linetype = "dashed", alpha = 0.5) +
+  geom_hline(yintercept = 0, linetype = "dashed", alpha = 0.5) +
+  geom_point(aes(x = SL, y = SW)) +
+  geom_abline(aes(intercept = 0, slope = slope, color = axs), data = slope) +
+  annotate("text", x = 0, y = 1.55, hjust = 0.5, vjust = 1,
+           label = rotlab, parse = T)  +
+  guides(color = guide_legend(override.aes = list(linewidth = 1))) +
+  scale_color_viridis_d(end  = 0.8) +
+  coord_equal(xlim = c(-1.5, 1.5), ylim = c(-1.5, 1.5)) +
+  theme(legend.background = element_blank(),
+        legend.title = element_blank(),
+        legend.position = c(0, 1),
+        legend.justification = c(0,1))
+
+p2 = ggplot(dset) + 
+  geom_line(aes(x = theta/pi*180, y = value, color = name)) +
+  geom_vline(xintercept = 180*acos(vmat[2,2])/pi) +
+  scale_color_viridis_d(end  = 0.8) +
+  scale_x_continuous(parse(text = "'Rotation angle'~(degree)"),
+                     limits = c(0, 90), breaks = seq(0, 90, length = 5)) +
+  scale_y_continuous("Variance", limits = c(0, 0.3)) +
+  theme(legend.background = element_blank(),
+        legend.title = element_blank(),
+        legend.position = c(0, 1),
+        legend.justification = c(0,1))
+
+p1 + p2 
+
+```
+
+::: aside
+The eigenvectors indicate the direction of the vectors that maximizes
+the variance of each axis. In this case, maximizing the variance in one
+axis lead to a minimization in the other.
+:::
+
+## Example 1:  derived information {.smaller}
+
+The total variance before rotation is:
+
+```{r}
+#| echo: true
+#| output-location: column
+diag(var(Yc)) |> sum()
+```
+
+and should be the same as the total inertia (i.e., variance) after rotation:
+
+```{r}
+#| echo: true
+#| output-location: column
+sum(lambda)
+```
+
+
+The variance of `SL` and `SW` is: 
+
+```{r}
+#| echo: true
+#| output-location: column
+diag(var(Yc))
+```
+
+
+## Example 1:  more derived information {.smaller}
+
+The relative importance of `SL` and `SW` is:
+```{r}
+#| echo: true
+#| output-location: column
+diag(var(Yc)) / sum(diag(var(Yc)))
+```
+
+
+However, the variance of the principal components and their relative importance is different:
+
+```{r}
+#| echo: true
+#| output-location: column
+
+lambda # The variance
+importance = lambda / sum(lambda)
+names(importance) = colnames(vmat)
+importance # The relative importance
+```
+
+::: aside
+The relative importance indicates the proportion of variation explained
+by the principal component axis. 
+Conceptually, $\mathbf{Y_c}$ is rotated until each component is maximized successively.
+:::
+
+## Example 1: scores and loadings
+
+**Scores**^[主成分得点: あるデータ点を主成分ベクトルで表現した場合の値] are the data points projected onto the principal component axes.
+
+```{r}
+#| echo: true
+# There are a total of n = 50 scores.
+scores = umat %*% diag(d)
+colnames(scores) = str_c("PC", 1:ncol(scores))
+scores |> head()
+```
+
+## Example 1: scores and loadings {.smaller}
+
+**Loadings** (rescaled loadings)^[主成分負荷量: ある主成分ベクトルのデータ点に対する重み] indicates the relationship of the variable with the principal component axes.
+
+```{r}
+#| echo: true
+#| output-location: column
+loadings = (vmat %*% diag(d)) / sqrt(n-1)
+colnames(loadings) = str_glue("PC{1:p}")
+loadings
+```
+
+Therefore, for variable `SL`, the loadings on `PC1` and `PC2` are
+`r str_c(format(loadings[1,], digits = 3), collapse = " and ")`,
+respectively. The cosine of the angle between loadings are their correlation.
+
+```{r}
+#| echo: true
+#| output-location: column
+SL = loadings[1, ]
+SW = loadings[2, ]
+L1 = atan2(y = SL[2], x = SL[1])
+L2 = atan2(y = SW[2], x = SW[1])
+theta = abs(L1 - L2)
+cos(theta)
+```
+
+## Example 2: `vegan::rda()` {.smaller}
+
+First run the analysis with both `rda()` and `svd().
+```{r}
+#| echo: true
+#| output-location: column
+rdaout = rda(Yc)
+svdout = svd(Yc)
+```
+
+**Left singular matrix**^[左特異値ベクトル]
+```{r}
+#| echo: true
+#| output-location: column
+#| results: hold
+svdout$u |> head(n = 2)     # SDV result
+rdaout$CA$u |> head(n = 2)  # RDA result
+```
+
+**Right singular matrix**^[右特異値ベクトル]
+```{r}
+#| echo: true
+#| output-location: column
+#| results: hold    
+svdout$v |> head(n = 2)    # SDV result
+rdaout$CA$v |> head(n = 2) # RDA result
+```
+
+## Example 2: `vegan::rda()`
+
+**Eigenvalues**
+```{r}
+#| echo: true
+#| output-location: column
+#| results: hold
+(svdout$d^2)/(n-1) # SDV result
+rdaout$CA$eig      # RDA result
+```
+
+## Example 2: similar output {.smaller}
+
+```{r}
+#| echo: true
+rdaout |> summary(display = NA)
+```
+
+::: {.absolute top=200 left=500 width="500" height="500"}
+
+- Note the total inertia is the sum of the eigenvalues `r format(sum(lambda),digits=3) `.
+- The proportion explained is the ratio of the eigenvalues to the sum of the eigenvalues $(\lambda_i / \sum{\lambda_i})$.
+
+:::
+
+::: aside
+At this stage numeric results from `svd()` and `rda()` are equivalent.
+However, the scores and loadings are scaled differently.
+:::
+
+
+## Example 2: `vegan`-like analysis {.smaller}
+
+In `vegan::rda()`, the **scores** are scaled according to the following:
+
+-   **scaling = 1:**^[Interpret spatial patterns.] $C\sqrt{\lambda_i / \sum\lambda_i}$
+-   **scaling = 2:**^[Interpret vector directions and angles.] $C$
+
+The constant term is $C = \sqrt[4]{(n -1)\sum{\lambda_i}}$.
+
+See the decision-vegan.pdf vignette for details.
+
+```{r}
+#| echo: true
+const = ((n - 1) * sum(lambda))^{1/4}
+scale1 = sqrt(lambda / sum(lambda) ) * const
+scale2 = const
+umat1 = umat %*% diag(scale1)
+umat2 = umat * scale2
+vmat1 = vmat %*% diag(scale1)
+vmat2 = vmat * scale2
+```
+
+## Example 2: scaling = 1 and 2 {.smaller}
+
+**Scaling 1**
+
+$$
+\mathbf{U}_1 =
+\mathbf{U} \times 
+\begin{bmatrix}
+\frac{\sqrt{\lambda_1}}{\sum\lambda_k} & 0 & 0 & \cdots & 0\\
+0 & \frac{\sqrt{\lambda_2}}{\sum\lambda_k} & 0 & \cdots & 0\\
+0 & 0 & \ddots & \cdots & 0 \\
+0 & 0 & 0 & \cdots  & \frac{\sqrt{\lambda_k}}{\sum\lambda_k} \\
+\end{bmatrix} \times
+\sqrt[4]{(n -1)\sum{\lambda_k}}
+$$
+
+**Scaling 2**
+
+$$
+\mathbf{U}_2 = \mathbf{U} \times 
+\sqrt[4]{(n -1)\sum{\lambda_k}}
+$$
+
+$\mathbf{U}_1$ and $\mathbf{U}_2$ are the scaled scores.
+
+
+## Example 2: no scaling {.smaller}
+
+::: columns
+::: {.column width="30%"}
+
+```{r}
+#| echo: false
+#| fig-width: 6
+#| fig-height: 6
+par(mar = c(5,4,1,1))
+limits = c(-0.5, 0.5)
+tmp = scores(rdaout, scaling = "none", display = "species")
+tmp = tmp %*% diag(1/diag(sqrt(tmp %*% t(tmp)))) / 2
+scores(rdaout, scaling = "none", display = "sites") |> 
+  plot(cex = 1.5, xlim = limits, ylim = limits)
+points(umat[,1], umat[,2], pch = 19, col = "blue", cex = 0.5)
+segments(c(0,0), c(0,0), tmp[,1], tmp[,2])
+text(tmp[,1], tmp[,2], labels = rownames(tmp))
+```
+:::
+::: {.column width="70%"}
+The unscaled principal components are in the matrix $\mathbf{U}$.
+The black circles indicate the `vegan::rda()` output and the colored
+dots indicate the results based on the SVD.
+:::
+:::
+
+
+```{r}
+#| echo: true
+#| eval: false
+limits = c(-0.5, 0.5)
+tmp = scores(rdaout, scaling = "none", display = "species")
+tmp = tmp %*% diag(1/diag(sqrt(tmp %*% t(tmp)))) / 2
+scores(rdaout, scaling = "none", display = "sites") |> 
+  plot(cex = 1.5, xlim = limits, ylim = limits)
+points(umat[,1], umat[,2], pch = 19, col = "blue", cex = 0.5)
+segments(c(0,0), c(0,0), tmp[,1], tmp[,2])
+text(tmp[,1], tmp[,2], labels = rownames(tmp))
+```
+
+## Example 2: scaling 1 {.smaller}
+
+::: columns
+::: {.column width="30%"}
+
+```{r}
+#| echo: false
+#| fig-width: 6
+#| fig-height: 6
+par(mar = c(5,4,1,1))
+limits = c(-1, 1)
+tmp = scores(rdaout, scaling = 1, display = "species")
+tmp = tmp %*% diag(1/diag(sqrt(tmp %*% t(tmp))))
+scores(rdaout, scaling = 1, display = "sites") |> 
+  plot(cex = 1.5, xlim = limits, ylim = limits)
+points(umat1[,1], umat1[,2], pch = 19, col = "blue", cex = 0.5)
+segments(c(0,0), c(0,0), tmp[,1], tmp[,2])
+text(tmp[,1], tmp[,2], labels = rownames(tmp))
+```
+:::
+::: {.column width="70%"}
+The scaled principal components are in the matrix
+$\mathbf{U}_1$.
+The black circles indicate the `vegan::rda()` output and the colored
+dots indicate the results based on the SVD.
+Distances between dots indicate approximate euclidean distances $(d = \sqrt{x^2+y^2})$^[ユークリッド距離].
+:::
+:::
+
+```{r}
+#| echo: true
+#| eval: false
+limits = c(-1, 1)
+tmp = scores(rdaout, scaling = 1, display = "species")
+tmp = tmp %*% diag(1/diag(sqrt(tmp %*% t(tmp))))
+scores(rdaout, scaling = 1, display = "sites") |> 
+  plot(cex = 1.5, xlim = limits, ylim = limits)
+points(umat1[,1], umat1[,2], pch = 19, col = "blue", cex = 0.5)
+segments(c(0,0), c(0,0), tmp[,1], tmp[,2])
+text(tmp[,1], tmp[,2], labels = rownames(tmp))
+```
+
+
+## Example 2: scaling 2 {.smaller}
+
+::: columns
+::: {.column width="30%"}
+
+```{r}
+#| echo: false
+#| fig-width: 6
+#| fig-height: 6
+par(mar = c(5,4,1,1))
+limits = c(-1.5, 1.5)
+tmp = scores(rdaout, choices = c(1,2), scaling = 2, display = "species")
+# tmp = tmp %*% diag(1/diag(sqrt(tmp %*% t(tmp)))) 
+scores(rdaout, scaling = 2, display = "sites") |> 
+  plot(cex = 1.5, xlim = limits, ylim = limits)
+points(umat2[,1], umat2[,2], pch = 19, col = "blue", cex = 0.5)
+segments(c(0,0), c(0,0), tmp[,1], tmp[,2])
+text(tmp[,1], tmp[,2], labels = rownames(tmp))
+```
+:::
+::: {.column width="70%"}
+The scaled principal components are in the matrix
+$\mathbf{U}_2$.
+The black circles indicate the `vegan::rda()` output and the colored
+dots indicate the results based on the SVD.
+Angles between vectors (radians) indicate correlation.
+:::
+:::
+
+```{r}
+#| echo: true
+#| eval: false
+limits = c(-1.5, 1.5)
+tmp = scores(rdaout, choices = c(1,2), scaling = 2, display = "species")
+tmp = tmp %*% diag(1/diag(sqrt(tmp %*% t(tmp)))) 
+scores(rdaout, scaling = 2, display = "sites") |> 
+  plot(cex = 1.5, xlim = limits, ylim = limits)
+points(umat2[,1], umat2[,2], pch = 19, col = "blue", cex = 0.5)
+segments(c(0,0), c(0,0), tmp[,1], tmp[,2])
+text(tmp[,1], tmp[,2], labels = rownames(tmp))
+```
+
+## Example 3: unscaled 3D plot
+
+```{r}
+Y = iris[, 1:3]
+Species = iris$Species
+colnames(Y) = colnames(iris)[1:3] |> str_remove_all("[a-z|\\.]+") 
+nm = dim(Y)
+Ybar = apply(Y, 2, mean)
+Ybar = matrix(Ybar, ncol = nm[2], nrow = nm[1], byrow = TRUE)
+Yc = Y - Ybar
+rdaout = rda(Yc)
+lambda = rdaout$CA$eig
+vmat = rdaout$CA$v
+```
+
+```{r}
+#| fig-align: center
+#| fig-width: 10
+#| fig-height: 10
+umat = scores(rdaout, choices = 1:3, scaling = 0, display = "sites")
+vmat = scores(rdaout, choices = 1:3, scaling = 0, display = "species")
+axislabels = str_glue("PC {1:3}")
+o = rep(0,3)
+limits = c(-1,1)*0.8
+multiplier = 1.1
+colors = viridis::viridis(5, 1, 0, 0.8)
+par(mar = c(3,0,0,0))
+scatter3D(umat[,1], umat[,2], umat[,3], 
+          pch = 19, 
+          phi = 30, theta = 25, 
+          colvar = as.numeric(Species),
+          col = colors[3:5], 
+          clim = c(1, 3),
+          bty = "g", 
+          colkey = list(at = c(1.33, 2, 2.66), 
+                        side = 1,
+                        addlines = TRUE,
+                        labels = levels(Species),
+                        length = 0.25, width = 1),
+          ticktype = "detailed",
+          xlim = limits, ylim = limits, zlim = limits, 
+          xlab = axislabels[1], ylab = axislabels[2], zlab = axislabels[3])
+
+arrows3D(o, o, o, vmat[,1], vmat[,2], vmat[,3], col = colors[1], add = TRUE)
+text3D(multiplier*vmat[,1], multiplier*vmat[,2], multiplier*vmat[,3] , colnames(Yc), add = TRUE)
+```
+
+## Example 3: scaled 3D plot
+
+```{r}
+#| layout-ncol: 2
+#| fig-cap: 
+#|   - "Scaling = 1"
+#|   - "Scaling = 2"
+#| fig-width: 10
+#| fig-height: 10
+#| out-width: "100%"
+umat = scores(rdaout, choices = 1:3, scaling = 1, display = "sites")
+vmat = scores(rdaout, choices = 1:3, scaling = 1, display = "species")
+vmat2 = 0.25 * vmat
+axislabels = str_glue("PC {1:3}")
+o = rep(0,3)
+limits = c(-1,1) * 1
+multiplier = 1.1
+colors = viridis::viridis(5, 1, 0, 0.8)
+par(mar = c(3,0,0,0))
+scatter3D(umat[,1], umat[,2], umat[,3], 
+          pch = 19, 
+          phi = 30, theta = 25, 
+          colvar = as.numeric(Species),
+          col = colors[3:5], 
+          clim = c(1, 3),
+          bty = "g", 
+          colkey = list(at = c(1.33, 2, 2.66), 
+                        side = 1,
+                        addlines = TRUE,
+                        labels = levels(Species),
+                        length = 0.25, width = 1),
+          ticktype = "detailed",
+          xlim = limits, ylim = limits, zlim = limits, 
+          xlab = axislabels[1], ylab = axislabels[2], zlab = axislabels[3])
+
+arrows3D(o, o, o, vmat2[,1], vmat2[,2], vmat2[,3], col = colors[1], add = TRUE)
+text3D(multiplier*vmat2[,1], multiplier*vmat2[,2], multiplier*vmat2[,3] , colnames(Yc), add = TRUE)
+
+umat = scores(rdaout, choices = 1:3, scaling = 2, display = "sites")
+vmat = scores(rdaout, choices = 1:3, scaling = 2, display = "species")
+vmat2 = 0.5 * vmat
+axislabels = str_glue("PC {1:3}")
+o = rep(0,3)
+limits = c(-1,1) * 1.5
+multiplier = 1.1
+colors = viridis::viridis(5, 1, 0, 0.8)
+par(mar = c(3,0,0,0))
+scatter3D(umat[,1], umat[,2], umat[,3], 
+          pch = 19, 
+          phi = 30, theta = 25, 
+          colvar = as.numeric(Species),
+          col = colors[3:5], 
+          clim = c(1, 3),
+          bty = "g", 
+          colkey = list(at = c(1.33, 2, 2.66), 
+                        side = 1,
+                        addlines = TRUE,
+                        labels = levels(Species),
+                        length = 0.25, width = 1),
+          ticktype = "detailed",
+          xlim = limits, ylim = limits, zlim = limits, 
+          xlab = axislabels[1], ylab = axislabels[2], zlab = axislabels[3])
+
+arrows3D(o, o, o, vmat2[,1], vmat2[,2], vmat2[,3], col = colors[1], add = TRUE)
+text3D(multiplier*vmat2[,1], multiplier*vmat2[,2], multiplier*vmat2[,3] , colnames(Yc), add = TRUE)
+```
+
+## Example 3: summary output {.smaller}
+
+```{r}
+#| echo: true
+rdaout |> summary(display = NA)
+```
+
+`PC1` explains 92.46 % of the inertia, therefore most of the variation occurs along the `PC1` axis.
+
+## Example 4: correlations among vectors
+
+The correlation between two vectors is determined as
+
+$$
+\begin{aligned}
+\cos\theta &= \frac{v_1\cdot v_2}{\lVert v_1 \rVert \lVert v_2 \rVert} \\
+\sin\theta &= \frac{\lVert v_1\times v_2 \rVert}{\lVert v_1 \rVert \lVert v_2 \rVert} \\
+\tan\theta &= \frac{\lVert v_1\times v_2\rVert}{v_1 \cdot v_2 } \\
+\end{aligned}
+$$
+
+## Example 3: problem
+
+::: columns
+::: {.column width="40%"}
+The correlation between two vectors is the cosine of the angle between the vectors. 
+
+$$
+\cos\theta = \frac{v_1\cdot v_2}{\lVert v_1 \rVert \lVert v_2 \rVert}
+$$
+
+```{r}
+sl = vmat["SL", ] 
+sw = vmat["SW", ]
+v1norm = sqrt(t(sl) %*% sl) |> as.numeric()
+v2norm = sqrt(t(sw) %*% sw) |> as.numeric()
+top = t(sl) %*% sw
+theta = (t(sl) %*% (sw) / (v1norm * v2norm)) |> acos()
+thetad = theta / pi * 180
+```
+:::
+::: {.column width="60%"}
+```{r}
+#| fig-cap: Determine the angle of the shaded region.
+#| out-width: "100%"
+par(mar = c(0,0,0,0))
+polygon3D(c(0, 0.8*sl[1], 0.8*sw[1]),
+          c(0, 0.8*sl[2], 0.8*sw[2]),
+          c(0, 0.8*sl[3], 0.8*sw[3]), xlim = c(-2, 2), ylim = c(-2,2), zlim = c(-2,2))
+arrows3D(0,0,0,sl[1], sl[2], sl[3],add =T)
+arrows3D(0,0,0,sw[1], sw[2], sw[3], add = T)
+```
+:::
+:::
+
+## Example 3: partial solution {.smaller}
+
+$$
+\cos\theta = \frac{v_1\cdot v_2}{\lVert v_1 \rVert \lVert v_2 \rVert}
+$$
+
+$$
+\begin{aligned}
+v_1 &= \begin{bmatrix} `r make_mat_row(sl)` \end{bmatrix} \\
+v_2 &= \begin{bmatrix} `r make_mat_row(sw)` \end{bmatrix} \\
+\lVert v_1\rVert &= \sqrt{\begin{bmatrix} `r make_mat_row(sl)` \end{bmatrix} \begin{bmatrix} `r make_mat_col(sl)` \end{bmatrix}}  = `r sprintf("%0.2f", v1norm)` \\
+\lVert v_2\rVert &= \sqrt{\begin{bmatrix} `r make_mat_row(sw)` \end{bmatrix} \begin{bmatrix} `r make_mat_col(sw)` \end{bmatrix}}  = `r sprintf("%0.2f", v2norm)` \\
+\end{aligned}
+$$
+
+## Example 3: final solution {.smaller}
+
+$$
+\cos\theta = \frac{\begin{bmatrix} `r make_mat_row(sl)` \end{bmatrix} \begin{bmatrix} `r make_mat_col(sw)` \end{bmatrix}}{`r sprintf("%0.2f", v1norm)` \times `r sprintf("%0.2f", v2norm)`}
+$$
+
+
+$$
+\cos\theta = \frac{`r sprintf("%0.2f", top)`}{`r sprintf("%0.2f", v1norm)` \times`r sprintf("%0.2f", v2norm)`} = `r sprintf("%0.2f", top / (v1norm * v2norm))`
+$$
+The correlation between the two vectors is `r sprintf("%0.2f", top / (v1norm * v2norm))`.
+The angle between the two vectors is $\cos^{-1}(\text{`r sprintf("%0.4f", top / (v1norm * v2norm))`}) =$ `r sprintf("%0.4f", theta)` radians, or `r sprintf("%0.4f", thetad)`${}^\circ$.
+
+## Example 3: correlations in R {.smaller}
+
+```{r}
+#| echo: true
+calc_costheta = function(v1, v2) {
+  v1 = matrix(as.numeric(v1), ncol = 3)
+  v2 = matrix(as.numeric(v2), ncol = 1)
+  bot = sqrt(v1 %*% t(v1)) * sqrt(t(v2)  %*% v2)
+  top = v1 %*% v2
+  costheta = (top/bot)
+  costheta
+}
+```
+
+Isolate the vectors.
+
+```{r}
+#| echo: true
+sl = vmat["SL", ]
+sw = vmat["SW", ]
+pl = vmat["PL", ]
+```
+
+Calculate $\cos\theta$. 
+
+```{r}
+#| echo: true
+#| results: hold
+#| output-location: column
+calc_costheta(sl, sw)
+calc_costheta(sl, pl)
+calc_costheta(pl, sw)
+```
+
+It is easier to calculate the correlations on the original centered data.
+
+```{r}
+#| echo: true
+#| output-location: column
+cor(Yc)
+```
+
+## Example 3: variable -- PC correlations {.smaller}
+
+To determine the correlations of each variable with respect to the principal component axes, use the function.
+
+```{r}
+#| echo: true
+#| output-location: column
+I = diag(1, 3, 3)
+cc = \(x) {calc_costheta(sl, I[x, ])}
+pcsl = sapply(1:3, cc)
+pcsw = sapply(1:3, cc)
+pcpl = sapply(1:3, cc)
+matrix(c(pcsl, pcsw, pcpl), ncol = 3,
+       dimnames = list(str_glue("PC{1:3}"), 
+                       c("SL", "SW", "PL")))
+```
+
+
+The `SL` and `PL` vectors are positively correlated with `PC1` (`r sprintf("%0.4f", pcsl[1])` and `r sprintf("%0.4f", pcpl[1])`, respectively).
+Whereas the `SW` vector is negatively correlated with `PC2` (`r sprintf("%0.4f", pcsw[2])`).
+
+
+
+
+
+
+
+```{r}
+```
+
+## References
+
+https://qiita.com/horiem/items/71380db4b659fb9307b4
+
+https://stats.stackexchange.com/questions/141085/positioning-the-arrows-on-a-pca-biplot

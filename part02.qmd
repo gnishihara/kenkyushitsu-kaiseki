@@ -1,0 +1,100 @@
+---
+title: "R 関数の基本"
+---
+
+# R 関数の基本
+
+関数をつくることにより、`r fontawesome::fa(name = "r-project")` での作業がとても楽になります。
+コードを繰り返して使うなら関数をつくりましょう。
+
+
+## 関数の作り方
+
+**R の関数に 2 つのパーツがあります。**
+
+* **Arguments**: 引数
+* **Code block**: 関数のコードは `{}` の間に納めます。
+
+```{r}
+#| error: true
+#| 
+hello = function(x) {
+  if(!is.character(x)) {
+    stop("Please provide a character string.")
+  }
+  sprintf("Hello %s!", x)
+}
+
+hello(214)
+hello("Yukio")
+```
+
+
+## 関数のスコープ (scope)（１）
+
+関数の中に作ったものは、関数の中にしか存在しない。
+
+```{r}
+#| echo: false
+set.seed (2021)
+```
+
+```{r}
+#| echo: true
+sumofsquare = function(x) {
+  ss = (x - mean(x))^2 # 関数の外から見れない
+  ssq = sum(ss) # 関数の外から見れない
+  ssq # 関数の外に返す
+}
+data = sample(1:10, 5, replace = TRUE)
+data
+value = sumofsquare(data)
+value
+```
+
+
+## 関数のスコープ (scope)（２）
+
+ところが、関数は外の環境に存在するものは見れます。
+このように関数を作ると、バグを起こしやすいので、注意。
+
+```{r, error = TRUE}
+#| echo: true
+sumofsquare = function(x) {
+  ss = (s - mean(s))^2 # s は関数の外にあるが、関数の引数ではない
+  ssq = sum(ss) # 関数の外から見れない
+  ssq # 関数の外に返す
+}
+s = sample(100:1000, 5, replace = TRUE)
+s
+data = sample(1:10, 5, replace = TRUE)
+data
+value = sumofsquare(data)
+value　# これは s の平方和です。
+```
+
+
+## 諸略した関数の書き方と無名関数 (anonymous function)
+
+関数は次のようにもかけます。
+`\(x){...}` はラムダ式 (lambda expression) とも呼ばれています。
+
+```{r}
+add_one = \(x) { x + 1}
+add_one(5)
+```
+
+無名関数をつくるときに便利な書き方です。
+
+```{r}
+# どちれも無名関数ですが、２つ目の関数がはラムダ式です。
+z = 1:5
+sapply(z, FUN = function(s){s^2})
+sapply(z, FUN = \(s){s^2})
+```
+
+
+
+
+
+

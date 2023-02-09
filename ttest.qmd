@@ -1,0 +1,1354 @@
+---
+title: "2群の比較：t 検定"
+subtitle: Comparing two groups with the t-test
+format: 
+  html:
+    html-math-method: katex
+reference-location: margin
+citation-location: margin
+---
+
+```{r}
+#| cache: false
+#| echo: false
+#| message: false
+#| warnings: false
+library(tidyverse)
+library(flextable)
+library(magick)
+library(furrr)
+library(broom)
+options(mc.cores = 8)
+plan(multisession)
+```
+
+
+```{r}
+#| echo: false
+set.seed(2021)
+nA = 6
+nB = 6
+meanA = 20
+meanB = 22
+sigmaA = 1
+sigmaB = 1
+groupA = rnorm(nA, meanA, sigmaA) %>% round(., 1)
+groupB = rnorm(nB, meanB, sigmaB) %>% round(., 1)
+dset = tibble(g = c("A", "B"), data = list(groupA, groupB)) %>% 
+  unnest(data)
+se = function(x) {sd(x) / sqrt(length(x))}
+```
+
+
+ノコギリモク (*Sargassum macrocarpum*) は褐藻類ホンダワラ属の海藻です。
+通年藻場を形成する海藻であり、海洋動物の住処、餌場、炭素固定の場として機能しています。
+かつて、九州に広く分布していましたが、温暖化に伴う環境変動と食害によって、局地的に絶滅しています。
+ここでは、ノコギリモクの幼体を資料として、2軍における解析手法を紹介します。
+
+では、地点 A と B のノコギリモク幼体の幅は @tbl-nokotable1 の通りです。
+各地点から合計６個体採取しました。
+
+::: {.grid}
+::: {.g-col-6}
+
+```{r}
+#| label: fig-nokoplot1
+#| echo: false
+#| fig-cap: ロープの幅は 6 mm なので、幼体の幅は約 20 mm です。
+
+folder = rprojroot::find_rstudio_root_file("images")
+file = dir(folder, full = TRUE) %>% str_subset("juvenile.jpg")
+img = image_read(file) 
+img %>% image_crop("1500x1500+1700+750") %>% 
+  image_annotate(text = "Juvenile", gravity = "southwest",
+                 location = "+50+100",
+                 weight = 700,
+                 color = "white", font = "Noto Sans", size = 80) %>% 
+  image_annotate(text = "Sargassum macrocarpum", gravity = "southwest",
+                 location = "+390+100",
+                 weight = 700,
+                 color = "white", font = "Noto Sans",
+                 style = "italic",
+                 size = 80) %>% 
+  image_annotate(text = "ノコギリモク", gravity = "northwest",
+                 weight = 700,
+                 boxcolor = "white",
+                 color = "black", font = "Noto Sans CJK JP",
+                 size = 80)
+```
+
+:::
+::: {.g-col-6}
+
+```{r}
+#| label: tbl-nokotable1
+#| tbl-cap: ノコギリモク (*Sargassum macrocarpum*) 幼体の幅 (mm).
+#| echo: false
+dset %>% 
+  pivot_wider(names_from = g,
+              values_from = data,
+              values_fn = list) %>% 
+  unnest(everything()) %>% 
+  mutate(sample = 1:n(), .before = A) %>% 
+  flextable() |> 
+  set_header_labels(sample = "Sample", A = "Site A", B = "Site B") |> 
+  set_table_properties(layout = "autofit", width = 0.9)
+```
+
+:::
+:::
+
+::: {.grid}
+::: {.g-col-6}
+
+```{r}
+#| echo: false
+#| label: fig-nokoplot2
+#| fig-cap: 地点毎のノコギリモク幼体の幅
+#| fig-width: 4
+#| fig-height: 4
+
+ggplot(dset) + 
+  geom_point(aes(x = g, y = data, color = g),
+             size = 2,
+             position = position_jitter(0.1)) +
+  scale_color_manual("", values = viridis::viridis(3)) +
+  labs(y = "Size (mm)", x = "Site") +
+  theme(legend.position = "top")
+```
+
+:::
+::: {.g-col-6}
+
+
+
+```{r}
+#| echo: false
+#| label: tbl-noko-summary1
+#| tbl-cap: ノコギリモク幼体幅の平均値，標準偏差、標準誤差. 
+dset |> 
+  group_by(g) |> 
+  summarise(across(data, list(mean = mean, sd = sd, se = se))) |> 
+  rename("Site" = g, 
+         `\\overline{x}` =　data_mean,
+         `s` = data_sd,
+         `s.e.` = data_se) |> 
+  flextable() |> 
+  colformat_double(j = 2, digits = 1) |> 
+  colformat_double(j = 3:4, digits = 3) |> 
+  mk_par(i = 1, j = 2:3,
+         part = "header",
+         value = as_paragraph(
+           as_equation(.,width = .1, height = .2)),
+         use_dot = TRUE) %>% set_table_properties(layout = "autofit", width = 0.9)
+```
+
+:::
+:::
+
+## 作業仮説を考えましょう
+
+::: {.callout-tip}
+## 作業仮設^[working hypothesis]
+
+すべての研究は作業仮説 から始まります。
+
+今回の例について、作業仮説は 「地点毎に対するノコギリモク幼体の幅は異なる」にしました。
+:::
+
+
+
+## 帰無仮説有意生検定が必要とする仮説を決めます
+
+作業仮説を定義したら、つぎは検定のための仮説を定義します。
+帰無仮説有意性検定 ^[null hypothesis signficance testing]
+
+* **$H_0$ (null hypothesis 帰無仮説):** 平均値に違いはない $(\mu_{A} = \mu_{B})$
+
+* **$H_A$ (alternative hypothesis 対立仮設):**  平均値は異なる $(\mu_{A} \neq \mu_{B})$
+
+つぎのような対立仮説も思いつきます。
+
+* $H_P$ **(対立仮設):**  $\mu_A > \mu_B$
+* $H_N$ **(対立仮設):**  $\mu_A < \mu_B$
+
+::: {.callout-note}
+## 無限に存在する
+帰無仮説と対立仮説はいくらでも考えられますが、
+$\mu_A = \mu_B$ は一般的な帰無仮説です。
+そして、$\mu_A \neq \mu_B$ も一般的な対立仮説です。
+:::
+
+## ナイーブ ^[naive] な解析手法
+
+地点 A と B のノコギリモクの大きさの違いが知りたいです。
+では、地点同士の大きさの違いを求めます。
+地点 A と B の平均値の差を求めてみます。
+
+$$
+\overline{x_A} - \overline{x_B} = `r format(mean(groupA)-mean(groupB), digits = 3)`
+$$
+地点 B のノコギリモクが大きいです。
+でも、この大きさはどの程度信用できるかがわかりません。
+平均値の差の制度を評価するには、標準誤差 ^[standard error] を求めないといけないです。
+この手法だと、標準誤差は求められません。
+
+では、かく地点のサンプル番号ごとの差をとってみます。
+この場合、 6 つの差を求められます。
+6 つあるので、平均値、標準偏差、標準誤差も求められます。
+
+
+```{r}
+#| label: tbl-noko-diff1
+#| tbl-cap: ノコギリモクの幅 (mm) とペア毎の差
+#| echo: false
+dset %>% 
+  pivot_wider(names_from = g,
+              values_from = data,
+              values_fn = list) %>% 
+  unnest(everything()) %>% 
+  mutate(sample = 1:6, .before = A) %>% 
+  mutate(d = sprintf("%0.2f - %0.2f = %0.2f",
+                     A, B, A-B)) %>% 
+  flextable() |> 
+  set_header_labels(sample = "Sample", A = "Site A", B = "Site B", d = "Difference") |> 
+  set_table_properties(layout = "autofit", width = 0.9)
+```
+
+```{r}
+#| echo: false
+x1 = format(mean(groupA-groupB), digits=2)
+x2 = format(sd(groupA-groupB), digits=2)
+x3 = format(se(groupA-groupB), digits=2)
+```
+
+* $\overline{x} = `r x1`$
+* $s = `r x2`$
+* $\text{s.e.} = `r x3`$
+
+**問題は、この差の平均値をどのように評価するのか。**
+
+## 平均値の分布
+
+
+::: {.grid}
+::: {.g-col-6}
+
+```{r}
+#| echo: false
+#| fig-cap: 求めた平均値と標準誤差から推定した正規分布。
+#| label: fig-normal1
+#| fig-width: 4
+#| fig-height: 4
+
+x1 = mean(groupA-groupB)
+x3 = se(groupA-groupB)
+xval    = x3 * (qnorm(0.05/2)  * c(1,-1)) + x1
+xlimits = x3 * (qnorm(0.001/2) * c(1,-1)) + x1
+
+cl = viridis::viridis(4)
+tibble(x = dset$data) %>% 
+  ggplot() +
+  geom_function(fun = dnorm, color = cl[1],
+                alpha = 0.5,
+                args = list(mean = mean(x1), sd = x3),
+                xlim = xlimits) +
+  geom_function(fun = dnorm, color = cl[1],
+                args = list(mean = mean(x1), sd = x3),
+                size = 2,
+                xlim = xval) +
+  stat_function(fun = dnorm, fill = cl[1],
+                alpha = 0.5,
+                args = list(mean = mean(x1), sd = x3),
+                size = 1, xlim = xval, geom = "area") +
+  geom_vline(aes(xintercept = mean(x1)), color = cl[3], size = 2) +
+  scale_x_continuous(parse(text = "bar(x)[A-B]~(cm)")) +
+  scale_y_continuous("Probability") +
+  theme(axis.text.y = element_blank(),
+        axis.title.y = element_blank(),
+        axis.ticks.y = element_blank())
+
+```
+:::
+::: {.g-col-6}
+**中心極限定理** ^[central limit theorem]によると、平均値の分布は正規分布 ^[normal or gaussian distribution]に従います。
+
+@fig-normal1 に示した紫色の部分は 95% の確率密度です。
+その幅は **信頼区間** ^[confidence interval]といいます。
+**有意水準**を $\alpha = 0.05$ として定義したとき、
+この信頼区間は 95% 信頼区間 ^[95% confidence interval]といいます。
+:::
+:::
+
+
+::: {.callout-note}
+## 信頼区間とは？
+
+$[l, u]$ の区間を定義したとき、$l$ は区間の下限、$u$ は区間の上限です。
+このように定義した区間は信頼区間といいます。
+
+では、$x$ に対する区間 $[l,u]$ は $1-\alpha$ の確率で次のように定義できます。
+
+
+$$
+P(l \le x \le u) = 1-\alpha
+$$
+
+$\overline{x}$ が標本平均であれば、**z値** ^[z-score]と呼ぶ統計量を定義できます。
+
+$$
+z = \frac{\overline{x}-\mu}{\sigma}
+$$
+
+$\mu$ は母平均、$\sigma$ は母分散です。
+
+つまり、下限と上限を求めるためには
+
+$$
+P(l \le z \le u) = 1-\alpha
+$$
+
+を解けばいい。
+
+**中心極限定理**は次の通りに定義されています。
+
+$$
+\lim_{n\rightarrow\infty} \sqrt{n}\overbrace{\left(\frac{\overline{x}_n-\mu}{\sigma}\right)}^\text{この部分は z 値}  \xrightarrow{d} N(0, 1)
+$$
+
+よって、 $\alpha = 0.05$　のときの $[l, u]$ は次の通りです。
+
+$$
+P\left(l \le z \le u \right) = 1-0.05 = 0.95
+$$
+
+標準化正規分布 $N(0,1)$ のとき、
+
+* $\alpha/2=0.05/2=0.025$ 分位数は $l$ です。
+* $1-\alpha/2=1-0.05/2=0.975$ 分位数は $u$ です。
+
+:::
+
+## z 値の分位数を求める
+
+```{r, fig.height = 3, fig.width=6}
+#| echo: false
+#| fig-cap: 標準化正規分布
+#| label: fig-normaldist-2
+
+xval500 = (qnorm(0.50/2) * c(1,-1))
+xval683 = c(-1,1) # pnorm(1)-pnorm(-1)
+xval950 = (qnorm(0.05/2) * c(1,-1))
+xval954 = c(-2,2) # pnorm(2) -pnorm(-2)
+xval990 = (qnorm(0.01/2) * c(1,-1))
+
+xbreaks = c(xval500, xval683, xval950, xval990, 0) %>% sort()
+xbreaks = xbreaks %>% round(2)
+cl = viridis::viridis(4) %>% rev()
+
+tibble(x = dset$data) %>% 
+  ggplot() +
+  
+  stat_function(fun = dnorm, aes(fill = "99.0%"),
+                alpha = 0.5,
+                size = 1, xlim = xval990, geom = "area") +
+  stat_function(fun = dnorm, aes(fill = "95.0%"),
+                alpha = 0.5,
+                size = 1, xlim = xval950, geom = "area") +
+  stat_function(fun = dnorm, aes(fill = "68.3%"),
+                alpha = 0.5,
+                size = 1, xlim = xval683, geom = "area") +
+  stat_function(fun = dnorm, aes(fill = "50.0%"),
+                alpha = 0.5,
+                size = 1, xlim = xval500, geom = "area") +
+  scale_fill_manual("Interval",values = cl) +
+  scale_x_continuous("z-value or standard deviation",
+                     breaks = xbreaks) +
+  theme(legend.position = c(1,1),
+        legend.justification = c(1,1),
+        legend.background = element_blank(),
+        axis.text.y = element_blank(),
+        axis.title.y = element_blank(),
+        axis.ticks.y = element_blank())
+
+```
+
+
+* $[-1 s, 1 s]$ は `r 100*round(pnorm(1)-pnorm(-1), 3)`% 区間
+* $[-2 s, 2 s]$ は `r 100*round(pnorm(2)-pnorm(-2), 3)`% 区間
+* $[-3 s, 3 s]$ は `r 100*round(pnorm(3)-pnorm(-3), 3)`% 区間
+
+
+```{r}
+#| echo: false
+d = dset$data
+```
+
+```{r}
+#| echo: false
+#| tbl-cap: 標準化正規分布の分位数
+#| label: tbl-quantile-normal
+
+x = c(0.5, 0.8, 0.9, 0.95, 0.975, pnorm(1:4) - (1-pnorm(1:4)))
+x = sort(x)
+y = -1*qnorm((1-x)/2)
+
+tibble(alpha = 1-x,
+       prob = x, 
+       quantile = y) %>% 
+  mutate(percent = prob * 100, .after = prob) %>% 
+  select(-prob) %>% 
+  flextable() |> 
+  set_header_labels(alpha = "Signififance level",
+                    prob = "Confidence interval (%)",
+                    quantile = "± quantile") |> 
+  set_table_properties(layout = "autofit", width = 0.9)
+```
+
+
+## 信頼区間の求め方
+
+平均値は $\overline{x}_{A-B} =$ `r mean(d) %>% round(.,3)` です。
+標準誤差は $\text{s.e.} =$ `r se(d) %>% round(.,3)` です。
+母分散は $\sigma_A = \sigma_B =$ `r sigmaA` です。
+有意水準は $\alpha = 0.05$ とします。
+
+
+95% 信頼区間は次のように定義しています。
+$$
+P\left(l \le \frac{\overline{x}-\mu}{\sigma}\le u\right) = 1-\alpha = 0.95
+$$
+
+
+書き直すと次のとおりです。
+
+$$
+P\left(\overline{x} +l \sigma \le \mu \le \overline{x} + u\sigma\right) = 1-\alpha = 0.95
+$$
+
+$\alpha= 0.05$　のとき、
+$l=$ `r round(qnorm(0.025),4)` と 
+$u=$ `r round(qnorm(1-0.025),4)` です。
+
+母分散は先程定義しましたが、$\sigma = 1$ です。
+それぞれの値を式に代入すると、次のとおりです。
+
+$$
+\begin{split}
+P(
+`r round(mean(d),3)` +  `r round(qnorm(0.025),4)` \times `r sigmaA`
+\le x \le 
+`r round(mean(d),3)` +  `r round(qnorm(1-0.025),4)` \times `r sigmaA`
+) &= 
+P(
+\overbrace{`r round(mean(d) + sigmaA * qnorm(0.025),3)`}^{l}
+\le x \le 
+\overbrace{`r round(mean(d) + sigmaA * qnorm(1-0.025),3)`}^{u}
+) \\
+&= 0.95
+\end{split}
+$$
+
+つまり、
+$\overline{x}=$ `r round(mean(d),3)` の 95% 信頼区間は 
+$[`r round(mean(d) + sigmaA * qnorm(0.025),3)`, `r round(mean(d) + sigmaA * qnorm(1-0.025),3)` ]$ です。
+
+
+```{r}
+#| echo: false
+#| fig-cap: 調査を 20 回行ったときの平均値と信頼区間。真の平均値は -2 です。このとき、全ての実験で求めた信頼区間内に真の平均値が存在します。
+#| label: fig-ci-known
+#| fig-height: 4
+#| fig-width: 6
+
+set.seed(2021)
+mult = qnorm(1-(0.05/2))
+X0 = tibble(n = 1:20) %>% 
+  mutate(data = map(n, function(x) {
+    A = rnorm(nA, meanA, sigmaA)
+    B = rnorm(nB, meanB, sigmaB)
+    tibble(A, B) %>% 
+      mutate(d = A-B)
+  }))
+
+
+X = X0 %>% 
+  unnest(data) %>% 
+  group_by(n) %>% 
+  summarise(mean = mean(d),
+            se = sigmaA) %>% 
+  mutate(lower = mean - mult * se,
+         upper = mean + mult * se) %>% 
+  mutate(col = ifelse((meanA-meanB) > lower & (meanA-meanB) < upper, "Yes", "No"), 
+         col2 = ifelse(0 > lower & 0 < upper, "Yes", "No"))
+
+XX = X %>% summarise(n = sum(str_detect(col, "Yes"))) %>% pull(n)
+XX0 = X %>% summarise(n = sum(str_detect(col2, "Yes"))) %>% pull(n)
+trials = X %>% nrow()
+
+p1 = ggplot(X) +
+  geom_hline(yintercept = meanA-meanB) +
+  geom_hline(yintercept = 0, linetype = "dashed") +
+  geom_pointrange(aes(x = n,
+                      y = mean,
+                      ymin = lower,
+                      ymax = upper, color = col)) +
+  scale_color_manual("Includes true mean (μ = -2)?",
+                     values = viridis::viridis(3)) + 
+  scale_y_continuous("Mean and 95% CI") +
+  scale_x_continuous("Experiment")+
+  theme(legend.position = "top")
+p1
+```
+
+
+信頼区間内に 0 が含まれるときの、帰無仮説は棄却できません。
+ちなみに、このときの帰無仮説は「平均値はゼロ」です。
+
+```{r}
+#| echo: false
+#| fig-cap: ゼロを含む信頼区間。
+#| label: fig-ci-zero
+#| fig-height: 4
+#| fig-width: 6
+#| 
+ggplot(X) +
+  geom_hline(yintercept = meanA-meanB) +
+  geom_hline(yintercept = 0, linetype = "dashed") +
+  geom_pointrange(aes(x = n,
+                      y = mean,
+                      ymin = lower,
+                      ymax = upper, color = col2)) +
+  scale_color_manual("Includes zero?",
+                     values = viridis::viridis(3)) + 
+  scale_y_continuous("Mean and 95% CI") +
+  scale_x_continuous("Experiment")+
+  theme(legend.position = "top")
+```
+
+
+* 真の平均値は `r meanA - meanB` なので、仮定した帰無仮説はそもそも誤りです。
+* $H_0$ を棄却しなかったら、 **第2種の誤り** ^[Type-II error]がおきます。
+* `r XX0` つの調査の 95% 信頼区間は 0 を含みます。つまり、第2種の誤りは  $\beta=$ `r XX0` / `r trials` = `r (XX0)/trials` (`r (XX0)/trials * 100`%) です。
+* この解析の検出力 ($1 - \beta$) は `r 1-((XX0)/trials)` です。正しい結果に導く確率は 60% です。
+
+## 解析は誤りです!
+
+z 値は正規分布に従いますが、このとき母平均と母分散は存知です。
+
+$$
+z = \frac{\overline{x} - \mu}{\sigma}\sim N(0,1)
+$$
+
+++ところが、一般的には母平均と母分散は未知です。**
+一般的には z 値より、t 値を求めます。
+
+
+$$
+t_{\overline{x}} = \frac{\overline{x} - x_0}{s.e.} = \frac{\overline{x} - x_0}{s / \sqrt{n}}
+$$
+
+t 値は t 分布に従います。
+
+
+```{r}
+#| echo: false
+#| fig-cap: ｔ分布
+#| label: fig-tdist-2
+#| fig-height: 3
+#| fig-width: 6
+
+DF = nA-1
+
+xval500 = (qt(0.50/2, df=DF) * c(1,-1))
+xval659 = c(-1,1) # pt(1, DF)-pt(-1,DF)
+xval950 = (qt(0.05/2, df=DF) * c(1,-1))
+xval927 = c(-2,2) # pt(2,DF) -pt(-2, DF)
+xval990 = (qt(0.01/2, df=DF) * c(1,-1))
+
+xbreaks = c(xval500, xval950, xval990, 0) %>% sort()
+xbreaks = xbreaks %>% round(2)
+cl = viridis::viridis(4) %>% rev()
+
+tibble(x = d) %>% 
+  ggplot() +
+  
+  stat_function(fun = dt, aes(fill = "99.0%"),
+                alpha = 0.5, args = list(df = DF),
+                size = 1, xlim = xval990, geom = "area") +
+  stat_function(fun = dt, aes(fill = "95.0%"),
+                alpha = 0.5, args = list(df = DF),
+                size = 1, xlim = xval950, geom = "area") +
+  stat_function(fun = dt, aes(fill = "65.9%"),
+                alpha = 0.5, args = list(df = DF),
+                size = 1, xlim = xval659, geom = "area") +
+  stat_function(fun = dt, aes(fill = "50.0%"),
+                alpha = 0.5, args = list(df = DF),
+                size = 1, xlim = xval500, geom = "area") +
+  scale_fill_manual("Confidence Interval",values = cl) +
+  scale_x_continuous("t-value or standard deviation",
+                     breaks = xbreaks) +
+  theme(legend.position = c(1,1),
+        legend.justification = c(1,1),
+        legend.background = element_blank(),
+        axis.text.y = element_blank(),
+        axis.title.y = element_blank(),
+        axis.ticks.y = element_blank())
+
+```
+
+この t 分布の 自由度 ^[degrees-of-freedom]は $N-1 = `r nA-1`$ です。
+
+```{r}
+#| echo: false
+#| tbl-cap: 自由度 5 のときに t 分布の分位数
+#| label: tbl-tdist-quantiles
+
+x = c(0.5, 0.8, 0.9, 0.95, 0.975, pt(1:4, DF) - (1-pt(1:4, DF)))
+x = sort(x)
+y = -1*qt((1-x)/2, DF)
+
+CAP = str_glue("Quantiles of the t distribution for d.f. = {DF}.")
+tibble(alpha = 1-x,
+       prob = x, 
+       quantile = y) %>% 
+  mutate(percent = prob * 100, .after = prob) %>% 
+  select(-prob) %>% 
+    flextable() |> 
+  set_header_labels(alpha = "Signififance level",
+                    prob = "Confidence interval (%)",
+                    quantile = "± quantile") |> 
+  set_table_properties(layout = "autofit", width = 0.9)
+
+```
+
+
+```{r, fig.height=3, fig.width=6}
+#| echo: false
+#| label: fig-tdist-experiments
+#| fig-cap: 母分散が未知のときの結果
+
+
+set.seed(2021)
+mult = qt(1-(0.05/2), df = DF)
+X0 = tibble(n = 1:20) %>% 
+  mutate(data = map(n, function(x) {
+    A = rnorm(nA, meanA, sigmaA)
+    B = rnorm(nB, meanB, sigmaB)
+    tibble(A, B) %>% 
+      mutate(d = A-B)
+  }))
+
+
+X = X0 %>% 
+  unnest(data) %>% 
+  group_by(n) %>% 
+  summarise(mean = mean(d),
+            se = se(d)) %>% 
+  mutate(lower = mean - mult * se,
+         upper = mean + mult * se) %>% 
+  mutate(col = ifelse((meanA-meanB) > lower & (meanA-meanB) < upper, "Yes", "No"), 
+         col2 = ifelse(0 > lower & 0 < upper, "Yes", "No"))
+
+XX = X %>% summarise(n = sum(str_detect(col, "Yes"))) %>% pull(n)
+XX0 = X %>% summarise(n = sum(str_detect(col2, "Yes"))) %>% pull(n)
+trials = X %>% nrow()
+
+p1 = ggplot(X) +
+  geom_hline(yintercept = meanA-meanB) +
+  geom_hline(yintercept = 0, linetype = "dashed") +
+  geom_pointrange(aes(x = n,
+                      y = mean,
+                      ymin = lower,
+                      ymax = upper, color = col)) +
+  scale_color_manual("Includes true mean (μ = -2)?",
+                     values = viridis::viridis(3)) + 
+  scale_y_continuous("Mean and 95% CI") +
+  scale_x_continuous("Experiment")+
+  theme(legend.position = "top")
+p1
+```
+
+::: {.callout-note}
+
+@fig-tdist-experiments は 20 の標本平均とそれぞれの 95% 信頼区間を示しています。
+真の平均値が頼区間に含まれている実験は紫色で示しています。
+`r trials` の調査のうち、新の平均値を含む回数は `r XX` 回です。
+
+**信頼区間の解釈について**
+
+基本的には、95%　信頼区間を次のように理解できる。
+実験を 100 回行い、信頼区間内に真の平均値が含まれる回数は 95 回です。。
+
+**下記で述べた解釈はすべて誤りです。**
+
+* 信頼区間に真の平均値が存在する。
+* 95% の確率で真の平均値が信頼区間に含まれる。
+* 95% の確率で次の実験の平均値が信頼区間に含まれる。
+
+:::
+
+
+```{r, fig.height=4, fig.width=4}
+#| echo: false
+#| label: fig-tdist-zeros2
+#| fig-cap: 信頼区間にゼロが含まれる回数
+#| fig-width: 6
+#| fig-height: 4
+ggplot(X) +
+  geom_hline(yintercept = meanA-meanB) +
+  geom_hline(yintercept = 0, linetype = "dashed") +
+  geom_pointrange(aes(x = n,
+                      y = mean,
+                      ymin = lower,
+                      ymax = upper, color = col2)) +
+  scale_color_manual("Includes zero?",
+                     values = viridis::viridis(3)) + 
+  scale_y_continuous("Mean and 95% CI") +
+  scale_x_continuous("Experiment")+
+  theme(legend.position = "top")
+```
+
+* 信頼区間に 0 を含む実験は 5つあるので、 $\beta=$ `r XX0` / `r trials` = `r (XX0)/trials` (`r (XX0)/trials * 100`%) です。
+* この実験の検出力 ($1 - \beta$) は `r 1-((XX0)/trials)`　です。
+
+# t 検定
+
+## 対応ありの t 検定
+
+```{r}
+#| echo: false
+#| label: fig-paired-ttest
+#| fig-cap: 対応ありの t 検定
+#| fig-width: 6
+#| fig-height: 4
+
+XT = X0 %>% 
+  unnest(data) %>% 
+  select(-d) %>% 
+  group_nest(n) %>% 
+  mutate(result = map(data, function(x) {
+    t.test(Pair(A,B) ~ 1, data = x) 
+  })) %>% 
+  mutate(out = map(result, broom::tidy)) %>% 
+  unnest(out) %>% 
+  mutate(col = ifelse(p.value >= 0.05, "No", "Yes"))
+xtsum = XT %>% 
+  summarise(n = length(p.value),
+            m = sum(p.value >= 0.05)) %>% 
+  mutate(beta = m / n,
+         power = 1-beta)
+XT %>% 
+  ggplot() +
+  geom_point(aes(x = n, y = (p.value), color = col)) +
+  geom_hline(yintercept = (0.05), linetype = "dashed") +
+  scale_color_manual(parse(text = "'Reject'~H[0]~'?'"),
+                     
+                     values = viridis::viridis(3)[c(2,1)]) + 
+  scale_y_continuous("P-value") +
+  scale_x_continuous("Experiment")+
+  theme(legend.position = "top")
+```
+
+このときの第２種の誤りををこす確率は
+$\beta$ = 
+`r xtsum$m` / `r xtsum$n` = 
+`r round(xtsum$beta,2)*100`% です。
+検出力　($1-\beta$) は `r round(xtsum$power,2)`です。
+
+## 分散が異なる t 検定 
+
+
+```{r}
+#| echo: false
+#| label: fig-welch-ttest
+#| fig-cap: 分散が異なる t 検定（ウェルチの t 検定ともよびます）
+#| fig-width: 6
+#| fig-height: 4
+
+XT = X0 %>% 
+  unnest(data) %>% 
+  select(-d) %>% 
+  group_nest(n) %>% 
+  mutate(result = map(data, function(x) {
+    z = x %>% pivot_longer(cols = c(A,B))
+    t.test(value ~ name, data = z)
+  })) %>% 
+  mutate(out = map(result, broom::tidy)) %>% 
+  unnest(out) %>% 
+  mutate(col = ifelse(p.value >= 0.05, "No", "Yes"))
+
+xtsum = XT %>% 
+  summarise(n = length(p.value),
+            m = sum(p.value >= 0.05)) %>% 
+  mutate(beta = m / n,
+         power = 1-beta)
+XT %>% 
+  ggplot() +
+  geom_point(aes(x = n, y = (p.value), color = col)) +
+  geom_hline(yintercept = (0.05), linetype = "dashed") +
+  scale_color_manual(parse(text = "'Reject'~H[0]~'?'"),
+                     values = viridis::viridis(3)[c(2,1)]) + 
+  scale_y_continuous("P-value") +
+  scale_x_continuous("Experiment")+
+  theme(legend.position = "top")
+```
+
+このときの第２種の誤りををこす確率は
+$\beta$ = `r xtsum$m` / `r xtsum$n` = `r round(xtsum$beta,2)*100`% です。
+
+検出力 ($1-\beta$) はs `r round(xtsum$power,2)` です。
+
+## 対応ありの t 検定
+
+**対応ありのt検定 (paired t-test)**
+
+t 検定の統計量は t 値です。
+
+$$
+t^* = \frac{\overline{x}_{A-B} - \mu}{s_{A-B} / \sqrt{n}}
+$$
+
+対応ありの t 検定の自由度は  $n-1$　です。
+
+観測値がペアとして対応しているときに使います。
+たとえば、低い光環境で育て海藻を高い光環境に移した時の成長速度の差を比較するときに使います。
+
+## 2標本の t 検定
+
+2標本 （２群）t 検定には 2 種類あります。
+
+
+
+**等分散の t 検定 (equal variance t-test)**
+
+$$
+t^* = \frac{\overline{x}_A - \overline{x}_B}{s_p \sqrt{1 / n_A + 1/n_B}}
+$$
+$$
+s_p = \sqrt{
+\frac{(n_A-1)s_A^2 + (n_B-1)s_B^2}
+{n_A + n_B -2}}
+$$
+自由度は $n_A + n_B - 2$　です。
+
+
+
+**不等分散の t 検定・ウェルチの t 検定 (Unequal variance, Welch's t-test)**
+
+$$
+t^* = \frac{\overline{x}_A - \overline{x}_B}{s_p}
+$$
+
+$$
+s_p = \sqrt{
+\frac{s_A^2}{n_A} +
+\frac{s_B^2}{n_B}}
+$$
+自由度はウェルチ–サタスウェイトの式 (Welch-Satterthwaite Equation) で求めます。
+
+$s$ は標準偏差、
+$n$ サンプル数、
+$\overline{x}$ は平均値、
+$t^*$ は t 値。
+
+$$
+\text{degrees-of-freedom} =
+\frac{
+\left(\frac{s_A^2}{n_A} + \frac{s_B^2}{n_B}\right)^2
+}
+{\frac{\left(s_A^2 / n_A\right)^2}{n_A-1} + \frac{\left(s_B^2 / n_B\right)^2}{n_B-1}}
+$$
+
+degrees-of-freedom は自由度です。
+
+## ノコギリモク幼体の幅に対する t 検定
+
+
+::: {.grid}
+::: {.g-col-6}
+
+**対応ありの t 検定**
+
+```{r}
+#| echo: false
+
+A = c(9.8,11.1,10.7,10.7,11.8,6.2)
+B = c(12.5,13.8,12.0,15.5,9.8,11.5)
+xbar = mean(A-B)
+s = sd(A-B)
+n = length(A)
+df = n - 1
+tval = xbar / (s / sqrt(n))
+pval = pt(xbar / (s / sqrt(n)), df = df)
+tout = t.test(A,B)
+pval2 = pt(tout$statistic, df = tout$parameter)
+
+```
+
+$$
+\begin{aligned}
+t^* &= \frac{\overline{x}_{A-B} - \mu}{s_{A-B} / \sqrt{n}} \\
+t^* &= \frac{`r round(xbar,3)`}{`r round(s,3)` / \sqrt{`r n`}} \\
+t^* &= `r round(tval,3)`
+\end{aligned}
+$$
+
+:::
+::: {.g-col-6}
+
+* $\overline{x}_{A-B}=$ `r round(xbar, 3)`
+* $s_{A-B}=$ `r round(s, 3)`
+* $\mu=0$
+* $n$ = `r n`
+* $\alpha$ =  0.05
+* t値: `r round(tval, 3)`
+* P値: `r round(2*pval, 3)`
+
+
+:::
+:::
+
+**ノコギリモク幼体のデータはお互いに対応していないので、対応ありの t 検定の結果は誤りです。**
+
+
+
+::: {.grid}
+::: {.g-col-6}
+
+**ノコギリモク幼体の正しい解析はウェルチの t 検定です。**
+
+
+$$
+\begin{aligned}
+t^* &= \frac{\overline{x}_A -\overline{x}_B}{s_p} \\
+s_p &= \sqrt{\frac{s_A^2}{n_A} + \frac{s_B^2}{n_B}} \\
+s_p &= \sqrt{\frac{`r round(sd(A),3)`^2}{`r n`} + \frac{`r round(sd(B),3)`^2}{`r n`}} \\
+t^* &= \frac{`r round(mean(A),3)` - `r round(mean(B),3)`}{`r round(tout$stderr, 3)`} \\
+t^* &= `r round(tout$statistic,3)` \\
+\text{d.f.} &= `r round(tout$parameter, 3)`
+\end{aligned}
+$$
+:::
+::: {.g-col-6}
+
+* $\alpha$ =  0.05
+* t値-value: `r round(tout$statistic, 3)`
+* P値: `r round(2*pval2, 3)`
+
+$P\nless  \alpha = 0.05$ なので、帰無仮説は棄却できません。
+
+:::
+:::
+
+
+
+## サンプル数と p 値の関係
+
+
+```{r}
+#| echo: false
+#| label: behavior01
+#| fig-cap: "分散等しい t 検定の場合、サンプル数が増えると第 2 種の誤りは減少し、検出力は増加します。第 1 種の誤りは変わりません。"
+
+makedata = function(N) {
+  A = rnorm(N, meanA, sigmaA)
+  B = rnorm(N, meanB, sigmaB)
+  tibble(A, B) 
+}
+
+Nvals = 2^seq(1, 4, by = 0.1)
+Nvals = as.integer(Nvals) %>% unique()
+Nsim = 2000
+
+X0 = tibble(N = Nvals) %>% 
+  mutate(n = list(n = 1:Nsim)) %>% 
+  unnest(n) %>% 
+  mutate(data = map(N, makedata)) %>% 
+  mutate(result = future_map(data, function(x) {
+    z = x %>% pivot_longer(cols = c(A,B))
+    t.test(value ~ name, data = z)
+  })) %>% 
+  mutate(out = map(result, tidy)) %>% 
+  unnest(out) %>% 
+  mutate(col = ifelse(p.value >= 0.05, "No", "Yes"))
+
+XT = X0 %>% 
+  group_by(N) %>% 
+  summarise(n = length(p.value),
+            m = sum(p.value >= 0.05)) %>% 
+  mutate(beta = m / n, power = 1 - beta) %>% 
+  select(N, beta, power)
+
+ggplot(XT) +
+  geom_hline(aes(yintercept = 0.05, color = "Type-I Error (α)")) +
+  geom_line(aes(x = N, y = power, color = "Power (1-β)")) +
+  geom_line(aes(x = N, y = beta, color = "Type-II Error (β)"))  +
+  scale_color_manual(values = viridis::viridis(4)) +
+  scale_x_continuous("Observations (N)") +
+  scale_y_continuous("Probability") +
+  theme(legend.title = element_blank(),
+        legend.position = c(1, 0.5),
+        legend.justification = c(1, 0.5),
+        legend.direction = "horizontal",
+        legend.background = element_blank())
+
+```
+
+
+::: {.callout-note}
+`site A` の真の平均値は $\mu = `r meanA`$、`site B` のは $\mu = `r meanB`$ です。
+`site A` の真の平均値は $\mu = `r meanA`$、`site B` のは $\mu = `r meanB`$ です。
+`site A` と `site B` の真の標準偏差 $(\sigma)$ は  `r sigmaA` と `r sigmaB` です。
+:::
+
+## Behavior of the t-test (unequal variance)
+
+```{r}
+#| echo: false
+#| label: behavior02
+#| fig-cap: "分散が異なる t 検定の場合、第 2 種の誤りと検出力の動きは分散が等しい t 検定と似ていますが、標本数も強く影響します。"
+makedata2 = function(N, mult) {
+  A = rnorm(N, meanA, sigmaA  * mult)
+  B = rnorm(N, meanB, sigmaA)
+  tibble(A, B) 
+}
+
+X0 = 
+  tibble(mult = seq(1, 5, length = 2*9)) %>% 
+  mutate(N = list(c(5, 10, 50))) %>% 
+  unnest(N) %>% 
+  mutate(n = list(n = 1:1000)) %>% 
+  unnest(everything()) %>% 
+  mutate(data = map2(N,mult, makedata2)) %>% 
+  mutate(result = future_map(data, function(x) {
+    z = x %>% pivot_longer(cols = c(A,B))
+    t.test(value ~ name, data = z)
+  })) %>% 
+  mutate(out = map(result, tidy)) %>% 
+  unnest(out) %>% 
+  mutate(col = ifelse(p.value >= 0.05, "No", "Yes"))
+
+XT = X0 %>% 
+  group_by(N, mult) %>% 
+  summarise(n = length(p.value),
+            m = sum(p.value >= 0.05), .groups = "drop") %>% 
+  mutate(beta = m / n, power = 1 - beta) %>% 
+  select(N, mult, beta, power)
+
+XT %>% 
+  mutate(N = factor(N, 
+                    levels = c(5, 10, 50),
+                    labels = c("N = 5", 
+                               "N = 10",
+                               "N = 50"))) %>% 
+  ggplot() +
+  geom_hline(aes(yintercept = 0.05, color = "Type-I Error (α)")) +
+  geom_line(aes(x = mult, y = power, color = "Power (1-β)")) +
+  geom_line(aes(x = mult, y = beta, color = "Type-II Error (β)"))  +
+  scale_color_manual(values = viridis::viridis(4)) +
+  scale_x_continuous(parse(text = "s[A]:s[B]~'ratio'")) +
+  scale_y_continuous("Probability") +
+  facet_wrap("N", ncol = 3) +
+  theme(legend.title = element_blank(),
+        legend.position = "top",
+        legend.background = element_blank())
+
+```
+
+::: {.callout-note}
+`site A` の真の平均値は $\mu = `r meanA`$、`site B` のは $\mu = `r meanB`$ です。
+`site A` の真の標準偏差は $\mu = `r sigmaA`$、ですが、`site B` の標準偏差は $\sigma_B = k\times\sigma_A$ です。
+$s_A / s_B \rightarrow\infty$のとき、第2種の誤りは増加し、検出力は減少します。
+さらに、標本数が増えると、不等分散性の影響が下がります。
+:::
+
+## ウェルチ t 検定の R 出力と結果
+
+```{r}
+#| echo: false
+A = c(9.8,11.1,10.7,10.7,11.8,6.2)
+B = c(12.5,13.8,12.0,15.5,9.8,11.5)
+data = tibble(A, B)
+data = data %>% pivot_longer(cols = c(A,B))
+t.test(value ~ name, data = data)
+```
+
+```{r}
+#| eval: false
+#| echo: true
+# パッケージの読み込み
+library(tidyverse)
+
+# 疑似データの作成
+A = c(9.8,11.1,10.7,10.7,11.8,6.2)
+B = c(12.5,13.8,12.0,15.5,9.8,11.5)
+data = tibble(A, B)
+data = data %>% pivot_longer(cols = c(A,B))
+
+# ウェルチ t 検定
+t.test(value ~ name, data = data)
+```
+
+```{r}
+#| eval: false
+#| echo: true
+# ひと書き方
+t.test(A, B)
+```
+
+
+```{r}
+#| eval: false
+#| echo: true
+# two-sample, equal variance t-test (等分散 t 検定)
+t.test(value ~ name, data = data, var.equal = TRUE) 
+```
+
+
+# 分散が異なるの t 検定の解析例
+
+## パッケージの読み込み
+
+t 検定だけしたいなら、次のパッケージの読み込みは不要です。
+そう言っても、自分のワークフローでは、つぎのパッケージは必ず読み込んでいます。
+パッケージを読み込もうとしたときに、
+`Error in library(tidyverse) : there is no package called 'tidyverse'` 
+のようなエラーがでたら、パッケージのインストールが必要です。
+
+パッケージのインストールは次のようにできます。
+
+```{r, eval = FALSE}
+install.packages("tidyverse")
+```
+
+では、パッケージを読み込みます。
+```{r}
+library(tidyverse)  # データの操作・処理・作図用メタパッケージ
+library(readxl) 　　# xlsx ファイルの読み込み用
+library(lubridate)　# 時刻データ用
+```
+
+## データの準備
+
+データは CSV (Comma Separated Value; コンマ区切り) ファイルに保存しています。
+ファイルの内容は次の通りです。
+最初の 3 行にはファイルの説明があります。
+
+```{r, echo = FALSE}
+set.seed(2021)
+nA = 6
+nB = 6
+meanA = 20
+meanB = 22
+sigmaA = 1
+sigmaB = 1
+groupA = rnorm(nA, meanA, sigmaA) %>% round(., 1)
+groupB = rnorm(nB, meanB, sigmaB) %>% round(., 1)
+dset = tibble(site = c("A", "B"), size = list(groupA, groupB)) %>% unnest(size)
+fname = "./_data/sargassum_t-test_dataset.csv"
+z1 = "# 6 Sargassum macrocarpum individuals from 2 sites were measured."
+z2 = "# site: is the collection site (A, B)."
+z3 = "# size: is the width of the individual in mm."
+
+write_lines(file = fname, list(z1,z2,z3))
+write_csv(dset, file = fname, append = TRUE, col_names = TRUE)
+```
+
+```{bash, echo = FALSE, comment = NA}
+cat "./_data/sargassum_t-test_dataset.csv"
+```
+
+では、データを R に読み込みます。
+
+```{r}
+filename = "./_data/sargassum_t-test_dataset.csv"
+dset = read_csv(filename)
+```
+
+読み込んだデータの内容を確認しましょう。
+
+```{r}
+dset
+```
+
+説明があるので、読み込みに失敗しました。
+読み込んだデータのクラス (class) は `r nrow(dset)` 行 `r ncol(dset)` 列の `tibble` になっています。
+2 列あるはずです。
+この場合、`read_csv()` に説明を無視させないといけない。
+
+`skip = 3` を `read_csv()` に渡せば、最初の 3 行をスキップできます。
+
+```{r}
+filename = "./_data/sargassum_t-test_dataset.csv"
+dset = read_csv(filename, skip = 3)
+```
+
+```{r}
+dset
+```
+
+`r nrow(dset)` 行 `r ncol(dset)` 列の `tibble` になりました。
+列1の列名は `site` 列２の列名は `size` です。
+
+## まずデータの平均値や標準偏差などをもとめる
+
+`site` ごとの `size` の平均値、標準偏差、サンプル数、標準誤差は
+`tidyverse` パッケージの解析システムをつかいます。
+
+```{r}
+dset |> 
+  group_by(site) |> 
+  summarise(across(size, list(mean = mean, sd = sd, n = length))) |> 
+  mutate(size_se = size_sd / sqrt(size_n))
+```
+
+
+## t 検定
+
+t検定は `t.test()` でやります。
+
+\small
+```{r}
+t.test(size ~ site, data = dset)
+```
+\normalsize
+
+`t.test()` の結果をオブジェクトに書き込んだら、t値 (t value)、p値 (p value)、自由度 (degrees of freedom) を抽出できます。
+
+```{r}
+dset_test = t.test(size ~ site, data = dset)
+dset_test$statistic  # t value
+dset_test$parameter  # degrees of freedom 
+dset_test$p.value 　 # p value
+```
+
+```{r, echo = FALSE}
+dsum = dset |> 
+  group_by(site) |> 
+  summarise(across(size, list(mean = mean, sd = sd, n = length))) |> 
+  mutate(size_se = size_sd / sqrt(size_n))
+pm = function(x, y) {
+  sprintf("%0.2f ± %0.2f", x, y)
+}
+```
+
+
+## 結果
+
+
+> ノコギリモクの幼体において、サイト A から採取した幼体の幅（平均値±標準誤差）は `r pm(dsum$size_mean[1], dsum$size_se[1])` mm でしたが、
+サイト B から採取した幼体の幅は `r pm(dsum$size_mean[2], dsum$size_se[2])` mm でした。
+ｔ検定の結果、両地点で幼体幅間に有意な差がみられた (t~(`r sprintf("%0.2f", dset_test$parameter)`)~ = `r sprintf("%2.3f", dset_test$statistic)`; P = `r sprintf("%2.4f", dset_test$p.value)`)。
+
+有意水準より低いP値は「P < 0.05」のように書くことも有ります。
+つまり、「ｔ検定の結果、両地点で幼体幅間に有意な差がみられた (t~(`r sprintf("%0.2f", dset_test$parameter)`)~ = `r sprintf("%2.3f", dset_test$statistic)`; P < 0.05)」。
+
+
+t検定の結果を記述することが重要です。この 3 つの情報を必ず記述しましょう。
+
+* t~(`r sprintf("%0.2f", dset_test$parameter)`)~: 検定に使用した自由度（サンプル数の目安）
+* `r sprintf("%2.3f", dset_test$statistic)`: t検定の統計量
+* P = `r sprintf("%2.4f", dset_test$p.value)`: 結果のP値
+
+\pagebreak
+
+## 付録 A: 等分散性と正規性の検定
+
+データの正規性と等分散性の検証も必要であれば Levene Test と Shapiro-Wilk Normality Test があります。
+Levene Test は `car` パッケージの `leveneTest()` 関数でできますが、Shapiro-Wilk Normality Test はベースR に あるので、
+パッケージの読み込みは必要ないです。
+
+**等分散性の検定**
+
+Levene Test (ルビーン検定) は2群以上の分散の均質性 (homogeneity) を検定するための検定です。
+ルビーン検定の帰無仮説は「各群の分散は等しい」です。
+有意水準より低いP値を求めたら、帰無仮説を棄却します。
+棄却した場合、各群は均一な分散ではありません。
+
+```{r}
+library(car)
+leveneTest(size ~ site, data = dset)
+```
+```{r, echo=F}
+pval = leveneTest(size ~ site, data = dset)$`Pr(>F)`[1]
+fval = leveneTest(size ~ site, data = dset)$`F value`[1]
+```
+
+
+ルビーン検定の統計量は F 値です。
+データの等分散性を確認したところ、
+F~(1,10)~ = `r sprintf("%2.2f", fval)`、
+P値は P = `r sprintf("%0.4f", pval)`です。
+有意水準より大きいので、帰無仮説を棄却しません。
+つまり、等分散性ではないといえません。
+
+**正規性の検定**
+
+Shapiro-Wilk Normality Test (シャピロ–ウィルク検定) の帰無仮説は「サンプルが正規分布に従う母集団からとれた」です。
+つまりシャピロウィルク検定から得たP値はサンプルの正規性を評価する指標です。
+帰無仮説検定論の場合、有意水準より低いP値は帰無仮説を棄却することになり、センプルは正規分布に従わない母集団から得たものだと考えられるようになる。
+
+
+```{r}
+shapiro.test(dset$size)
+```
+```{r, echo =F}
+z=shapiro.test(dset$size) 
+```
+
+シャピロウィルク検定の統計量は W値です。
+W  =`r sprintf("%2.2f", z$statistic)`、
+P = `r sprintf("%2.4f", z$.value)` ので、
+帰無仮説を棄却しません。
+正規性に従わないといえません。
+
+**一般的な手順のコード**
+
+
+```{r, eval=FALSE}
+library(tidyverse)
+library(car)
+filename = "./_data/sargassum_t-test_dataset.csv"
+dset = read_csv(filename, skip = 3)
+
+# (1) データの可視化
+ggplot(dset) + 
+  geom_point(aes(x = site, y = size)) +
+  labs(y = "Width (mm)",
+       x = "Site")
+
+# (2) 等分散性の確認
+leveneTest(size ~ site, data = dset)
+
+# (3) 正規性の確認
+shapiro.test(dset$size)
+
+# (4) t検定
+t.test(size ~ site, data = dset)
+```
+
+
+## 付録 B: 本資料のデータ作成
+
+資料に使ったデータは次のコードでつくれます。
+
+```{r, eval = FALSE}
+library(tidyverse)
+set.seed(2021)
+nA = 6
+nB = 6
+meanA = 20
+meanB = 22
+sigmaA = 1
+sigmaB = 1
+groupA = rnorm(nA, meanA, sigmaA) |>  round(digits = 1)
+groupB = rnorm(nB, meanB, sigmaB) |>  round(digits = 1)
+dset   = tibble(site = c("A", "B"), size = list(groupA, groupB)) |>  unnest(size)
+L1 = "# 6 Sargassum macrocarpum individuals from 2 sites were measured."
+L2 = "# site: is the collection site (A, B)."
+L3 = "# size: is the width of the individual in mm."
+fname = "sargassum_t-test_dataset.csv"
+write_lines(file = fname, list(L1, L2, L3))
+write_csv(dset, file = fname, append = TRUE, col_names = TRUE)
+```

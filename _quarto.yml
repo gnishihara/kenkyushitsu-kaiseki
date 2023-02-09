@@ -1,0 +1,59 @@
+project:
+  type: website
+  output-dir: docs
+  render:
+    - index.qmd
+    - about.qmd
+    - pca.qmd
+    - rda.qmd
+    - "part*.qmd"
+    - "anova*.qmd"
+    - ttest.qmd
+    - glm.qmd
+    - linearmodels.qmd
+
+website:
+  title: "データ解析（研究室用）"
+  sidebar:
+    style: "docked"
+    search: true
+    contents:
+      - section: Introduction
+        contents:
+        - index.qmd
+        - about.qmd
+      - section: Rの基礎
+        contents:
+        - part01.qmd
+        - part02.qmd
+        - part03.qmd
+        - part04.qmd
+        - part05.qmd
+      - section: Linear models
+        contents:
+        - linearmodels.qmd
+        - ttest.qmd
+        - anova.qmd
+        - anova2.qmd
+        - glm.qmd
+      - section: Multivariate
+        contents:
+        - pca.qmd
+        - rda.qmd
+
+format:
+  html:
+    theme: [ cosmo, custom.scss]
+    css: styles.css
+    toc: true
+    html-math-method: katex
+    code-block-bg: true
+    code-block-border-left: "#31BAE9"
+reference-location: margin
+citation-location: margin
+bibliography: references.bib
+
+execute: 
+  freeze: auto
+  
+

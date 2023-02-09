@@ -1,0 +1,726 @@
+---
+title: "一元配置分散分析"
+subtitle: Comparing multiple groups with ANOVA
+format: 
+  html:
+    html-math-method: katex
+reference-location: margin
+citation-location: margin
+bibliography: references.bib
+---
+
+```{r}
+#| cache: false
+#| echo: false
+#| message: false
+#| warnings: false
+library(tidyverse)
+library(flextable)
+library(magick)
+library(kableExtra)
+library(furrr)
+library(patchwork)
+library(broom)
+library(gnnlab)
+options(mc.cores = 8, scipen = 6)
+plan(multisession)
+
+```
+
+
+::: {.callout-note}
+解析の紹介に使った疑似データは次のようにつくりました。
+
+```{r}
+#| cache: false
+set.seed(2021) # 疑似乱数のシードを設定する
+nA = 6         # サンプル数を決める
+nB = 6
+nC = 6
+meanA = 20     # 真の平均値
+meanB = 22
+meanC = 18
+sigmaA = 1     # 真の標準偏差
+sigmaB = 1
+sigmaC = 1
+siteA = rnorm(nA, meanA, sigmaA) |> round(1) # データを発生する
+siteB = rnorm(nB, meanB, sigmaB) |> round(1)
+siteC = rnorm(nC, meanC, sigmaC) |> round(1)
+
+# tibble を組み立てる
+dset = tibble(g = c("A", "B", "C"), data = list(siteA, siteB, siteC)) |> 
+  unnest(data) |> 
+  mutate(g = factor(g))
+```
+:::
+
+## ノコギリモク (*Sargassum macrocarpum*) の疑似データ
+
+::: {.grid}
+
+::: {.g-col-4}
+```{r}
+#| cache: true
+#| echo: false
+#| fig-cap: "The width of the rope is 6 mm, so the juvenile is about 20 mm in width."
+#| label: juvenile-sargassum-figure
+folder = rprojroot::find_rstudio_root_file("_images")
+file = dir(folder, full = TRUE) |> str_subset("juvenile.jpg")
+img = image_read(file) 
+img = img |> image_crop("1500x1500+1700+750") |> 
+  image_annotate(text = "Juvenile", gravity = "southwest",
+                 location = "+50+100",
+                 weight = 700,
+                 color = "white", font = "Noto Sans", size = 80) |> 
+  image_annotate(text = "Sargassum macrocarpum", gravity = "southwest",
+                 location = "+390+100",
+                 weight = 700,
+                 color = "white", font = "Noto Sans",
+                 style = "italic",
+                 size = 80) |> 
+  image_annotate(text = "ノコギリモク", gravity = "northwest",
+                 weight = 700,
+                 boxcolor = "white",
+                 color = "black", font = "Noto Sans CJK JP",
+                 size = 80)
+img
+```
+:::
+::: {.g-col-8}
+
+```{r}
+#| echo: false
+#| label: tbl-juvenile-dataset
+#| tbl-cap: "Size (mm) of juvenile Sargassum macrocarpum（ノコギリモク）."
+cnames = c("Sample", "Site A", "Site B", "Site C")
+dset |> 
+  pivot_wider(names_from = g,
+              values_from = data,
+              values_fn = list) |> 
+  unnest(everything()) |> 
+  mutate(sample = 1:n(), .before = A) |> 
+  kbl(col.names = cnames) |> 
+  kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive"))
+  
+```
+:::
+:::
+
+::: {.callout-note}
+ノコギモクの大きさは @tbl-juvenile-dataset に示しています。
+サンプルは 3 箇所（3群）から採取しました。
+各サンプルに個体数番号もふっています。
+
+データは 上のノートに紹介したコードで発生しました。
+:::
+
+
+## データの可視化
+
+```{r}
+ggplot(dset) + 
+  geom_point(aes(x = g, y = data, color = g),
+             size = 2,
+             position = position_jitter(0.1)) +
+  scale_color_manual("", values = viridis::viridis(4)) +
+  labs(y = "Width (mm)", x = "Site") +
+  theme(legend.position = "top")
+```
+
+各サイトの平均値 ($\overline{x}$), 標準偏差 ($s$), と標準誤差 (s.e.) は、
+
+* $\overline{x}_A=$ `r mean(siteA) |> round(1)`; $s_A=$ `r sd(siteA) |> round(2)`; s.e. = `r se(siteA) |> round(2)`
+* $\overline{x}_B=$ `r mean(siteB) |> round(1)`; $s_B=$ `r sd(siteB) |> round(2)`; s.e. = `r se(siteB) |> round(2)`
+* $\overline{x}_C=$ `r mean(siteC) |> round(1)`; $s_C=$ `r sd(siteC) |> round(2)`; s.e. = `r se(siteC) |> round(2)`
+
+
+## 仮説を決める {#hypothesis}
+
+::: {.callout-important}
+解析する前に作業仮説、帰無仮説、対立仮説を設定する必要があります。
+
+:::
+
+::: {.callout-note appearance="simple"}
+## Working hypothesis
+
+**作業仮設**: ノコギリモクの大きさは採取した場所によって異なる。 
+:::
+
+* 記述統計量によって、平均値以外の統計量（標準偏差と標準誤差）は似ています。
+- $\overline{x}_A=$ `r mean(siteA) |> round(1)`; $s=$ `r sd(siteA) |> round(2)`; s.e. = `r se(siteA) |> round(2)`
+- $\overline{x}_B=$ `r mean(siteB) |> round(1)`; $s=$ `r sd(siteB) |> round(2)`; s.e. = `r se(siteB) |> round(2)`
+- $\overline{x}_C=$ `r mean(siteC) |> round(1)`; $s=$ `r sd(siteC) |> round(2)`; s.e. = `r se(siteC) |> round(2)`
+
+### 帰無仮説と対立仮説
+
+統計学的に解析するための帰無仮説と対立仮説を決めます。
+
+* **$H_0$ (null hypothesis 帰無仮説・ヌル仮説):** ノコギリモクの大きさは場所によって異ならない
+* **$H_A$ (alternative hypothesis 対立仮設):**  ノコギリモクの大きさは場所によって異なる
+
+## ナイーブな ペア毎の t 検定
+
+とりあえず、場所のペア毎の t 検定を実施します。
+このとき、3 つの帰無仮説が必要なので、@hypothesis と違います。
+
+* H~0,A-B~: Site A と Site B の大きさは同じ
+* H~0,A-C~: Site A と Site C の大きさは同じ
+* H~0,B-C~: Site B と Site C の大きさは同じ
+
+では、それぞれの t 検定を実施します。
+
+### Site A and B の t 検定
+
+```{r}
+resultAB = dset |> filter(!str_detect(g, "C"))
+resultAB = t.test(data ~ g, data = resultAB)
+resultAB
+```
+
+
+t値は `r resultAB$statistic |> round(digits = 3)`、P値は `r resultAB$p.value |> round(digits = 4)` です。
+`r resultAB$p.value |> round(digits = 4)` $\le$ 0.05 なので、帰無仮説は棄却できます。
+
+### Site A and C の t 検定
+
+```{r}
+resultAC = dset |> filter(!str_detect(g, "B"))
+resultAC = t.test(data ~ g, data = resultAC)
+resultAC
+```
+
+t値は `r resultAC$statistic |> round(digits = 3)`、P値は `r resultAC$p.value |> round(digits = 4)` です。
+`r resultAC$p.value |> round(digits = 4)` $\ge$ 0.05 なので、帰無仮説は棄却できません。
+
+### Site B and C の t 検定
+
+
+```{r}
+resultBC = dset |> filter(!str_detect(g, "A"))
+resultBC = t.test(data ~ g, data = resultBC)
+resultBC
+```
+
+t値は `r resultBC$statistic |> round(digits = 3)`、P値は `r resultBC$p.value |> round(digits = 4)` です。
+`r resultBC$p.value |> round(digits = 4)` $\le$ 0.05 なので、帰無仮説は棄却できます。
+
+**t検定の結果をまとめました。**
+
+```{r}
+#| label: tbl-three-t-tests
+#| echo: false
+#| tbl-cap: "Summary of three t-tests."
+
+cnames = c(
+  "Pair", 
+  "Difference", 
+  "t-value", 
+  "P-value",
+  "d.f.",
+  "95% CI",
+  "Is P ≤ 0.05?"
+)
+
+bind_rows(
+  `B-A`=tidy(resultAB),
+  `C-A`=tidy(resultAC),
+  `C-B`=tidy(resultBC),
+  .id = "Pair"
+) |> 
+  mutate(ci = str_glue("{format(conf.low, digits = 2)} to {format(conf.high, digits = 2)}")) |> 
+  select(Pair, estimate, statistic, p.value, parameter, ci) |> 
+  mutate(chk = ifelse(p.value <= 0.05, "Yes", "No")) |> 
+  kbl(col.names = cnames) |> 
+  kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive"))
+  
+```
+
+d.f. は Welch-Satterthwaite 式で求めた自由度^[degrees-of-freedom]、95% CI は 95% 信頼区間です。
+
+## 第１種の誤り (accepting a false H~0~)
+
+::: {.callout-note}
+## 第１種の誤り
+H~0~ が **FALSE** のときに帰無仮説を棄却できなかった誤りです。
+:::
+
+t 検定を 1 回実施したときの誤りは 
+
+$$
+\text{Type I error rate} = \alpha = 0.05
+$$
+
+t 検定を 2 回実施したときの誤りは 
+
+$$
+1 - (1 - \alpha) \times (1 - \alpha) = 1 - (1-\alpha)^2=0.0975
+$$
+
+t 検定を 3 回実施したときの誤りは 
+
+$$
+1 - (1 - \alpha) \times (1 - \alpha) \times (1 - \alpha)= 1 - (1-\alpha)^3=0.142625
+$$
+
+t 検定を $h$ 回実施したとき、第１種の誤りは $1 - (1-\alpha)^h$ です。
+
+
+### 群が増えると大変なことなる
+
+$n$ 群のサンプルの全ペア毎の比較がしたい場合、 $h$ のペア $(k = 2)$ が存在します。
+
+
+$$
+h = \binom{n}{k}=\frac{n!}{k!(n-k!)}
+$$
+
+ペア毎の $h$ の数を求める式は次のようになります。
+
+$$
+h = \binom{n}{2}=\frac{n!}{2!(n-2!)} = \frac{n(n-1)}{2}
+$$
+
+
+例えば、5 site の場合、`r choose(5,2)` のペアが存在します。
+ペア毎の t 検定をしたら、第１種の誤りは 
+
+$$
+1 - (1-0.05)^{`r choose(5,2)`}=`r 1 - (1-0.05)^choose(5,2)`
+$$
+
+::: {.callout-note}
+## R での求め方
+
+```{r}
+alpha = 0.05       # 有意水準
+k = 2              # ペアだから 2
+n = 5              # 比較する群・場所・グループの数
+h = choose(n, k)   # ペアの数
+1 - (1 - alpha)^h  # 第１種の誤り
+```
+
+:::
+
+```{r}
+#| fig-cap: 比較する群が増えると、t 検定を繰り返して実施すると、第１種の誤りを起こしやすい。
+#| echo: false
+tibble(sites = 3:10) |> 
+  mutate(pairs = choose(sites, 2)) |> 
+  mutate(error = 1-0.95^pairs) |> 
+  ggplot() + 
+  geom_segment(aes(x = pairs, xend = pairs, y = 0, yend = error), size = 3)+
+  annotate("text", x = 3, y = 1, label = "α = 0.05", vjust = 1, hjust = 0) +
+  scale_x_continuous("Number of unique pairs to test", breaks = choose(3:10,2),
+                     sec.axis = dup_axis(name = "Number of sites",labels = 3:10)) +
+  scale_y_continuous("Type-I error rate", limits = c(0, 1)) +
+  theme_gray(base_size = 8)
+```
+
+
+# 一元配置分散分析
+
+## One-Way ANOVA (一元配置分散分析)
+
+複数群（因子の水準）の解析は **一元配置分散分析)**^[One-Way ANOVA (One-Way Analysis of Variance] 用います。
+
+* 因子・要因^[factor]：説明変数、一般的には離散型な変数
+* 水準^[level, factor level]：説明変数における値、レベル、要素
+
+分散分析の帰無仮説は、
+
+$$
+\mu_1 = \mu_2 = \cdots = \mu_i
+$$
+
+つまり、一つの検定で複数群の平均値を同時に解析するから、第１種の誤りは 0.05 に抑えられる。
+
+分散分析のモデル式は次のように表せます。
+
+$$
+x_{ij} = \mu_i + \epsilon_{ij}
+$$
+
+水準 $i$ とサンプル $j$ の値は $x_{ij}$です。
+水準 $i$ の平均値は $\mu_i$ です。
+モデルの残渣^[residual]または誤差項^[error term]は $\epsilon_{ij}$ です。
+
+
+
+## 一元配置分散分析表
+
+
+```{r}
+#| cache: false
+#| echo: false
+CAP = "One-Way ANOVA Table"
+tibble(Factor = c("A", "e", " "),
+       `Degrees-of-freedom (df)` = c("$df_A = I-1$", "$df_R = I(J-1)$", "$df_T =IJ-1$"),
+       `Sum-of-Squares (SS)` = c("$SS_A$", "$SS_R$", "$SS_T$"),
+       `Mean-square (MS)` = c("$MS_A = SS_A / df_A$",
+                              "$MS_R = SS_R / df_R$",
+                              " "),
+       `F-value` = c("$MS_A / MS_R$", " ", " "),
+       `P-value` = c("$qf(1-α, df_A, df_R)$", "", "")) |> 
+  kbl() |> 
+  kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive"))
+  
+```
+
+
+
+* 因子は $A$^[factor]
+* 残渣は $e$^[residual]
+* 水準数は $I$^[number of levels]
+* サンプル数は　$J$^[number of samples]
+* 水準間平方和は $SS_A$^[among levels sum-of-squares (SS)]
+* 残渣平方和は $SS_R$^[residual SS]
+* 総平方和は $SS_T$^[total SS]
+* 水準間平均平方は $MS_A$^[among levels mean square (MS)]
+* 残渣平均平方は $MS_R$^[residual mean square (MS)]
+* F値^[F-value]は MS の比です。
+
+## 平方和の方程式
+
+$$
+\underbrace{\sum_{i=1}^I\sum_{j=1}^J(x_{ij} - \overline{\overline{x}})^2 }_{\text{総平方和}\;(SS_T)} =
+\overbrace{J\sum_{i=1}^I(\overline{x}_{i}-\overline{\overline{x}})^2}^{\text{水準間平方和}\;SS_A} +
+\underbrace{\sum_{i=1}^I\sum_{j=1}^J(x_{ij} - \overline{x}_i)^2}_{\text{残渣平方和}\;SS_R}
+$$
+
+標本平均は $\bar{x}_i$、総平均は $\bar{\bar{x}}$ です。
+
+
+## Decomposing the sum-of-squares
+
+```{r}
+#| echo: false
+out = glm(data ~ g, data = dset)
+xmean = dset |> pull(data) |> mean()
+dset2 = dset |> 
+  mutate(predict = predict(out),
+         residuals = residuals(out))
+Z = dset2 |> dplyr::select(g, predict) |> distinct() |> 
+  mutate(xmean = xmean, 
+         residuals =  predict - xmean)
+
+p1 = ggplot(dset2) +
+  geom_pointrange(aes(x= g, 
+                      y = data,
+                      ymin = data, 
+                      ymax = data - residuals, color = g), 
+                  position=position_jitter(width = 0.2, height = 0)) +
+  geom_errorbar(aes(x = g, y = predict, ymin = predict, ymax = predict),
+                color = "black",
+                data = dset2 |> dplyr::select(g, predict) |> distinct()) +
+  scale_x_discrete("Field site") +
+  scale_y_continuous("Length (cm)", limits = c(15, 25)) +
+  ggtitle(parse(text = "'Residual SS'[R]")) +
+  guides(color = "none")
+
+
+p2 = ggplot(Z) +
+  geom_pointrange(aes(x= g, 
+                      y = predict,
+                      ymin = predict, 
+                      ymax = predict - residuals, color = g)) + 
+  geom_hline(yintercept = xmean) +
+  scale_x_discrete("Field site") +
+  scale_y_continuous("Length (cm)", limits = c(15, 25)) +
+  ggtitle(parse(text = "'Among levels SS'[A]")) +
+  guides(color = "none")
+```
+
+```{r}
+#| echo: false
+#| layout-ncol: 2
+#| fig-cap: 
+#|   - "残渣平方和：各サンプルの値は点、グループ毎の平均値は黒線で示しています。黒線から点の縦線は残渣を表しています。"
+#|   - "水準間平方和：各グループの平均値は点、総平均は黒線で示しています。黒線から点の縦線はグループ毎の平均値と総平均の違いを表しています。"
+
+p1
+p2
+```
+
+
+## 分散分析の統計量
+
+
+$$
+F = \left . \frac{SS_A}{I-1} \right / \frac{SS_R}{I(J-1)}  = \frac{SS_A}{SS_R} \frac{I(J-1)}{I-1} = \frac{MS_A}{MS_R}
+$$
+
+
+F値は 自由度 $\text{df}_1 = I-1, \text{df}_2 = I(J-1)$ のF分布に従います。
+水準の数は $I$、水準ごとのサンプルの数は $J$ です。
+
+:::{.callout-note}
+
+* F値の分子^[numerator] が大きとき、または分母^[denominator]が小さいとき、F値は大きいです。
+* F値とP値は反比例します。
+
+:::
+
+## F値の確率密度関数
+
+$$
+P(x|\text{df}_1, \text{df}_2) = \frac{1}{\mathrm{B}\left(\frac{\text{df}_1}{2}, \frac{\text{df}_2}{2}\right)}\left(\frac{\text{df}_1}{\text{df}_2}\right)^{\left(\frac{\text{df}_1}{2}\right)}x^{\left(\frac{\text{df}_1}{2}-1\right)}\left(1+\frac{\text{df}_1}{\text{df}_2}x\right)^{\left(-\frac{\text{df}_1+\text{df}_2}{2}\right)}
+$$
+$\mathrm{B}(\text{df}_1, \text{df}_2)=\int_0^1t^{x-1}(1-t)^{y-1}dt$ は ベータ関数^[Beta function] といいます。
+$\text{df}_1$ と $\text{df}_2$ は自由度、$x$ は確率変数です。
+
+
+```{r}
+#| cache: false
+#| echo: false
+#| fig-cap: 自由度が変わるとF分布の形が変わります。
+
+Z= tibble(df1 = 3:6) |> 
+  mutate(df2 = df1 * 5) |> 
+  mutate(data = map2(df1,df2, function(x,y) {
+    fval = seq(0, 5, by = 0.01)
+    tibble(fval = fval,
+           pval = df(fval, x,y))
+  })) |> 
+  # mutate(group = paste0("list(d[1] ==", df1, ", d[2] == ", df2, ")") ) |> 
+  mutate(group = str_glue("({df1}, {df2})")) |> 
+  unnest(data) 
+
+ggplot(Z) +
+  geom_line(aes(x = fval, y = pval, color = group)) +
+  scale_color_manual(values=viridis::viridis(6), 
+                     labels = unique(Z$group))+
+  scale_x_continuous("F-value") +
+  theme(legend.text.align=0,
+        legend.background=element_blank(),
+        legend.title=element_blank(),
+        legend.position=c(1,1),
+        legend.justification=c(1,1),
+        axis.title.y = element_blank(),
+        axis.ticks.y = element_blank(),
+        axis.text.y=element_blank())
+
+```
+
+
+## 一元配置分散分析表の仮定
+
+分散分析するときに注意する仮定
+
+* 水準毎の母分散は等しい
+* 残渣は正規分布に従う
+* 観測値はお互いに独立であり、同一分布に従う
+* 観測変数は連続変数^[continuous]
+* 説明変数は離散変数^[discrete]
+
+
+## Rにおける解析
+
+解析例に使うデータは `thedata.csv` に保存したので、まずは読み込みます。
+
+```{r}
+#| echo: false
+dset = dset |> rename(site = g, obs = data)
+```
+
+```{r}
+#| cache: false
+#| eval: false
+# Read data from a csv file
+dset = read_csv("thedata.csv")
+```
+
+データをグループ化したあと、最初の 2 行を表示する。
+
+```{r}
+#| echo: true
+dset |> group_by(site) |> slice(1:2)
+```
+
+帰無仮説を当てはめる。
+
+```{r}
+nullmodel = lm(obs ~ 1, data = dset) # 帰無モデル、ヌルモデル
+```
+
+フルモデル（対立仮説）を当てはめる。
+
+```{r}
+fullmodel = lm(obs ~ site, data = dset) # 対立モデル、フルモデル
+```
+
+
+## 分散分析の結果
+
+**帰無仮説と対立仮説のモデル結果を用いた方法。**
+
+```{r}
+anova(nullmodel, fullmodel, test = "F")
+```
+
+```{r}
+#| echo: false
+x = anova(nullmodel, fullmodel, test = "F")
+pval = x$`Pr(>F)`[2]
+fval = x$F[2]
+dfs = c(x$Df[2], x$Res.Df[2])
+```
+
+F値は `r round(fval, digits = 3)`、自由度は df~1~ = `r dfs[1]` と df~2~ = `r dfs[2]` です。
+よって、P値は `r round(pval, digits = 6)` です。
+有意水準が $\alpha = 0.05$ 、自由度が　`r paste0("(", paste0(dfs, collapse = ", "), ")")` 
+のときのF値は `r round(qf(0.95, dfs[1], dfs[2]), digits = 3)`.
+
+**フルモデルの結果でけ用いた解析**
+
+```{r }
+anova(fullmodel)
+```
+
+**`aov()` 関数を用いた方法**
+
+このとき、`lm()` は不要です。
+
+```{r }
+aovout = aov(obs ~ site, data = dset)
+summary(aovout)
+```
+
+::: {.callout-important}
+分散分析の帰無仮説は $\mu_0 = \mu_1 = \cdots \mu_i$ なので、
+ペア間の検定ではないです。
+:::
+
+# 多重比較^[multiple comparisons]
+
+## 多重比較
+
+分散分析の帰無仮説を棄却したら、ペア毎の比較がしたくなります。
+第１種の誤りを抑える多重比較の検定は豊富に存在します。
+
+1. Bonferroni Procedure (ボンフェロニ法)
+1. Holm-Bonferroni Method (ホルム = ボンフェロニ法)
+1. Tukey’s Honest Signiﬁcant Difference Test (テューキーの HSD 検定)
+1. Tukey-Kramer method, Tukey’s test
+1. Scheffe’s Method (シェッフェの方法)
+1. Dunnett’s Test (ダネットの検定)
+1. Fisher’s Least Signiﬁcant Difference (フィッシャーの最小有意差法)
+1. Duncan’s new multiple range test (ダンカンの新多重範囲検定)
+
+1 から 4 はペア毎の比較です。
+ダネットの検定は水準に対する比較です。
+フィッシャーとダンカンの検定の第１種の誤りは高いので、使用しないでください。
+
+## 多重比較用 R パッケージ
+
+多重比較用の関数は次のパッケージにあります。
+
+* `multcomp`
+* `emmeans`
+
+ここでは、`emmeans` を紹介します。
+
+```{r }
+library(emmeans) # 多重比較用パッケージ
+library(nlme)    # gls() 関数はこのパッケージにある
+```
+
+## 繰り返しウェルチの t 検定
+
+**説明のために紹介しています。実際の解析には使わないでください。**
+
+```{r }
+glsmodel = gls(obs ~ site, data = dset, 
+               weights = varIdent(form = ~ 1|site))
+emout = emmeans(glsmodel, specs = pairwise ~ site, adjust = "none")
+emout$contrasts |> summary(infer =T)
+```
+
+第１種の誤りを調整していません。
+
+
+## 繰り返し t 検定
+
+**説明のために紹介しています。実際の解析には使わないでください。**
+
+```{r}
+emout = emmeans(fullmodel, specs = pairwise ~ site, data = dset, adjust = "none")
+emout$contrasts |> summary(infer =T)
+```
+
+第１種の誤りを調整していません。
+
+## ボンフェロニ法
+
+
+```{r }
+emout = emmeans(fullmodel, specs = pairwise ~ site, data=dset, adjust = "bonferroni")
+emout$contrasts |> summary(infer =T)
+```
+
+P値は $p_{adj} =m\times p$ によって求められました. 
+
+
+## ホルム=ボンフェロニ法
+
+```{r }
+emout = emmeans(fullmodel, specs = pairwise ~ site, data=dset, adjust = "holm")
+emout$contrasts |> summary(infer =T)
+```
+
+P値は低い値から高い値へ並べ替えてから、$p_{adj} = (m+1-k)\times p$ によって求めます。
+$m$ は比較の数、 $k$ は比較の指数です。
+
+
+::: {.callout-note}
+ボンフェロニ法とホルム=ボンフェロニ法の
+P値は次のように求められます。
+
+```{r }
+emout = emmeans(fullmodel, specs = pairwise ~ site, adjust = "none")
+x = emout$contrasts  |>  as_tibble()
+x  |>  arrange(p.value)  |> 
+  mutate(k = 1:3)  |> mutate(m = n())  |> 
+  mutate(p.bonferroni = p.value * m,
+         p.holm = p.value * (m + 1 - k))  |> 
+  select(contrast, m, k, starts_with("p"))
+```
+:::
+
+## テューキーのHSD法
+
+
+```{r}
+emout = emmeans(fullmodel, specs = pairwise ~ site, data=dset, adjust = "tukey")
+emout$contrasts |> summary(infer =T)
+```
+
+P値はステュデント化範囲の分布^[Studentized range distribution]に従います。
+
+
+## シェッフェの方法
+
+
+```{r}
+emout = emmeans(fullmodel, specs = pairwise ~ site, data=dset, adjust = "scheffe")
+emout$contrasts |> summary(infer =T)
+```
+
+P値はF分布に従います。
+
+## ダネットの検定
+
+
+```{r}
+emout = emmeans(fullmodel, specs = trt.vs.ctrl ~ site, ref = 2)
+emout$contrasts |> summary(infer =T)
+```
+
+ダネットの検定は、各水準は標準水準と比較する方法です。
+P値は多変量 t 分布に従います。
+
+
+## 多重比較のおすすめ
+
+* 比較: A -- B, A -- C, B -- C <i class="bi bi-arrow-right"></i> **テューキーのHSD法**
+* 比較: A -- B, A -- C, A -- D <i class="bi bi-arrow-right"></i> **ダネット法**

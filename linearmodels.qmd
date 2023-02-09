@@ -1,0 +1,455 @@
+---
+title: "ノンパラメトリック法"
+subtitle: Non-parametric statistics
+format: 
+  html:
+    html-math-method: katex
+reference-location: margin
+citation-location: margin
+bibliography: references.bib
+---
+
+```{r}
+#| cache: false
+#| echo: false
+#| message: false
+#| warnings: false
+library(tidyverse)
+library(flextable)
+library(magick)
+library(patchwork)
+```
+
+Non-parametric statistics^[ノンパラメトリック検定] are a type of statistics that do not assume data is drawn from a probability distribution^[特定の確率分布に依存しない仮説検定].
+
+## Example data
+
+```{r}
+#| fig-cap: "The unranked and ranked data from the Iris dataset. Note the change in shape"
+#| code-fold: true
+title = "生データ（左）と順位つけデータ（右）"
+p1 = iris |> 
+  ggplot() + geom_point(aes(x = Petal.Length, y = Petal.Width)) +
+  ggtitle("Unranked values")
+
+p2 = iris |> 
+  mutate(across(matches("Petal"), rank)) |> 
+  ggplot() + geom_point(aes(x = Petal.Length, y = Petal.Width)) +
+  ggtitle("Ranked values")
+p1 + p2 + 
+  plot_annotation(title = title)
+```
+
+## Correlation
+
+The Pearson correlation coefficient^[ピアソン相関係数] describes the linear (i.e., straight-line) relationship between two variables. The Spearman correlation describes the monotonic relationship between two variables [@leerodgers1988].
+
+**Pearson correlation**
+
+$$
+r_{xy} = \frac{\sum (x_i - \overline{x})(y_i - \overline{y})}{
+\sqrt{\sum (x_i - \overline{x})^2}\sqrt{\sum (y_i - \overline{y})^2}
+} =
+\frac{S_{xy}}{S_xS_y}
+$$
+
+The Pearson correlation is bounded by -1 and 1 $(-1 \le r_{xy} \le 1)$. 
+$S_{xy}$ is the covariance, $S_{xx}$ and $S_{yy}$ are the variances of $x$ and $y$, respectively.
+
+Manually calculating the Pearson correlation.
+
+```{r}
+x = iris$Petal.Length
+y = iris$Petal.Width
+
+meanx = mean(x)
+meany = mean(y)
+
+numerator = sum((x - meanx) * (y - meany))
+denominator = sqrt(sum((x - meanx)^2)) * sqrt(sum((y - meany)^2))
+numerator / denominator
+```
+
+Calculate the Pearson correlation using `cor()`.
+
+```{r}
+cor(x, y, method = "pearson")
+```
+
+Conduct the Pearson's product-moment correlation test.
+
+```{r}
+cor.test(x, y, method = "pearson")
+```
+
+**Spearman rank correlation**
+
+$$
+\rho = r_{s} = \frac{\sum (R(x_i) - \overline{R(x)})(R(y_i) - \overline{R(y)})}{
+\sqrt{\sum (R(x_i) - \overline{R(x)})^2}\sqrt{\sum (R(y_i) - \overline{R(y)})^2}
+}
+$$
+
+The Spearman's rank correlation coefficient^[スピアマン順位相関係数] is also bounded by -1 and 1 $(-1 \le r_{s} \le 1)$.
+$R(x)$ indicates taking the rank of $x$.
+
+Manually calculate the Spearman's rank correlation.
+
+```{r}
+x = iris$Petal.Length |> rank()
+y = iris$Petal.Width  |> rank()
+
+meanx = mean(x)
+meany = mean(y)
+
+numerator = sum((x - meanx) * (y - meany))
+denominator = sqrt(sum((x - meanx)^2)) * sqrt(sum((y - meany)^2))
+numerator / denominator
+```
+
+Calculate the Spearman's rank correlation using `cor()`.
+
+```{r}
+cor(x, y, method = "spearman")
+```
+
+Test the Spearman's rank correlation.
+
+```{r}
+cor.test(x, y, method = "spearman", exact = F)
+```
+
+**Compare the two correlations coefficients**
+
+Comparing the performance of the two correlations using simulation.
+Assume that the Pearson correlation coefficient is `r Sxy = 0.5; Sxy`.
+
+Sample from a multivariate normal distribution.
+
+```{r}
+set.seed(2020)
+Sxy = 0.5
+Z = MASS::mvrnorm(n = 10000, 
+                  mu = c(0,0),
+                  Sigma = matrix(c(1, Sxy, Sxy, 1), ncol = 2))
+```
+
+```{r}
+#| fig-cap: Multivariate normal distribution with a mean of (0,0) and a covariance matrix of $\Sigma = \begin{bmatrix}1&0.5\\0.5&1\end{bmatrix}$.
+#| warning: false
+#| code-fold: true
+
+Z |> as_tibble(.name_repair = ~c("V1", "V2")) |> 
+  slice_sample(n = 5000) |> 
+  ggplot() + geom_point(aes(x = V1, y = V2), alpha = 0.2)
+```
+
+Calculate the Pearson and Spearman rank correlation for $n$ samples.
+The correlation coefficient should converge to 0.5.
+
+```{r}
+n = c(
+  seq(10, 100, by = 10),
+  seq(100, 1000 - 100, by = 100),
+  seq(1000, 10000 - 1000, by = 1000)
+  )
+sample_from_z = function(n, z, method) {
+    z = z[sample(1:nrow(z), n), ]
+    cor(z[ ,1], z[ ,2], method = method)
+}
+dout = 
+  tibble(n = n) |> group_by(n) |> 
+  mutate(pearson = map_dbl(n, sample_from_z, z = Z, method = "pearson")) |> 
+  mutate(spearman = map_dbl(n, sample_from_z, z = Z, method = "spearman")) 
+
+```
+
+
+```{r}
+#| fig-cap: The Pearson and Spearman rank correlation coefficients for $n$ samples The thick line indicates the true correlation coefficient.
+#| code-fold: true
+dout |> 
+  ggplot() + 
+  geom_hline(yintercept = Sxy)  +
+  geom_point(aes(x = n, y = pearson, color = "Pearson")) +
+  geom_point(aes(x = n, y = spearman, color = "Spearman")) +
+  geom_line(aes(x = n, y = pearson, color = "Pearson")) +
+  geom_line(aes(x = n, y = spearman, color = "Spearman"))  +
+  scale_color_viridis_d("", end = 0.8) + 
+  scale_y_continuous("Correlation coefficient", limits = c(0, 1)) +
+  scale_x_continuous("Samples (n)") +
+  theme(legend.position = c(1,1),
+        legend.justification = c(1,1),
+        legend.background = element_blank())
+```
+
+## Parametric and non-parametric tests
+
+### One-sample test
+
+**Parametric test**
+
+The (one-sample) t-test.
+
+```{r}
+t.test(Petal.Length ~ 1, data = iris)
+```
+
+The `lm()` function can also be used to conduct the test.
+
+```{r}
+lm(Petal.Length ~ 1, data = iris) |> summary()
+```
+
+**Non-parametric test**
+
+The (one-sample) Wilcoxon test
+
+```{r}
+wilcox.test(iris$Petal.Length)
+```
+
+Alternative version, however we need to determined the signed ranks^[符号順位] of the observations.
+
+```{r}
+signed_rank = function(x) sign(x) * rank(abs(x))
+```
+
+```{r}
+lm(signed_rank(Petal.Length) ~ 1, data = iris) |> 
+  summary()
+```
+
+### Two-sample test
+
+**Parametric test**
+
+This is the Welch's t-test.
+
+```{r}
+testdata = iris |> filter(!str_detect(Species, "setosa"))
+t.test(Petal.Length ~ Species, data = testdata)
+```
+
+The `lm()` version of the test.
+
+```{r}
+lm(Petal.Length ~ Species, data = testdata) |> summary()
+```
+
+
+**Non-parametric test**
+
+This is the Mann-Whitney U test (i.e., two-sample Wilcoxon test).
+One important consideration of this test is shape of the distributions for each group.
+If the groups have the same shape, then the Mann-Whitney U test is a test of differences in the medians.
+If the groups have different shapes, then the Mann-Whitney U test is a test of differences in the distributions.
+
+```{r}
+wilcox.test(Petal.Length ~ Species, data = testdata)
+```
+
+The `lm()` version using the `signed_rank()` function.
+
+```{r}
+testdata = testdata |> mutate(Petal.Length_srank = signed_rank(Petal.Length))
+lm(Petal.Length_srank ~ Species, data = testdata) |> summary()
+```
+
+### Regarding the U-test
+
+```{r}
+x = rpois(1000, 2) + 5
+y = 14 - x
+data = tibble(group = c("A", "B")) |> 
+  mutate(obs = list(x, y)) |> 
+  unnest(obs)
+
+data |> group_by(group) |> summarise(m = median(obs))
+```
+
+
+```{r}
+ggplot(data) + 
+  geom_histogram(aes(x = obs, fill = group),
+                 position = position_dodge())
+```
+
+```{r}
+wilcox.test(obs ~ group, data = data)
+```
+
+
+
+### Performance evaluation
+
+Evaluating the performance of the two-sample tests when the effect size is 1 and the standard deviations are 1.
+
+```{r}
+#| code-fold: true
+#| fig-cap: "When sample size is large, the P values convege to zero. Note that either test performs well, especially since the data is from a normal distribution."
+testdata = 
+  tibble(group = c("A", "B"),
+         mu = c(2, 3),
+         sd = c(1, 1)) |> 
+  group_by(group) |> 
+  mutate(obs = map2(mu, sd, rnorm, n = 500)) |> unnest(obs)
+
+td2 = 
+tibble(n = 3:200) |> 
+  mutate(out = map(n, function(n, data) {
+    df = data |> group_by(group) |> slice_sample(n = n)
+    tout = t.test(obs ~ group, data = df)$p.value
+    uout = wilcox.test(obs ~ group, data = df, exact = F)$p.value
+    tibble(toutp = tout, uoutp = uout)
+  }, data = testdata)) |> 
+  unnest(out)
+
+ggplot(td2) + 
+  geom_point(aes(x = n, y = toutp, color = "t-test")) +
+  geom_point(aes(x = n, y = uoutp, color = "U-test")) +
+  geom_line(aes(x = n, y = toutp, color = "t-test")) +
+  geom_line(aes(x = n, y = uoutp, color = "U-test")) +
+  scale_color_viridis_d("", end = 0.8) + 
+  scale_y_continuous("P-value", limits = c(0, 1)) +
+  scale_x_continuous("Samples (n)") +
+  theme(legend.position = c(1,1),
+        legend.justification = c(1,1),
+        legend.background = element_blank())
+
+```
+
+Evaluating the performance of the two-sample tests when the effect size is 1 and the standard deviations are 1 and 5.
+
+```{r}
+#| code-fold: true
+#| fig-cap: "When the variances are different, then both have similar difficulty detecting an effect. Large sample numbers are needed to reduce the P value to zero."
+
+testdata = 
+  tibble(group = c("A", "B"),
+         mu = c(2, 3),
+         sd = c(1, 5)) |> 
+  group_by(group) |> 
+  mutate(obs = map2(mu, sd, rnorm, n = 500)) |> unnest(obs)
+
+td2 = 
+  tibble(n = 3:500) |> 
+  mutate(out = map(n, function(n, data) {
+    df = data |> group_by(group) |> slice_sample(n = n)
+    tout = t.test(obs ~ group, data = df)$p.value
+    uout = wilcox.test(obs ~ group, data = df, exact = F)$p.value
+    tibble(toutp = tout, uoutp = uout)
+  }, data = testdata)) |> 
+  unnest(out)
+
+ggplot(td2) + 
+  geom_point(aes(x = n, y = toutp, color = "t-test")) +
+  geom_point(aes(x = n, y = uoutp, color = "U-test")) +
+  geom_line(aes(x = n, y = toutp, color = "t-test")) +
+  geom_line(aes(x = n, y = uoutp, color = "U-test")) +
+  scale_color_viridis_d("", end = 0.8) + 
+  scale_y_continuous("P-value", limits = c(0, 1)) +
+  scale_x_continuous("Samples (n)") +
+  theme(legend.position = c(1,1),
+        legend.justification = c(1,1),
+        legend.background = element_blank())
+
+```
+
+
+### ANOVA like tests
+
+**Parametric test**
+
+The One-way Analysis of Variance (ANOVA). 
+
+```{r}
+lm(Petal.Length ~ Species, data = iris) |> summary.aov()
+
+
+
+```
+
+**Non-parametric test**
+
+The Kruskal-Wallis rank sum test^[クラスカル=ウォリス検定].
+The test statistic^[検定統計量] is the $\chi^2$ statistic^[カイ2乗].
+The null hypothesis is that all of the groups have the same distribution^[すべてのグループで分布はは同じ].
+
+```{r}
+kruskal.test(Petal.Length ~ Species, data = iris)
+```
+
+Examine the performance of the one-way ANOVA and the Kruskal-Wallis test for 3-level factor, where the coefficient of variation is 1 and the means are 1.5, 2.0 and 2.5.
+
+
+```{r}
+#| code-fold: true
+#| fig-cap: "When the variances are the same, both tests quickly converge to P = 0."
+testdata = 
+  tibble(group = c("A", "B", "C"),
+         mu = c(1.5, 2, 2.5)) |> 
+  mutate(sd = rep(1, n())) |> 
+  group_by(group) |> 
+  mutate(obs = map2(mu, sd, rnorm, n = 500)) |> unnest(obs) |> 
+  ungroup()
+
+td2 = 
+  tibble(n = 3:500) |> 
+  mutate(out = map(n, function(n, data) {
+    df = data |> group_by(group) |> slice_sample(n = n)
+    tout = summary.aov(lm(obs ~ group, data = df))[[1]][5][[1]][1]
+    uout = kruskal.test(obs ~ group, data = df)$p.value
+    tibble(toutp = tout, uoutp = uout)
+  }, data = testdata)) |> 
+  unnest(out)
+
+ggplot(td2) + 
+  geom_point(aes(x = n, y = toutp, color = "One-way ANOVA")) +
+  geom_point(aes(x = n, y = uoutp, color = "Kruskal-Wallis")) +
+  geom_line(aes(x = n, y = toutp, color = "One-way ANOVA")) +
+  geom_line(aes(x = n, y = uoutp, color = "Kruskal-Wallis")) +
+  scale_color_viridis_d("", end = 0.8) + 
+  scale_y_continuous("P-value") +
+  scale_x_continuous("Samples (n)") +
+  theme(legend.position = c(1,1),
+        legend.justification = c(1,1),
+        legend.background = element_blank())
+```
+
+Examine the performance of the one-way ANOVA and the Kruskal-Wallis test for 3-level factor, where the coefficient of variation is 3 and the means are 1.5, 2, 2.5.
+
+```{r}
+#| code-fold: true
+#| fig-cap: "When the variances are different, then both have similar difficulty detecting an effect. Large sample numbers are needed to reduce the P value to zero."
+testdata = 
+  tibble(group = c("A", "B", "C"),
+         mu = c(1.5, 2, 2.5)) |> 
+  mutate(cv = rep(2, n())) |> 
+  mutate(sd = mu * cv) |> 
+  group_by(group) |> 
+  mutate(obs = map2(mu, sd, rnorm, n = 500)) |> unnest(obs) |> 
+  ungroup()
+
+td2 = 
+  tibble(n = 3:500) |> 
+  mutate(out = map(n, function(n, data) {
+    df = data |> group_by(group) |> slice_sample(n = n)
+    tout = summary.aov(lm(obs ~ group, data = df))[[1]][5][[1]][1]
+    uout = kruskal.test(obs ~ group, data = df)$p.value
+    tibble(toutp = tout, uoutp = uout)
+  }, data = testdata)) |> 
+  unnest(out)
+
+ggplot(td2) + 
+  geom_point(aes(x = n, y = toutp, color = "One-way ANOVA")) +
+  geom_point(aes(x = n, y = uoutp, color = "Kruskal-Wallis")) +
+  geom_line(aes(x = n, y = toutp, color = "One-way ANOVA")) +
+  geom_line(aes(x = n, y = uoutp, color = "Kruskal-Wallis")) +
+  scale_color_viridis_d("", end = 0.8) + 
+  scale_y_continuous("P-value") +
+  scale_x_continuous("Samples (n)") +
+  theme(legend.position = c(1,1),
+        legend.justification = c(1,1),
+        legend.background = element_blank())
+```

@@ -1,0 +1,45 @@
+%!xelatex
+\documentclass[margin = 2mm, tikz]{standalone}
+
+% \usepackage{xeCJK}
+% \defaultfontfeatures{Ligatures=TeX,Scale=MatchLowercase}
+% \setmainfont[]{Noto Sans}
+% \setsansfont[]{Noto Sans}
+% \setmonofont[]{Noto Sans Mono}
+\usepackage[vvarbb, upint, sfdefault]{notomath}
+\usepackage{noto-sans}
+
+% \setCJKmainfont[%
+% FontFace={ul}{n}{Font=* Thin},%
+% FontFace={l}{n}{Font=* Light}%
+% ]{Noto Sans CJK JP}%
+% 
+% \setCJKsansfont{Noto Sans CJK JP}%
+
+% \usepackage{amssymb,amsmath}
+\usepackage{ifxetex,ifluatex}
+\usepackage{fixltx2e} % provides \textsubscript
+\usepackage{longtable,booktabs}
+\usepackage{xcolor,color}
+\usepackage{titlesec, titletoc}
+\usepackage[parfill]{parskip}
+
+\definecolor{nagasakiBlue}{HTML}{006fc5} % \nagasaki university school color DIC183
+\definecolor{orange}{rgb}   {0.90,0.60,0.00}
+\definecolor{skyblue}{rgb}  {0.35,0.70,0.90}
+\definecolor{bluegreen}{rgb}{0.00,0.60,0.50}
+\definecolor{yellow}{rgb}   {0.95,0.90,0.25}
+\definecolor{blue}{rgb}     {0.00,0.45,0.70}
+\definecolor{red}{rgb}      {0.80,0.40,0.00}
+\definecolor{purple}{rgb}   {0.80,0.60,0.70}
+\definecolor{grey}{rgb}     {0.8,0.8,0.8}
+\definecolor{darkgrey}{rgb} {0.2,0.2,0.2}
+
+\usepackage{calc}
+
+\usepackage{tikz}
+\usetikzlibrary{matrix}
+\usetikzlibrary{positioning}
+\begin{document}
+%% TIKZ_CODE %%
+\end{document}

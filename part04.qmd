@@ -1,0 +1,492 @@
+---
+title: "データの操作"
+---
+
+```{r}
+library(tidyverse)
+```
+
+
+## 理想的なデータ構造
+
+* 1 行 = 1 観測値
+* 1 列 = 1 変数
+
+## データ加工・操作用関数
+
+**データの結合 (mutating join)**
+
+`x`, `y`, `by` は関数の引数です。`by` で指定したキー（変数名）が一致するように行を合わせることができる。
+
+* `full_join(x, y, by)`：全ての `x` と `y` 行と列を結合する。
+* `inner_join(x, y, by)`：`x` と `y` で共通する行と列を結合する。
+* `left_join(x, y, by)`：左側（）第 1 引数のtibble に `y` の変数を追加する。
+* `right_join(x, y, by)`：右側（）第 2 引数のtibble に `x` の変数を追加する。
+
+
+**データの結合 (join)**
+
+* `bind_cols()`：渡したtibbleを横に結合する（行数が異なったらエラーが発生する）。
+* `bind_rows()`：渡した tibble を立てに結合する（一致する変数名を合わせてくれます）。
+
+
+## mutating join のつかいかた
+
+```{r}
+X = tibble(x = c("A", "B", "C", "G"), y = c(NA, rnorm(3, mean = 5)))
+Y = tibble(x = c("A", "C", "D", "E"), z = c(rpois(3, lambda = 5), NA))
+```
+
+```{r}
+X
+```
+
+
+```{r}
+Y
+```
+
+```{r}
+full_join(X,Y, by = "x")
+```
+
+
+```{r}
+inner_join(X, Y, by = "x")
+```
+
+
+```{r}
+left_join(X, Y, by = "x")
+```
+
+```{r}
+right_join(X, Y, by = "x")
+```
+
+```{r}
+bind_rows(X, Y)
+```
+
+```{r}
+bind_rows("X" = X, "Y" = Y, .id = "origin")
+```
+
+```{r}
+bind_cols(X, Y)
+```
+
+## 行と列の加工・操作用関数
+
+**列における操作**
+
+* `mutate()`：既存の変数の書き換えや変数の追加する
+* `select()`：既存の変数を選らぶ
+* `rename()`：既存の変数の名前を変える
+* `pull()`：既存の変数をリストとして抽出する
+* `relocate()``：指定した列の位置を変える
+
+**行における操作**
+
+* `filter()`：条件を満たした行を返す
+* `distinct()`：指定した変数から重複している行を外す
+* `slice()`：指定した行インデックスを返す
+* `arrange()`：指定した列の昇順で行を並べ替える
+
+## 列の加工
+
+```{r}
+iris |> as_tibble() |> mutate(P2 = Petal.Length^2)
+```
+
+```{r}
+iris |> as_tibble() |> select(Species, Petal.Length)
+```
+
+```{r}
+iris |> as_tibble() |> select(matches("Length"))
+```
+
+```{r}
+iris |> as_tibble() |> rename(PL = Petal.Length)
+```
+
+```{r}
+iris |> as_tibble() |> 
+  rename_with(~str_replace_all(.x, "[(a-z.)]", ""), .cols = matches("(Pet)|(Sep)"))
+```
+
+```{r}
+iris |> as_tibble() |> pull(Species)
+```
+
+```{r}
+iris |> as_tibble() |> relocate(Species, .before = "Sepal.Length")
+```
+
+```{r}
+iris |> as_tibble() |> relocate(Species, matches("Length"), .before = "Sepal.Length")
+```
+
+
+## 行の加工
+
+
+```{r}
+iris |> as_tibble() |> filter(str_detect(Species, "versicolor"))
+```
+
+```{r}
+iris |> as_tibble() |> filter(Petal.Length > 6 & Sepal.Length > 7.5)
+```
+
+```{r}
+iris |> as_tibble() |> distinct(Species)
+```
+
+```{r}
+iris |> as_tibble() |> distinct(Petal.Length, .keep_all = T)
+```
+
+```{r}
+iris |> as_tibble() |> slice(1:5)
+iris |> as_tibble() |> slice_head(n = 2)
+iris |> as_tibble() |> slice_tail(n = 2)
+```
+
+```{r}
+iris |> as_tibble() |> slice_min(Petal.Length)
+iris |> as_tibble() |> slice_max(Petal.Length)
+iris |> as_tibble() |> slice_sample(n = 3)
+```
+
+```{r}
+iris |> as_tibble() |> arrange(Sepal.Length)
+```
+
+```{r}
+iris |> as_tibble() |> 
+  arrange(desc(Sepal.Length), desc(Sepal.Width))
+```
+
+## グループ化・ネストに関する関数
+
+* `group_by()`：`tibble` をグループ化する
+* `group_nest()`：グループ化した `tibble` をネスト（入れ子）する
+* `nest()`：渡した列をネストする
+* `unnest()`：ネストされている列を展開（アンネスト）する
+* `group_map()`：グループ化した `tibble` に関数を適応して、リストを返す
+* `group_modify()`：グループ化した `tibble` に関数を適応して、tibble を返す
+
+## `tibble` のグループ化
+
+
+```{r}
+iris |> as_tibble() |> select(1:3)
+```
+
+```{r}
+iris |> as_tibble() |> group_by(Species) |> select(1:3)
+```
+
+```{r}
+iris |> as_tibble() |> group_nest(Species)
+```
+
+```{r}
+iris |> as_tibble() |> nest(data = matches("Length|Width"))
+```
+
+```{r}
+iris |> as_tibble() |> group_nest(Species) |> unnest(data)
+```
+
+```{r}
+iris |> as_tibble() |> group_by(Species) |> group_map(~head(.x, n = 2))
+```
+
+```{r}
+iris |> as_tibble() |> group_by(Species) |> group_modify(~head(.x, n = 2))
+```
+
+## その他の関数
+
+* `drop_na()`：`NA`（欠損値）を含む行を削除
+* `replace_na()`：`NA`を他の値と書き換える
+* `fill()`：`NA`を直前の値で埋める
+
+* `separate()`：文字列の変数を任意の区切りで複数変数に分裂する
+* `unite()`：複数の変数を任意の区切りで 1 列にまとめる
+
+```{r}
+X
+```
+
+```{r}
+X |> drop_na()
+```
+
+```{r}
+X |> replace_na(list(x = "Z", y = 0))
+```
+
+```{r}
+X |> mutate(y = replace_na(y, 0))
+```
+
+```{r}
+Y |> fill(z)
+```
+
+```{r}
+tibble(x = c(NA, "Iris.setosa", "Iris.virginica", "Iris.versicolor")) |> 
+  separate(x, into = c("Genus", "Species"))
+```
+
+```{r}
+tibble(x = rep("Iris", 3), y = c("setosa", "virginica", "versicolor")) |> 
+  unite(Species, x, y, sep = "_")
+```
+
+## ピボット・`tibble`を変形する関数
+
+* `pivot_longer()`：`tibble` を wide format （横広）から long format （縦長）に変える
+* `pivot_wider()`：`tibble` をlong format から wide format に変える
+
+### 重要な引数
+
+`pivot_longer()`
+
+* `cols`：動かす変数
+* `names_to`：動かした変数の名前の移動先
+* `values_to`：動かした変数の値の移動先
+* `names_transform`：移動先の変数のタイプを変換
+
+`pivot_wider()`
+
+* `id_cols`：行（値）を区別するための列名
+* `names_from`：移動先の列名になる変数
+* `values_from`：移動したい値
+* `values_fill`：存在しない要素の埋め込み方法
+* `values_fn`：行の区別ができないときの処理（デフォルトはリスト）
+
+## `pivot_longer()` の使い方
+
+```{r}
+relig_income |> as_tibble()
+```
+
+```{r}
+relig_income |> as_tibble() |> 
+pivot_longer(!religion, names_to = "income", values_to = "count")
+```
+
+```{r}
+billboard |> as_tibble()
+```
+
+```{r}
+billboard |> as_tibble() |> 
+  pivot_longer(col = starts_with("wk"),
+               names_to = "week", names_prefix = "wk",
+               values_to = "rank", values_drop_na = TRUE)
+```
+
+```{r}
+who |> as_tibble()
+```
+
+```{r}
+who %>% as_tibble() |>
+  pivot_longer(cols = new_sp_m014:newrel_f65,
+               names_to = c("diagnosis", "gender", "age"),
+               names_pattern = "new_?(.*)_(.)(.*)",
+               values_to = "count", values_drop_na = TRUE)
+
+```
+
+```{r}
+anscombe |> as_tibble()
+```
+
+```{r}
+anscombe %>% as_tibble() |> 
+ pivot_longer(everything(), names_to = c(".value", "set"), names_pattern = "(.)(.)"
+ )
+```
+
+## `pivot_wider()` の使い方
+
+```{r}
+fish_encounters
+```
+
+```{r}
+fish_encounters |> as_tibble() |> 
+  pivot_wider(names_from = station, values_from = seen)
+```
+
+```{r}
+fish_encounters
+```
+
+```{r}
+# 存在しない組み合わせの要素を埋める
+fish_encounters |>  as_tibble() |> 
+  pivot_wider(names_from = station, values_from = seen, values_fill = 0)
+
+```
+
+```{r}
+us_rent_income |> as_tibble()
+```
+
+```{r}
+us_rent_income |> as_tibble() |> 
+  pivot_wider(names_from = variable, values_from = c(estimate, moe))
+
+# us_rent_income  |> as_tibble() |> 
+#   pivot_wider(names_from = variable,
+#               names_sep = ".",
+#               values_from = c(estimate, moe))
+
+# us_rent_income  |> as_tibble() |> 
+#   pivot_wider(names_from = variable,
+#               names_glue = "{variable}_{.value}",
+#               values_from = c(estimate, moe))
+```
+
+```{r}
+warpbreaks |> as_tibble()
+```
+
+```{r}
+warpbreaks |> as_tibble() |> 
+  pivot_wider(names_from = wool,
+              values_from = breaks)
+
+```
+
+```{r}
+warpbreaks |> as_tibble()
+```
+
+```{r}
+warpbreaks |> as_tibble() |> 
+  pivot_wider(names_from = wool,
+              values_from = breaks,
+              values_fn = mean)
+
+```
+
+## 不都合なデータ構造
+
+```{r, include = F, cache=TRUE}
+# 光合成曲線疑似データ
+set.seed(2021)
+f1 = \(x, p) {p[1] * (1-exp(-p[2] / p[1] * x)) - p[3]} 
+p = 32*c(80, 5, 30)
+z = tibble(light = c(seq(0, 45, by  = 5), seq(50, 100, by = 25))) |> 
+  mutate(yhat = f1(light, p))
+
+z = tibble(min = seq(0, 30, by = 5), data = list(z)) |> 
+  unnest(data) |> 
+  mutate(umol = min * yhat/10000 + 10) 
+
+z = tibble(sample = 1:10, data = list(z)) |> 
+  mutate(data = map(data, \(x) {
+    x |> 
+      mutate(umol = rnorm(n(), umol, sd = 0.1))
+  })) |> 
+  unnest(data) |> 
+  select(-yhat) |> 
+  pivot_wider(id_cols = c(sample, min),
+              names_from = light,
+              values_from = umol)
+z |> arrange(min, z) |> 
+  filter(sample <6) |> 
+  select(sample, min, matches("((5[0-9])|(7[0-9])|(10[0-9]))")) |> 
+  write_csv("_data/photosynthesis1_high.csv")
+  
+z |> arrange(min, z) |> 
+  filter(sample <6) |> 
+  select(!matches("((5[0-9])|(7[0-9])|(10[0-9]))")) |> 
+  write_csv("_data/photosynthesis1_low.csv")
+
+z |> arrange(min, z) |> 
+  filter(sample > 5) |> 
+  select(sample, min, matches("((5[0-9])|(7[0-9])|(10[0-9]))")) |> 
+  write_csv("_data/photosynthesis2_high.csv")
+  
+z |> arrange(min, z) |> 
+  filter(sample > 5) |> 
+  select(!matches("((5[0-9])|(7[0-9])|(10[0-9]))")) |> 
+  write_csv("_data/photosynthesis2_low.csv")
+```
+```{r readphoto, include = F, cache=TRUE}
+fname = rprojroot::find_rstudio_root_file("_data/photosynthesis1_low.csv")
+dset1_low = read_csv(fname)
+fname = rprojroot::find_rstudio_root_file("_data/photosynthesis1_high.csv")
+dset1_high = read_csv(fname)
+fname = rprojroot::find_rstudio_root_file("_data/photosynthesis2_low.csv")
+dset2_low = read_csv(fname)
+fname = rprojroot::find_rstudio_root_file("_data/photosynthesis2_high.csv")
+dset2_high = read_csv(fname)
+```
+
+```{r, eval = FALSE}
+fname = "photosynthesis1_low.csv"
+dset1_low = read_csv(fname)
+```
+
+
+```{r}
+dset1_low
+```
+
+`sample` と `min` の列はサンプル番号と時間 (minutes) の変数です。
+それぞれに、サンプル番号と時間の値が入っています。
+`0` から `45` の列には溶存酸素濃度の値が入っています。
+この時の変数名は光条件ですね。
+
+## ワイドからロングへ変換
+
+```{r}
+dset1_low |> 
+  pivot_longer(cols = matches("[0-9]+"),　names_to = "light",
+               names_transform  = list(light = as.numeric))
+```
+
+## 残りのデータの読み込み
+
+
+```{r, eval = FALSE}
+dset1_high = read_csv("photosynthesis1_high.csv")
+dset2_low  = read_csv("photosynthesis2_low.csv")
+dset2_high = read_csv("photosynthesis2_high.csv")
+```
+
+## ピボットしてから結合
+
+```{r}
+dset1_low  = dset1_low  |> pivot_longer(cols = matches("[0-9]+"), names_to = "light", names_transform = list(light = as.numeric))
+dset1_high = dset1_high |> pivot_longer(cols = matches("[0-9]+"), names_to = "light", names_transform = list(light = as.numeric))
+dset2_low  = dset2_low  |> pivot_longer(cols = matches("[0-9]+"), names_to = "light", names_transform = list(light = as.numeric))
+dset2_high = dset2_high |> pivot_longer(cols = matches("[0-9]+"), names_to = "light", names_transform = list(light = as.numeric))
+alldata = bind_rows(dset1_low, dset2_low, dset1_high, dset2_high)
+alldata
+```
+
+## 結合してからピボット
+
+```{r, ref.label="readphoto", echo=F}
+```
+
+```{r}
+dset1 = full_join(dset1_low, dset1_high, by = c("sample", "min"))
+dset2 = full_join(dset2_low, dset2_high, by = c("sample", "min"))
+alldata = bind_rows(dset1, dset2)
+alldata = alldata |> 
+  pivot_longer(cols = matches("[0-9]+"), names_to = "light", 
+               names_transform = list(light = as.numeric))
+```

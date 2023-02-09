@@ -1,0 +1,11 @@
+/*-- scss:defaults --*/
+
+
+// import Fira Code
+@import url(https://cdn.jsdelivr.net/npm/firacode@6.2.0/distr/fira_code.css);
+$font-family-monospace: "Fira Code", monosapce;
+
+// import Noto Sans JP
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+JP&display=swap');
+
+$font-family-sans-serif:    "Noto Sans JP", "Source Sans Pro", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol" !default;

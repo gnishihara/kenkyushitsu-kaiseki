@@ -1,0 +1,1166 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.2.335">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>データ解析（研究室用） - 多数群の比較：二元配置分散分析</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1.6em;
+  vertical-align: middle;
+}
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { color: #008000; } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { color: #008000; font-weight: bold; } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+}
+.hanging div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}
+</style>
+
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<script src="site_libs/quarto-html/quarto.js"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 20,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit"
+  }
+}</script>
+
+  <script>window.backupDefine = window.define; window.define = undefined;</script><script src="https://cdn.jsdelivr.net/npm/katex@0.15.1/dist/katex.min.js"></script>
+  <script>document.addEventListener("DOMContentLoaded", function () {
+ var mathElements = document.getElementsByClassName("math");
+ var macros = [];
+ for (var i = 0; i < mathElements.length; i++) {
+  var texText = mathElements[i].firstChild;
+  if (mathElements[i].tagName == "SPAN") {
+   katex.render(texText.data, mathElements[i], {
+    displayMode: mathElements[i].classList.contains('display'),
+    throwOnError: false,
+    macros: macros,
+    fleqn: false
+   });
+}}});
+  </script>
+  <script>window.define = window.backupDefine; window.backupDefine = undefined;</script><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.15.1/dist/katex.min.css">
+
+<link rel="stylesheet" href="styles.css">
+</head>
+
+<body class="nav-sidebar docked slimcontent">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+  <nav class="quarto-secondary-nav" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+    <div class="container-fluid d-flex justify-content-between">
+      <h1 class="quarto-secondary-nav-title">多数群の比較：二元配置分散分析</h1>
+      <button type="button" class="quarto-btn-toggle btn" aria-label="Show secondary navigation">
+        <i class="bi bi-chevron-right"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse sidebar-navigation docked overflow-auto">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header">
+    <div class="sidebar-title mb-0 py-0">
+      <a href="./">データ解析（研究室用）</a> 
+    </div>
+      </div>
+      <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Search"></div>
+        </div>
+      </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-expanded="true">Introduction</a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-expanded="true">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./index.html" class="sidebar-item-text sidebar-link">研究室と講義の R コード</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./about.html" class="sidebar-item-text sidebar-link">About</a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-expanded="true">Rの基礎</a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-expanded="true">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./part01.html" class="sidebar-item-text sidebar-link">R の基本操作</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./part02.html" class="sidebar-item-text sidebar-link">R 関数の基本</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./part03.html" class="sidebar-item-text sidebar-link">Tidyverse</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./part04.html" class="sidebar-item-text sidebar-link">データの操作</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./part05.html" class="sidebar-item-text sidebar-link">ggplot の図</a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" aria-expanded="true">Linear models</a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" aria-expanded="true">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./linearmodels.html" class="sidebar-item-text sidebar-link">ノンパラメトリック法</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./ttest.html" class="sidebar-item-text sidebar-link">2群の比較：t 検定</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./anova.html" class="sidebar-item-text sidebar-link">一元配置分散分析</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./anova2.html" class="sidebar-item-text sidebar-link active">多数群の比較：二元配置分散分析</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./glm.html" class="sidebar-item-text sidebar-link">線形モデル</a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" aria-expanded="true">Multivariate</a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" aria-expanded="true">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./pca.html" class="sidebar-item-text sidebar-link">Principal Component Analysis</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./rda.html" class="sidebar-item-text sidebar-link">Redundancy Analysis</a>
+  </div>
+</li>
+      </ul>
+  </li>
+    </ul>
+    </div>
+</nav>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#two-way-anova-table-二元配置分散分析表" id="toc-two-way-anova-table-二元配置分散分析表" class="nav-link active" data-scroll-target="#two-way-anova-table-二元配置分散分析表">Two-Way ANOVA Table (二元配置分散分析表)</a></li>
+  <li><a href="#type-i-平方和の方程式" id="toc-type-i-平方和の方程式" class="nav-link" data-scroll-target="#type-i-平方和の方程式">Type I 平方和の方程式</a></li>
+  <li><a href="#r-コード" id="toc-r-コード" class="nav-link" data-scroll-target="#r-コード">R コード</a>
+  <ul class="collapse">
+  <li><a href="#二元配置分散分析" id="toc-二元配置分散分析" class="nav-link" data-scroll-target="#二元配置分散分析">二元配置分散分析</a></li>
+  <li><a href="#釣り合い型データと直交性について" id="toc-釣り合い型データと直交性について" class="nav-link" data-scroll-target="#釣り合い型データと直交性について">釣り合い型データと直交性について</a></li>
+  <li><a href="#type-iiii-平方和の分散分析" id="toc-type-iiii-平方和の分散分析" class="nav-link" data-scroll-target="#type-iiii-平方和の分散分析">Type-IIII 平方和の分散分析</a></li>
+  </ul></li>
+  <li><a href="#解析のまとめ" id="toc-解析のまとめ" class="nav-link" data-scroll-target="#解析のまとめ">解析のまとめ</a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content page-columns page-full" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title d-none d-lg-block">多数群の比較：二元配置分散分析</h1>
+<p class="subtitle lead">Comparing multiple groups with Two-Way ANOVA</p>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+</header>
+
+<div class="cell" data-warnings="false">
+
+</div>
+<p><strong>二元配置分散分析 (Two-Way ANOVA)</strong> 2 種類の因子（要因）を同時に比較するときに使用する。</p>
+<p><strong>二元配置分散分析の帰無仮説</strong></p>
+<ul>
+<li><span class="math inline">\mu_{A1} = \mu_{A2} = \cdots = \mu_{Ai}</span> (要因Aの主効果)</li>
+<li><span class="math inline">\mu_{B1} = \mu_{B2} = \cdots = \mu_{Bj}</span> (要因Bの主効果)</li>
+<li><span class="math inline">\mu_{ABij} = 0\text{ for all }i,j</span> (相互作用ABまたは交互作用ABの効果)</li>
+</ul>
+<p><strong>フルモデルは: </strong></p>
+<p><span class="math display">x_{ijk} = \mu_{Ai}+\mu_{Bj} + \mu_{ABij} + \epsilon_{ijk}</span></p>
+<p>水準 <span class="math inline">i</span>, <span class="math inline">j</span>, とサンプル <span class="math inline">k</span> の値は <span class="math inline">x_{ijk}</span>。 因子 <span class="math inline">A</span> の水準 <span class="math inline">i</span> ごとの平均値は <span class="math inline">\mu_{Ai}</span>。 因子 <span class="math inline">B</span> の水準 <span class="math inline">i</span> ごとの平均値は <span class="math inline">\mu_{Bi}</span>。</p>
+<p>交互作用 <span class="math inline">AB</span> の <span class="math inline">i,j</span> 効果の平均値は <span class="math inline">\mu_{ABij}</span>。 残渣（誤差項）は <span class="math inline">\epsilon_{ijk}</span>。</p>
+<section id="two-way-anova-table-二元配置分散分析表" class="level2 page-columns page-full">
+<h2 class="anchored" data-anchor-id="two-way-anova-table-二元配置分散分析表">Two-Way ANOVA Table (二元配置分散分析表)</h2>
+<div class="smalltable">
+<div class="cell">
+<div class="cell-output-display">
+<table class="table table-sm table-striped">
+<colgroup>
+<col style="width: 5%">
+<col style="width: 18%">
+<col style="width: 15%">
+<col style="width: 23%">
+<col style="width: 13%">
+<col style="width: 23%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Factor</th>
+<th style="text-align: left;">Degrees-of-freedom (df)</th>
+<th style="text-align: left;">Sum-of-Squares (SS)</th>
+<th style="text-align: left;">Mean-square (MS)</th>
+<th style="text-align: left;">F-value</th>
+<th style="text-align: left;">P-value</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">A</td>
+<td style="text-align: left;"><span class="math inline">df_A = I-1</span></td>
+<td style="text-align: left;"><span class="math inline">SS_A</span></td>
+<td style="text-align: left;"><span class="math inline">MS_A = SS_A / df_A</span></td>
+<td style="text-align: left;"><span class="math inline">MS_A / MS_R</span></td>
+<td style="text-align: left;"><span class="math inline">qf(1-\alpha, df_A, df_R)</span></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">B</td>
+<td style="text-align: left;"><span class="math inline">df_B = J-1</span></td>
+<td style="text-align: left;"><span class="math inline">SS_B</span></td>
+<td style="text-align: left;"><span class="math inline">MS_B = SS_B / df_B</span></td>
+<td style="text-align: left;"><span class="math inline">MS_B / MS_R</span></td>
+<td style="text-align: left;"><span class="math inline">qf(1-\alpha, df_B, df_R)</span></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">AB</td>
+<td style="text-align: left;"><span class="math inline">df_{AB} = (I-1)(J-1)</span></td>
+<td style="text-align: left;"><span class="math inline">SS_{AB}</span></td>
+<td style="text-align: left;"><span class="math inline">MS_{AB} = SS_{AB} / df_{AB}</span></td>
+<td style="text-align: left;"><span class="math inline">MS_{AB} / MS_R</span></td>
+<td style="text-align: left;"><span class="math inline">qf(1-\alpha, df_{AB}, df_R)</span></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">e</td>
+<td style="text-align: left;"><span class="math inline">df_R = IJ(K-1)</span></td>
+<td style="text-align: left;"><span class="math inline">SS_R</span></td>
+<td style="text-align: left;"><span class="math inline">MS_R = SS_R / df_R</span></td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;"></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"></td>
+<td style="text-align: left;"><span class="math inline">df_T = IJK-1</span></td>
+<td style="text-align: left;"><span class="math inline">SS_T</span></td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;"></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+<p><span class="math inline">A</span> と <span class="math inline">B</span> は主効果、 <span class="math inline">e</span> は残渣、 <span class="math inline">I</span> と <span class="math inline">J</span> は各因子の水準、 <span class="math inline">K</span> はサンプル数です。 <span class="math inline">SS_A</span> と <span class="math inline">SS_B</span> は水準間平方和、 <span class="math inline">SS_{AB}</span> は相互作用平方和、 <span class="math inline">SS_R</span> は残渣平方和、 <span class="math inline">SS_T</span> は総平方和です。 <span class="math inline">MS_A</span> と <span class="math inline">MS_B</span> は水準間平均平方、 <span class="math inline">MS_{AB}</span> は相互作用平均平方、 <span class="math inline">MS_R</span> は残渣平均平方です。 平均平方の比率はF値です。</p>
+<div class="callout-important callout callout-style-default callout-captioned">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-caption-container flex-fill">
+平方和は他にもある
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>上述した分散分析表は Type I 平方和 (SS) を求めています。 このとき、<span class="math inline">SS(A)</span>, <span class="math inline">SS(B|A)</span>, <span class="math inline">SS(AB|A,B)</span> です。 分散分析の結果は因子に順序とに依存し、非釣り合い型データに合わない。</p>
+<p>Type II 平方和は、<span class="math inline">SS(A|B)</span> と <span class="math inline">SS(B|A)</span> のみです。相互作用はありません。 分散分析の結果は因子に順序とに依存しないが、非釣り合い型データに合わない。</p>
+<p>Type III 平方和は、<span class="math inline">SS(A|B, AB)</span>, <span class="math inline">SS(B|A, AB)</span>, <span class="math inline">SS(AB|A,B)</span> です。 分散分析の結果は因子に順序とに依存しない、非釣り合い型データにも使えるが、 必ず<code>contr.sum</code> を設定しなければならない。</p>
+</div>
+</div>
+<p>平方和の非釣り合い型データの問題については、<span class="citation" data-cites="Hector2010">Hector, Felten, and Schmid (<a href="#ref-Hector2010" role="doc-biblioref">2010</a>)</span>, <span class="citation" data-cites="Langsrud2003">Langsrud (<a href="#ref-Langsrud2003" role="doc-biblioref">2003</a>)</span> を参考にしてください。</p>
+<div class="no-row-height column-margin column-container"><div id="ref-Hector2010" class="csl-entry" role="doc-biblioentry">
+Hector, Andy, Stefanie von Felten, and Bernhard Schmid. 2010. <span>“<span class="nocase">Analysis of variance with unbalanced data: An update for ecology <span>&amp;</span> evolution</span>.”</span> <em>Journal of Animal Ecology</em> 79: 308–16. <a href="https://doi.org/10.1111/j.1365-2656.2009.01634.x">https://doi.org/10.1111/j.1365-2656.2009.01634.x</a>.
+</div><div id="ref-Langsrud2003" class="csl-entry" role="doc-biblioentry">
+Langsrud, Øyvind. 2003. <span>“<span class="nocase">ANOVA for unbalanced data: Use Type II instead</span>.”</span> <em>Statistics and Computing</em> 13: 163–67. <a href="https://doi.org/10.1023/A:1023260610025">https://doi.org/10.1023/A:1023260610025</a>.
+</div></div></section>
+<section id="type-i-平方和の方程式" class="level2">
+<h2 class="anchored" data-anchor-id="type-i-平方和の方程式">Type I 平方和の方程式</h2>
+<p><span class="math display">
+\begin{split}
+\overbrace{\sum_{i=1}^I\sum_{j=1}^J\sum_{k=1}^K(x_{ijk} - \overline{\overline{x}})^2 }^{\text{総平方和}\;(SS_T)} =
+\overbrace{JK\sum_{i=1}^I(\overline{x}_{i}-\overline{\overline{x}})^2}^{\text{水準間平方和}\;SS_A} +
+\overbrace{IK\sum_{j=1}^J(\overline{x}_{j}-\overline{\overline{x}})^2}^{\text{水準間平方和}\;SS_B} \\ +
+\underbrace{K\sum_{i=1}^I\sum_{j=1}^J(\overline{x}_{ij} + \overline{\overline{x}})^2}_{\text{相互作用平方和}\;SS_{AB}} +
+\underbrace{\sum_{i=1}^I\sum_{j=1}^J\sum_{k=1}^K(x_{ijk} - \overline{x}_{ij})^2}_{\text{残渣平方和}\;SS_R}
+\end{split}
+</span></p>
+<p><span class="math inline">\bar{x}_i</span> is the sample mean (標本平均) and <span class="math inline">\bar{\bar{x}}</span> is the global mean (総平均).</p>
+</section>
+<section id="r-コード" class="level1">
+<h1>R コード</h1>
+<p>データはクラウドからダウンロードしました。 クラウドに CSV ファイルとして公開していると、そのまま読み込むことができます。</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>URL <span class="ot">=</span> <span class="st">"https://raw.githubusercontent.com/dzchilds/stats-for-bio/master/data_csv/FESTUCA.CSV"</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>festuca <span class="ot">=</span> <span class="fu">read_csv</span>(URL)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+
+</div>
+<ul>
+<li>観測値: <em>Festuca ovina</em> (ウシノケグサ) の康重量　dry weight (g) [K = 5]</li>
+<li>A因子: 土壌の pH (3.5 or 5.5) [I = 2]</li>
+<li>B因子: <em>Calluna vulgaris</em> (ギョリュウモドキ) の存在 [J = 2]</li>
+</ul>
+<p>データの可視化するまえに、変数を因子に変換します。</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>festuca <span class="ot">=</span> festuca <span class="sc">|&gt;</span> </span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">pH =</span> <span class="fu">factor</span>(pH),</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">Calluna =</span> <span class="fu">factor</span>(Calluna))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>上のコードは次のように諸略できます。</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>festuca <span class="ot">=</span> festuca <span class="sc">|&gt;</span> <span class="fu">mutate</span>(<span class="fu">across</span>(<span class="fu">c</span>(pH, Calluna), factor))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>では、作図。</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(festuca) <span class="sc">+</span> </span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="fu">aes</span>(<span class="at">x =</span> pH, <span class="at">y =</span> Weight, <span class="at">color =</span> Calluna),</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>             <span class="at">size =</span> <span class="dv">2</span>,</span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>             <span class="at">position =</span> <span class="fu">position_dodge</span>(<span class="fl">0.25</span>)) <span class="sc">+</span></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_x_discrete</span>(<span class="st">"pH"</span>) <span class="sc">+</span> </span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_y_continuous</span>(<span class="st">"Dry weight (g)"</span>) <span class="sc">+</span></span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_color_viridis_d</span>(<span class="at">end =</span> <span class="fl">0.8</span>) <span class="sc">+</span> </span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="fu">c</span>(<span class="dv">0</span>,<span class="dv">1</span>),</span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>        <span class="at">legend.justification =</span> <span class="fu">c</span>(<span class="dv">0</span>,<span class="dv">1</span>),</span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>        <span class="at">legend.background =</span> <span class="fu">element_blank</span>())</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="anova2_files/figure-html/unnamed-chunk-7-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<section id="二元配置分散分析" class="level2">
+<h2 class="anchored" data-anchor-id="二元配置分散分析">二元配置分散分析</h2>
+<p>分散分析の結果。</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>fullmodel_treatment <span class="ot">=</span> <span class="fu">lm</span>(Weight <span class="sc">~</span> pH <span class="sc">+</span> Calluna <span class="sc">+</span> pH<span class="sc">:</span>Calluna, <span class="at">data =</span> festuca)</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="fu">anova</span>(fullmodel_treatment)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Analysis of Variance Table
+
+Response: Weight
+           Df  Sum Sq Mean Sq F value     Pr(&gt;F)    
+pH          1 19.9800 19.9800 28.1792 0.00007065 ***
+Calluna     1 10.2102 10.2102 14.4001    0.00159 ** 
+pH:Calluna  1  5.3976  5.3976  7.6126    0.01397 *  
+Residuals  16 11.3446  0.7090                       
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
+</div>
+</div>
+<p>モデル係数の結果。</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(fullmodel_treatment)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Call:
+lm(formula = Weight ~ pH + Calluna + pH:Calluna, data = festuca)
+
+Residuals:
+   Min     1Q Median     3Q    Max 
+-1.156 -0.603 -0.138  0.732  1.272 
+
+Coefficients:
+                       Estimate Std. Error t value    Pr(&gt;|t|)    
+(Intercept)              3.3680     0.3766   8.944 0.000000127 ***
+pHpH5.5                  3.0380     0.5326   5.705 0.000032562 ***
+CallunaPresent          -0.3900     0.5326  -0.732       0.475    
+pHpH5.5:CallunaPresent  -2.0780     0.7531  -2.759       0.014 *  
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Residual standard error: 0.842 on 16 degrees of freedom
+Multiple R-squared:  0.7583,    Adjusted R-squared:  0.713 
+F-statistic: 16.73 on 3 and 16 DF,  p-value: 0.00003447</code></pre>
+</div>
+</div>
+<p>因子ごとの比較は <code>emmeans</code> パッケージの <code>emmeans()</code> 関数でします。 <code>object</code> 引数に、処理するモデルを渡します。 <code>formula</code> には、A因子 と B因子をモデル式として、渡します。</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="fu">emmip</span>(<span class="at">object =</span> fullmodel_treatment, </span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>      <span class="at">formula =</span> pH <span class="sc">~</span> Calluna)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="anova2_files/figure-html/unnamed-chunk-10-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<p>図で確認したと、ペアごとの比較をして、t値を求めます。 <code>object</code> 引数に、処理するモデルを渡します。</p>
+<p>B因子の水準内のペアごとの比較をしたい場合は、<code>specs</code> に <code>pairwise ~ A因子 | B因子</code> を渡します。</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="fu">emmeans</span>(<span class="at">object =</span> fullmodel_treatment, <span class="at">specs =</span> pairwise <span class="sc">~</span> pH <span class="sc">|</span> Calluna)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>$emmeans
+Calluna = Absent:
+ pH    emmean    SE df lower.CL upper.CL
+ pH3.5   3.37 0.377 16     2.57     4.17
+ pH5.5   6.41 0.377 16     5.61     7.20
+
+Calluna = Present:
+ pH    emmean    SE df lower.CL upper.CL
+ pH3.5   2.98 0.377 16     2.18     3.78
+ pH5.5   3.94 0.377 16     3.14     4.74
+
+Confidence level used: 0.95 
+
+$contrasts
+Calluna = Absent:
+ contrast      estimate    SE df t.ratio p.value
+ pH3.5 - pH5.5    -3.04 0.533 16  -5.705  &lt;.0001
+
+Calluna = Present:
+ contrast      estimate    SE df t.ratio p.value
+ pH3.5 - pH5.5    -0.96 0.533 16  -1.803  0.0903</code></pre>
+</div>
+</div>
+<p>全ペア毎の比較は、次の通りです。</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="fu">emmeans</span>(<span class="at">object =</span> fullmodel_treatment, <span class="at">specs =</span> pairwise <span class="sc">~</span> pH <span class="sc">:</span> Calluna, <span class="at">adjust =</span> <span class="st">"tukey"</span>) <span class="sc">|&gt;</span> </span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summary</span>(<span class="at">infer =</span> T)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>$emmeans
+ pH    Calluna emmean    SE df lower.CL upper.CL t.ratio p.value
+ pH3.5 Absent    3.37 0.377 16     2.57     4.17   8.944  &lt;.0001
+ pH5.5 Absent    6.41 0.377 16     5.61     7.20  17.011  &lt;.0001
+ pH3.5 Present   2.98 0.377 16     2.18     3.78   7.908  &lt;.0001
+ pH5.5 Present   3.94 0.377 16     3.14     4.74  10.457  &lt;.0001
+
+Confidence level used: 0.95 
+
+$contrasts
+ contrast                      estimate    SE df lower.CL upper.CL t.ratio
+ pH3.5 Absent - pH5.5 Absent      -3.04 0.533 16   -4.562   -1.514  -5.705
+ pH3.5 Absent - pH3.5 Present      0.39 0.533 16   -1.134    1.914   0.732
+ pH3.5 Absent - pH5.5 Present     -0.57 0.533 16   -2.094    0.954  -1.070
+ pH5.5 Absent - pH3.5 Present      3.43 0.533 16    1.904    4.952   6.437
+ pH5.5 Absent - pH5.5 Present      2.47 0.533 16    0.944    3.992   4.634
+ pH3.5 Present - pH5.5 Present    -0.96 0.533 16   -2.484    0.564  -1.803
+ p.value
+  0.0002
+  0.8827
+  0.7118
+  &lt;.0001
+  0.0014
+  0.3080
+
+Confidence level used: 0.95 
+Conf-level adjustment: tukey method for comparing a family of 4 estimates 
+P value adjustment: tukey method for comparing a family of 4 estimates </code></pre>
+</div>
+</div>
+</section>
+<section id="釣り合い型データと直交性について" class="level2">
+<h2 class="anchored" data-anchor-id="釣り合い型データと直交性について">釣り合い型データと直交性について</h2>
+<div class="callout-notes callout callout-style-default no-icon callout-captioned">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-caption-container flex-fill">
+釣り合い型データ (balanced data)
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>各因子水準のデータ数は同じであること</p>
+</div>
+</div>
+<div class="callout-notes callout callout-style-default no-icon callout-captioned">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-caption-container flex-fill">
+直行性 (orthogonality)
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>説明変数同士の内積 (inner product) はゼロと意味します。 ベクトルとした場合、ベクトル間の角度が 90°であること。 つまり、説明変数がお互いに相関していないこと。</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Example of calculating the inner product of two 3d vectors.</span></span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a><span class="co">#| echo: false</span></span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a><span class="co">#| eval: false</span></span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a>k  <span class="ot">=</span> <span class="fu">c</span>(<span class="fu">rnorm</span>(<span class="dv">3</span>))</span>
+<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a>x1 <span class="ot">=</span> <span class="fu">c</span>(<span class="fu">rnorm</span>(<span class="dv">2</span>),<span class="dv">0</span>)</span>
+<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a>x1 <span class="ot">=</span> x1 <span class="sc">-</span> <span class="fu">as.vector</span>(x1 <span class="sc">%*%</span> k) <span class="sc">*</span> k <span class="sc">/</span> <span class="fu">sqrt</span>(<span class="fu">sum</span>(k<span class="sc">^</span><span class="dv">2</span>))<span class="sc">^</span><span class="dv">2</span></span>
+<span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a>x2 <span class="ot">=</span> pracma<span class="sc">::</span><span class="fu">cross</span>(k,x1)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>() <span class="sc">+</span></span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_segment</span>(<span class="fu">aes</span>(<span class="at">x =</span> <span class="dv">0</span>, <span class="at">y =</span> <span class="dv">0</span>, <span class="at">xend =</span> <span class="dv">1</span>, <span class="at">yend =</span> <span class="dv">1</span>)) <span class="sc">+</span></span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_segment</span>(<span class="fu">aes</span>(<span class="at">x =</span> <span class="dv">0</span>, <span class="at">y =</span> <span class="dv">0</span>, <span class="at">xend =</span> <span class="sc">-</span><span class="dv">1</span>, <span class="at">yend =</span> <span class="dv">1</span>)) <span class="sc">+</span></span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_text</span>(<span class="fu">aes</span>(<span class="at">x =</span> <span class="dv">1</span>, <span class="at">y =</span><span class="dv">1</span>, <span class="at">label =</span> <span class="st">"(1,1)"</span>), <span class="at">vjust =</span> <span class="dv">0</span>) <span class="sc">+</span></span>
+<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_text</span>(<span class="fu">aes</span>(<span class="at">x =</span> <span class="sc">-</span><span class="dv">1</span>, <span class="at">y =</span><span class="dv">1</span>, <span class="at">label =</span> <span class="st">"(-1,1)"</span>), <span class="at">vjust =</span> <span class="dv">0</span>) <span class="sc">+</span></span>
+<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_label</span>(<span class="fu">aes</span>(<span class="at">x =</span> <span class="dv">0</span>, <span class="at">y =</span> <span class="fu">sqrt</span>(<span class="dv">2</span><span class="sc">*</span>(<span class="fl">0.5</span><span class="sc">^</span><span class="dv">2</span>)), <span class="at">label =</span> <span class="st">"90°"</span>)) <span class="sc">+</span></span>
+<span id="cb15-7"><a href="#cb15-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_curve</span>(<span class="fu">aes</span>(<span class="at">x =</span> <span class="fl">0.5</span>, <span class="at">y =</span> <span class="fl">0.5</span>, <span class="at">xend =</span> <span class="sc">-</span><span class="fl">0.5</span>, <span class="at">yend =</span> <span class="fl">0.5</span>),</span>
+<span id="cb15-8"><a href="#cb15-8" aria-hidden="true" tabindex="-1"></a>             <span class="at">arrow =</span> <span class="fu">arrow</span>(<span class="at">ends =</span> <span class="st">"both"</span>, <span class="at">type =</span> <span class="st">"closed"</span>)) <span class="sc">+</span></span>
+<span id="cb15-9"><a href="#cb15-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_x_continuous</span>(<span class="at">expand =</span> <span class="fu">expansion</span>(<span class="at">add =</span> <span class="fl">0.2</span>)) <span class="sc">+</span></span>
+<span id="cb15-10"><a href="#cb15-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_y_continuous</span>(<span class="at">expand =</span> <span class="fu">expansion</span>(<span class="at">add =</span> <span class="fl">0.2</span>)) <span class="sc">+</span></span>
+<span id="cb15-11"><a href="#cb15-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">coord_equal</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="anova2_files/figure-html/unnamed-chunk-14-1.png" class="img-fluid figure-img" width="288"></p>
+<p></p><figcaption class="figure-caption">著効性のあるベクトルのペア</figcaption><p></p>
+</figure>
+</div>
+</div>
+</div>
+<p>説明変数の係数 <span class="math inline">x_1</span> と <span class="math inline">x_2</span> の内積がゼロになること。</p>
+<p><span class="math display">
+\begin{aligned}
+x_1 &amp;= \begin{bmatrix}
+-1 &amp; 1
+\end{bmatrix} \\
+x_2 &amp;= \begin{bmatrix}
+1 &amp; 1
+\end{bmatrix}
+\end{aligned}
+</span></p>
+<p><span class="math display">
+x_1^T \cdot x_2 = \begin{bmatrix}
+-1 &amp; 1
+\end{bmatrix}
+\begin{bmatrix}
+1 \\ 1
+\end{bmatrix} = (-1 \times 1) + (1 \times 1) = 0
+</span></p>
+</div>
+</div>
+<div class="cell" data-hash="anova2_cache/html/unnamed-chunk-15_4eeca26e5691bcafdd0d22586b48e1f3">
+<div class="cell-output cell-output-stderr">
+<pre><code>`summarise()` has grouped output by 'pH'. You can override using the `.groups`
+argument.
+`summarise()` has grouped output by 'name'. You can override using the
+`.groups` argument.</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="anova2_files/figure-html/unnamed-chunk-16-1.png" class="img-fluid figure-img" width="672"></p>
+<p></p><figcaption class="figure-caption">釣り合い型データではないとき、Type-I 平方和を用いたとき,　第2種の誤りを起こすことが高くなります。つまり、誤って帰無仮説を採択することが増えます。</figcaption><p></p>
+</figure>
+</div>
+</div>
+</div>
+<p>つまり、因子の水準毎のデータ数が異なるとき、係数のデフォルト比 (<code>contr.treatment</code>) と デフォルトの平方和 (Type-I) の解析は誤りです。</p>
+<div class="cell">
+<div class="cell-output cell-output-stderr">
+<pre><code>`summarise()` has grouped output by 'pH'. You can override using the `.groups`
+argument.</code></pre>
+</div>
+</div>
+<p>解析用のデータ数の内訳。</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>dset <span class="sc">|&gt;</span> </span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(pH, Calluna) <span class="sc">|&gt;</span> </span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">N =</span> <span class="fu">length</span>(Weight))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>`summarise()` has grouped output by 'pH'. You can override using the `.groups`
+argument.</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 4 × 3
+# Groups:   pH [2]
+  pH    Calluna     N
+  &lt;fct&gt; &lt;fct&gt;   &lt;int&gt;
+1 pH3.5 Absent      7
+2 pH3.5 Present     8
+3 pH5.5 Absent     12
+4 pH5.5 Present    14</code></pre>
+</div>
+</div>
+<p>デフォルトの平方和と比較の場合、モデルに入れる因子の順序によってF値が変わります。</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="fu">contrasts</span>(dset<span class="sc">$</span>pH) <span class="ot">=</span> contr.treatment      <span class="co"># Required</span></span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a><span class="fu">contrasts</span>(dset<span class="sc">$</span>Calluna) <span class="ot">=</span> contr.treatment</span>
+<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a><span class="co"># pH first, Calluna second.</span></span>
+<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a>f1 <span class="ot">=</span> <span class="fu">lm</span>(Weight <span class="sc">~</span> pH <span class="sc">*</span> Calluna, <span class="at">data =</span> dset)</span>
+<span id="cb21-5"><a href="#cb21-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Calluna first, pH second.</span></span>
+<span id="cb21-6"><a href="#cb21-6" aria-hidden="true" tabindex="-1"></a>f2 <span class="ot">=</span> <span class="fu">lm</span>(Weight <span class="sc">~</span> Calluna<span class="sc">*</span>pH, <span class="at">data =</span> dset)</span>
+<span id="cb21-7"><a href="#cb21-7" aria-hidden="true" tabindex="-1"></a><span class="fu">anova</span>(f1)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Analysis of Variance Table
+
+Response: Weight
+           Df Sum Sq Mean Sq F value    Pr(&gt;F)    
+pH          1 39.924  39.924 102.720 3.178e-12 ***
+Calluna     1 26.948  26.948  69.334 5.252e-10 ***
+pH:Calluna  1  8.193   8.193  21.081 4.947e-05 ***
+Residuals  37 14.381   0.389                      
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="fu">anova</span>(f2)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Analysis of Variance Table
+
+Response: Weight
+           Df Sum Sq Mean Sq F value    Pr(&gt;F)    
+Calluna     1 26.623  26.623  68.498 6.089e-10 ***
+pH          1 40.248  40.248 103.555 2.844e-12 ***
+Calluna:pH  1  8.193   8.193  21.081 4.947e-05 ***
+Residuals  37 14.381   0.389                      
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
+</div>
+</div>
+<p>データ数が異なるとき、因子は直交ではないときは、Type-III 平方を使いましょう。</p>
+</section>
+<section id="type-iiii-平方和の分散分析" class="level2">
+<h2 class="anchored" data-anchor-id="type-iiii-平方和の分散分析">Type-IIII 平方和の分散分析</h2>
+<p>Type-I 以外の平方を使うとき、car パッケージが必要です。</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(car)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Loading required package: carData</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>
+Attaching package: 'car'</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>The following object is masked from 'package:dplyr':
+
+    recode</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>The following object is masked from 'package:purrr':
+
+    some</code></pre>
+</div>
+</div>
+<p>さらに、比較は 必ず <code>contr.sum</code> にすること。</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="fu">contrasts</span>(dset<span class="sc">$</span>pH) <span class="ot">=</span> contr.sum      <span class="co"># Required</span></span>
+<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a><span class="fu">contrasts</span>(dset<span class="sc">$</span>Calluna) <span class="ot">=</span> contr.sum <span class="co"># Required</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a>fullmodel_1 <span class="ot">=</span> <span class="fu">lm</span>(Weight <span class="sc">~</span> pH <span class="sc">*</span> Calluna, <span class="at">data =</span> dset)</span>
+<span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a>fullmodel_2 <span class="ot">=</span> <span class="fu">lm</span>(Weight <span class="sc">~</span> Calluna <span class="sc">*</span> pH, <span class="at">data =</span> dset)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb32"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a><span class="fu">Anova</span>(fullmodel_1, <span class="at">type =</span> <span class="st">"III"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Anova Table (Type III tests)
+
+Response: Weight
+            Sum Sq Df  F value    Pr(&gt;F)    
+(Intercept) 683.36  1 1758.218 &lt; 2.2e-16 ***
+pH           42.64  1  109.711 1.278e-12 ***
+Calluna      17.94  1   46.163 5.336e-08 ***
+pH:Calluna    8.19  1   21.081 4.947e-05 ***
+Residuals    14.38 37                       
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb34"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a><span class="fu">Anova</span>(fullmodel_2, <span class="at">type =</span> <span class="st">"III"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Anova Table (Type III tests)
+
+Response: Weight
+            Sum Sq Df  F value    Pr(&gt;F)    
+(Intercept) 683.36  1 1758.218 &lt; 2.2e-16 ***
+Calluna      17.94  1   46.163 5.336e-08 ***
+pH           42.64  1  109.711 1.278e-12 ***
+Calluna:pH    8.19  1   21.081 4.947e-05 ***
+Residuals    14.38 37                       
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
+</div>
+</div>
+<p>モデルに入れる因子の順序が変わっても、結果は同じです。</p>
+</section>
+</section>
+<section id="解析のまとめ" class="level1">
+<h1>解析のまとめ</h1>
+<p>データは <code>festuca</code> に入っています。 Type-III 平方和を用いて、分散分析をします。</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb36"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(car)</span>
+<span id="cb36-2"><a href="#cb36-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(emmeans)</span>
+<span id="cb36-3"><a href="#cb36-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggpubr)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>
+Attaching package: 'ggpubr'</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>The following objects are masked from 'package:flextable':
+
+    border, font, rotate</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb39"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a>festuca <span class="sc">|&gt;</span> <span class="fu">print</span>(<span class="at">n =</span> <span class="cn">Inf</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 20 × 3
+   Weight pH    Calluna
+    &lt;dbl&gt; &lt;fct&gt; &lt;fct&gt;  
+ 1   2.76 pH3.5 Present
+ 2   2.39 pH3.5 Present
+ 3   3.54 pH3.5 Present
+ 4   3.71 pH3.5 Present
+ 5   2.49 pH3.5 Present
+ 6   4.1  pH3.5 Absent 
+ 7   2.72 pH3.5 Absent 
+ 8   2.28 pH3.5 Absent 
+ 9   4.43 pH3.5 Absent 
+10   3.31 pH3.5 Absent 
+11   3.21 pH5.5 Present
+12   4.1  pH5.5 Present
+13   3.04 pH5.5 Present
+14   4.13 pH5.5 Present
+15   5.21 pH5.5 Present
+16   5.92 pH5.5 Absent 
+17   7.31 pH5.5 Absent 
+18   6.1  pH5.5 Absent 
+19   5.25 pH5.5 Absent 
+20   7.45 pH5.5 Absent </code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb41"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a><span class="fu">contrasts</span>(festuca<span class="sc">$</span>pH) <span class="ot">=</span> contr.sum      <span class="co"># Required</span></span>
+<span id="cb41-2"><a href="#cb41-2" aria-hidden="true" tabindex="-1"></a><span class="fu">contrasts</span>(festuca<span class="sc">$</span>Calluna) <span class="ot">=</span> contr.sum <span class="co"># Required</span></span>
+<span id="cb41-3"><a href="#cb41-3" aria-hidden="true" tabindex="-1"></a>fullmodel <span class="ot">=</span> <span class="fu">lm</span>(Weight <span class="sc">~</span> pH <span class="sc">*</span> Calluna, <span class="at">data =</span> festuca)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb42"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a><span class="fu">Anova</span>(fullmodel, <span class="at">type =</span> <span class="st">"III"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Anova Table (Type III tests)
+
+Response: Weight
+            Sum Sq Df  F value    Pr(&gt;F)    
+(Intercept) 348.20  1 491.0831 1.957e-13 ***
+pH           19.98  1  28.1792 7.065e-05 ***
+Calluna      10.21  1  14.4001   0.00159 ** 
+pH:Calluna    5.40  1   7.6126   0.01397 *  
+Residuals    11.34 16                       
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
+</div>
+</div>
+<ul>
+<li><code>(Intercept)</code> は総平均値の結果です。</li>
+<li><code>pH</code> は総平均に対する pH の効果です。</li>
+<li><code>Calluna</code> は総平均に対する Calluna の効果です。</li>
+<li><code>ph:Calluna</code> は総平均に対する 相互作用 の効果です。</li>
+</ul>
+<p>Calluna の効果がなかったので、Caluna内のpH に対するペア毎の比較をします。</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb44"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true" tabindex="-1"></a><span class="fu">emmeans</span>(fullmodel, pairwise <span class="sc">~</span> pH<span class="sc">|</span>Calluna, <span class="at">data =</span> festuca, <span class="at">adjust =</span> <span class="st">"tukey"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>$emmeans
+Calluna = Absent:
+ pH    emmean    SE df lower.CL upper.CL
+ pH3.5   3.37 0.377 16     2.57     4.17
+ pH5.5   6.41 0.377 16     5.61     7.20
+
+Calluna = Present:
+ pH    emmean    SE df lower.CL upper.CL
+ pH3.5   2.98 0.377 16     2.18     3.78
+ pH5.5   3.94 0.377 16     3.14     4.74
+
+Confidence level used: 0.95 
+
+$contrasts
+Calluna = Absent:
+ contrast      estimate    SE df t.ratio p.value
+ pH3.5 - pH5.5    -3.04 0.533 16  -5.705  &lt;.0001
+
+Calluna = Present:
+ contrast      estimate    SE df t.ratio p.value
+ pH3.5 - pH5.5    -0.96 0.533 16  -1.803  0.0903</code></pre>
+</div>
+</div>
+<p>もしも全ペアの比較が必要であれば、次のコードを実行します。</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb46"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb46-1"><a href="#cb46-1" aria-hidden="true" tabindex="-1"></a><span class="fu">emmeans</span>(fullmodel, pairwise <span class="sc">~</span> pH <span class="sc">*</span> Calluna, <span class="at">data =</span> festuca, <span class="at">adjust =</span> <span class="st">"tukey"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>$emmeans
+ pH    Calluna emmean    SE df lower.CL upper.CL
+ pH3.5 Absent    3.37 0.377 16     2.57     4.17
+ pH5.5 Absent    6.41 0.377 16     5.61     7.20
+ pH3.5 Present   2.98 0.377 16     2.18     3.78
+ pH5.5 Present   3.94 0.377 16     3.14     4.74
+
+Confidence level used: 0.95 
+
+$contrasts
+ contrast                      estimate    SE df t.ratio p.value
+ pH3.5 Absent - pH5.5 Absent      -3.04 0.533 16  -5.705  0.0002
+ pH3.5 Absent - pH3.5 Present      0.39 0.533 16   0.732  0.8827
+ pH3.5 Absent - pH5.5 Present     -0.57 0.533 16  -1.070  0.7118
+ pH5.5 Absent - pH3.5 Present      3.43 0.533 16   6.437  &lt;.0001
+ pH5.5 Absent - pH5.5 Present      2.47 0.533 16   4.634  0.0014
+ pH3.5 Present - pH5.5 Present    -0.96 0.533 16  -1.803  0.3080
+
+P value adjustment: tukey method for comparing a family of 4 estimates </code></pre>
+</div>
+</div>
+<div class="callout-tips callout callout-style-default no-icon callout-captioned">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-caption-container flex-fill">
+結果の書き方
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>二元配置分散分析を行った結果、pH (F<sub>(1,16)</sub> = 32.54, P = 0.00003) と pH と Calluna の相互作用 (F<sub>(1,16)</sub> = 7.61, P = 0.0140) に対しては有意の効果があった。 Calluna (F<sub>(1,16)</sub> = 0.54, P = 0.4746) に対しては有意な効果がなかった。</p>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb48"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb48-1"><a href="#cb48-1" aria-hidden="true" tabindex="-1"></a>festuca_summary <span class="ot">=</span> festuca <span class="sc">|&gt;</span> </span>
+<span id="cb48-2"><a href="#cb48-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(pH, Calluna) <span class="sc">|&gt;</span> </span>
+<span id="cb48-3"><a href="#cb48-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">mean =</span> <span class="fu">mean</span>(Weight),</span>
+<span id="cb48-4"><a href="#cb48-4" aria-hidden="true" tabindex="-1"></a>            <span class="at">sd =</span> <span class="fu">sd</span>(Weight),</span>
+<span id="cb48-5"><a href="#cb48-5" aria-hidden="true" tabindex="-1"></a>            <span class="at">n =</span> <span class="fu">length</span>(Weight)) <span class="sc">|&gt;</span> </span>
+<span id="cb48-6"><a href="#cb48-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">se =</span> sd <span class="sc">/</span> <span class="fu">sqrt</span>(n <span class="sc">-</span> <span class="dv">1</span>)) <span class="sc">|&gt;</span> </span>
+<span id="cb48-7"><a href="#cb48-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">pH =</span> <span class="fu">str_remove</span>(pH, <span class="st">"pH"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>`summarise()` has grouped output by 'pH'. You can override using the `.groups`
+argument.</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb50"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb50-1"><a href="#cb50-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(festuca_summary) <span class="sc">+</span></span>
+<span id="cb50-2"><a href="#cb50-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="fu">aes</span>(<span class="at">x =</span> pH, <span class="at">y =</span> mean, <span class="at">color =</span> Calluna),</span>
+<span id="cb50-3"><a href="#cb50-3" aria-hidden="true" tabindex="-1"></a>             <span class="at">size =</span> <span class="dv">2</span>,</span>
+<span id="cb50-4"><a href="#cb50-4" aria-hidden="true" tabindex="-1"></a>                <span class="at">position =</span> <span class="fu">position_dodge</span>(<span class="at">width =</span> <span class="fl">0.2</span>)) <span class="sc">+</span></span>
+<span id="cb50-5"><a href="#cb50-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_errorbar</span>(<span class="fu">aes</span>(<span class="at">x =</span> pH, <span class="at">y =</span> mean,</span>
+<span id="cb50-6"><a href="#cb50-6" aria-hidden="true" tabindex="-1"></a>                    <span class="at">ymin =</span> mean <span class="sc">-</span> se,</span>
+<span id="cb50-7"><a href="#cb50-7" aria-hidden="true" tabindex="-1"></a>                    <span class="at">ymax =</span> mean <span class="sc">+</span> se,</span>
+<span id="cb50-8"><a href="#cb50-8" aria-hidden="true" tabindex="-1"></a>                    <span class="at">color =</span> Calluna),</span>
+<span id="cb50-9"><a href="#cb50-9" aria-hidden="true" tabindex="-1"></a>                <span class="at">size =</span> <span class="dv">1</span>,</span>
+<span id="cb50-10"><a href="#cb50-10" aria-hidden="true" tabindex="-1"></a>                <span class="at">width =</span> <span class="fl">0.25</span>,</span>
+<span id="cb50-11"><a href="#cb50-11" aria-hidden="true" tabindex="-1"></a>                <span class="at">position =</span> <span class="fu">position_dodge</span>(<span class="at">width =</span> <span class="fl">0.2</span>)) <span class="sc">+</span></span>
+<span id="cb50-12"><a href="#cb50-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_x_discrete</span>(<span class="st">"pH"</span>) <span class="sc">+</span> </span>
+<span id="cb50-13"><a href="#cb50-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_y_continuous</span>(<span class="st">"Mean weight (mg)"</span>,</span>
+<span id="cb50-14"><a href="#cb50-14" aria-hidden="true" tabindex="-1"></a>                     <span class="at">limits =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">8</span>)) <span class="sc">+</span></span>
+<span id="cb50-15"><a href="#cb50-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_color_viridis_d</span>(<span class="at">end =</span> <span class="fl">0.8</span>) <span class="sc">+</span></span>
+<span id="cb50-16"><a href="#cb50-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_pubr</span>() <span class="sc">+</span></span>
+<span id="cb50-17"><a href="#cb50-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="fu">c</span>(<span class="dv">0</span>,<span class="dv">1</span>),</span>
+<span id="cb50-18"><a href="#cb50-18" aria-hidden="true" tabindex="-1"></a>        <span class="at">legend.justification =</span> <span class="fu">c</span>(<span class="dv">0</span>,<span class="dv">1</span>),</span>
+<span id="cb50-19"><a href="#cb50-19" aria-hidden="true" tabindex="-1"></a>        <span class="at">legend.background =</span> <span class="fu">element_blank</span>())</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: Using `size` aesthetic for lines was deprecated in ggplot2 3.4.0.
+ℹ Please use `linewidth` instead.</code></pre>
+</div>
+<div class="cell-output-display">
+<p><img src="anova2_files/figure-html/unnamed-chunk-30-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+
+
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    target: function(trigger) {
+      return trigger.previousElementSibling;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  function tippyHover(el, contentFn) {
+    const config = {
+      allowHTML: true,
+      content: contentFn,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start'
+    };
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+</div> <!-- /content -->
+
+
+
+</body></html>

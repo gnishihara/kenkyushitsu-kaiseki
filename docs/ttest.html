@@ -1,0 +1,1363 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.2.335">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>データ解析（研究室用） - 2群の比較：t 検定</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1.6em;
+  vertical-align: middle;
+}
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { color: #008000; } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { color: #008000; font-weight: bold; } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<script src="site_libs/quarto-html/quarto.js"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 20,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit"
+  }
+}</script>
+<link href="site_libs/tabwid-1.1.2/tabwid.css" rel="stylesheet">
+
+  <script>window.backupDefine = window.define; window.define = undefined;</script><script src="https://cdn.jsdelivr.net/npm/katex@0.15.1/dist/katex.min.js"></script>
+  <script>document.addEventListener("DOMContentLoaded", function () {
+ var mathElements = document.getElementsByClassName("math");
+ var macros = [];
+ for (var i = 0; i < mathElements.length; i++) {
+  var texText = mathElements[i].firstChild;
+  if (mathElements[i].tagName == "SPAN") {
+   katex.render(texText.data, mathElements[i], {
+    displayMode: mathElements[i].classList.contains('display'),
+    throwOnError: false,
+    macros: macros,
+    fleqn: false
+   });
+}}});
+  </script>
+  <script>window.define = window.backupDefine; window.backupDefine = undefined;</script><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.15.1/dist/katex.min.css">
+
+<link rel="stylesheet" href="styles.css">
+</head>
+
+<body class="nav-sidebar docked slimcontent">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+  <nav class="quarto-secondary-nav" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+    <div class="container-fluid d-flex justify-content-between">
+      <h1 class="quarto-secondary-nav-title">2群の比較：t 検定</h1>
+      <button type="button" class="quarto-btn-toggle btn" aria-label="Show secondary navigation">
+        <i class="bi bi-chevron-right"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse sidebar-navigation docked overflow-auto">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header">
+    <div class="sidebar-title mb-0 py-0">
+      <a href="./">データ解析（研究室用）</a> 
+    </div>
+      </div>
+      <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Search"></div>
+        </div>
+      </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-expanded="true">Introduction</a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-expanded="true">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./index.html" class="sidebar-item-text sidebar-link">研究室と講義の R コード</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./about.html" class="sidebar-item-text sidebar-link">About</a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-expanded="true">Rの基礎</a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-expanded="true">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./part01.html" class="sidebar-item-text sidebar-link">R の基本操作</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./part02.html" class="sidebar-item-text sidebar-link">R 関数の基本</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./part03.html" class="sidebar-item-text sidebar-link">Tidyverse</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./part04.html" class="sidebar-item-text sidebar-link">データの操作</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./part05.html" class="sidebar-item-text sidebar-link">ggplot の図</a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" aria-expanded="true">Linear models</a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" aria-expanded="true">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./linearmodels.html" class="sidebar-item-text sidebar-link">ノンパラメトリック法</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./ttest.html" class="sidebar-item-text sidebar-link active">2群の比較：t 検定</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./anova.html" class="sidebar-item-text sidebar-link">一元配置分散分析</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./anova2.html" class="sidebar-item-text sidebar-link">多数群の比較：二元配置分散分析</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./glm.html" class="sidebar-item-text sidebar-link">線形モデル</a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" aria-expanded="true">Multivariate</a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" aria-expanded="true">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./pca.html" class="sidebar-item-text sidebar-link">Principal Component Analysis</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./rda.html" class="sidebar-item-text sidebar-link">Redundancy Analysis</a>
+  </div>
+</li>
+      </ul>
+  </li>
+    </ul>
+    </div>
+</nav>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#作業仮説を考えましょう" id="toc-作業仮説を考えましょう" class="nav-link active" data-scroll-target="#作業仮説を考えましょう">作業仮説を考えましょう</a></li>
+  <li><a href="#帰無仮説有意生検定が必要とする仮説を決めます" id="toc-帰無仮説有意生検定が必要とする仮説を決めます" class="nav-link" data-scroll-target="#帰無仮説有意生検定が必要とする仮説を決めます">帰無仮説有意生検定が必要とする仮説を決めます</a></li>
+  <li><a href="#ナイーブ-な解析手法" id="toc-ナイーブ-な解析手法" class="nav-link" data-scroll-target="#ナイーブ-な解析手法">ナイーブ な解析手法</a></li>
+  <li><a href="#平均値の分布" id="toc-平均値の分布" class="nav-link" data-scroll-target="#平均値の分布">平均値の分布</a></li>
+  <li><a href="#z-値の分位数を求める" id="toc-z-値の分位数を求める" class="nav-link" data-scroll-target="#z-値の分位数を求める">z 値の分位数を求める</a></li>
+  <li><a href="#信頼区間の求め方" id="toc-信頼区間の求め方" class="nav-link" data-scroll-target="#信頼区間の求め方">信頼区間の求め方</a></li>
+  <li><a href="#解析は誤りです" id="toc-解析は誤りです" class="nav-link" data-scroll-target="#解析は誤りです">解析は誤りです!</a></li>
+  <li><a href="#t-検定" id="toc-t-検定" class="nav-link" data-scroll-target="#t-検定">t 検定</a>
+  <ul class="collapse">
+  <li><a href="#対応ありの-t-検定" id="toc-対応ありの-t-検定" class="nav-link" data-scroll-target="#対応ありの-t-検定">対応ありの t 検定</a></li>
+  <li><a href="#分散が異なる-t-検定" id="toc-分散が異なる-t-検定" class="nav-link" data-scroll-target="#分散が異なる-t-検定">分散が異なる t 検定</a></li>
+  <li><a href="#対応ありの-t-検定-1" id="toc-対応ありの-t-検定-1" class="nav-link" data-scroll-target="#対応ありの-t-検定-1">対応ありの t 検定</a></li>
+  <li><a href="#標本の-t-検定" id="toc-標本の-t-検定" class="nav-link" data-scroll-target="#標本の-t-検定">2標本の t 検定</a></li>
+  <li><a href="#ノコギリモク幼体の幅に対する-t-検定" id="toc-ノコギリモク幼体の幅に対する-t-検定" class="nav-link" data-scroll-target="#ノコギリモク幼体の幅に対する-t-検定">ノコギリモク幼体の幅に対する t 検定</a></li>
+  <li><a href="#サンプル数と-p-値の関係" id="toc-サンプル数と-p-値の関係" class="nav-link" data-scroll-target="#サンプル数と-p-値の関係">サンプル数と p 値の関係</a></li>
+  <li><a href="#behavior-of-the-t-test-unequal-variance" id="toc-behavior-of-the-t-test-unequal-variance" class="nav-link" data-scroll-target="#behavior-of-the-t-test-unequal-variance">Behavior of the t-test (unequal variance)</a></li>
+  <li><a href="#ウェルチ-t-検定の-r-出力と結果" id="toc-ウェルチ-t-検定の-r-出力と結果" class="nav-link" data-scroll-target="#ウェルチ-t-検定の-r-出力と結果">ウェルチ t 検定の R 出力と結果</a></li>
+  </ul></li>
+  <li><a href="#分散が異なるの-t-検定の解析例" id="toc-分散が異なるの-t-検定の解析例" class="nav-link" data-scroll-target="#分散が異なるの-t-検定の解析例">分散が異なるの t 検定の解析例</a>
+  <ul class="collapse">
+  <li><a href="#パッケージの読み込み" id="toc-パッケージの読み込み" class="nav-link" data-scroll-target="#パッケージの読み込み">パッケージの読み込み</a></li>
+  <li><a href="#データの準備" id="toc-データの準備" class="nav-link" data-scroll-target="#データの準備">データの準備</a></li>
+  <li><a href="#まずデータの平均値や標準偏差などをもとめる" id="toc-まずデータの平均値や標準偏差などをもとめる" class="nav-link" data-scroll-target="#まずデータの平均値や標準偏差などをもとめる">まずデータの平均値や標準偏差などをもとめる</a></li>
+  <li><a href="#t-検定-1" id="toc-t-検定-1" class="nav-link" data-scroll-target="#t-検定-1">t 検定</a></li>
+  <li><a href="#結果" id="toc-結果" class="nav-link" data-scroll-target="#結果">結果</a></li>
+  <li><a href="#付録-a-等分散性と正規性の検定" id="toc-付録-a-等分散性と正規性の検定" class="nav-link" data-scroll-target="#付録-a-等分散性と正規性の検定">付録 A: 等分散性と正規性の検定</a></li>
+  <li><a href="#付録-b-本資料のデータ作成" id="toc-付録-b-本資料のデータ作成" class="nav-link" data-scroll-target="#付録-b-本資料のデータ作成">付録 B: 本資料のデータ作成</a></li>
+  </ul></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content page-columns page-full" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title d-none d-lg-block">2群の比較：t 検定</h1>
+<p class="subtitle lead">Comparing two groups with the t-test</p>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+</header>
+
+<div class="cell" data-warnings="false">
+
+</div>
+<div class="cell">
+
+</div>
+<p>ノコギリモク (<em>Sargassum macrocarpum</em>) は褐藻類ホンダワラ属の海藻です。 通年藻場を形成する海藻であり、海洋動物の住処、餌場、炭素固定の場として機能しています。 かつて、九州に広く分布していましたが、温暖化に伴う環境変動と食害によって、局地的に絶滅しています。 ここでは、ノコギリモクの幼体を資料として、2軍における解析手法を紹介します。</p>
+<p>では、地点 A と B のノコギリモク幼体の幅は <a href="#tbl-nokotable1">Table&nbsp;1</a> の通りです。 各地点から合計６個体採取しました。</p>
+<div class="grid">
+<div class="g-col-6">
+<div class="cell">
+
+</div>
+</div>
+<div class="g-col-6">
+<div class="cell">
+<div class="cell-output-display">
+<div id="tbl-nokotable1" class="anchored">
+
+<div class="tabwid"><style>.cl-e5d72eea{table-layout:auto;width:90%;}.cl-e5c15aa2{font-family:'DejaVu Sans';font-size:11pt;font-weight:normal;font-style:normal;text-decoration:none;color:rgba(0, 0, 0, 1.00);background-color:transparent;}.cl-e5d3061c{margin:0;text-align:right;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);padding-bottom:5pt;padding-top:5pt;padding-left:5pt;padding-right:5pt;line-height: 1;background-color:transparent;}.cl-e5d31d0a{background-color:transparent;vertical-align: middle;border-bottom: 2pt solid rgba(102, 102, 102, 1.00);border-top: 2pt solid rgba(102, 102, 102, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-e5d31d1e{background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-e5d31d1f{background-color:transparent;vertical-align: middle;border-bottom: 2pt solid rgba(102, 102, 102, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}</style><table data-quarto-disable-processing="true" class="cl-e5d72eea"><caption>Table&nbsp;1:  ノコギリモク (Sargassum macrocarpum) 幼体の幅 (mm). </caption><thead><tr style="overflow-wrap:break-word;"><th class="cl-e5d31d0a"><p class="cl-e5d3061c"><span class="cl-e5c15aa2">Sample</span></p></th><th class="cl-e5d31d0a"><p class="cl-e5d3061c"><span class="cl-e5c15aa2">Site A</span></p></th><th class="cl-e5d31d0a"><p class="cl-e5d3061c"><span class="cl-e5c15aa2">Site B</span></p></th></tr></thead><tbody><tr style="overflow-wrap:break-word;"><td class="cl-e5d31d1e"><p class="cl-e5d3061c"><span class="cl-e5c15aa2">1</span></p></td><td class="cl-e5d31d1e"><p class="cl-e5d3061c"><span class="cl-e5c15aa2">19.9</span></p></td><td class="cl-e5d31d1e"><p class="cl-e5d3061c"><span class="cl-e5c15aa2">22.3</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-e5d31d1e"><p class="cl-e5d3061c"><span class="cl-e5c15aa2">2</span></p></td><td class="cl-e5d31d1e"><p class="cl-e5d3061c"><span class="cl-e5c15aa2">20.6</span></p></td><td class="cl-e5d31d1e"><p class="cl-e5d3061c"><span class="cl-e5c15aa2">22.9</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-e5d31d1e"><p class="cl-e5d3061c"><span class="cl-e5c15aa2">3</span></p></td><td class="cl-e5d31d1e"><p class="cl-e5d3061c"><span class="cl-e5c15aa2">20.3</span></p></td><td class="cl-e5d31d1e"><p class="cl-e5d3061c"><span class="cl-e5c15aa2">22.0</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-e5d31d1e"><p class="cl-e5d3061c"><span class="cl-e5c15aa2">4</span></p></td><td class="cl-e5d31d1e"><p class="cl-e5d3061c"><span class="cl-e5c15aa2">20.4</span></p></td><td class="cl-e5d31d1e"><p class="cl-e5d3061c"><span class="cl-e5c15aa2">23.7</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-e5d31d1e"><p class="cl-e5d3061c"><span class="cl-e5c15aa2">5</span></p></td><td class="cl-e5d31d1e"><p class="cl-e5d3061c"><span class="cl-e5c15aa2">20.9</span></p></td><td class="cl-e5d31d1e"><p class="cl-e5d3061c"><span class="cl-e5c15aa2">20.9</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-e5d31d1f"><p class="cl-e5d3061c"><span class="cl-e5c15aa2">6</span></p></td><td class="cl-e5d31d1f"><p class="cl-e5d3061c"><span class="cl-e5c15aa2">18.1</span></p></td><td class="cl-e5d31d1f"><p class="cl-e5d3061c"><span class="cl-e5c15aa2">21.7</span></p></td></tr></tbody></table></div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="grid">
+<div class="g-col-6">
+<div class="cell">
+<div class="cell-output-display">
+<div id="fig-nokoplot2" class="quarto-figure quarto-figure-center anchored">
+<figure class="figure">
+<p><img src="ttest_files/figure-html/fig-nokoplot2-1.png" class="img-fluid figure-img" width="384"></p>
+<p></p><figcaption class="figure-caption">Figure&nbsp;1: 地点毎のノコギリモク幼体の幅</figcaption><p></p>
+</figure>
+</div>
+</div>
+</div>
+</div>
+<div class="g-col-6">
+<div class="cell">
+<div class="cell-output-display">
+<div id="tbl-noko-summary1" class="anchored">
+
+<div class="tabwid"><style>.cl-e6278d04{table-layout:auto;width:90%;}.cl-e61e860a{font-family:'DejaVu Sans';font-size:11pt;font-weight:normal;font-style:normal;text-decoration:none;color:rgba(0, 0, 0, 1.00);background-color:transparent;}.cl-e623e9d8{margin:0;text-align:left;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);padding-bottom:5pt;padding-top:5pt;padding-left:5pt;padding-right:5pt;line-height: 1;background-color:transparent;}.cl-e623e9ec{margin:0;text-align:right;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);padding-bottom:5pt;padding-top:5pt;padding-left:5pt;padding-right:5pt;line-height: 1;background-color:transparent;}.cl-e623fd1a{background-color:transparent;vertical-align: middle;border-bottom: 2pt solid rgba(102, 102, 102, 1.00);border-top: 2pt solid rgba(102, 102, 102, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-e623fd24{background-color:transparent;vertical-align: middle;border-bottom: 2pt solid rgba(102, 102, 102, 1.00);border-top: 2pt solid rgba(102, 102, 102, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-e623fd25{background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-e623fd2e{background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-e623fd2f{background-color:transparent;vertical-align: middle;border-bottom: 2pt solid rgba(102, 102, 102, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-e623fd30{background-color:transparent;vertical-align: middle;border-bottom: 2pt solid rgba(102, 102, 102, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}</style><table data-quarto-disable-processing="true" class="cl-e6278d04"><caption>Table&nbsp;2:  ノコギリモク幼体幅の平均値，標準偏差、標準誤差. </caption><thead><tr style="overflow-wrap:break-word;"><th class="cl-e623fd1a"><p class="cl-e623e9d8"><span class="cl-e61e860a">Site</span></p></th><th class="cl-e623fd24"><p class="cl-e623e9ec"><link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/katex@0.15.2/dist/katex.min.css" data-external="1"><span class="cl-e61e860a"><link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/katex@0.16.3/dist/katex.min.css" data-external="1">
+<span class="katex-display"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><mover accent="true"><mi>x</mi><mo stretchy="true">‾</mo></mover></mrow><annotation encoding="application/x-tex">\overline{x}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6306em;"></span><span class="mord overline"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.6306em;"><span style="top:-3em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord mathnormal">x</span></span></span><span style="top:-3.5506em;"><span class="pstrut" style="height:3em;"></span><span class="overline-line" style="border-bottom-width:0.04em;"></span></span></span></span></span></span></span></span></span></span></span></p></th><th class="cl-e623fd24"><p class="cl-e623e9ec"><span class="cl-e61e860a"><link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/katex@0.16.3/dist/katex.min.css" data-external="1">
+<span class="katex-display"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><mi>s</mi></mrow><annotation encoding="application/x-tex">s</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.4306em;"></span><span class="mord mathnormal">s</span></span></span></span></span></span></p></th><th class="cl-e623fd24"><p class="cl-e623e9ec"><span class="cl-e61e860a">s.e.</span></p></th></tr></thead><tbody><tr style="overflow-wrap:break-word;"><td class="cl-e623fd25"><p class="cl-e623e9d8"><span class="cl-e61e860a">A</span></p></td><td class="cl-e623fd2e"><p class="cl-e623e9ec"><span class="cl-e61e860a">20.0</span></p></td><td class="cl-e623fd2e"><p class="cl-e623e9ec"><span class="cl-e61e860a">1.003</span></p></td><td class="cl-e623fd2e"><p class="cl-e623e9ec"><span class="cl-e61e860a">0.410</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-e623fd2f"><p class="cl-e623e9d8"><span class="cl-e61e860a">B</span></p></td><td class="cl-e623fd30"><p class="cl-e623e9ec"><span class="cl-e61e860a">22.2</span></p></td><td class="cl-e623fd30"><p class="cl-e623e9ec"><span class="cl-e61e860a">0.971</span></p></td><td class="cl-e623fd30"><p class="cl-e623e9ec"><span class="cl-e61e860a">0.396</span></p></td></tr></tbody></table></div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<section id="作業仮説を考えましょう" class="level2 page-columns page-full">
+<h2 class="anchored" data-anchor-id="作業仮説を考えましょう">作業仮説を考えましょう</h2>
+<div class="callout-tip callout callout-style-default callout-captioned page-columns page-full">
+<div class="callout-header d-flex align-content-center page-columns page-full">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-caption-container flex-fill page-columns page-full">
+作業仮設<a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a>
+<div class="no-row-height column-margin column-container"><li id="fn1"><p><sup>1</sup>&nbsp;working hypothesis</p></li></div></div>
+</div>
+<div class="callout-body-container callout-body">
+<p>すべての研究は作業仮説 から始まります。</p>
+<p>今回の例について、作業仮説は 「地点毎に対するノコギリモク幼体の幅は異なる」にしました。</p>
+</div>
+</div>
+</section>
+<section id="帰無仮説有意生検定が必要とする仮説を決めます" class="level2 page-columns page-full">
+<h2 class="anchored" data-anchor-id="帰無仮説有意生検定が必要とする仮説を決めます">帰無仮説有意生検定が必要とする仮説を決めます</h2>
+<div class="page-columns page-full"><p>作業仮説を定義したら、つぎは検定のための仮説を定義します。 帰無仮説有意性検定 <a href="#fn2" class="footnote-ref" id="fnref2" role="doc-noteref"><sup>2</sup></a></p><div class="no-row-height column-margin column-container"><li id="fn2"><p><sup>2</sup>&nbsp;null hypothesis signficance testing</p></li></div></div>
+<ul>
+<li><p><strong><span class="math inline">H_0</span> (null hypothesis 帰無仮説):</strong> 平均値に違いはない <span class="math inline">(\mu_{A} = \mu_{B})</span></p></li>
+<li><p><strong><span class="math inline">H_A</span> (alternative hypothesis 対立仮設):</strong> 平均値は異なる <span class="math inline">(\mu_{A} \neq \mu_{B})</span></p></li>
+</ul>
+<p>つぎのような対立仮説も思いつきます。</p>
+<ul>
+<li><span class="math inline">H_P</span> <strong>(対立仮設):</strong> <span class="math inline">\mu_A &gt; \mu_B</span></li>
+<li><span class="math inline">H_N</span> <strong>(対立仮設):</strong> <span class="math inline">\mu_A &lt; \mu_B</span></li>
+</ul>
+<div class="callout-note callout callout-style-default callout-captioned">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-caption-container flex-fill">
+無限に存在する
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>帰無仮説と対立仮説はいくらでも考えられますが、 <span class="math inline">\mu_A = \mu_B</span> は一般的な帰無仮説です。 そして、<span class="math inline">\mu_A \neq \mu_B</span> も一般的な対立仮説です。</p>
+</div>
+</div>
+</section>
+<section id="ナイーブ-な解析手法" class="level2 page-columns page-full">
+<h2 class="anchored page-columns page-full" data-anchor-id="ナイーブ-な解析手法">ナイーブ <a href="#fn3" class="footnote-ref" id="fnref3" role="doc-noteref"><sup>3</sup></a> な解析手法<div class="no-row-height column-margin column-container"><li id="fn3"><p><sup>3</sup>&nbsp;naive</p></li></div></h2>
+<p>地点 A と B のノコギリモクの大きさの違いが知りたいです。 では、地点同士の大きさの違いを求めます。 地点 A と B の平均値の差を求めてみます。</p>
+<div class="page-columns page-full"><p><span class="math display">
+\overline{x_A} - \overline{x_B} = -2.22
+</span> 地点 B のノコギリモクが大きいです。 でも、この大きさはどの程度信用できるかがわかりません。 平均値の差の制度を評価するには、標準誤差 <a href="#fn4" class="footnote-ref" id="fnref4" role="doc-noteref"><sup>4</sup></a> を求めないといけないです。 この手法だと、標準誤差は求められません。</p><div class="no-row-height column-margin column-container"><li id="fn4"><p><sup>4</sup>&nbsp;standard error</p></li></div></div>
+<p>では、かく地点のサンプル番号ごとの差をとってみます。 この場合、 6 つの差を求められます。 6 つあるので、平均値、標準偏差、標準誤差も求められます。</p>
+<div class="cell">
+<div class="cell-output-display">
+<div id="tbl-noko-diff1" class="anchored">
+
+<div class="tabwid"><style>.cl-e63ea462{table-layout:auto;width:90%;}.cl-e636e5a6{font-family:'DejaVu Sans';font-size:11pt;font-weight:normal;font-style:normal;text-decoration:none;color:rgba(0, 0, 0, 1.00);background-color:transparent;}.cl-e63ae6b0{margin:0;text-align:right;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);padding-bottom:5pt;padding-top:5pt;padding-left:5pt;padding-right:5pt;line-height: 1;background-color:transparent;}.cl-e63ae6ba{margin:0;text-align:left;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);padding-bottom:5pt;padding-top:5pt;padding-left:5pt;padding-right:5pt;line-height: 1;background-color:transparent;}.cl-e63afa2e{background-color:transparent;vertical-align: middle;border-bottom: 2pt solid rgba(102, 102, 102, 1.00);border-top: 2pt solid rgba(102, 102, 102, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-e63afa38{background-color:transparent;vertical-align: middle;border-bottom: 2pt solid rgba(102, 102, 102, 1.00);border-top: 2pt solid rgba(102, 102, 102, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-e63afa42{background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-e63afa43{background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-e63afa44{background-color:transparent;vertical-align: middle;border-bottom: 2pt solid rgba(102, 102, 102, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-e63afa4c{background-color:transparent;vertical-align: middle;border-bottom: 2pt solid rgba(102, 102, 102, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}</style><table data-quarto-disable-processing="true" class="cl-e63ea462"><caption>Table&nbsp;3:  ノコギリモクの幅 (mm) とペア毎の差 </caption><thead><tr style="overflow-wrap:break-word;"><th class="cl-e63afa2e"><p class="cl-e63ae6b0"><span class="cl-e636e5a6">Sample</span></p></th><th class="cl-e63afa2e"><p class="cl-e63ae6b0"><span class="cl-e636e5a6">Site A</span></p></th><th class="cl-e63afa2e"><p class="cl-e63ae6b0"><span class="cl-e636e5a6">Site B</span></p></th><th class="cl-e63afa38"><p class="cl-e63ae6ba"><span class="cl-e636e5a6">Difference</span></p></th></tr></thead><tbody><tr style="overflow-wrap:break-word;"><td class="cl-e63afa42"><p class="cl-e63ae6b0"><span class="cl-e636e5a6">1</span></p></td><td class="cl-e63afa42"><p class="cl-e63ae6b0"><span class="cl-e636e5a6">19.9</span></p></td><td class="cl-e63afa42"><p class="cl-e63ae6b0"><span class="cl-e636e5a6">22.3</span></p></td><td class="cl-e63afa43"><p class="cl-e63ae6ba"><span class="cl-e636e5a6">19.90 - 22.30 = -2.40</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-e63afa42"><p class="cl-e63ae6b0"><span class="cl-e636e5a6">2</span></p></td><td class="cl-e63afa42"><p class="cl-e63ae6b0"><span class="cl-e636e5a6">20.6</span></p></td><td class="cl-e63afa42"><p class="cl-e63ae6b0"><span class="cl-e636e5a6">22.9</span></p></td><td class="cl-e63afa43"><p class="cl-e63ae6ba"><span class="cl-e636e5a6">20.60 - 22.90 = -2.30</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-e63afa42"><p class="cl-e63ae6b0"><span class="cl-e636e5a6">3</span></p></td><td class="cl-e63afa42"><p class="cl-e63ae6b0"><span class="cl-e636e5a6">20.3</span></p></td><td class="cl-e63afa42"><p class="cl-e63ae6b0"><span class="cl-e636e5a6">22.0</span></p></td><td class="cl-e63afa43"><p class="cl-e63ae6ba"><span class="cl-e636e5a6">20.30 - 22.00 = -1.70</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-e63afa42"><p class="cl-e63ae6b0"><span class="cl-e636e5a6">4</span></p></td><td class="cl-e63afa42"><p class="cl-e63ae6b0"><span class="cl-e636e5a6">20.4</span></p></td><td class="cl-e63afa42"><p class="cl-e63ae6b0"><span class="cl-e636e5a6">23.7</span></p></td><td class="cl-e63afa43"><p class="cl-e63ae6ba"><span class="cl-e636e5a6">20.40 - 23.70 = -3.30</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-e63afa42"><p class="cl-e63ae6b0"><span class="cl-e636e5a6">5</span></p></td><td class="cl-e63afa42"><p class="cl-e63ae6b0"><span class="cl-e636e5a6">20.9</span></p></td><td class="cl-e63afa42"><p class="cl-e63ae6b0"><span class="cl-e636e5a6">20.9</span></p></td><td class="cl-e63afa43"><p class="cl-e63ae6ba"><span class="cl-e636e5a6">20.90 - 20.90 = 0.00</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-e63afa44"><p class="cl-e63ae6b0"><span class="cl-e636e5a6">6</span></p></td><td class="cl-e63afa44"><p class="cl-e63ae6b0"><span class="cl-e636e5a6">18.1</span></p></td><td class="cl-e63afa44"><p class="cl-e63ae6b0"><span class="cl-e636e5a6">21.7</span></p></td><td class="cl-e63afa4c"><p class="cl-e63ae6ba"><span class="cl-e636e5a6">18.10 - 21.70 = -3.60</span></p></td></tr></tbody></table></div>
+</div>
+</div>
+</div>
+<div class="cell">
+
+</div>
+<ul>
+<li><span class="math inline">\overline{x} = -2.2</span></li>
+<li><span class="math inline">s = 1.3</span></li>
+<li><span class="math inline">\text{s.e.} = 0.53</span></li>
+</ul>
+<p><strong>問題は、この差の平均値をどのように評価するのか。</strong></p>
+</section>
+<section id="平均値の分布" class="level2 page-columns page-full">
+<h2 class="anchored" data-anchor-id="平均値の分布">平均値の分布</h2>
+<div class="grid page-columns page-full">
+<div class="g-col-6">
+<div class="cell">
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: Using `size` aesthetic for lines was deprecated in ggplot2 3.4.0.
+ℹ Please use `linewidth` instead.</code></pre>
+</div>
+<div class="cell-output-display">
+<div id="fig-normal1" class="quarto-figure quarto-figure-center anchored">
+<figure class="figure">
+<p><img src="ttest_files/figure-html/fig-normal1-1.png" class="img-fluid figure-img" width="384"></p>
+<p></p><figcaption class="figure-caption">Figure&nbsp;2: 求めた平均値と標準誤差から推定した正規分布。</figcaption><p></p>
+</figure>
+</div>
+</div>
+</div>
+</div>
+<div class="g-col-6 page-columns page-full">
+<div class="page-columns page-full"><p><strong>中心極限定理</strong> <a href="#fn5" class="footnote-ref" id="fnref5" role="doc-noteref"><sup>5</sup></a>によると、平均値の分布は正規分布 <a href="#fn6" class="footnote-ref" id="fnref6" role="doc-noteref"><sup>6</sup></a>に従います。</p><div class="no-row-height column-margin column-container"><li id="fn5"><p><sup>5</sup>&nbsp;central limit theorem</p></li><li id="fn6"><p><sup>6</sup>&nbsp;normal or gaussian distribution</p></li></div></div>
+<div class="page-columns page-full"><p><a href="#fig-normal1">Figure&nbsp;2</a> に示した紫色の部分は 95% の確率密度です。 その幅は <strong>信頼区間</strong> <a href="#fn7" class="footnote-ref" id="fnref7" role="doc-noteref"><sup>7</sup></a>といいます。 <strong>有意水準</strong>を <span class="math inline">\alpha = 0.05</span> として定義したとき、 この信頼区間は 95% 信頼区間 <a href="#fn8" class="footnote-ref" id="fnref8" role="doc-noteref"><sup>8</sup></a>といいます。</p><div class="no-row-height column-margin column-container"><li id="fn7"><p><sup>7</sup>&nbsp;confidence interval</p></li><li id="fn8"><p><sup>8</sup>&nbsp;95% confidence interval</p></li></div></div>
+</div>
+</div>
+<div class="callout-note callout callout-style-default callout-captioned page-columns page-full">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-caption-container flex-fill">
+信頼区間とは？
+</div>
+</div>
+<div class="callout-body-container callout-body page-columns page-full">
+<p><span class="math inline">[l, u]</span> の区間を定義したとき、<span class="math inline">l</span> は区間の下限、<span class="math inline">u</span> は区間の上限です。 このように定義した区間は信頼区間といいます。</p>
+<p>では、<span class="math inline">x</span> に対する区間 <span class="math inline">[l,u]</span> は <span class="math inline">1-\alpha</span> の確率で次のように定義できます。</p>
+<p><span class="math display">
+P(l \le x \le u) = 1-\alpha
+</span></p>
+<div class="page-columns page-full"><p><span class="math inline">\overline{x}</span> が標本平均であれば、<strong>z値</strong> <a href="#fn9" class="footnote-ref" id="fnref9" role="doc-noteref"><sup>9</sup></a>と呼ぶ統計量を定義できます。</p><div class="no-row-height column-margin column-container"><li id="fn9"><p><sup>9</sup>&nbsp;z-score</p></li></div></div>
+<p><span class="math display">
+z = \frac{\overline{x}-\mu}{\sigma}
+</span></p>
+<p><span class="math inline">\mu</span> は母平均、<span class="math inline">\sigma</span> は母分散です。</p>
+<p>つまり、下限と上限を求めるためには</p>
+<p><span class="math display">
+P(l \le z \le u) = 1-\alpha
+</span></p>
+<p>を解けばいい。</p>
+<p><strong>中心極限定理</strong>は次の通りに定義されています。</p>
+<p><span class="math display">
+\lim_{n\rightarrow\infty} \sqrt{n}\overbrace{\left(\frac{\overline{x}_n-\mu}{\sigma}\right)}^\text{この部分は z 値}  \xrightarrow{d} N(0, 1)
+</span></p>
+<p>よって、 <span class="math inline">\alpha = 0.05</span>　のときの <span class="math inline">[l, u]</span> は次の通りです。</p>
+<p><span class="math display">
+P\left(l \le z \le u \right) = 1-0.05 = 0.95
+</span></p>
+<p>標準化正規分布 <span class="math inline">N(0,1)</span> のとき、</p>
+<ul>
+<li><span class="math inline">\alpha/2=0.05/2=0.025</span> 分位数は <span class="math inline">l</span> です。</li>
+<li><span class="math inline">1-\alpha/2=1-0.05/2=0.975</span> 分位数は <span class="math inline">u</span> です。</li>
+</ul>
+</div>
+</div>
+</section>
+<section id="z-値の分位数を求める" class="level2">
+<h2 class="anchored" data-anchor-id="z-値の分位数を求める">z 値の分位数を求める</h2>
+<div class="cell">
+<div class="cell-output-display">
+<div id="fig-normaldist-2" class="quarto-figure quarto-figure-center anchored">
+<figure class="figure">
+<p><img src="ttest_files/figure-html/fig-normaldist-2-1.png" class="img-fluid figure-img" width="576"></p>
+<p></p><figcaption class="figure-caption">Figure&nbsp;3: 標準化正規分布</figcaption><p></p>
+</figure>
+</div>
+</div>
+</div>
+<ul>
+<li><span class="math inline">[-1 s, 1 s]</span> は 68.3% 区間</li>
+<li><span class="math inline">[-2 s, 2 s]</span> は 95.4% 区間</li>
+<li><span class="math inline">[-3 s, 3 s]</span> は 99.7% 区間</li>
+</ul>
+<div class="cell">
+
+</div>
+<div class="cell">
+<div class="cell-output-display">
+<div id="tbl-quantile-normal" class="anchored">
+
+<div class="tabwid"><style>.cl-e6e1e0be{table-layout:auto;width:90%;}.cl-e6d9f016{font-family:'DejaVu Sans';font-size:11pt;font-weight:normal;font-style:normal;text-decoration:none;color:rgba(0, 0, 0, 1.00);background-color:transparent;}.cl-e6dce5dc{margin:0;text-align:right;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);padding-bottom:5pt;padding-top:5pt;padding-left:5pt;padding-right:5pt;line-height: 1;background-color:transparent;}.cl-e6dcf9d2{background-color:transparent;vertical-align: middle;border-bottom: 2pt solid rgba(102, 102, 102, 1.00);border-top: 2pt solid rgba(102, 102, 102, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-e6dcf9dc{background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-e6dcf9dd{background-color:transparent;vertical-align: middle;border-bottom: 2pt solid rgba(102, 102, 102, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}</style><table data-quarto-disable-processing="true" class="cl-e6e1e0be"><caption>Table&nbsp;4:  標準化正規分布の分位数 </caption><thead><tr style="overflow-wrap:break-word;"><th class="cl-e6dcf9d2"><p class="cl-e6dce5dc"><span class="cl-e6d9f016">Signififance level</span></p></th><th class="cl-e6dcf9d2"><p class="cl-e6dce5dc"><span class="cl-e6d9f016">percent</span></p></th><th class="cl-e6dcf9d2"><p class="cl-e6dce5dc"><span class="cl-e6d9f016">± quantile</span></p></th></tr></thead><tbody><tr style="overflow-wrap:break-word;"><td class="cl-e6dcf9dc"><p class="cl-e6dce5dc"><span class="cl-e6d9f016">0.50000000000</span></p></td><td class="cl-e6dcf9dc"><p class="cl-e6dce5dc"><span class="cl-e6d9f016">50.00000</span></p></td><td class="cl-e6dcf9dc"><p class="cl-e6dce5dc"><span class="cl-e6d9f016">0.6744898</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-e6dcf9dc"><p class="cl-e6dce5dc"><span class="cl-e6d9f016">0.31731050786</span></p></td><td class="cl-e6dcf9dc"><p class="cl-e6dce5dc"><span class="cl-e6d9f016">68.26895</span></p></td><td class="cl-e6dcf9dc"><p class="cl-e6dce5dc"><span class="cl-e6d9f016">1.0000000</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-e6dcf9dc"><p class="cl-e6dce5dc"><span class="cl-e6d9f016">0.20000000000</span></p></td><td class="cl-e6dcf9dc"><p class="cl-e6dce5dc"><span class="cl-e6d9f016">80.00000</span></p></td><td class="cl-e6dcf9dc"><p class="cl-e6dce5dc"><span class="cl-e6d9f016">1.2815516</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-e6dcf9dc"><p class="cl-e6dce5dc"><span class="cl-e6d9f016">0.10000000000</span></p></td><td class="cl-e6dcf9dc"><p class="cl-e6dce5dc"><span class="cl-e6d9f016">90.00000</span></p></td><td class="cl-e6dcf9dc"><p class="cl-e6dce5dc"><span class="cl-e6d9f016">1.6448536</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-e6dcf9dc"><p class="cl-e6dce5dc"><span class="cl-e6d9f016">0.05000000000</span></p></td><td class="cl-e6dcf9dc"><p class="cl-e6dce5dc"><span class="cl-e6d9f016">95.00000</span></p></td><td class="cl-e6dcf9dc"><p class="cl-e6dce5dc"><span class="cl-e6d9f016">1.9599640</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-e6dcf9dc"><p class="cl-e6dce5dc"><span class="cl-e6d9f016">0.04550026390</span></p></td><td class="cl-e6dcf9dc"><p class="cl-e6dce5dc"><span class="cl-e6d9f016">95.44997</span></p></td><td class="cl-e6dcf9dc"><p class="cl-e6dce5dc"><span class="cl-e6d9f016">2.0000000</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-e6dcf9dc"><p class="cl-e6dce5dc"><span class="cl-e6d9f016">0.02500000000</span></p></td><td class="cl-e6dcf9dc"><p class="cl-e6dce5dc"><span class="cl-e6d9f016">97.50000</span></p></td><td class="cl-e6dcf9dc"><p class="cl-e6dce5dc"><span class="cl-e6d9f016">2.2414027</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-e6dcf9dc"><p class="cl-e6dce5dc"><span class="cl-e6d9f016">0.00269979606</span></p></td><td class="cl-e6dcf9dc"><p class="cl-e6dce5dc"><span class="cl-e6d9f016">99.73002</span></p></td><td class="cl-e6dcf9dc"><p class="cl-e6dce5dc"><span class="cl-e6d9f016">3.0000000</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-e6dcf9dd"><p class="cl-e6dce5dc"><span class="cl-e6d9f016">0.00006334248</span></p></td><td class="cl-e6dcf9dd"><p class="cl-e6dce5dc"><span class="cl-e6d9f016">99.99367</span></p></td><td class="cl-e6dcf9dd"><p class="cl-e6dce5dc"><span class="cl-e6d9f016">4.0000000</span></p></td></tr></tbody></table></div>
+</div>
+</div>
+</div>
+</section>
+<section id="信頼区間の求め方" class="level2 page-columns page-full">
+<h2 class="anchored" data-anchor-id="信頼区間の求め方">信頼区間の求め方</h2>
+<p>平均値は <span class="math inline">\overline{x}_{A-B} =</span> 21.142 です。 標準誤差は <span class="math inline">\text{s.e.} =</span> 0.431 です。 母分散は <span class="math inline">\sigma_A = \sigma_B =</span> 1 です。 有意水準は <span class="math inline">\alpha = 0.05</span> とします。</p>
+<p>95% 信頼区間は次のように定義しています。 <span class="math display">
+P\left(l \le \frac{\overline{x}-\mu}{\sigma}\le u\right) = 1-\alpha = 0.95
+</span></p>
+<p>書き直すと次のとおりです。</p>
+<p><span class="math display">
+P\left(\overline{x} +l \sigma \le \mu \le \overline{x} + u\sigma\right) = 1-\alpha = 0.95
+</span></p>
+<p><span class="math inline">\alpha= 0.05</span>　のとき、 <span class="math inline">l=</span> -1.96 と <span class="math inline">u=</span> 1.96 です。</p>
+<p>母分散は先程定義しましたが、<span class="math inline">\sigma = 1</span> です。 それぞれの値を式に代入すると、次のとおりです。</p>
+<p><span class="math display">
+\begin{split}
+P(
+21.142 +  -1.96 \times 1
+\le x \le
+21.142 +  1.96 \times 1
+) &amp;=
+P(
+\overbrace{19.182}^{l}
+\le x \le
+\overbrace{23.102}^{u}
+) \\
+&amp;= 0.95
+\end{split}
+</span></p>
+<p>つまり、 <span class="math inline">\overline{x}=</span> 21.142 の 95% 信頼区間は <span class="math inline">[19.182, 23.102 ]</span> です。</p>
+<div class="cell">
+<div class="cell-output-display">
+<div id="fig-ci-known" class="quarto-figure quarto-figure-center anchored">
+<figure class="figure">
+<p><img src="ttest_files/figure-html/fig-ci-known-1.png" class="img-fluid figure-img" width="576"></p>
+<p></p><figcaption class="figure-caption">Figure&nbsp;4: 調査を 20 回行ったときの平均値と信頼区間。真の平均値は -2 です。このとき、全ての実験で求めた信頼区間内に真の平均値が存在します。</figcaption><p></p>
+</figure>
+</div>
+</div>
+</div>
+<p>信頼区間内に 0 が含まれるときの、帰無仮説は棄却できません。 ちなみに、このときの帰無仮説は「平均値はゼロ」です。</p>
+<div class="cell">
+<div class="cell-output-display">
+<div id="fig-ci-zero" class="quarto-figure quarto-figure-center anchored">
+<figure class="figure">
+<p><img src="ttest_files/figure-html/fig-ci-zero-1.png" class="img-fluid figure-img" width="576"></p>
+<p></p><figcaption class="figure-caption">Figure&nbsp;5: ゼロを含む信頼区間。</figcaption><p></p>
+</figure>
+</div>
+</div>
+</div>
+<ul>
+<li>真の平均値は -2 なので、仮定した帰無仮説はそもそも誤りです。</li>
+<li><span class="math inline">H_0</span> を棄却しなかったら、 <strong>第2種の誤り</strong> <a href="#fn10" class="footnote-ref" id="fnref10" role="doc-noteref"><sup>10</sup></a>がおきます。</li>
+<li>8 つの調査の 95% 信頼区間は 0 を含みます。つまり、第2種の誤りは <span class="math inline">\beta=</span> 8 / 20 = 0.4 (40%) です。</li>
+<li>この解析の検出力 (<span class="math inline">1 - \beta</span>) は 0.6 です。正しい結果に導く確率は 60% です。</li>
+</ul>
+<div class="no-row-height column-margin column-container"><li id="fn10"><p><sup>10</sup>&nbsp;Type-II error</p></li></div></section>
+<section id="解析は誤りです" class="level2 page-columns page-full">
+<h2 class="anchored" data-anchor-id="解析は誤りです">解析は誤りです!</h2>
+<p>z 値は正規分布に従いますが、このとき母平均と母分散は存知です。</p>
+<p><span class="math display">
+z = \frac{\overline{x} - \mu}{\sigma}\sim N(0,1)
+</span></p>
+<p>++ところが、一般的には母平均と母分散は未知です。** 一般的には z 値より、t 値を求めます。</p>
+<p><span class="math display">
+t_{\overline{x}} = \frac{\overline{x} - x_0}{s.e.} = \frac{\overline{x} - x_0}{s / \sqrt{n}}
+</span></p>
+<p>t 値は t 分布に従います。</p>
+<div class="cell">
+<div class="cell-output-display">
+<div id="fig-tdist-2" class="quarto-figure quarto-figure-center anchored">
+<figure class="figure">
+<p><img src="ttest_files/figure-html/fig-tdist-2-1.png" class="img-fluid figure-img" width="576"></p>
+<p></p><figcaption class="figure-caption">Figure&nbsp;6: ｔ分布</figcaption><p></p>
+</figure>
+</div>
+</div>
+</div>
+<div class="page-columns page-full"><p>この t 分布の 自由度 <a href="#fn11" class="footnote-ref" id="fnref11" role="doc-noteref"><sup>11</sup></a>は <span class="math inline">N-1 = 5</span> です。</p><div class="no-row-height column-margin column-container"><li id="fn11"><p><sup>11</sup>&nbsp;degrees-of-freedom</p></li></div></div>
+<div class="cell">
+<div class="cell-output-display">
+<div id="tbl-tdist-quantiles" class="anchored">
+
+<div class="tabwid"><style>.cl-e7c58328{table-layout:auto;width:90%;}.cl-e7beea72{font-family:'DejaVu Sans';font-size:11pt;font-weight:normal;font-style:normal;text-decoration:none;color:rgba(0, 0, 0, 1.00);background-color:transparent;}.cl-e7c1be50{margin:0;text-align:right;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);padding-bottom:5pt;padding-top:5pt;padding-left:5pt;padding-right:5pt;line-height: 1;background-color:transparent;}.cl-e7c1d1a6{background-color:transparent;vertical-align: middle;border-bottom: 2pt solid rgba(102, 102, 102, 1.00);border-top: 2pt solid rgba(102, 102, 102, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-e7c1d1b0{background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-e7c1d1b1{background-color:transparent;vertical-align: middle;border-bottom: 2pt solid rgba(102, 102, 102, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}</style><table data-quarto-disable-processing="true" class="cl-e7c58328"><caption>Table&nbsp;5:  自由度 5 のときに t 分布の分位数 </caption><thead><tr style="overflow-wrap:break-word;"><th class="cl-e7c1d1a6"><p class="cl-e7c1be50"><span class="cl-e7beea72">Signififance level</span></p></th><th class="cl-e7c1d1a6"><p class="cl-e7c1be50"><span class="cl-e7beea72">percent</span></p></th><th class="cl-e7c1d1a6"><p class="cl-e7c1be50"><span class="cl-e7beea72">± quantile</span></p></th></tr></thead><tbody><tr style="overflow-wrap:break-word;"><td class="cl-e7c1d1b0"><p class="cl-e7c1be50"><span class="cl-e7beea72">0.50000000</span></p></td><td class="cl-e7c1d1b0"><p class="cl-e7c1be50"><span class="cl-e7beea72">50.00000</span></p></td><td class="cl-e7c1d1b0"><p class="cl-e7c1be50"><span class="cl-e7beea72">0.7266868</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-e7c1d1b0"><p class="cl-e7c1be50"><span class="cl-e7beea72">0.36321747</span></p></td><td class="cl-e7c1d1b0"><p class="cl-e7c1be50"><span class="cl-e7beea72">63.67825</span></p></td><td class="cl-e7c1d1b0"><p class="cl-e7c1be50"><span class="cl-e7beea72">1.0000000</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-e7c1d1b0"><p class="cl-e7c1be50"><span class="cl-e7beea72">0.20000000</span></p></td><td class="cl-e7c1d1b0"><p class="cl-e7c1be50"><span class="cl-e7beea72">80.00000</span></p></td><td class="cl-e7c1d1b0"><p class="cl-e7c1be50"><span class="cl-e7beea72">1.4758840</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-e7c1d1b0"><p class="cl-e7c1be50"><span class="cl-e7beea72">0.10193948</span></p></td><td class="cl-e7c1d1b0"><p class="cl-e7c1be50"><span class="cl-e7beea72">89.80605</span></p></td><td class="cl-e7c1d1b0"><p class="cl-e7c1be50"><span class="cl-e7beea72">2.0000000</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-e7c1d1b0"><p class="cl-e7c1be50"><span class="cl-e7beea72">0.10000000</span></p></td><td class="cl-e7c1d1b0"><p class="cl-e7c1be50"><span class="cl-e7beea72">90.00000</span></p></td><td class="cl-e7c1d1b0"><p class="cl-e7c1be50"><span class="cl-e7beea72">2.0150484</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-e7c1d1b0"><p class="cl-e7c1be50"><span class="cl-e7beea72">0.05000000</span></p></td><td class="cl-e7c1d1b0"><p class="cl-e7c1be50"><span class="cl-e7beea72">95.00000</span></p></td><td class="cl-e7c1d1b0"><p class="cl-e7c1be50"><span class="cl-e7beea72">2.5705818</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-e7c1d1b0"><p class="cl-e7c1be50"><span class="cl-e7beea72">0.03009925</span></p></td><td class="cl-e7c1d1b0"><p class="cl-e7c1be50"><span class="cl-e7beea72">96.99008</span></p></td><td class="cl-e7c1d1b0"><p class="cl-e7c1be50"><span class="cl-e7beea72">3.0000000</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-e7c1d1b0"><p class="cl-e7c1be50"><span class="cl-e7beea72">0.02500000</span></p></td><td class="cl-e7c1d1b0"><p class="cl-e7c1be50"><span class="cl-e7beea72">97.50000</span></p></td><td class="cl-e7c1d1b0"><p class="cl-e7c1be50"><span class="cl-e7beea72">3.1633814</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-e7c1d1b1"><p class="cl-e7c1be50"><span class="cl-e7beea72">0.01032342</span></p></td><td class="cl-e7c1d1b1"><p class="cl-e7c1be50"><span class="cl-e7beea72">98.96766</span></p></td><td class="cl-e7c1d1b1"><p class="cl-e7c1be50"><span class="cl-e7beea72">4.0000000</span></p></td></tr></tbody></table></div>
+</div>
+</div>
+</div>
+<div class="cell">
+<div class="cell-output-display">
+<div id="fig-tdist-experiments" class="quarto-figure quarto-figure-center anchored">
+<figure class="figure">
+<p><img src="ttest_files/figure-html/fig-tdist-experiments-1.png" class="img-fluid figure-img" width="576"></p>
+<p></p><figcaption class="figure-caption">Figure&nbsp;7: 母分散が未知のときの結果</figcaption><p></p>
+</figure>
+</div>
+</div>
+</div>
+<div class="callout-note callout callout-style-default callout-captioned">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-caption-container flex-fill">
+Note
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p><a href="#fig-tdist-experiments">Figure&nbsp;7</a> は 20 の標本平均とそれぞれの 95% 信頼区間を示しています。 真の平均値が頼区間に含まれている実験は紫色で示しています。 20 の調査のうち、新の平均値を含む回数は 19 回です。</p>
+<p><strong>信頼区間の解釈について</strong></p>
+<p>基本的には、95%　信頼区間を次のように理解できる。 実験を 100 回行い、信頼区間内に真の平均値が含まれる回数は 95 回です。。</p>
+<p><strong>下記で述べた解釈はすべて誤りです。</strong></p>
+<ul>
+<li>信頼区間に真の平均値が存在する。</li>
+<li>95% の確率で真の平均値が信頼区間に含まれる。</li>
+<li>95% の確率で次の実験の平均値が信頼区間に含まれる。</li>
+</ul>
+</div>
+</div>
+<div class="cell">
+<div class="cell-output-display">
+<div id="fig-tdist-zeros2" class="quarto-figure quarto-figure-center anchored">
+<figure class="figure">
+<p><img src="ttest_files/figure-html/fig-tdist-zeros2-1.png" class="img-fluid figure-img" width="576"></p>
+<p></p><figcaption class="figure-caption">Figure&nbsp;8: 信頼区間にゼロが含まれる回数</figcaption><p></p>
+</figure>
+</div>
+</div>
+</div>
+<ul>
+<li>信頼区間に 0 を含む実験は 5つあるので、 <span class="math inline">\beta=</span> 5 / 20 = 0.25 (25%) です。</li>
+<li>この実験の検出力 (<span class="math inline">1 - \beta</span>) は 0.75　です。</li>
+</ul>
+</section>
+<section id="t-検定" class="level1">
+<h1>t 検定</h1>
+<section id="対応ありの-t-検定" class="level2">
+<h2 class="anchored" data-anchor-id="対応ありの-t-検定">対応ありの t 検定</h2>
+<div class="cell">
+<div class="cell-output-display">
+<div id="fig-paired-ttest" class="quarto-figure quarto-figure-center anchored">
+<figure class="figure">
+<p><img src="ttest_files/figure-html/fig-paired-ttest-1.png" class="img-fluid figure-img" width="576"></p>
+<p></p><figcaption class="figure-caption">Figure&nbsp;9: 対応ありの t 検定</figcaption><p></p>
+</figure>
+</div>
+</div>
+</div>
+<p>このときの第２種の誤りををこす確率は <span class="math inline">\beta</span> = 5 / 20 = 25% です。 検出力　(<span class="math inline">1-\beta</span>) は 0.75です。</p>
+</section>
+<section id="分散が異なる-t-検定" class="level2">
+<h2 class="anchored" data-anchor-id="分散が異なる-t-検定">分散が異なる t 検定</h2>
+<div class="cell">
+<div class="cell-output-display">
+<div id="fig-welch-ttest" class="quarto-figure quarto-figure-center anchored">
+<figure class="figure">
+<p><img src="ttest_files/figure-html/fig-welch-ttest-1.png" class="img-fluid figure-img" width="576"></p>
+<p></p><figcaption class="figure-caption">Figure&nbsp;10: 分散が異なる t 検定（ウェルチの t 検定ともよびます）</figcaption><p></p>
+</figure>
+</div>
+</div>
+</div>
+<p>このときの第２種の誤りををこす確率は <span class="math inline">\beta</span> = 1 / 20 = 5% です。</p>
+<p>検出力 (<span class="math inline">1-\beta</span>) はs 0.95 です。</p>
+</section>
+<section id="対応ありの-t-検定-1" class="level2">
+<h2 class="anchored" data-anchor-id="対応ありの-t-検定-1">対応ありの t 検定</h2>
+<p><strong>対応ありのt検定 (paired t-test)</strong></p>
+<p>t 検定の統計量は t 値です。</p>
+<p><span class="math display">
+t^* = \frac{\overline{x}_{A-B} - \mu}{s_{A-B} / \sqrt{n}}
+</span></p>
+<p>対応ありの t 検定の自由度は <span class="math inline">n-1</span>　です。</p>
+<p>観測値がペアとして対応しているときに使います。 たとえば、低い光環境で育て海藻を高い光環境に移した時の成長速度の差を比較するときに使います。</p>
+</section>
+<section id="標本の-t-検定" class="level2">
+<h2 class="anchored" data-anchor-id="標本の-t-検定">2標本の t 検定</h2>
+<p>2標本 （２群）t 検定には 2 種類あります。</p>
+<p><strong>等分散の t 検定 (equal variance t-test)</strong></p>
+<p><span class="math display">
+t^* = \frac{\overline{x}_A - \overline{x}_B}{s_p \sqrt{1 / n_A + 1/n_B}}
+</span> <span class="math display">
+s_p = \sqrt{
+\frac{(n_A-1)s_A^2 + (n_B-1)s_B^2}
+{n_A + n_B -2}}
+</span> 自由度は <span class="math inline">n_A + n_B - 2</span>　です。</p>
+<p><strong>不等分散の t 検定・ウェルチの t 検定 (Unequal variance, Welch’s t-test)</strong></p>
+<p><span class="math display">
+t^* = \frac{\overline{x}_A - \overline{x}_B}{s_p}
+</span></p>
+<p><span class="math display">
+s_p = \sqrt{
+\frac{s_A^2}{n_A} +
+\frac{s_B^2}{n_B}}
+</span> 自由度はウェルチ–サタスウェイトの式 (Welch-Satterthwaite Equation) で求めます。</p>
+<p><span class="math inline">s</span> は標準偏差、 <span class="math inline">n</span> サンプル数、 <span class="math inline">\overline{x}</span> は平均値、 <span class="math inline">t^*</span> は t 値。</p>
+<p><span class="math display">
+\text{degrees-of-freedom} =
+\frac{
+\left(\frac{s_A^2}{n_A} + \frac{s_B^2}{n_B}\right)^2
+}
+{\frac{\left(s_A^2 / n_A\right)^2}{n_A-1} + \frac{\left(s_B^2 / n_B\right)^2}{n_B-1}}
+</span></p>
+<p>degrees-of-freedom は自由度です。</p>
+</section>
+<section id="ノコギリモク幼体の幅に対する-t-検定" class="level2">
+<h2 class="anchored" data-anchor-id="ノコギリモク幼体の幅に対する-t-検定">ノコギリモク幼体の幅に対する t 検定</h2>
+<div class="grid">
+<div class="g-col-6">
+<p><strong>対応ありの t 検定</strong></p>
+<div class="cell">
+
+</div>
+<p><span class="math display">
+\begin{aligned}
+t^* &amp;= \frac{\overline{x}_{A-B} - \mu}{s_{A-B} / \sqrt{n}} \\
+t^* &amp;= \frac{-2.467}{2.642 / \sqrt{6}} \\
+t^* &amp;= -2.287
+\end{aligned}
+</span></p>
+</div>
+<div class="g-col-6">
+<ul>
+<li><span class="math inline">\overline{x}_{A-B}=</span> -2.467</li>
+<li><span class="math inline">s_{A-B}=</span> 2.642</li>
+<li><span class="math inline">\mu=0</span></li>
+<li><span class="math inline">n</span> = 6</li>
+<li><span class="math inline">\alpha</span> = 0.05</li>
+<li>t値: -2.287</li>
+<li>P値: 0.071</li>
+</ul>
+</div>
+</div>
+<p><strong>ノコギリモク幼体のデータはお互いに対応していないので、対応ありの t 検定の結果は誤りです。</strong></p>
+<div class="grid">
+<div class="g-col-6">
+<p><strong>ノコギリモク幼体の正しい解析はウェルチの t 検定です。</strong></p>
+<p><span class="math display">
+\begin{aligned}
+t^* &amp;= \frac{\overline{x}_A -\overline{x}_B}{s_p} \\
+s_p &amp;= \sqrt{\frac{s_A^2}{n_A} + \frac{s_B^2}{n_B}} \\
+s_p &amp;= \sqrt{\frac{1.995^2}{6} + \frac{1.961^2}{6}} \\
+t^* &amp;= \frac{10.05 - 12.517}{1.142} \\
+t^* &amp;= -2.16 \\
+\text{d.f.} &amp;= 9.997
+\end{aligned}
+</span></p>
+</div>
+<div class="g-col-6">
+<ul>
+<li><span class="math inline">\alpha</span> = 0.05</li>
+<li>t値-value: -2.16</li>
+<li>P値: 0.056</li>
+</ul>
+<p><span class="math inline">P\nless \alpha = 0.05</span> なので、帰無仮説は棄却できません。</p>
+</div>
+</div>
+</section>
+<section id="サンプル数と-p-値の関係" class="level2">
+<h2 class="anchored" data-anchor-id="サンプル数と-p-値の関係">サンプル数と p 値の関係</h2>
+<div class="cell">
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="ttest_files/figure-html/behavior01-1.png" class="img-fluid figure-img" width="672"></p>
+<p></p><figcaption class="figure-caption">分散等しい t 検定の場合、サンプル数が増えると第 2 種の誤りは減少し、検出力は増加します。第 1 種の誤りは変わりません。</figcaption><p></p>
+</figure>
+</div>
+</div>
+</div>
+<div class="callout-note callout callout-style-default callout-captioned">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-caption-container flex-fill">
+Note
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p><code>site A</code> の真の平均値は <span class="math inline">\mu = 20</span>、<code>site B</code> のは <span class="math inline">\mu = 22</span> です。 <code>site A</code> の真の平均値は <span class="math inline">\mu = 20</span>、<code>site B</code> のは <span class="math inline">\mu = 22</span> です。 <code>site A</code> と <code>site B</code> の真の標準偏差 <span class="math inline">(\sigma)</span> は 1 と 1 です。</p>
+</div>
+</div>
+</section>
+<section id="behavior-of-the-t-test-unequal-variance" class="level2">
+<h2 class="anchored" data-anchor-id="behavior-of-the-t-test-unequal-variance">Behavior of the t-test (unequal variance)</h2>
+<div class="cell">
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="ttest_files/figure-html/behavior02-1.png" class="img-fluid figure-img" width="672"></p>
+<p></p><figcaption class="figure-caption">分散が異なる t 検定の場合、第 2 種の誤りと検出力の動きは分散が等しい t 検定と似ていますが、標本数も強く影響します。</figcaption><p></p>
+</figure>
+</div>
+</div>
+</div>
+<div class="callout-note callout callout-style-default callout-captioned">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-caption-container flex-fill">
+Note
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p><code>site A</code> の真の平均値は <span class="math inline">\mu = 20</span>、<code>site B</code> のは <span class="math inline">\mu = 22</span> です。 <code>site A</code> の真の標準偏差は <span class="math inline">\mu = 1</span>、ですが、<code>site B</code> の標準偏差は <span class="math inline">\sigma_B = k\times\sigma_A</span> です。 <span class="math inline">s_A / s_B \rightarrow\infty</span>のとき、第2種の誤りは増加し、検出力は減少します。 さらに、標本数が増えると、不等分散性の影響が下がります。</p>
+</div>
+</div>
+</section>
+<section id="ウェルチ-t-検定の-r-出力と結果" class="level2">
+<h2 class="anchored" data-anchor-id="ウェルチ-t-検定の-r-出力と結果">ウェルチ t 検定の R 出力と結果</h2>
+<div class="cell">
+<div class="cell-output cell-output-stdout">
+<pre><code>
+    Welch Two Sample t-test
+
+data:  value by name
+t = -2.16, df = 9.9971, p-value = 0.05612
+alternative hypothesis: true difference in means between group A and group B is not equal to 0
+95 percent confidence interval:
+ -5.01124979  0.07791646
+sample estimates:
+mean in group A mean in group B 
+       10.05000        12.51667 </code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># パッケージの読み込み</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="co"># 疑似データの作成</span></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>A <span class="ot">=</span> <span class="fu">c</span>(<span class="fl">9.8</span>,<span class="fl">11.1</span>,<span class="fl">10.7</span>,<span class="fl">10.7</span>,<span class="fl">11.8</span>,<span class="fl">6.2</span>)</span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>B <span class="ot">=</span> <span class="fu">c</span>(<span class="fl">12.5</span>,<span class="fl">13.8</span>,<span class="fl">12.0</span>,<span class="fl">15.5</span>,<span class="fl">9.8</span>,<span class="fl">11.5</span>)</span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>data <span class="ot">=</span> <span class="fu">tibble</span>(A, B)</span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>data <span class="ot">=</span> data <span class="sc">%&gt;%</span> <span class="fu">pivot_longer</span>(<span class="at">cols =</span> <span class="fu">c</span>(A,B))</span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a><span class="co"># ウェルチ t 検定</span></span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a><span class="fu">t.test</span>(value <span class="sc">~</span> name, <span class="at">data =</span> data)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># ひと書き方</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="fu">t.test</span>(A, B)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co"># two-sample, equal variance t-test (等分散 t 検定)</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="fu">t.test</span>(value <span class="sc">~</span> name, <span class="at">data =</span> data, <span class="at">var.equal =</span> <span class="cn">TRUE</span>) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+</section>
+<section id="分散が異なるの-t-検定の解析例" class="level1">
+<h1>分散が異なるの t 検定の解析例</h1>
+<section id="パッケージの読み込み" class="level2">
+<h2 class="anchored" data-anchor-id="パッケージの読み込み">パッケージの読み込み</h2>
+<p>t 検定だけしたいなら、次のパッケージの読み込みは不要です。 そう言っても、自分のワークフローでは、つぎのパッケージは必ず読み込んでいます。 パッケージを読み込もうとしたときに、 <code>Error in library(tidyverse) : there is no package called 'tidyverse'</code> のようなエラーがでたら、パッケージのインストールが必要です。</p>
+<p>パッケージのインストールは次のようにできます。</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">install.packages</span>(<span class="st">"tidyverse"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>では、パッケージを読み込みます。</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)  <span class="co"># データの操作・処理・作図用メタパッケージ</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(readxl) 　　<span class="co"># xlsx ファイルの読み込み用</span></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(lubridate)　<span class="co"># 時刻データ用</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>
+Attaching package: 'lubridate'</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>The following objects are masked from 'package:base':
+
+    date, intersect, setdiff, union</code></pre>
+</div>
+</div>
+</section>
+<section id="データの準備" class="level2">
+<h2 class="anchored" data-anchor-id="データの準備">データの準備</h2>
+<p>データは CSV (Comma Separated Value; コンマ区切り) ファイルに保存しています。 ファイルの内容は次の通りです。 最初の 3 行にはファイルの説明があります。</p>
+<div class="cell">
+
+</div>
+<div class="cell">
+<div class="cell-output cell-output-stdout">
+<pre><code># 6 Sargassum macrocarpum individuals from 2 sites were measured.
+# site: is the collection site (A, B).
+# size: is the width of the individual in mm.
+site,size
+A,19.9
+A,20.6
+A,20.3
+A,20.4
+A,20.9
+A,18.1
+B,22.3
+B,22.9
+B,22
+B,23.7
+B,20.9
+B,21.7</code></pre>
+</div>
+</div>
+<p>では、データを R に読み込みます。</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>filename <span class="ot">=</span> <span class="st">"./_data/sargassum_t-test_dataset.csv"</span></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>dset <span class="ot">=</span> <span class="fu">read_csv</span>(filename)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: One or more parsing issues, call `problems()` on your data frame for details,
+e.g.:
+  dat &lt;- vroom(...)
+  problems(dat)</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Rows: 15 Columns: 1
+── Column specification ────────────────────────────────────────────────────────
+Delimiter: ","
+chr (1): # 6 Sargassum macrocarpum individuals from 2 sites were measured.
+
+ℹ Use `spec()` to retrieve the full column specification for this data.
+ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
+</div>
+</div>
+<p>読み込んだデータの内容を確認しましょう。</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>dset</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 15 × 1
+   `# 6 Sargassum macrocarpum individuals from 2 sites were measured.`
+   &lt;chr&gt;                                                              
+ 1 # site: is the collection site (A, B).                             
+ 2 # size: is the width of the individual in mm.                      
+ 3 site,size                                                          
+ 4 A,19.9                                                             
+ 5 A,20.6                                                             
+ 6 A,20.3                                                             
+ 7 A,20.4                                                             
+ 8 A,20.9                                                             
+ 9 A,18.1                                                             
+10 B,22.3                                                             
+11 B,22.9                                                             
+12 B,22                                                               
+13 B,23.7                                                             
+14 B,20.9                                                             
+15 B,21.7                                                             </code></pre>
+</div>
+</div>
+<p>説明があるので、読み込みに失敗しました。 読み込んだデータのクラス (class) は 15 行 1 列の <code>tibble</code> になっています。 2 列あるはずです。 この場合、<code>read_csv()</code> に説明を無視させないといけない。</p>
+<p><code>skip = 3</code> を <code>read_csv()</code> に渡せば、最初の 3 行をスキップできます。</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>filename <span class="ot">=</span> <span class="st">"./_data/sargassum_t-test_dataset.csv"</span></span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>dset <span class="ot">=</span> <span class="fu">read_csv</span>(filename, <span class="at">skip =</span> <span class="dv">3</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Rows: 12 Columns: 2
+── Column specification ────────────────────────────────────────────────────────
+Delimiter: ","
+chr (1): site
+dbl (1): size
+
+ℹ Use `spec()` to retrieve the full column specification for this data.
+ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>dset</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 12 × 2
+   site   size
+   &lt;chr&gt; &lt;dbl&gt;
+ 1 A      19.9
+ 2 A      20.6
+ 3 A      20.3
+ 4 A      20.4
+ 5 A      20.9
+ 6 A      18.1
+ 7 B      22.3
+ 8 B      22.9
+ 9 B      22  
+10 B      23.7
+11 B      20.9
+12 B      21.7</code></pre>
+</div>
+</div>
+<p>12 行 2 列の <code>tibble</code> になりました。 列1の列名は <code>site</code> 列２の列名は <code>size</code> です。</p>
+</section>
+<section id="まずデータの平均値や標準偏差などをもとめる" class="level2">
+<h2 class="anchored" data-anchor-id="まずデータの平均値や標準偏差などをもとめる">まずデータの平均値や標準偏差などをもとめる</h2>
+<p><code>site</code> ごとの <code>size</code> の平均値、標準偏差、サンプル数、標準誤差は <code>tidyverse</code> パッケージの解析システムをつかいます。</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>dset <span class="sc">|&gt;</span> </span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(site) <span class="sc">|&gt;</span> </span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="fu">across</span>(size, <span class="fu">list</span>(<span class="at">mean =</span> mean, <span class="at">sd =</span> sd, <span class="at">n =</span> length))) <span class="sc">|&gt;</span> </span>
+<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">size_se =</span> size_sd <span class="sc">/</span> <span class="fu">sqrt</span>(size_n))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 2 × 5
+  site  size_mean size_sd size_n size_se
+  &lt;chr&gt;     &lt;dbl&gt;   &lt;dbl&gt;  &lt;int&gt;   &lt;dbl&gt;
+1 A          20.0   1.00       6   0.410
+2 B          22.2   0.971      6   0.396</code></pre>
+</div>
+</div>
+</section>
+<section id="t-検定-1" class="level2">
+<h2 class="anchored" data-anchor-id="t-検定-1">t 検定</h2>
+<p>t検定は <code>t.test()</code> でやります。</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="fu">t.test</span>(size <span class="sc">~</span> site, <span class="at">data =</span> dset)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+    Welch Two Sample t-test
+
+data:  size by site
+t = -3.8886, df = 9.9893, p-value = 0.003022
+alternative hypothesis: true difference in means between group A and group B is not equal to 0
+95 percent confidence interval:
+ -3.486976 -0.946357
+sample estimates:
+mean in group A mean in group B 
+       20.03333        22.25000 </code></pre>
+</div>
+</div>
+<p><code>t.test()</code> の結果をオブジェクトに書き込んだら、t値 (t value)、p値 (p value)、自由度 (degrees of freedom) を抽出できます。</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>dset_test <span class="ot">=</span> <span class="fu">t.test</span>(size <span class="sc">~</span> site, <span class="at">data =</span> dset)</span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>dset_test<span class="sc">$</span>statistic  <span class="co"># t value</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>        t 
+-3.888623 </code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a>dset_test<span class="sc">$</span>parameter  <span class="co"># degrees of freedom </span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>      df 
+9.989348 </code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a>dset_test<span class="sc">$</span>p.value 　 <span class="co"># p value</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 0.003022351</code></pre>
+</div>
+</div>
+<div class="cell">
+
+</div>
+</section>
+<section id="結果" class="level2">
+<h2 class="anchored" data-anchor-id="結果">結果</h2>
+<blockquote class="blockquote">
+<p>ノコギリモクの幼体において、サイト A から採取した幼体の幅（平均値±標準誤差）は 20.03 ± 0.41 mm でしたが、 サイト B から採取した幼体の幅は 22.25 ± 0.40 mm でした。 ｔ検定の結果、両地点で幼体幅間に有意な差がみられた (t<sub>(9.99)</sub> = -3.889; P = 0.0030)。</p>
+</blockquote>
+<p>有意水準より低いP値は「P &lt; 0.05」のように書くことも有ります。 つまり、「ｔ検定の結果、両地点で幼体幅間に有意な差がみられた (t<sub>(9.99)</sub> = -3.889; P &lt; 0.05)」。</p>
+<p>t検定の結果を記述することが重要です。この 3 つの情報を必ず記述しましょう。</p>
+<ul>
+<li>t<sub>(9.99)</sub>: 検定に使用した自由度（サンプル数の目安）</li>
+<li>-3.889: t検定の統計量</li>
+<li>P = 0.0030: 結果のP値</li>
+</ul>
+<div style="page-break-after: always;"></div>
+</section>
+<section id="付録-a-等分散性と正規性の検定" class="level2">
+<h2 class="anchored" data-anchor-id="付録-a-等分散性と正規性の検定">付録 A: 等分散性と正規性の検定</h2>
+<p>データの正規性と等分散性の検証も必要であれば Levene Test と Shapiro-Wilk Normality Test があります。 Levene Test は <code>car</code> パッケージの <code>leveneTest()</code> 関数でできますが、Shapiro-Wilk Normality Test はベースR に あるので、 パッケージの読み込みは必要ないです。</p>
+<p><strong>等分散性の検定</strong></p>
+<p>Levene Test (ルビーン検定) は2群以上の分散の均質性 (homogeneity) を検定するための検定です。 ルビーン検定の帰無仮説は「各群の分散は等しい」です。 有意水準より低いP値を求めたら、帰無仮説を棄却します。 棄却した場合、各群は均一な分散ではありません。</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(car)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Loading required package: carData</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>
+Attaching package: 'car'</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>The following object is masked from 'package:dplyr':
+
+    recode</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>The following object is masked from 'package:purrr':
+
+    some</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb35"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a><span class="fu">leveneTest</span>(size <span class="sc">~</span> site, <span class="at">data =</span> dset)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in leveneTest.default(y = y, group = group, ...): group coerced to
+factor.</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Levene's Test for Homogeneity of Variance (center = median)
+      Df F value Pr(&gt;F)
+group  1   0.079 0.7844
+      10               </code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in leveneTest.default(y = y, group = group, ...): group coerced to
+factor.
+
+Warning in leveneTest.default(y = y, group = group, ...): group coerced to
+factor.</code></pre>
+</div>
+</div>
+<p>ルビーン検定の統計量は F 値です。 データの等分散性を確認したところ、 F<sub>(1,10)</sub> = 0.08、 P値は P = 0.7844です。 有意水準より大きいので、帰無仮説を棄却しません。 つまり、等分散性ではないといえません。</p>
+<p><strong>正規性の検定</strong></p>
+<p>Shapiro-Wilk Normality Test (シャピロ–ウィルク検定) の帰無仮説は「サンプルが正規分布に従う母集団からとれた」です。 つまりシャピロウィルク検定から得たP値はサンプルの正規性を評価する指標です。 帰無仮説検定論の場合、有意水準より低いP値は帰無仮説を棄却することになり、センプルは正規分布に従わない母集団から得たものだと考えられるようになる。</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb39"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a><span class="fu">shapiro.test</span>(dset<span class="sc">$</span>size)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+    Shapiro-Wilk normality test
+
+data:  dset$size
+W = 0.97575, p-value = 0.9608</code></pre>
+</div>
+</div>
+<div class="cell">
+
+</div>
+<p>シャピロウィルク検定の統計量は W値です。 W =0.98、 P = ので、 帰無仮説を棄却しません。 正規性に従わないといえません。</p>
+<p><strong>一般的な手順のコード</strong></p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb41"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
+<span id="cb41-2"><a href="#cb41-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(car)</span>
+<span id="cb41-3"><a href="#cb41-3" aria-hidden="true" tabindex="-1"></a>filename <span class="ot">=</span> <span class="st">"./_data/sargassum_t-test_dataset.csv"</span></span>
+<span id="cb41-4"><a href="#cb41-4" aria-hidden="true" tabindex="-1"></a>dset <span class="ot">=</span> <span class="fu">read_csv</span>(filename, <span class="at">skip =</span> <span class="dv">3</span>)</span>
+<span id="cb41-5"><a href="#cb41-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb41-6"><a href="#cb41-6" aria-hidden="true" tabindex="-1"></a><span class="co"># (1) データの可視化</span></span>
+<span id="cb41-7"><a href="#cb41-7" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(dset) <span class="sc">+</span> </span>
+<span id="cb41-8"><a href="#cb41-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="fu">aes</span>(<span class="at">x =</span> site, <span class="at">y =</span> size)) <span class="sc">+</span></span>
+<span id="cb41-9"><a href="#cb41-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">y =</span> <span class="st">"Width (mm)"</span>,</span>
+<span id="cb41-10"><a href="#cb41-10" aria-hidden="true" tabindex="-1"></a>       <span class="at">x =</span> <span class="st">"Site"</span>)</span>
+<span id="cb41-11"><a href="#cb41-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb41-12"><a href="#cb41-12" aria-hidden="true" tabindex="-1"></a><span class="co"># (2) 等分散性の確認</span></span>
+<span id="cb41-13"><a href="#cb41-13" aria-hidden="true" tabindex="-1"></a><span class="fu">leveneTest</span>(size <span class="sc">~</span> site, <span class="at">data =</span> dset)</span>
+<span id="cb41-14"><a href="#cb41-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb41-15"><a href="#cb41-15" aria-hidden="true" tabindex="-1"></a><span class="co"># (3) 正規性の確認</span></span>
+<span id="cb41-16"><a href="#cb41-16" aria-hidden="true" tabindex="-1"></a><span class="fu">shapiro.test</span>(dset<span class="sc">$</span>size)</span>
+<span id="cb41-17"><a href="#cb41-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb41-18"><a href="#cb41-18" aria-hidden="true" tabindex="-1"></a><span class="co"># (4) t検定</span></span>
+<span id="cb41-19"><a href="#cb41-19" aria-hidden="true" tabindex="-1"></a><span class="fu">t.test</span>(size <span class="sc">~</span> site, <span class="at">data =</span> dset)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="付録-b-本資料のデータ作成" class="level2">
+<h2 class="anchored" data-anchor-id="付録-b-本資料のデータ作成">付録 B: 本資料のデータ作成</h2>
+<p>資料に使ったデータは次のコードでつくれます。</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb42"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
+<span id="cb42-2"><a href="#cb42-2" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">2021</span>)</span>
+<span id="cb42-3"><a href="#cb42-3" aria-hidden="true" tabindex="-1"></a>nA <span class="ot">=</span> <span class="dv">6</span></span>
+<span id="cb42-4"><a href="#cb42-4" aria-hidden="true" tabindex="-1"></a>nB <span class="ot">=</span> <span class="dv">6</span></span>
+<span id="cb42-5"><a href="#cb42-5" aria-hidden="true" tabindex="-1"></a>meanA <span class="ot">=</span> <span class="dv">20</span></span>
+<span id="cb42-6"><a href="#cb42-6" aria-hidden="true" tabindex="-1"></a>meanB <span class="ot">=</span> <span class="dv">22</span></span>
+<span id="cb42-7"><a href="#cb42-7" aria-hidden="true" tabindex="-1"></a>sigmaA <span class="ot">=</span> <span class="dv">1</span></span>
+<span id="cb42-8"><a href="#cb42-8" aria-hidden="true" tabindex="-1"></a>sigmaB <span class="ot">=</span> <span class="dv">1</span></span>
+<span id="cb42-9"><a href="#cb42-9" aria-hidden="true" tabindex="-1"></a>groupA <span class="ot">=</span> <span class="fu">rnorm</span>(nA, meanA, sigmaA) <span class="sc">|&gt;</span>  <span class="fu">round</span>(<span class="at">digits =</span> <span class="dv">1</span>)</span>
+<span id="cb42-10"><a href="#cb42-10" aria-hidden="true" tabindex="-1"></a>groupB <span class="ot">=</span> <span class="fu">rnorm</span>(nB, meanB, sigmaB) <span class="sc">|&gt;</span>  <span class="fu">round</span>(<span class="at">digits =</span> <span class="dv">1</span>)</span>
+<span id="cb42-11"><a href="#cb42-11" aria-hidden="true" tabindex="-1"></a>dset   <span class="ot">=</span> <span class="fu">tibble</span>(<span class="at">site =</span> <span class="fu">c</span>(<span class="st">"A"</span>, <span class="st">"B"</span>), <span class="at">size =</span> <span class="fu">list</span>(groupA, groupB)) <span class="sc">|&gt;</span>  <span class="fu">unnest</span>(size)</span>
+<span id="cb42-12"><a href="#cb42-12" aria-hidden="true" tabindex="-1"></a>L1 <span class="ot">=</span> <span class="st">"# 6 Sargassum macrocarpum individuals from 2 sites were measured."</span></span>
+<span id="cb42-13"><a href="#cb42-13" aria-hidden="true" tabindex="-1"></a>L2 <span class="ot">=</span> <span class="st">"# site: is the collection site (A, B)."</span></span>
+<span id="cb42-14"><a href="#cb42-14" aria-hidden="true" tabindex="-1"></a>L3 <span class="ot">=</span> <span class="st">"# size: is the width of the individual in mm."</span></span>
+<span id="cb42-15"><a href="#cb42-15" aria-hidden="true" tabindex="-1"></a>fname <span class="ot">=</span> <span class="st">"sargassum_t-test_dataset.csv"</span></span>
+<span id="cb42-16"><a href="#cb42-16" aria-hidden="true" tabindex="-1"></a><span class="fu">write_lines</span>(<span class="at">file =</span> fname, <span class="fu">list</span>(L1, L2, L3))</span>
+<span id="cb42-17"><a href="#cb42-17" aria-hidden="true" tabindex="-1"></a><span class="fu">write_csv</span>(dset, <span class="at">file =</span> fname, <span class="at">append =</span> <span class="cn">TRUE</span>, <span class="at">col_names =</span> <span class="cn">TRUE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+
+
+</section>
+</section>
+
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    target: function(trigger) {
+      return trigger.previousElementSibling;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  function tippyHover(el, contentFn) {
+    const config = {
+      allowHTML: true,
+      content: contentFn,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start'
+    };
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+</div> <!-- /content -->
+
+
+
+</body></html>

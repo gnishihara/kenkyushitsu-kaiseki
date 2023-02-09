@@ -1,0 +1,781 @@
+---
+title: "ggplot の図"
+---
+
+```{r}
+library(tidyverse)
+library(lubridate)
+library(readxl)
+library(ggpubr)
+library(showtext)
+library(patchwork)
+```
+
+## 図の詳細設定
+
+`showtext` パッケージを使って、システムフォントを使えるようにします。
+使用可能なフォントは次のように調べます。
+
+```{r}
+#! eval: false
+font_files() |> as_tibble()
+```
+
+Google の Noto シリーズのフォントを使いたいので、`filter()` にかけます。
+
+```{r}
+font_files() |> as_tibble() |> 
+  filter(str_detect(ps_name, "NotoSansCJK|NotoSansSymbol")) |> 
+  select(file, face, ps_name) 
+```
+
+フォントファイルのファイル名は `file` 変数にあります。
+その変数を使って、`font_add()` 関数で用意します。
+
+```{r}
+font_add(family = "notosans", 
+         regular = "NotoSansCJKjp-Regular.otf",
+         bold = "NotoSansCJKjp-Black.otf",
+         symbol = "NotoSansSymbols-Regular.ttf")
+```
+
+図のデフォルトテーマをここで設定します。
+`base_size` はフォントの大きさ。
+`base_family` は `font_add()` で定義した `family` です。
+
+```{r}
+theme_gray(base_size = 10, base_family = "notosans") |> theme_set()
+showtext_auto()
+```
+
+論文用のテーマは `ggpubr` パッケージの `theme_pubr()` をおすすめします。
+
+```{r}
+#| eval: false
+theme_pubr(base_size = 10, base_family = "notosans") |> theme_set()
+showtext_auto()
+```
+
+
+## `ggplot2` について
+
+* `ggplot2` の関数は `+` でつなげる
+* `ggplot()` はベースレイヤー
+* `geom_*()` はプロットレイヤー
+* `scales_*()` でエステティク (aesthetics) を調整
+* `theme()` や `theme_()` で書式を調整
+* `facet_wrap()` や `facet_grid()` は多変量データのプロットのパネル分け
+
+## Aesthetics （エステティク）とは
+
+### 色・透明度
+
+* `color`：点と線の色
+* `fill`：面の色
+* `alpha`：透明度（0 -- 1 の値）
+
+### 大きさ・形状
+
+* `size`：点と文字の大きさ、線の太さ
+* `shape`：点の形
+* `linetype`：線の種類
+
+
+### グループ化
+
+* `group`：点や線のグループ化
+
+### 座標、始点・終点
+
+* `x`, `y`
+* `xmin`, `ymin`
+* `xend`, `yend`
+
+
+## geom の種類
+
+**散布図**
+
+* `geom_point()`
+* `geom_jitter()`
+
+**折れ線グラフ**
+
+* `geom_path()`
+* `geom_line()`
+* `geom_step()`
+
+**面グラフ**
+* `geom_ribbon()`
+* `geom_area()`
+* `geom_polygon()`
+
+
+**ヒートマップ・コンター図**
+* `geom_tile()`
+* `geom_raster()`
+* `geom_rect()`
+* `geom_contour()`
+
+**エラーバー**
+* `geom_error()`
+* `geom_linerange()`
+* `geom_pointrange()`
+* `geom_crossbar()`
+
+
+## geom の種類
+
+**曲線など**
+
+* `geom_smooth()`
+* `geom_curve()`
+* `geom_segment()`
+* `geom_abline()`
+* `geom_hline()`
+* `geom_vline()`
+
+**文字列**
+
+* `geom_text()`
+* `geom_label()`
+
+**ヒストグラム・密度曲線**
+* `geom_histogram()`
+* `geom_freqpoly()`
+* `geom_density()`
+* `geom_bin2d()`
+* `geom_hex()`
+* `geom_dotplot()`
+
+**棒グラフ・箱ひげ図**
+* `geom_bar()`
+* `geom_col()`
+* `geom_boxplot()`
+* `geom_violin()`
+
+
+## `ggplot2` の付属パッケージ
+
+**研究室が使っているパッケージ**
+
+* `ggpubr`: `theme_pubr()`, `ggarrange()`
+* `ggrepel`: `geom_text_repel()`
+* `lemon`: `facet_rep_grid()`, `facet_rep_wrap()`
+* `showtext`: システムフォントの埋め込み
+
+[ggplot2 extensions](https://exts.ggplot2.tidyverse.org/)
+
+## データを読み込んだら、可視化しよう
+
+```{r}
+#| eval: FALSE
+filename = "Table 2.xlsx"
+col_names = c("month", "temperature1", "sd1", "empty","temperature2", "sd2")
+exceldata = read_excel(filename, sheet = 1, skip = 2, col_name = col_names)
+```
+
+```{r}
+#| echo: false
+filename = rprojroot::find_rstudio_root_file("_data/Table 2.xlsx")
+col_names = c("month", "temperature1", "sd1", "empty","temperature2", "sd2")
+exceldata = readxl::read_excel(filename, sheet=1, skip = 2, col_name = col_names)
+```
+
+
+```{r}
+ggplot(exceldata) + geom_point(aes(x = month, y = temperature1))
+```
+
+横軸の順序がおかしいですね。軸タイトルも変えたほうがいいですね。
+
+## 軸タイトルの関数
+
+軸タイトルや図のタイトルは `labs()` 関数でします。
+
+```{r}
+xlabel = "Month"
+ylabel = "'Temperature ('*degree*'C)'" # plotmath expression see ?plotmath
+ggplot(exceldata) + 
+  geom_point(aes(x = month, y = temperature1)) + 
+  labs(x = xlabel, 
+       y = parse(text = ylabel),
+       title = "Monthly mean water temperature") 
+```
+
+## 論文用に変える
+
+学術論文に記載する図の場合、図から余計なかざりを外します。
+研究室では `ggpubr` の `theme_pubr()` 関数を使っています。
+
+```{r}
+xlabel = "Month"
+ylabel = "'Temperature ('*degree*'C)'" # plotmath expression see ?plotmath
+ggplot(exceldata) + 
+  geom_point(aes(x = month, y = temperature1)) + 
+  labs(x = parse(text = xlabel), 
+       y = parse(text = ylabel))  +
+  theme_pubr(base_size = 10)
+```
+
+## 月の順序をなおす
+
+もう気づいたと思いますが、横軸の月の順序が間違っています。
+`factor()` で、`month` 変数を整えます。
+
+```{r}
+# element_text() size is in points (pt)
+# 1 pt = 0.35 mm
+xlabel = "Month"
+ylabel = "'Temperature ('*degree*'C)'" # plotmath expression see ?plotmath
+
+levels = month.abb
+levels = str_c(levels, ifelse(levels == "May", "", "."))
+
+exceldata |> 
+  mutate(month = factor(month, levels = levels)) |> 
+  ggplot() + 
+  geom_point(aes(x = month, y = temperature1)) + 
+  labs(x = parse(text = xlabel), 
+       y = parse(text = ylabel))  +
+  theme_pubr(base_family = "notosans") +
+  theme(text = element_text(size = 10))
+
+```
+
+```{r}
+#| echo: false
+library(magick)
+pout = exceldata |> 
+  mutate(month = factor(month, levels = levels)) |> 
+  ggplot() + 
+  geom_point(aes(x = month, y = temperature1)) + 
+  labs(x = parse(text = xlabel), 
+       y = parse(text = ylabel))  +
+  theme_pubr(base_family = "notosans") +
+  theme(text = element_text(size = 10))
+
+pdffile = rprojroot::find_rstudio_root_file("_data/temperature_plot.pdf")
+pngfile = rprojroot::find_rstudio_root_file("_data/temperature_plot.png")
+wh = c(80, 80)
+ggsave(pdffile, plot = pout, width = wh[1], height = wh[2], units = "mm", device = cairo_pdf)
+ggsave(pngfile, plot = pout, width = wh[1], height = wh[2], units = "mm", dpi = 300)
+
+i1 = image_read_pdf(pdffile, density = 236) |> image_resize("x500") 
+i2 = image_read(pngfile)|> image_resize("x500") 
+```
+
+## 図を保存する
+
+図は PDF と PNG 形式で保存しましょう。
+
+**PDFファイル**
+`ggsave()` は最後の表示した図を書き出しします。
+`width` と `height` を指定したら必ず単位も指定しましょう (`units = "mm"`)。
+PDFファイルにシステムフォントを埋め込むなら、`device = cairo_pdf`も渡しましょう。
+
+```{r}
+#| eval: false
+wh = list(width = 80, height = 80) # 図の縦横幅
+pdffile = "temperature_plot.pdf"
+ggsave(pdffile, width = wh$width, height = wh$height, units = "mm", device = cairo_pdf)
+```
+
+**PNGファイル**
+直接PNGファイルに保存する場合は、画像の解像度 (`dpi = 300`) も必要です。
+```{r}
+#| eval: false
+pngfile = "temperature_plot.png"
+ggsave(pngfile, width = wh$width, height = wh$height, units = "mm", dpi = 300)
+```
+
+---
+
+## 保存の結果
+
+```{r}
+#| echo: false
+img3 = image_blank(10, 500, color = "#002b36")
+image_append(c(i1, img3, i2)) |> 
+  image_annotate("PDF", location = "+400+0", size = 36, color = "#002b36", font = "Noto Sans") |>
+  image_annotate("PNG", location = "+900+0", size = 36, color = "#002b36", font = "Noto Sans") 
+```
+
+* `wh = list(width = 80, height = 80)` は同じだが、図は似ていません。
+* モニターでみたとき、PDF の解像度は 96 です。つまり、`dpi = 300` のPNGファイルはPDFの約 3 倍の大きさです。
+
+
+## 図のフォントを拡大して、PNGファイルを修正する
+
+```{r}
+#| include: false
+DPI = 300
+# When done in xaringan the denominator is (72 / ggplot2::.pt).
+# But when done in an R script, the denominator is 96.
+# If this code is run in RStudio, use the second line.
+scale = DPI / 72 / .pt
+# scale = DPI / 96
+wh = list(width = 80, height = 80)
+pdffile = rprojroot::find_rstudio_root_file("_data/temperature_plot2.pdf")
+pngfile = rprojroot::find_rstudio_root_file("_data/temperature_plot2.png")
+
+pout = exceldata |> 
+  mutate(month = factor(month, levels = levels)) |> 
+  ggplot() + 
+  geom_point(aes(x = month, y = temperature1)) + 
+  labs(x = parse(text = xlabel), 
+       y = parse(text = ylabel))  +
+  theme_pubr(base_family = "notosans") +
+  theme(text = element_text(size = 10))
+
+ggsave(pdffile, plot = pout, width = wh$width, height = wh$height, units = "mm", dev = cairo_pdf)
+
+pout = exceldata |> 
+  mutate(month = factor(month, levels = levels)) |> 
+  ggplot() + 
+  geom_point(aes(x = month, y = temperature1)) + 
+  labs(x = parse(text = xlabel), 
+       y = parse(text = ylabel))  +
+  theme_pubr(base_family = "notosans") +
+  theme(text = element_text(size = 10 * scale))
+
+ggsave(pngfile, plot = pout, width = wh$width, height = wh$height, units = "mm", dpi = DPI)
+
+i1 = image_read_pdf(pdffile, density = 600) |> image_resize("x500") 
+i2 = image_read(pngfile)|> image_resize("x500") 
+
+```
+
+```{r}
+#| eval: false
+DPI = 300
+scale = DPI / 96
+exceldata |> 
+  mutate(month = factor(month, levels = levels)) |> 
+  ggplot() + 
+  geom_point(aes(x = month, y = temperature1)) + 
+  labs(x = parse(text = xlabel), 
+       y = parse(text = ylabel))  +
+  theme_pubr(base_family = "notosans") +
+  theme(text = element_text(size = 10 * scale))
+
+pngfile = "temperature_plot.png"
+wh = list(width = 80, height = 80)
+ggsave(pngfile, width = wh$width, height = wh$height, units = "mm", dpi = DPI)
+
+```
+
+
+```{r panel} 
+#| echo: FALSE
+img3 = image_blank(10, 500, color = "#002b36")
+image_append(c(i1, img3, i2)) |> 
+  image_annotate("PDF", location = "+400+0", size = 36, color = "#002b36", font = "Noto Sans") |>
+  image_annotate("PNG", location = "+910+0", size = 36, color = "#002b36", font = "Noto Sans") 
+```
+
+## 研究室のワークフロー
+
+PNGファイルのDPIをいじるのが面倒なので、PDFをPNGに変換するのが楽です。
+月の頭文字をチックラベルにします。さらに、`lemon` パッケージの `geom_pointline()`を使ってみました。
+
+```{r}
+library(lemon)
+xlabel = "Month"
+ylabel = "'Temperature'~(degree*C)" # plotmath expression see ?plotmath
+levels = month.abb
+levels = str_c(levels, ifelse(levels == "May", "", "."))
+labels = str_sub(month.abb, 1, 1)
+# 図の結果は plot1 にいれます。
+plot1 =   exceldata |> mutate(month = factor(month, levels = levels)) |> 
+  ggplot() + 
+  geom_point(aes(x = month, y = temperature1)) +
+  scale_x_discrete(name = xlabel, labels = labels) +
+  scale_y_continuous(name = parse(text = ylabel), breaks = seq(21, 29, by = 1)) +
+  theme_pubr(base_family = "notosans") +
+  theme(text = element_text(size = 10))
+```
+
+まず、PDFファイルを保存します。システムフォントをPDFファイルに入れるためには `device = cairo_pdf` を渡します。
+
+```{r}
+#| echo: false
+library(magick) # imagemagick パッケージ
+wh = list(width = 80, height = 80) # 図の縦横幅
+pdffile = rprojroot::find_rstudio_root_file("_data/temperature_plot.pdf")
+pngfile = rprojroot::find_rstudio_root_file("_data/temperature_plot.png")
+ggsave(pdffile, width = wh$width, height = wh$height, units = "mm", device = cairo_pdf)
+```
+
+```{r}
+#| eval: false
+wh = list(width = 80, height = 80) # 図の縦横幅
+pdffile = "temperature_plot.pdf"
+ggsave(pdffile, width = wh$width, height = wh$height, units = "mm", device = cairo_pdf)
+```
+
+ImageMagick のAPIを使って、PDFをPNGに変換します。
+この方法だと、DPIのややこしい変換は不要です。
+
+つぎに `magick` パッケージを読み込みます。
+
+```{r}
+#| eval: false
+library(magick) # imagemagick パッケージ
+```
+
+つづいて、PDF ファイルを 600 DPI で読み込む。
+```{r}
+#| eval: false
+img = image_read_pdf(pdffile, density = 600)
+```
+
+PDFファイルをPNGファイルに書き出す。
+
+```{r}
+#| eval: false
+img |> image_write(pngfile)
+```
+
+## 保存の結果
+
+```{r panel2}
+#| echo: false
+pdffile = rprojroot::find_rstudio_root_file("_data/temperature_plot.pdf")
+pngfile = rprojroot::find_rstudio_root_file("_data/temperature_plot.png")
+img = image_read_pdf(pdffile, density = 600)
+img |> image_write(pngfile)
+img = img |> image_resize("x500")
+img2 = image_read(pngfile)|> image_resize("x500")
+img3 = image_blank(10, 500, color = "#002b36")
+image_append(c(img, img3, img2)) |> 
+  image_annotate("PDF", location = "+400+0", size = 36, color = "#002b36", font = "Noto Sans") |>
+  image_annotate("PNG", location = "+910+0", size = 36, color = "#002b36", font = "Noto Sans") 
+```
+
+このとき、フォントサイズは 10 pt にしました：`theme(text = element_text(size = 10))`。
+
+## データを追加してプロット
+
+```{r}
+xlabel = "Month"
+ylabel = "'Temperature'~(degree*C)" # plotmath expression see ?plotmath
+levels = month.abb
+levels = str_c(levels, ifelse(levels == "May", "", "."))
+labels = str_sub(month.abb, 1, 1)
+exceldata |> mutate(month = factor(month, levels = levels)) |> 
+  ggplot() + 
+  geom_pointline(aes(x = month, y = temperature1, color = "Group 1", shape = "Group 1", group = 1)) +
+  geom_pointline(aes(x = month, y = temperature2, color = "Group 2", shape = "Group 2", group = 1)) +
+  scale_x_discrete(name = xlabel, labels = labels) +
+  scale_y_continuous(name = parse(text = ylabel), breaks = seq(15, 30, by = 5), limits = c(15, 30)) +
+  scale_color_viridis_d("", option = "turbo", begin = 0, end = 0.5) +
+  scale_shape_discrete("") +
+  theme_pubr(base_family = "notosans") +
+  theme(text = element_text(size = 10),
+        legend.position = c(1, 0),
+        legend.justification = c(1, 0),
+        legend.background = element_blank(),
+        legend.title = element_blank())
+```
+]
+
+## 複数パネルのプロット
+
+```{r}
+xlabel = "Petal width (cm)"
+ylabel = "Sepal width (cm)"
+iris |> group_nest(Species) |> 
+  mutate(L = c("A", "B", "C")) |> 
+  mutate(Species = sprintf("italic('I.')~italic('%s')~'(%s)'",  Species, L)) |> 
+  unnest(data) |> 
+  ggplot() + 
+  geom_point(aes(x = Petal.Width, y = Sepal.Width, color = Species)) +
+  geom_text(aes(x = 3, y = 5, label = Species), parse = TRUE, vjust = 1, hjust = 1,
+            family = "notosans", size =3,  check_overlap = TRUE) +
+  scale_x_continuous(name = xlabel, breaks = seq(0, 3), limits = c(0, 3)) +
+  scale_y_continuous(name = ylabel, breaks = seq(0, 5), limits = c(0, 5)) +
+  scale_color_viridis_d("", option = "turbo", 
+                      begin = 0, end = 0.5, labels = scales::parse_format()) +
+  guides(color = "none") +
+  facet_rep_grid(cols = vars(Species)) +
+  theme_pubr(base_family = "notosans") +
+  theme(text = element_text(size = 10),
+        strip.background = element_blank(),
+        strip.text = element_blank())
+```
+
+
+## 複数プロットの結合
+
+```{r}
+xlabel1 = "Petal width (cm)"
+ylabel1 = "Sepal width (cm)"
+xlabel2 = "Petal length (cm)"
+ylabel2 = "Sepal length (cm)"
+
+iris2 = iris |> 
+    mutate(Species = sprintf("italic('I.')~italic('%s')",  Species))
+```
+
+```{r}
+plot1 = 
+  ggplot(iris2) + 
+  geom_point(aes(x = Petal.Width, y = Sepal.Width, color = Species)) +
+  scale_x_continuous(name = xlabel1, breaks = seq(0, 8), limits = c(0, 8)) +
+  scale_y_continuous(name = ylabel1, breaks = seq(0, 8), limits = c(0, 8)) +
+  scale_color_viridis_d("", option = "turbo", 
+                      begin = 0, end = 0.5, labels = scales::parse_format()) +
+  theme_pubr(base_family = "notosans") +
+  theme(text = element_text(size = 10))
+```
+
+```{r}
+plot2 = 
+  ggplot(iris2) + 
+  geom_point(aes(x = Petal.Length, y = Sepal.Length, color = Species)) +
+  scale_x_continuous(name = xlabel2, breaks = seq(0, 8), limits = c(0, 8)) +
+  scale_y_continuous(name = ylabel2, breaks = seq(0, 8), limits = c(0, 8)) +
+  scale_color_viridis_d("", option = "turbo", 
+                      begin = 0, end = 0.5, labels = scales::parse_format()) +
+  theme_pubr(base_family = "notosans") +
+  theme(text = element_text(size = 10))
+```
+
+## 複数プロットの結合の結果
+
+```{r, fig.height=2.25}
+plot1 + plot2 + plot_layout(ncol = 2, 
+                            nrow = 1, 
+                            guides = "collect")
+```
+
+## 線と点（説明変数は離散型変数の場合）
+
+```{r}
+ylabel = "Petal length (cm)"
+iris2 |> group_by(Species) |> 
+  summarise(PL = mean(Petal.Length),
+            sd = sd(Petal.Length)) |> 
+  mutate(lower = PL - sd,
+         upper = PL + sd) |> 
+ggplot() + 
+  geom_line(aes(x = Species, y = PL, group = 1)) +
+  geom_point(aes(x = Species, y = PL), size = 2, color = "white") +
+  geom_point(aes(x = Species, y = PL), size = 1) +
+  geom_errorbar(aes(x = Species, ymin = lower, ymax = upper),
+                width = 0.0) +  
+  scale_x_discrete(name = "Species", labels = scales::parse_format()) +
+  scale_y_continuous(name = ylabel, breaks = seq(0, 8), limits = c(0, 8)) +
+  theme_pubr(base_family = "notosans") +
+  theme(text = element_text(size = 10))
+```
+
+## ボーグラフ
+
+```{r}
+ylabel = "Petal length (cm)"
+iris2 |> group_by(Species) |> 
+  summarise(PL = mean(Petal.Length),
+            sd = sd(Petal.Length)) |> 
+  mutate(lower = PL - sd,
+         upper = PL + sd) |> 
+ggplot() + 
+  geom_col(aes(x = Species, y = PL, fill = Species)) +
+  geom_errorbar(aes(x = Species, ymin = lower, ymax = upper),
+                width = 0.01) +  
+  scale_x_discrete(name = "Species", labels = scales::parse_format()) +
+  scale_y_continuous(name = ylabel, breaks = seq(0, 8), limits = c(0, 8)) +
+  scale_fill_viridis_d("", option = "turbo", 
+                      begin = 0, end = 0.5, labels = scales::parse_format()) +
+  guides(fill = "none") +
+  theme_pubr(base_family = "notosans") +
+  theme(text = element_text(size = 10))
+```
+
+## ボーグラフ（横向き・並び替える）
+
+```{r}
+ylabel = "Petal length (cm)"
+iris2 |> group_by(Species) |> 
+  summarise(PL = mean(Petal.Length),
+            sd = sd(Petal.Length)) |> 
+  mutate(lower = PL - sd,
+         upper = PL + sd) |> 
+  ggplot(aes(x = fct_reorder(Species, PL, .desc = T))) + 
+  geom_col(aes(y = PL, fill = Species)) +
+  geom_errorbar(aes(ymin = lower, ymax = upper),
+                width = 0.1) +  
+  scale_x_discrete(name = "Species", labels = scales::parse_format()) +
+  scale_y_continuous(name = ylabel, breaks = seq(0, 8), limits = c(0, 8)) +
+  scale_fill_viridis_d("", option = "turbo", 
+                      begin = 0, end = 0.5, labels = scales::parse_format()) +
+  guides(fill = "none") +
+  theme_pubr(base_family = "notosans") +
+  theme(text = element_text(size = 10))+ 
+  coord_flip()
+```
+
+## ヒストグラム
+
+```{r}
+xlabel = "Petal length (cm)"
+ylabel = "Frequency"
+iris2 |> 
+  ggplot() + 
+  geom_histogram(aes(x = Petal.Length, fill = Species)) +
+  scale_x_continuous(name = xlabel) +
+  scale_y_continuous(name = ylabel) +
+  scale_fill_viridis_d("", option = "turbo", 
+                      begin = 0, end = 0.5, labels = scales::parse_format()) +
+  theme_pubr(base_family = "notosans") +
+  theme(text = element_text(size = 10),
+        legend.position = c(1,1),
+        legend.justification = c(1,1))
+```
+
+## ヒストグラム・パネル
+
+```{r}
+xlabel = "Petal length (cm)"
+ylabel = "Frequency"
+iris2 |> 
+  ggplot() + 
+  geom_histogram(aes(x = Petal.Length, fill = Species),
+                 binwidth = 0.1, center = 0) +
+  scale_x_continuous(name = xlabel, limits = c(0, 10)) +
+  scale_y_continuous(name = ylabel) +
+  scale_fill_viridis_d("", option = "turbo", 
+                      begin = 0, end = 0.5, labels = scales::parse_format()) +
+  facet_rep_wrap(facets = vars(Species)) +
+  theme_pubr(base_family = "notosans") +
+  theme(text = element_text(size = 10),
+        legend.position = c(1,1),
+        legend.justification = c(1,1),
+        strip.background = element_blank(),
+        strip.text = element_blank())
+```
+
+## 時系列
+
+データは (https://covid.ourworldindata.org/data/owid-covid-data.csv)。
+
+```{r}
+#| cache: true
+covid = read_csv("https://covid.ourworldindata.org/data/owid-covid-data.csv")
+covid2 = covid |> 
+  group_by(continent, date) |> 
+  summarise(tc = sum(total_cases_per_million, na.rm=T),
+            td = sum(total_deaths_per_million, na.rm= T)) |> 
+  drop_na()
+```
+
+```{r}
+xlabel = "Date"
+ylabel = "COVID cases per million"
+ggplot(covid2) +
+  geom_path(aes(x=date, y = tc, color = continent))+
+  scale_x_date(name = xlabel) +
+  scale_y_continuous(name = ylabel) +
+  scale_color_viridis_d("", option = "turbo", begin = 0, end = 0.8) +
+  theme_pubr(base_family = "notosans") +
+  theme(text = element_text(size = 10),
+        legend.position = c(0,1),
+        legend.justification = c(0,1),
+        strip.background = element_blank(),
+        strip.text = element_blank())
+```
+
+
+## 時系列
+
+```{r}
+xlabel = "Date"
+ylabel = "COVID cases per million"
+ggplot(covid2) +
+  geom_path(aes(x=date, y = tc, color = continent))+
+  scale_x_date(name = xlabel, date_labels = "%Y-%m-%d") +
+  scale_y_continuous(name = ylabel, 
+                     breaks = 10^seq(-2,7), limits = c(0.01, 10^7),
+                     trans = "log10", labels = scales::label_math(format = log10)) +
+  scale_color_viridis_d("", option = "turbo", begin = 0, end = 0.8) +
+  guides(color = guide_legend(ncol = 2)) +
+  theme_pubr(base_family = "notosans") +
+  theme(text = element_text(size = 10),
+        legend.position = c(0.5,0),
+        legend.justification = c(0,0),
+        legend.background = element_blank(),
+        strip.background = element_blank(),
+        strip.text = element_blank())
+```
+
+
+## 時系列軸のカスタムラベル
+
+```{r}
+gnn_date = function() {
+  function(x) {
+    m = format(x, "%b")
+    m = str_sub(m, start = 1, end = 1)
+    y = format(x, "%Y")
+    ifelse(duplicated(y), m, sprintf("%s\n%s", m,y))
+  }
+}
+```
+
+
+## 時系列
+
+
+```{r}
+xlabel = "Date"
+ylabel = "COVID cases per million"
+ggplot(covid2) +
+  geom_path(aes(x=date, y = tc, color = continent))+
+  scale_x_date(name = xlabel, date_breaks = "months", labels = gnn_date()) +
+  scale_y_continuous(name = ylabel, 
+                     breaks = 10^seq(-2,7, by = 2), limits = c(0.01, 10^7),
+                     trans = "log10", labels = scales::label_math(format = log10)) +
+  scale_color_viridis_d("", option = "turbo", begin = 0, end = 0.8) +
+  guides(color = guide_legend(ncol = 2)) +
+  theme_pubr(base_family = "notosans") +
+  theme(text = element_text(size = 10),
+        legend.position = c(0.5,0),
+        legend.justification = c(0,0),
+        legend.background = element_blank(),
+        strip.background = element_blank(),
+        strip.text = element_blank())
+```
+
+
+## 箱ひげ図
+
+```{r}
+covid2 = covid |> 
+  filter(date >= lubridate::ymd("2021-01-01")) |> 
+  filter(str_detect(location, "Indonesia|Japan|South Korea|Taiwan|China"))
+```
+
+
+```{r}
+xlabel = "Country"
+ylabel = "Daily cases per million"
+ggplot(covid2) +
+  geom_boxplot(aes(x = fct_reorder(location, new_cases_per_million, mean, na.rm=T, .desc=T), 
+                   y = new_cases_per_million, fill = location)) + 
+  scale_x_discrete(name = xlabel) +
+  scale_y_continuous(name = ylabel, 
+                     breaks = 10^seq(-3,3, by = 1), limits = 10^c(-3, 3),
+                     trans = "log10", labels = scales::label_math(format = log10)) +
+  scale_color_viridis_d("", option = "turbo",  begin = 0, end = 0.8) +
+  guides(fill = guide_legend(ncol = 2)) +
+  theme_pubr(base_family = "notosans") +
+  theme(text = element_text(size = 10),
+        legend.position = c(0,0),
+        legend.justification = c(0,0),
+        legend.background = element_blank(),
+        legend.title = element_blank(),
+        strip.background = element_blank(),
+        strip.text = element_blank())
+```
+

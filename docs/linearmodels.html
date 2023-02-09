@@ -1,0 +1,1052 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.2.335">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>データ解析（研究室用） - ノンパラメトリック法</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1.6em;
+  vertical-align: middle;
+}
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { color: #008000; } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { color: #008000; font-weight: bold; } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+}
+.hanging div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}
+</style>
+
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<script src="site_libs/quarto-html/quarto.js"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 20,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit"
+  }
+}</script>
+
+  <script>window.backupDefine = window.define; window.define = undefined;</script><script src="https://cdn.jsdelivr.net/npm/katex@0.15.1/dist/katex.min.js"></script>
+  <script>document.addEventListener("DOMContentLoaded", function () {
+ var mathElements = document.getElementsByClassName("math");
+ var macros = [];
+ for (var i = 0; i < mathElements.length; i++) {
+  var texText = mathElements[i].firstChild;
+  if (mathElements[i].tagName == "SPAN") {
+   katex.render(texText.data, mathElements[i], {
+    displayMode: mathElements[i].classList.contains('display'),
+    throwOnError: false,
+    macros: macros,
+    fleqn: false
+   });
+}}});
+  </script>
+  <script>window.define = window.backupDefine; window.backupDefine = undefined;</script><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.15.1/dist/katex.min.css">
+
+<link rel="stylesheet" href="styles.css">
+</head>
+
+<body class="nav-sidebar docked slimcontent">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+  <nav class="quarto-secondary-nav" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+    <div class="container-fluid d-flex justify-content-between">
+      <h1 class="quarto-secondary-nav-title">ノンパラメトリック法</h1>
+      <button type="button" class="quarto-btn-toggle btn" aria-label="Show secondary navigation">
+        <i class="bi bi-chevron-right"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse sidebar-navigation docked overflow-auto">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header">
+    <div class="sidebar-title mb-0 py-0">
+      <a href="./">データ解析（研究室用）</a> 
+    </div>
+      </div>
+      <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Search"></div>
+        </div>
+      </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-expanded="true">Introduction</a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-expanded="true">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./index.html" class="sidebar-item-text sidebar-link">研究室と講義の R コード</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./about.html" class="sidebar-item-text sidebar-link">About</a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-expanded="true">Rの基礎</a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-expanded="true">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./part01.html" class="sidebar-item-text sidebar-link">R の基本操作</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./part02.html" class="sidebar-item-text sidebar-link">R 関数の基本</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./part03.html" class="sidebar-item-text sidebar-link">Tidyverse</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./part04.html" class="sidebar-item-text sidebar-link">データの操作</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./part05.html" class="sidebar-item-text sidebar-link">ggplot の図</a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" aria-expanded="true">Linear models</a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" aria-expanded="true">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./linearmodels.html" class="sidebar-item-text sidebar-link active">ノンパラメトリック法</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./ttest.html" class="sidebar-item-text sidebar-link">2群の比較：t 検定</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./anova.html" class="sidebar-item-text sidebar-link">一元配置分散分析</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./anova2.html" class="sidebar-item-text sidebar-link">多数群の比較：二元配置分散分析</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./glm.html" class="sidebar-item-text sidebar-link">線形モデル</a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" aria-expanded="true">Multivariate</a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" aria-expanded="true">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./pca.html" class="sidebar-item-text sidebar-link">Principal Component Analysis</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./rda.html" class="sidebar-item-text sidebar-link">Redundancy Analysis</a>
+  </div>
+</li>
+      </ul>
+  </li>
+    </ul>
+    </div>
+</nav>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#example-data" id="toc-example-data" class="nav-link active" data-scroll-target="#example-data">Example data</a></li>
+  <li><a href="#correlation" id="toc-correlation" class="nav-link" data-scroll-target="#correlation">Correlation</a></li>
+  <li><a href="#parametric-and-non-parametric-tests" id="toc-parametric-and-non-parametric-tests" class="nav-link" data-scroll-target="#parametric-and-non-parametric-tests">Parametric and non-parametric tests</a>
+  <ul class="collapse">
+  <li><a href="#one-sample-test" id="toc-one-sample-test" class="nav-link" data-scroll-target="#one-sample-test">One-sample test</a></li>
+  <li><a href="#two-sample-test" id="toc-two-sample-test" class="nav-link" data-scroll-target="#two-sample-test">Two-sample test</a></li>
+  <li><a href="#performance-evaluation" id="toc-performance-evaluation" class="nav-link" data-scroll-target="#performance-evaluation">Performance evaluation</a></li>
+  <li><a href="#anova-like-tests" id="toc-anova-like-tests" class="nav-link" data-scroll-target="#anova-like-tests">ANOVA like tests</a></li>
+  </ul></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content page-columns page-full" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title d-none d-lg-block">ノンパラメトリック法</h1>
+<p class="subtitle lead">Non-parametric statistics</p>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+</header>
+
+<div class="cell" data-warnings="false">
+
+</div>
+<div class="page-columns page-full"><p>Non-parametric statistics<a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a> are a type of statistics that do not assume data is drawn from a probability distribution<a href="#fn2" class="footnote-ref" id="fnref2" role="doc-noteref"><sup>2</sup></a>.</p><div class="no-row-height column-margin column-container"><li id="fn1"><p><sup>1</sup>&nbsp;ノンパラメトリック検定</p></li><li id="fn2"><p><sup>2</sup>&nbsp;特定の確率分布に依存しない仮説検定</p></li></div></div>
+<section id="example-data" class="level2">
+<h2 class="anchored" data-anchor-id="example-data">Example data</h2>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>title <span class="ot">=</span> <span class="st">"生データ（左）と順位つけデータ（右）"</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>p1 <span class="ot">=</span> iris <span class="sc">|&gt;</span> </span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>() <span class="sc">+</span> <span class="fu">geom_point</span>(<span class="fu">aes</span>(<span class="at">x =</span> Petal.Length, <span class="at">y =</span> Petal.Width)) <span class="sc">+</span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggtitle</span>(<span class="st">"Unranked values"</span>)</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>p2 <span class="ot">=</span> iris <span class="sc">|&gt;</span> </span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="fu">across</span>(<span class="fu">matches</span>(<span class="st">"Petal"</span>), rank)) <span class="sc">|&gt;</span> </span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>() <span class="sc">+</span> <span class="fu">geom_point</span>(<span class="fu">aes</span>(<span class="at">x =</span> Petal.Length, <span class="at">y =</span> Petal.Width)) <span class="sc">+</span></span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggtitle</span>(<span class="st">"Ranked values"</span>)</span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>p1 <span class="sc">+</span> p2 <span class="sc">+</span> </span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">plot_annotation</span>(<span class="at">title =</span> title)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="linearmodels_files/figure-html/unnamed-chunk-2-1.png" class="img-fluid figure-img" width="672"></p>
+<p></p><figcaption class="figure-caption">The unranked and ranked data from the Iris dataset. Note the change in shape</figcaption><p></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="correlation" class="level2 page-columns page-full">
+<h2 class="anchored" data-anchor-id="correlation">Correlation</h2>
+<div class="page-columns page-full"><p>The Pearson correlation coefficient<a href="#fn3" class="footnote-ref" id="fnref3" role="doc-noteref"><sup>3</sup></a> describes the linear (i.e., straight-line) relationship between two variables. The Spearman correlation describes the monotonic relationship between two variables <span class="citation" data-cites="leerodgers1988">(<a href="#ref-leerodgers1988" role="doc-biblioref">Lee Rodgers and Nicewander 1988</a>)</span>.</p><div class="no-row-height column-margin column-container"><li id="fn3"><p><sup>3</sup>&nbsp;ピアソン相関係数</p></li><div id="ref-leerodgers1988" class="csl-entry" role="doc-biblioentry">
+Lee Rodgers, Joseph, and W. Alan Nicewander. 1988. <span>“Thirteen Ways to Look at the Correlation Coefficient.”</span> <em>The American Statistician</em> 42 (1): 59–66. <a href="https://doi.org/10.1080/00031305.1988.10475524">https://doi.org/10.1080/00031305.1988.10475524</a>.
+</div></div></div>
+<p><strong>Pearson correlation</strong></p>
+<p><span class="math display">
+r_{xy} = \frac{\sum (x_i - \overline{x})(y_i - \overline{y})}{
+\sqrt{\sum (x_i - \overline{x})^2}\sqrt{\sum (y_i - \overline{y})^2}
+} =
+\frac{S_{xy}}{S_xS_y}
+</span></p>
+<p>The Pearson correlation is bounded by -1 and 1 <span class="math inline">(-1 \le r_{xy} \le 1)</span>. <span class="math inline">S_{xy}</span> is the covariance, <span class="math inline">S_{xx}</span> and <span class="math inline">S_{yy}</span> are the variances of <span class="math inline">x</span> and <span class="math inline">y</span>, respectively.</p>
+<p>Manually calculating the Pearson correlation.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>x <span class="ot">=</span> iris<span class="sc">$</span>Petal.Length</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>y <span class="ot">=</span> iris<span class="sc">$</span>Petal.Width</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>meanx <span class="ot">=</span> <span class="fu">mean</span>(x)</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>meany <span class="ot">=</span> <span class="fu">mean</span>(y)</span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>numerator <span class="ot">=</span> <span class="fu">sum</span>((x <span class="sc">-</span> meanx) <span class="sc">*</span> (y <span class="sc">-</span> meany))</span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>denominator <span class="ot">=</span> <span class="fu">sqrt</span>(<span class="fu">sum</span>((x <span class="sc">-</span> meanx)<span class="sc">^</span><span class="dv">2</span>)) <span class="sc">*</span> <span class="fu">sqrt</span>(<span class="fu">sum</span>((y <span class="sc">-</span> meany)<span class="sc">^</span><span class="dv">2</span>))</span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>numerator <span class="sc">/</span> denominator</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 0.9628654</code></pre>
+</div>
+</div>
+<p>Calculate the Pearson correlation using <code>cor()</code>.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cor</span>(x, y, <span class="at">method =</span> <span class="st">"pearson"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 0.9628654</code></pre>
+</div>
+</div>
+<p>Conduct the Pearson’s product-moment correlation test.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cor.test</span>(x, y, <span class="at">method =</span> <span class="st">"pearson"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+    Pearson's product-moment correlation
+
+data:  x and y
+t = 43.387, df = 148, p-value &lt; 2.2e-16
+alternative hypothesis: true correlation is not equal to 0
+95 percent confidence interval:
+ 0.9490525 0.9729853
+sample estimates:
+      cor 
+0.9628654 </code></pre>
+</div>
+</div>
+<p><strong>Spearman rank correlation</strong></p>
+<p><span class="math display">
+\rho = r_{s} = \frac{\sum (R(x_i) - \overline{R(x)})(R(y_i) - \overline{R(y)})}{
+\sqrt{\sum (R(x_i) - \overline{R(x)})^2}\sqrt{\sum (R(y_i) - \overline{R(y)})^2}
+}
+</span></p>
+<div class="page-columns page-full"><p>The Spearman’s rank correlation coefficient<a href="#fn4" class="footnote-ref" id="fnref4" role="doc-noteref"><sup>4</sup></a> is also bounded by -1 and 1 <span class="math inline">(-1 \le r_{s} \le 1)</span>. <span class="math inline">R(x)</span> indicates taking the rank of <span class="math inline">x</span>.</p><div class="no-row-height column-margin column-container"><li id="fn4"><p><sup>4</sup>&nbsp;スピアマン順位相関係数</p></li></div></div>
+<p>Manually calculate the Spearman’s rank correlation.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>x <span class="ot">=</span> iris<span class="sc">$</span>Petal.Length <span class="sc">|&gt;</span> <span class="fu">rank</span>()</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>y <span class="ot">=</span> iris<span class="sc">$</span>Petal.Width  <span class="sc">|&gt;</span> <span class="fu">rank</span>()</span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>meanx <span class="ot">=</span> <span class="fu">mean</span>(x)</span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>meany <span class="ot">=</span> <span class="fu">mean</span>(y)</span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>numerator <span class="ot">=</span> <span class="fu">sum</span>((x <span class="sc">-</span> meanx) <span class="sc">*</span> (y <span class="sc">-</span> meany))</span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a>denominator <span class="ot">=</span> <span class="fu">sqrt</span>(<span class="fu">sum</span>((x <span class="sc">-</span> meanx)<span class="sc">^</span><span class="dv">2</span>)) <span class="sc">*</span> <span class="fu">sqrt</span>(<span class="fu">sum</span>((y <span class="sc">-</span> meany)<span class="sc">^</span><span class="dv">2</span>))</span>
+<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a>numerator <span class="sc">/</span> denominator</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 0.9376668</code></pre>
+</div>
+</div>
+<p>Calculate the Spearman’s rank correlation using <code>cor()</code>.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cor</span>(x, y, <span class="at">method =</span> <span class="st">"spearman"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 0.9376668</code></pre>
+</div>
+</div>
+<p>Test the Spearman’s rank correlation.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cor.test</span>(x, y, <span class="at">method =</span> <span class="st">"spearman"</span>, <span class="at">exact =</span> F)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+    Spearman's rank correlation rho
+
+data:  x and y
+S = 35061, p-value &lt; 2.2e-16
+alternative hypothesis: true rho is not equal to 0
+sample estimates:
+      rho 
+0.9376668 </code></pre>
+</div>
+</div>
+<p><strong>Compare the two correlations coefficients</strong></p>
+<p>Comparing the performance of the two correlations using simulation. Assume that the Pearson correlation coefficient is 0.5.</p>
+<p>Sample from a multivariate normal distribution.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">2020</span>)</span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>Sxy <span class="ot">=</span> <span class="fl">0.5</span></span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>Z <span class="ot">=</span> MASS<span class="sc">::</span><span class="fu">mvrnorm</span>(<span class="at">n =</span> <span class="dv">10000</span>, </span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a>                  <span class="at">mu =</span> <span class="fu">c</span>(<span class="dv">0</span>,<span class="dv">0</span>),</span>
+<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a>                  <span class="at">Sigma =</span> <span class="fu">matrix</span>(<span class="fu">c</span>(<span class="dv">1</span>, Sxy, Sxy, <span class="dv">1</span>), <span class="at">ncol =</span> <span class="dv">2</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>Z <span class="sc">|&gt;</span> <span class="fu">as_tibble</span>(<span class="at">.name_repair =</span> <span class="sc">~</span><span class="fu">c</span>(<span class="st">"V1"</span>, <span class="st">"V2"</span>)) <span class="sc">|&gt;</span> </span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">slice_sample</span>(<span class="at">n =</span> <span class="dv">5000</span>) <span class="sc">|&gt;</span> </span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>() <span class="sc">+</span> <span class="fu">geom_point</span>(<span class="fu">aes</span>(<span class="at">x =</span> V1, <span class="at">y =</span> V2), <span class="at">alpha =</span> <span class="fl">0.2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="linearmodels_files/figure-html/unnamed-chunk-10-1.png" class="img-fluid figure-img" width="672"></p>
+<p></p><figcaption class="figure-caption">Multivariate normal distribution with a mean of (0,0) and a covariance matrix of <span class="math inline">\Sigma = \begin{bmatrix}1&amp;0.5\\0.5&amp;1\end{bmatrix}</span>.</figcaption><p></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Calculate the Pearson and Spearman rank correlation for <span class="math inline">n</span> samples. The correlation coefficient should converge to 0.5.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>n <span class="ot">=</span> <span class="fu">c</span>(</span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">seq</span>(<span class="dv">10</span>, <span class="dv">100</span>, <span class="at">by =</span> <span class="dv">10</span>),</span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">seq</span>(<span class="dv">100</span>, <span class="dv">1000</span> <span class="sc">-</span> <span class="dv">100</span>, <span class="at">by =</span> <span class="dv">100</span>),</span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">seq</span>(<span class="dv">1000</span>, <span class="dv">10000</span> <span class="sc">-</span> <span class="dv">1000</span>, <span class="at">by =</span> <span class="dv">1000</span>)</span>
+<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a>sample_from_z <span class="ot">=</span> <span class="cf">function</span>(n, z, method) {</span>
+<span id="cb16-7"><a href="#cb16-7" aria-hidden="true" tabindex="-1"></a>    z <span class="ot">=</span> z[<span class="fu">sample</span>(<span class="dv">1</span><span class="sc">:</span><span class="fu">nrow</span>(z), n), ]</span>
+<span id="cb16-8"><a href="#cb16-8" aria-hidden="true" tabindex="-1"></a>    <span class="fu">cor</span>(z[ ,<span class="dv">1</span>], z[ ,<span class="dv">2</span>], <span class="at">method =</span> method)</span>
+<span id="cb16-9"><a href="#cb16-9" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb16-10"><a href="#cb16-10" aria-hidden="true" tabindex="-1"></a>dout <span class="ot">=</span> </span>
+<span id="cb16-11"><a href="#cb16-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tibble</span>(<span class="at">n =</span> n) <span class="sc">|&gt;</span> <span class="fu">group_by</span>(n) <span class="sc">|&gt;</span> </span>
+<span id="cb16-12"><a href="#cb16-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">pearson =</span> <span class="fu">map_dbl</span>(n, sample_from_z, <span class="at">z =</span> Z, <span class="at">method =</span> <span class="st">"pearson"</span>)) <span class="sc">|&gt;</span> </span>
+<span id="cb16-13"><a href="#cb16-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">spearman =</span> <span class="fu">map_dbl</span>(n, sample_from_z, <span class="at">z =</span> Z, <span class="at">method =</span> <span class="st">"spearman"</span>)) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>dout <span class="sc">|&gt;</span> </span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>() <span class="sc">+</span> </span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_hline</span>(<span class="at">yintercept =</span> Sxy)  <span class="sc">+</span></span>
+<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="fu">aes</span>(<span class="at">x =</span> n, <span class="at">y =</span> pearson, <span class="at">color =</span> <span class="st">"Pearson"</span>)) <span class="sc">+</span></span>
+<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="fu">aes</span>(<span class="at">x =</span> n, <span class="at">y =</span> spearman, <span class="at">color =</span> <span class="st">"Spearman"</span>)) <span class="sc">+</span></span>
+<span id="cb17-6"><a href="#cb17-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="fu">aes</span>(<span class="at">x =</span> n, <span class="at">y =</span> pearson, <span class="at">color =</span> <span class="st">"Pearson"</span>)) <span class="sc">+</span></span>
+<span id="cb17-7"><a href="#cb17-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="fu">aes</span>(<span class="at">x =</span> n, <span class="at">y =</span> spearman, <span class="at">color =</span> <span class="st">"Spearman"</span>))  <span class="sc">+</span></span>
+<span id="cb17-8"><a href="#cb17-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_color_viridis_d</span>(<span class="st">""</span>, <span class="at">end =</span> <span class="fl">0.8</span>) <span class="sc">+</span> </span>
+<span id="cb17-9"><a href="#cb17-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_y_continuous</span>(<span class="st">"Correlation coefficient"</span>, <span class="at">limits =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">1</span>)) <span class="sc">+</span></span>
+<span id="cb17-10"><a href="#cb17-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_x_continuous</span>(<span class="st">"Samples (n)"</span>) <span class="sc">+</span></span>
+<span id="cb17-11"><a href="#cb17-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">1</span>),</span>
+<span id="cb17-12"><a href="#cb17-12" aria-hidden="true" tabindex="-1"></a>        <span class="at">legend.justification =</span> <span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">1</span>),</span>
+<span id="cb17-13"><a href="#cb17-13" aria-hidden="true" tabindex="-1"></a>        <span class="at">legend.background =</span> <span class="fu">element_blank</span>())</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="linearmodels_files/figure-html/unnamed-chunk-12-1.png" class="img-fluid figure-img" width="672"></p>
+<p></p><figcaption class="figure-caption">The Pearson and Spearman rank correlation coefficients for <span class="math inline">n</span> samples The thick line indicates the true correlation coefficient.</figcaption><p></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="parametric-and-non-parametric-tests" class="level2 page-columns page-full">
+<h2 class="anchored" data-anchor-id="parametric-and-non-parametric-tests">Parametric and non-parametric tests</h2>
+<section id="one-sample-test" class="level3 page-columns page-full">
+<h3 class="anchored" data-anchor-id="one-sample-test">One-sample test</h3>
+<p><strong>Parametric test</strong></p>
+<p>The (one-sample) t-test.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="fu">t.test</span>(Petal.Length <span class="sc">~</span> <span class="dv">1</span>, <span class="at">data =</span> iris)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+    One Sample t-test
+
+data:  Petal.Length
+t = 26.073, df = 149, p-value &lt; 2.2e-16
+alternative hypothesis: true mean is not equal to 0
+95 percent confidence interval:
+ 3.473185 4.042815
+sample estimates:
+mean of x 
+    3.758 </code></pre>
+</div>
+</div>
+<p>The <code>lm()</code> function can also be used to conduct the test.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="fu">lm</span>(Petal.Length <span class="sc">~</span> <span class="dv">1</span>, <span class="at">data =</span> iris) <span class="sc">|&gt;</span> <span class="fu">summary</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Call:
+lm(formula = Petal.Length ~ 1, data = iris)
+
+Residuals:
+   Min     1Q Median     3Q    Max 
+-2.758 -2.158  0.592  1.342  3.142 
+
+Coefficients:
+            Estimate Std. Error t value Pr(&gt;|t|)    
+(Intercept)   3.7580     0.1441   26.07   &lt;2e-16 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Residual standard error: 1.765 on 149 degrees of freedom</code></pre>
+</div>
+</div>
+<p><strong>Non-parametric test</strong></p>
+<p>The (one-sample) Wilcoxon test</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="fu">wilcox.test</span>(iris<span class="sc">$</span>Petal.Length)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+    Wilcoxon signed rank test with continuity correction
+
+data:  iris$Petal.Length
+V = 11325, p-value &lt; 2.2e-16
+alternative hypothesis: true location is not equal to 0</code></pre>
+</div>
+</div>
+<div class="page-columns page-full"><p>Alternative version, however we need to determined the signed ranks<a href="#fn5" class="footnote-ref" id="fnref5" role="doc-noteref"><sup>5</sup></a> of the observations.</p><div class="no-row-height column-margin column-container"><li id="fn5"><p><sup>5</sup>&nbsp;符号順位</p></li></div></div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>signed_rank <span class="ot">=</span> <span class="cf">function</span>(x) <span class="fu">sign</span>(x) <span class="sc">*</span> <span class="fu">rank</span>(<span class="fu">abs</span>(x))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="fu">lm</span>(<span class="fu">signed_rank</span>(Petal.Length) <span class="sc">~</span> <span class="dv">1</span>, <span class="at">data =</span> iris) <span class="sc">|&gt;</span> </span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summary</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Call:
+lm(formula = signed_rank(Petal.Length) ~ 1, data = iris)
+
+Residuals:
+   Min     1Q Median     3Q    Max 
+ -74.5  -34.5    0.5   37.0   74.5 
+
+Coefficients:
+            Estimate Std. Error t value Pr(&gt;|t|)    
+(Intercept)   75.500      3.544   21.31   &lt;2e-16 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Residual standard error: 43.4 on 149 degrees of freedom</code></pre>
+</div>
+</div>
+</section>
+<section id="two-sample-test" class="level3">
+<h3 class="anchored" data-anchor-id="two-sample-test">Two-sample test</h3>
+<p><strong>Parametric test</strong></p>
+<p>This is the Welch’s t-test.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a>testdata <span class="ot">=</span> iris <span class="sc">|&gt;</span> <span class="fu">filter</span>(<span class="sc">!</span><span class="fu">str_detect</span>(Species, <span class="st">"setosa"</span>))</span>
+<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a><span class="fu">t.test</span>(Petal.Length <span class="sc">~</span> Species, <span class="at">data =</span> testdata)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+    Welch Two Sample t-test
+
+data:  Petal.Length by Species
+t = -12.604, df = 95.57, p-value &lt; 2.2e-16
+alternative hypothesis: true difference in means between group versicolor and group virginica is not equal to 0
+95 percent confidence interval:
+ -1.49549 -1.08851
+sample estimates:
+mean in group versicolor  mean in group virginica 
+                   4.260                    5.552 </code></pre>
+</div>
+</div>
+<p>The <code>lm()</code> version of the test.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="fu">lm</span>(Petal.Length <span class="sc">~</span> Species, <span class="at">data =</span> testdata) <span class="sc">|&gt;</span> <span class="fu">summary</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Call:
+lm(formula = Petal.Length ~ Species, data = testdata)
+
+Residuals:
+   Min     1Q Median     3Q    Max 
+-1.260 -0.360  0.044  0.340  1.348 
+
+Coefficients:
+                 Estimate Std. Error t value Pr(&gt;|t|)    
+(Intercept)       4.26000    0.07248   58.77   &lt;2e-16 ***
+Speciesvirginica  1.29200    0.10251   12.60   &lt;2e-16 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Residual standard error: 0.5125 on 98 degrees of freedom
+Multiple R-squared:  0.6185,    Adjusted R-squared:  0.6146 
+F-statistic: 158.9 on 1 and 98 DF,  p-value: &lt; 2.2e-16</code></pre>
+</div>
+</div>
+<p><strong>Non-parametric test</strong></p>
+<p>This is the Mann-Whitney U test (i.e., two-sample Wilcoxon test).</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a><span class="fu">wilcox.test</span>(Petal.Length <span class="sc">~</span> Species, <span class="at">data =</span> testdata)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+    Wilcoxon rank sum test with continuity correction
+
+data:  Petal.Length by Species
+W = 44.5, p-value &lt; 2.2e-16
+alternative hypothesis: true location shift is not equal to 0</code></pre>
+</div>
+</div>
+<p>The <code>lm()</code> version using the <code>signed_rank()</code> function.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb33"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a>testdata <span class="ot">=</span> testdata <span class="sc">|&gt;</span> <span class="fu">mutate</span>(<span class="at">Petal.Length_srank =</span> <span class="fu">signed_rank</span>(Petal.Length))</span>
+<span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a><span class="fu">lm</span>(Petal.Length_srank <span class="sc">~</span> Species, <span class="at">data =</span> testdata) <span class="sc">|&gt;</span> <span class="fu">summary</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Call:
+lm(formula = Petal.Length_srank ~ Species, data = testdata)
+
+Residuals:
+   Min     1Q Median     3Q    Max 
+-41.11 -12.18   0.25  12.61  36.11 
+
+Coefficients:
+                 Estimate Std. Error t value Pr(&gt;|t|)    
+(Intercept)        26.390      2.260   11.68   &lt;2e-16 ***
+Speciesvirginica   48.220      3.196   15.09   &lt;2e-16 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Residual standard error: 15.98 on 98 degrees of freedom
+Multiple R-squared:  0.699, Adjusted R-squared:  0.696 
+F-statistic: 227.6 on 1 and 98 DF,  p-value: &lt; 2.2e-16</code></pre>
+</div>
+</div>
+</section>
+<section id="performance-evaluation" class="level3">
+<h3 class="anchored" data-anchor-id="performance-evaluation">Performance evaluation</h3>
+<p>Evaluating the performance of the two-sample tests when the effect size is 1 and the standard deviations are 1.</p>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb35"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a>testdata <span class="ot">=</span> </span>
+<span id="cb35-2"><a href="#cb35-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tibble</span>(<span class="at">group =</span> <span class="fu">c</span>(<span class="st">"A"</span>, <span class="st">"B"</span>),</span>
+<span id="cb35-3"><a href="#cb35-3" aria-hidden="true" tabindex="-1"></a>         <span class="at">mu =</span> <span class="fu">c</span>(<span class="dv">2</span>, <span class="dv">3</span>),</span>
+<span id="cb35-4"><a href="#cb35-4" aria-hidden="true" tabindex="-1"></a>         <span class="at">sd =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">1</span>)) <span class="sc">|&gt;</span> </span>
+<span id="cb35-5"><a href="#cb35-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(group) <span class="sc">|&gt;</span> </span>
+<span id="cb35-6"><a href="#cb35-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">obs =</span> <span class="fu">map2</span>(mu, sd, rnorm, <span class="at">n =</span> <span class="dv">500</span>)) <span class="sc">|&gt;</span> <span class="fu">unnest</span>(obs)</span>
+<span id="cb35-7"><a href="#cb35-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb35-8"><a href="#cb35-8" aria-hidden="true" tabindex="-1"></a>td2 <span class="ot">=</span> </span>
+<span id="cb35-9"><a href="#cb35-9" aria-hidden="true" tabindex="-1"></a><span class="fu">tibble</span>(<span class="at">n =</span> <span class="dv">3</span><span class="sc">:</span><span class="dv">200</span>) <span class="sc">|&gt;</span> </span>
+<span id="cb35-10"><a href="#cb35-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">out =</span> <span class="fu">map</span>(n, <span class="cf">function</span>(n, data) {</span>
+<span id="cb35-11"><a href="#cb35-11" aria-hidden="true" tabindex="-1"></a>    df <span class="ot">=</span> data <span class="sc">|&gt;</span> <span class="fu">group_by</span>(group) <span class="sc">|&gt;</span> <span class="fu">slice_sample</span>(<span class="at">n =</span> n)</span>
+<span id="cb35-12"><a href="#cb35-12" aria-hidden="true" tabindex="-1"></a>    tout <span class="ot">=</span> <span class="fu">t.test</span>(obs <span class="sc">~</span> group, <span class="at">data =</span> df)<span class="sc">$</span>p.value</span>
+<span id="cb35-13"><a href="#cb35-13" aria-hidden="true" tabindex="-1"></a>    uout <span class="ot">=</span> <span class="fu">wilcox.test</span>(obs <span class="sc">~</span> group, <span class="at">data =</span> df, <span class="at">exact =</span> F)<span class="sc">$</span>p.value</span>
+<span id="cb35-14"><a href="#cb35-14" aria-hidden="true" tabindex="-1"></a>    <span class="fu">tibble</span>(<span class="at">toutp =</span> tout, <span class="at">uoutp =</span> uout)</span>
+<span id="cb35-15"><a href="#cb35-15" aria-hidden="true" tabindex="-1"></a>  }, <span class="at">data =</span> testdata)) <span class="sc">|&gt;</span> </span>
+<span id="cb35-16"><a href="#cb35-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">unnest</span>(out)</span>
+<span id="cb35-17"><a href="#cb35-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb35-18"><a href="#cb35-18" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(td2) <span class="sc">+</span> </span>
+<span id="cb35-19"><a href="#cb35-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="fu">aes</span>(<span class="at">x =</span> n, <span class="at">y =</span> toutp, <span class="at">color =</span> <span class="st">"t-test"</span>)) <span class="sc">+</span></span>
+<span id="cb35-20"><a href="#cb35-20" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="fu">aes</span>(<span class="at">x =</span> n, <span class="at">y =</span> uoutp, <span class="at">color =</span> <span class="st">"U-test"</span>)) <span class="sc">+</span></span>
+<span id="cb35-21"><a href="#cb35-21" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="fu">aes</span>(<span class="at">x =</span> n, <span class="at">y =</span> toutp, <span class="at">color =</span> <span class="st">"t-test"</span>)) <span class="sc">+</span></span>
+<span id="cb35-22"><a href="#cb35-22" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="fu">aes</span>(<span class="at">x =</span> n, <span class="at">y =</span> uoutp, <span class="at">color =</span> <span class="st">"U-test"</span>)) <span class="sc">+</span></span>
+<span id="cb35-23"><a href="#cb35-23" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_color_viridis_d</span>(<span class="st">""</span>, <span class="at">end =</span> <span class="fl">0.8</span>) <span class="sc">+</span> </span>
+<span id="cb35-24"><a href="#cb35-24" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_y_continuous</span>(<span class="st">"P-value"</span>, <span class="at">limits =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">1</span>)) <span class="sc">+</span></span>
+<span id="cb35-25"><a href="#cb35-25" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_x_continuous</span>(<span class="st">"Samples (n)"</span>) <span class="sc">+</span></span>
+<span id="cb35-26"><a href="#cb35-26" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">1</span>),</span>
+<span id="cb35-27"><a href="#cb35-27" aria-hidden="true" tabindex="-1"></a>        <span class="at">legend.justification =</span> <span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">1</span>),</span>
+<span id="cb35-28"><a href="#cb35-28" aria-hidden="true" tabindex="-1"></a>        <span class="at">legend.background =</span> <span class="fu">element_blank</span>())</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="linearmodels_files/figure-html/unnamed-chunk-22-1.png" class="img-fluid figure-img" width="672"></p>
+<p></p><figcaption class="figure-caption">When sample size is large, the P values convege to zero. Note that either test performs well, especially since the data is from a normal distribution.</figcaption><p></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Evaluating the performance of the two-sample tests when the effect size is 1 and the standard deviations are 1 and 5.</p>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb36"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a>testdata <span class="ot">=</span> </span>
+<span id="cb36-2"><a href="#cb36-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tibble</span>(<span class="at">group =</span> <span class="fu">c</span>(<span class="st">"A"</span>, <span class="st">"B"</span>),</span>
+<span id="cb36-3"><a href="#cb36-3" aria-hidden="true" tabindex="-1"></a>         <span class="at">mu =</span> <span class="fu">c</span>(<span class="dv">2</span>, <span class="dv">3</span>),</span>
+<span id="cb36-4"><a href="#cb36-4" aria-hidden="true" tabindex="-1"></a>         <span class="at">sd =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">5</span>)) <span class="sc">|&gt;</span> </span>
+<span id="cb36-5"><a href="#cb36-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(group) <span class="sc">|&gt;</span> </span>
+<span id="cb36-6"><a href="#cb36-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">obs =</span> <span class="fu">map2</span>(mu, sd, rnorm, <span class="at">n =</span> <span class="dv">500</span>)) <span class="sc">|&gt;</span> <span class="fu">unnest</span>(obs)</span>
+<span id="cb36-7"><a href="#cb36-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb36-8"><a href="#cb36-8" aria-hidden="true" tabindex="-1"></a>td2 <span class="ot">=</span> </span>
+<span id="cb36-9"><a href="#cb36-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tibble</span>(<span class="at">n =</span> <span class="dv">3</span><span class="sc">:</span><span class="dv">500</span>) <span class="sc">|&gt;</span> </span>
+<span id="cb36-10"><a href="#cb36-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">out =</span> <span class="fu">map</span>(n, <span class="cf">function</span>(n, data) {</span>
+<span id="cb36-11"><a href="#cb36-11" aria-hidden="true" tabindex="-1"></a>    df <span class="ot">=</span> data <span class="sc">|&gt;</span> <span class="fu">group_by</span>(group) <span class="sc">|&gt;</span> <span class="fu">slice_sample</span>(<span class="at">n =</span> n)</span>
+<span id="cb36-12"><a href="#cb36-12" aria-hidden="true" tabindex="-1"></a>    tout <span class="ot">=</span> <span class="fu">t.test</span>(obs <span class="sc">~</span> group, <span class="at">data =</span> df)<span class="sc">$</span>p.value</span>
+<span id="cb36-13"><a href="#cb36-13" aria-hidden="true" tabindex="-1"></a>    uout <span class="ot">=</span> <span class="fu">wilcox.test</span>(obs <span class="sc">~</span> group, <span class="at">data =</span> df, <span class="at">exact =</span> F)<span class="sc">$</span>p.value</span>
+<span id="cb36-14"><a href="#cb36-14" aria-hidden="true" tabindex="-1"></a>    <span class="fu">tibble</span>(<span class="at">toutp =</span> tout, <span class="at">uoutp =</span> uout)</span>
+<span id="cb36-15"><a href="#cb36-15" aria-hidden="true" tabindex="-1"></a>  }, <span class="at">data =</span> testdata)) <span class="sc">|&gt;</span> </span>
+<span id="cb36-16"><a href="#cb36-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">unnest</span>(out)</span>
+<span id="cb36-17"><a href="#cb36-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb36-18"><a href="#cb36-18" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(td2) <span class="sc">+</span> </span>
+<span id="cb36-19"><a href="#cb36-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="fu">aes</span>(<span class="at">x =</span> n, <span class="at">y =</span> toutp, <span class="at">color =</span> <span class="st">"t-test"</span>)) <span class="sc">+</span></span>
+<span id="cb36-20"><a href="#cb36-20" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="fu">aes</span>(<span class="at">x =</span> n, <span class="at">y =</span> uoutp, <span class="at">color =</span> <span class="st">"U-test"</span>)) <span class="sc">+</span></span>
+<span id="cb36-21"><a href="#cb36-21" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="fu">aes</span>(<span class="at">x =</span> n, <span class="at">y =</span> toutp, <span class="at">color =</span> <span class="st">"t-test"</span>)) <span class="sc">+</span></span>
+<span id="cb36-22"><a href="#cb36-22" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="fu">aes</span>(<span class="at">x =</span> n, <span class="at">y =</span> uoutp, <span class="at">color =</span> <span class="st">"U-test"</span>)) <span class="sc">+</span></span>
+<span id="cb36-23"><a href="#cb36-23" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_color_viridis_d</span>(<span class="st">""</span>, <span class="at">end =</span> <span class="fl">0.8</span>) <span class="sc">+</span> </span>
+<span id="cb36-24"><a href="#cb36-24" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_y_continuous</span>(<span class="st">"P-value"</span>, <span class="at">limits =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">1</span>)) <span class="sc">+</span></span>
+<span id="cb36-25"><a href="#cb36-25" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_x_continuous</span>(<span class="st">"Samples (n)"</span>) <span class="sc">+</span></span>
+<span id="cb36-26"><a href="#cb36-26" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">1</span>),</span>
+<span id="cb36-27"><a href="#cb36-27" aria-hidden="true" tabindex="-1"></a>        <span class="at">legend.justification =</span> <span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">1</span>),</span>
+<span id="cb36-28"><a href="#cb36-28" aria-hidden="true" tabindex="-1"></a>        <span class="at">legend.background =</span> <span class="fu">element_blank</span>())</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="linearmodels_files/figure-html/unnamed-chunk-23-1.png" class="img-fluid figure-img" width="672"></p>
+<p></p><figcaption class="figure-caption">When the variances are different, then both have similar difficulty detecting an effect. Large sample numbers are needed to reduce the P value to zero.</figcaption><p></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="anova-like-tests" class="level3 page-columns page-full">
+<h3 class="anchored" data-anchor-id="anova-like-tests">ANOVA like tests</h3>
+<p><strong>Parametric test</strong></p>
+<p>The One-way Analysis of Variance (ANOVA).</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb37"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a><span class="fu">lm</span>(Petal.Length <span class="sc">~</span> Species, <span class="at">data =</span> iris) <span class="sc">|&gt;</span> <span class="fu">summary.aov</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>             Df Sum Sq Mean Sq F value Pr(&gt;F)    
+Species       2  437.1  218.55    1180 &lt;2e-16 ***
+Residuals   147   27.2    0.19                   
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
+</div>
+</div>
+<p><strong>Non-parametric test</strong></p>
+<div class="page-columns page-full"><p>The Kruskal-Wallis rank sum test<a href="#fn6" class="footnote-ref" id="fnref6" role="doc-noteref"><sup>6</sup></a>. The test statistic<a href="#fn7" class="footnote-ref" id="fnref7" role="doc-noteref"><sup>7</sup></a> is the <span class="math inline">chi^2</span> statistic<a href="#fn8" class="footnote-ref" id="fnref8" role="doc-noteref"><sup>8</sup></a>. The null hypothesis is that all of the groups have the same distribution<a href="#fn9" class="footnote-ref" id="fnref9" role="doc-noteref"><sup>9</sup></a>.</p><div class="no-row-height column-margin column-container"><li id="fn6"><p><sup>6</sup>&nbsp;クラスカル=ウォリス検定</p></li><li id="fn7"><p><sup>7</sup>&nbsp;検定統計量</p></li><li id="fn8"><p><sup>8</sup>&nbsp;カイ2乗</p></li><li id="fn9"><p><sup>9</sup>&nbsp;すべてのグループで分布はは同じ</p></li></div></div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb39"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a><span class="fu">kruskal.test</span>(Petal.Length <span class="sc">~</span> Species, <span class="at">data =</span> iris)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+    Kruskal-Wallis rank sum test
+
+data:  Petal.Length by Species
+Kruskal-Wallis chi-squared = 130.41, df = 2, p-value &lt; 2.2e-16</code></pre>
+</div>
+</div>
+<p>Examine the performance of the one-way ANOVA and the Kruskal-Wallis test for 3-level factor, where the coefficient of variation is 1 and the means are 1.5, 2.0 and 2.5.</p>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb41"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a>testdata <span class="ot">=</span> </span>
+<span id="cb41-2"><a href="#cb41-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tibble</span>(<span class="at">group =</span> <span class="fu">c</span>(<span class="st">"A"</span>, <span class="st">"B"</span>, <span class="st">"C"</span>),</span>
+<span id="cb41-3"><a href="#cb41-3" aria-hidden="true" tabindex="-1"></a>         <span class="at">mu =</span> <span class="fu">c</span>(<span class="fl">1.5</span>, <span class="dv">2</span>, <span class="fl">2.5</span>)) <span class="sc">|&gt;</span> </span>
+<span id="cb41-4"><a href="#cb41-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">sd =</span> <span class="fu">rep</span>(<span class="dv">1</span>, <span class="fu">n</span>())) <span class="sc">|&gt;</span> </span>
+<span id="cb41-5"><a href="#cb41-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(group) <span class="sc">|&gt;</span> </span>
+<span id="cb41-6"><a href="#cb41-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">obs =</span> <span class="fu">map2</span>(mu, sd, rnorm, <span class="at">n =</span> <span class="dv">500</span>)) <span class="sc">|&gt;</span> <span class="fu">unnest</span>(obs) <span class="sc">|&gt;</span> </span>
+<span id="cb41-7"><a href="#cb41-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ungroup</span>()</span>
+<span id="cb41-8"><a href="#cb41-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb41-9"><a href="#cb41-9" aria-hidden="true" tabindex="-1"></a>td2 <span class="ot">=</span> </span>
+<span id="cb41-10"><a href="#cb41-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tibble</span>(<span class="at">n =</span> <span class="dv">3</span><span class="sc">:</span><span class="dv">500</span>) <span class="sc">|&gt;</span> </span>
+<span id="cb41-11"><a href="#cb41-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">out =</span> <span class="fu">map</span>(n, <span class="cf">function</span>(n, data) {</span>
+<span id="cb41-12"><a href="#cb41-12" aria-hidden="true" tabindex="-1"></a>    df <span class="ot">=</span> data <span class="sc">|&gt;</span> <span class="fu">group_by</span>(group) <span class="sc">|&gt;</span> <span class="fu">slice_sample</span>(<span class="at">n =</span> n)</span>
+<span id="cb41-13"><a href="#cb41-13" aria-hidden="true" tabindex="-1"></a>    tout <span class="ot">=</span> <span class="fu">summary.aov</span>(<span class="fu">lm</span>(obs <span class="sc">~</span> group, <span class="at">data =</span> df))[[<span class="dv">1</span>]][<span class="dv">5</span>][[<span class="dv">1</span>]][<span class="dv">1</span>]</span>
+<span id="cb41-14"><a href="#cb41-14" aria-hidden="true" tabindex="-1"></a>    uout <span class="ot">=</span> <span class="fu">kruskal.test</span>(obs <span class="sc">~</span> group, <span class="at">data =</span> df)<span class="sc">$</span>p.value</span>
+<span id="cb41-15"><a href="#cb41-15" aria-hidden="true" tabindex="-1"></a>    <span class="fu">tibble</span>(<span class="at">toutp =</span> tout, <span class="at">uoutp =</span> uout)</span>
+<span id="cb41-16"><a href="#cb41-16" aria-hidden="true" tabindex="-1"></a>  }, <span class="at">data =</span> testdata)) <span class="sc">|&gt;</span> </span>
+<span id="cb41-17"><a href="#cb41-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">unnest</span>(out)</span>
+<span id="cb41-18"><a href="#cb41-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb41-19"><a href="#cb41-19" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(td2) <span class="sc">+</span> </span>
+<span id="cb41-20"><a href="#cb41-20" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="fu">aes</span>(<span class="at">x =</span> n, <span class="at">y =</span> toutp, <span class="at">color =</span> <span class="st">"One-way ANOVA"</span>)) <span class="sc">+</span></span>
+<span id="cb41-21"><a href="#cb41-21" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="fu">aes</span>(<span class="at">x =</span> n, <span class="at">y =</span> uoutp, <span class="at">color =</span> <span class="st">"Kruskal-Wallis"</span>)) <span class="sc">+</span></span>
+<span id="cb41-22"><a href="#cb41-22" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="fu">aes</span>(<span class="at">x =</span> n, <span class="at">y =</span> toutp, <span class="at">color =</span> <span class="st">"One-way ANOVA"</span>)) <span class="sc">+</span></span>
+<span id="cb41-23"><a href="#cb41-23" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="fu">aes</span>(<span class="at">x =</span> n, <span class="at">y =</span> uoutp, <span class="at">color =</span> <span class="st">"Kruskal-Wallis"</span>)) <span class="sc">+</span></span>
+<span id="cb41-24"><a href="#cb41-24" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_color_viridis_d</span>(<span class="st">""</span>, <span class="at">end =</span> <span class="fl">0.8</span>) <span class="sc">+</span> </span>
+<span id="cb41-25"><a href="#cb41-25" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_y_continuous</span>(<span class="st">"P-value"</span>) <span class="sc">+</span></span>
+<span id="cb41-26"><a href="#cb41-26" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_x_continuous</span>(<span class="st">"Samples (n)"</span>) <span class="sc">+</span></span>
+<span id="cb41-27"><a href="#cb41-27" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">1</span>),</span>
+<span id="cb41-28"><a href="#cb41-28" aria-hidden="true" tabindex="-1"></a>        <span class="at">legend.justification =</span> <span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">1</span>),</span>
+<span id="cb41-29"><a href="#cb41-29" aria-hidden="true" tabindex="-1"></a>        <span class="at">legend.background =</span> <span class="fu">element_blank</span>())</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="linearmodels_files/figure-html/unnamed-chunk-26-1.png" class="img-fluid figure-img" width="672"></p>
+<p></p><figcaption class="figure-caption">When the variances are the same, both tests quickly converge to P = 0.</figcaption><p></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Examine the performance of the one-way ANOVA and the Kruskal-Wallis test for 3-level factor, where the coefficient of variation is 3 and the means are 1.5, 2, 2.5.</p>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb42"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a>testdata <span class="ot">=</span> </span>
+<span id="cb42-2"><a href="#cb42-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tibble</span>(<span class="at">group =</span> <span class="fu">c</span>(<span class="st">"A"</span>, <span class="st">"B"</span>, <span class="st">"C"</span>),</span>
+<span id="cb42-3"><a href="#cb42-3" aria-hidden="true" tabindex="-1"></a>         <span class="at">mu =</span> <span class="fu">c</span>(<span class="fl">1.5</span>, <span class="dv">2</span>, <span class="fl">2.5</span>)) <span class="sc">|&gt;</span> </span>
+<span id="cb42-4"><a href="#cb42-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">cv =</span> <span class="fu">rep</span>(<span class="dv">2</span>, <span class="fu">n</span>())) <span class="sc">|&gt;</span> </span>
+<span id="cb42-5"><a href="#cb42-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">sd =</span> mu <span class="sc">*</span> cv) <span class="sc">|&gt;</span> </span>
+<span id="cb42-6"><a href="#cb42-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(group) <span class="sc">|&gt;</span> </span>
+<span id="cb42-7"><a href="#cb42-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">obs =</span> <span class="fu">map2</span>(mu, sd, rnorm, <span class="at">n =</span> <span class="dv">500</span>)) <span class="sc">|&gt;</span> <span class="fu">unnest</span>(obs) <span class="sc">|&gt;</span> </span>
+<span id="cb42-8"><a href="#cb42-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ungroup</span>()</span>
+<span id="cb42-9"><a href="#cb42-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb42-10"><a href="#cb42-10" aria-hidden="true" tabindex="-1"></a>td2 <span class="ot">=</span> </span>
+<span id="cb42-11"><a href="#cb42-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tibble</span>(<span class="at">n =</span> <span class="dv">3</span><span class="sc">:</span><span class="dv">500</span>) <span class="sc">|&gt;</span> </span>
+<span id="cb42-12"><a href="#cb42-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">out =</span> <span class="fu">map</span>(n, <span class="cf">function</span>(n, data) {</span>
+<span id="cb42-13"><a href="#cb42-13" aria-hidden="true" tabindex="-1"></a>    df <span class="ot">=</span> data <span class="sc">|&gt;</span> <span class="fu">group_by</span>(group) <span class="sc">|&gt;</span> <span class="fu">slice_sample</span>(<span class="at">n =</span> n)</span>
+<span id="cb42-14"><a href="#cb42-14" aria-hidden="true" tabindex="-1"></a>    tout <span class="ot">=</span> <span class="fu">summary.aov</span>(<span class="fu">lm</span>(obs <span class="sc">~</span> group, <span class="at">data =</span> df))[[<span class="dv">1</span>]][<span class="dv">5</span>][[<span class="dv">1</span>]][<span class="dv">1</span>]</span>
+<span id="cb42-15"><a href="#cb42-15" aria-hidden="true" tabindex="-1"></a>    uout <span class="ot">=</span> <span class="fu">kruskal.test</span>(obs <span class="sc">~</span> group, <span class="at">data =</span> df)<span class="sc">$</span>p.value</span>
+<span id="cb42-16"><a href="#cb42-16" aria-hidden="true" tabindex="-1"></a>    <span class="fu">tibble</span>(<span class="at">toutp =</span> tout, <span class="at">uoutp =</span> uout)</span>
+<span id="cb42-17"><a href="#cb42-17" aria-hidden="true" tabindex="-1"></a>  }, <span class="at">data =</span> testdata)) <span class="sc">|&gt;</span> </span>
+<span id="cb42-18"><a href="#cb42-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">unnest</span>(out)</span>
+<span id="cb42-19"><a href="#cb42-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb42-20"><a href="#cb42-20" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(td2) <span class="sc">+</span> </span>
+<span id="cb42-21"><a href="#cb42-21" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="fu">aes</span>(<span class="at">x =</span> n, <span class="at">y =</span> toutp, <span class="at">color =</span> <span class="st">"One-way ANOVA"</span>)) <span class="sc">+</span></span>
+<span id="cb42-22"><a href="#cb42-22" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="fu">aes</span>(<span class="at">x =</span> n, <span class="at">y =</span> uoutp, <span class="at">color =</span> <span class="st">"Kruskal-Wallis"</span>)) <span class="sc">+</span></span>
+<span id="cb42-23"><a href="#cb42-23" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="fu">aes</span>(<span class="at">x =</span> n, <span class="at">y =</span> toutp, <span class="at">color =</span> <span class="st">"One-way ANOVA"</span>)) <span class="sc">+</span></span>
+<span id="cb42-24"><a href="#cb42-24" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="fu">aes</span>(<span class="at">x =</span> n, <span class="at">y =</span> uoutp, <span class="at">color =</span> <span class="st">"Kruskal-Wallis"</span>)) <span class="sc">+</span></span>
+<span id="cb42-25"><a href="#cb42-25" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_color_viridis_d</span>(<span class="st">""</span>, <span class="at">end =</span> <span class="fl">0.8</span>) <span class="sc">+</span> </span>
+<span id="cb42-26"><a href="#cb42-26" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_y_continuous</span>(<span class="st">"P-value"</span>) <span class="sc">+</span></span>
+<span id="cb42-27"><a href="#cb42-27" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_x_continuous</span>(<span class="st">"Samples (n)"</span>) <span class="sc">+</span></span>
+<span id="cb42-28"><a href="#cb42-28" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">1</span>),</span>
+<span id="cb42-29"><a href="#cb42-29" aria-hidden="true" tabindex="-1"></a>        <span class="at">legend.justification =</span> <span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">1</span>),</span>
+<span id="cb42-30"><a href="#cb42-30" aria-hidden="true" tabindex="-1"></a>        <span class="at">legend.background =</span> <span class="fu">element_blank</span>())</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="linearmodels_files/figure-html/unnamed-chunk-27-1.png" class="img-fluid figure-img" width="672"></p>
+<p></p><figcaption class="figure-caption">When the variances are different, then both have similar difficulty detecting an effect. Large sample numbers are needed to reduce the P value to zero.</figcaption><p></p>
+</figure>
+</div>
+</div>
+</div>
+
+
+
+</section>
+</section>
+
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    target: function(trigger) {
+      return trigger.previousElementSibling;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  function tippyHover(el, contentFn) {
+    const config = {
+      allowHTML: true,
+      content: contentFn,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start'
+    };
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+</div> <!-- /content -->
+
+
+
+</body></html>

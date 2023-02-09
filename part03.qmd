@@ -1,0 +1,293 @@
+---
+title: "Tidyverse"
+---
+
+```{r}
+library(tidyverse)
+```
+
+
+# `tidyverse` 
+
+> Hadley Wickhamが開発した、タイディバースはRのプログラマーの中で最も使われているデータ分析パッケージです。
+> データの読み込み、抽出、加工、可視化を助けてくれる関数の解析システムです。
+> `tidyverse` の基礎となるアイディアは `tidy` な解析コードを開発することです。
+つまり、だれでも読めるすぐに実行できるコードのことですね。
+
+## `tidyverse`
+
+`tidyverse` はメタパッケージなので、`library(tidyverse)` を実行すると次の 8 つのパッケージが読み込まれます。
+
+* dplyr：データの変形・加工
+* forcats：`factor()` 因子が使いやすくなります
+* ggplot2：データの可視化・作図
+* purrr ：関数型プログラミング
+* readr ：CSV、TSVデータの読み込み
+* stringr ：文字列の操作が楽になる
+* tibble ：データフレームの操作が楽になる
+* tidyr ：データをタイディ (tidy) にして操作しやすくなる
+
+`tidyverse` の概念をもっと知りたい方は [tidyverse のマニフェスト](https://cran.r-project.org/web/packages/tidyverse/vignettes/manifesto.html) を読みましょう。
+
+# Data I/O
+
+データ解析をするためには, データを `r fontawesome::fa(name = "r-project")` に読み込む必要があります。
+
+ベースRの関数または外部パッケージの関数を使えば, 様々なデータファイルを簡単に読み込めます。
+
+## `tibble` には list 列を入れられる
+
+
+ちょっと高度の方法ですが, list を変数の要素として記録できます。
+
+```{r}
+a1 = list(1,5,1,3,5,1)
+a2 = list(2,3,5,2)
+a3 = list("A","b","E")
+tibble(a = 1:3, values = list(a1, a2, a3))
+```
+
+`values` 列は list の list ですね。
+
+
+```{tikz, fig.ext = "png", echo = FALSE, engine.opts = list(template = "tikz.latex"), out.width = "70%"}
+\begin{tikzpicture}[
+  hbox1/.style = {fill=blue!50,  draw=blue,  minimum width = 1.25cm, minimum height = 1.25cm},
+  hbox2/.style = {fill=green!50, draw=green, minimum width = 1.25cm, minimum height = 1.25cm},
+  box1/.style  = {fill=blue!10,  draw=blue,  minimum width = 1.25cm, minimum height = 1.25cm},
+  box2/.style  = {fill=green!10, draw=green, minimum width = 1.25cm, minimum height = 1.25cm},
+  sbox/.style  = {fill=green!10, draw=green, minimum width = 0.50cm, minimum height = 0.50cm}]
+
+\node[name = h1, hbox1] {a};
+\node[name = h2, hbox2, right=-\pgflinewidth/2 of h1] {values};
+\node[name = b11, box1, below=-\pgflinewidth/2 of h1] {1};
+\node[name = b21, box2, right=-\pgflinewidth/2 of b11] {list [6]};
+\node[name = b12, box1, below=-\pgflinewidth/2 of b11] {2};
+\node[name = b22, box2, right=-\pgflinewidth/2 of b12] {list [4]};
+\node[name = b13, box1, below=-\pgflinewidth/2 of b12] {3};
+\node[name = b23, box2, right=-\pgflinewidth/2 of b13] {list [3]};
+
+\node[name = l6a, sbox, right= 0 of b21.east, anchor=south west] {1};
+\node[name = l6b, sbox, right= 0 of l6a] {5};
+\node[name = l6c, sbox, right= 0 of l6b] {1};
+\node[name = l6d, sbox, below= 0 of l6a] {3};
+\node[name = l6e, sbox, below= 0 of l6b] {5};
+\node[name = l6f, sbox, below= 0 of l6c] {1};
+
+\node[name = l5a, sbox, right= 0 of b22.east, anchor=south west] {2};
+\node[name = l5b, sbox, right= 0 of l5a] {3};
+\node[name = l5c, sbox, right= 0 of l5b] {5};
+\node[name = l5d, sbox, below= 0 of l5a] {2};
+
+\node[name = l3a, sbox, right= 0 of b23.east, anchor=west] {A};
+\node[name = l3b, sbox, right= 0 of l3a] {b};
+\node[name = l3c, sbox, right= 0 of l3b] {E};
+
+\end{tikzpicture}
+```
+
+
+## 列名・変数名について
+
+`data.frame()` は無効な変数名を自動的に変更します。
+
+```{r}
+data.frame(`1 name` = 1) |> names()
+```
+
+`tibble()` はそのままにしてくれます。
+
+```{r}
+tibble(`1 name` = 1) |> names()
+```
+
+```{r}
+#| echo: false
+z = c("2021FY", "2021 FY", "2020-FY", "FY-2021")
+z2 = make.names(z)
+zout = stringr::str_glue("`{z}`") |> stringr::str_c(collapse = ", ")
+zout2 = stringr::str_glue("`{z2}`") |> stringr::str_c(collapse = ", ")
+```
+
+**`data.frame()`の場合**
+* **有効な変数名：**文字または、ドット(.)と文字から始まる文字列。変数名に使用できるものは文字、数字、ドットとアンダースコア (_) だけです。
+* **無効な変数名の例：**`r zout` は自動的に `r zout2` に変更されます。
+
+**`tibble()`の場合**
+* 変数名はそのまま使えますが、使うときは `` ` `` `` ` `` （バクチック）に囲んでください。
+
+**ところが!**
+どうしても `data.frame()` に無効な変数名を使いたいのであれば、`check.names = F` を渡してください。
+
+```{r}
+data.frame(`1 name` = 1, check.names = FALSE) |> names()
+```
+
+## 引数を連続的に使える
+
+`tibble()`はこのように, 計算処理をしながらデータフレームを構築できます。
+
+```{r}
+tibble(x = 1:4, `x^2` = x^2, `sqrt(x)` = sqrt(x))
+```
+
+
+## ベクトルをリサイクルしない
+
+二つのベクトルの長さが異なるときに, データフレームを作ると, 小さいほうのベクトルは先頭から繰り返して使われます。ただし長いベクトルの要素数は短いベクトルの要素数で除算できる必要があります。
+
+```{r}
+x = 1:4
+y = 1:8
+data.frame(x, y)
+```
+
+ところが, この機能はデータ解析時にバグの原因になります。`tibble()`はベクトルのリサイクルはできません。
+
+```{r}
+#| error: true
+x = 1:4
+y = 1:8
+tibble(x, y)
+```
+
+## I/O 関係の関数
+
+**読み込み関数**
+
+* `read_delim()`：一般性の高い関数, 区切りの指定が必要
+* `read_csv()`：コンマ区切りフィアルの読み込み（csv ファイル）
+* `read_table()`：ホワイトスペース区切りファイルの読み込み（タブ・スペース区切りファイル）
+* `read_rds()`：R オブジェクトの読み込み
+
+**書き出し関数**
+
+* `write_delim()`：一般性の高い関数, 区切りの指定が必要
+* `write_csv()`：コンマ区切りフィアルの書き出し
+* `write_excel_csv()`：Excel 用にコンマ区切りフィアルを書き出す
+* `write_table()`：ホワイトスペース区切りファイルの書き出し（タブ・スペース区切りファイル）
+* `write_rds()`：R オブジェクトの書き出し
+* `ggsave()`: `ggplot2` でつくった図を書き出し
+
+## `read_csv()` の重要な引数
+
+* `file`：パスとファイル名
+* `col_names = TRUE`：TRUEのとき, 1行目は列名として使う, FALSE のときは列名を自動的に作成する, 文字列ベクトルを渡せば読み込み中に列名を付けられます
+* `col_types = NULL`：列のデータ型を指定できるが NULL のときは関数に任せる
+* `comment = ""`：コメント記号を指定し, コメント記号後の文字を無視する
+* `skip = 0`             先頭から無視する行数
+* `locale`：ロケール（地域の設定）
+* `n_max = Inf`：読み込む行数、デフォルトは全ての行数
+
+
+## `read_csv()`の使い方
+
+`read_csv()`
+```{r}
+#| eval: false
+rabbits = read_csv("Assignment_06_Dataset01.csv")
+rabbits
+```
+
+```{r}
+#| echo: false
+filename = rprojroot::find_rstudio_root_file("_data/Assignment_06_Dataset01.csv")
+rabbits = read_csv(filename)
+rabbits
+```
+
+
+## readxl パッケージ
+
+`readxl` は Microsoft Excelファイルの読み込みに使えるパッケージです。
+
+```{r}
+library(readxl)
+```
+
+ファイルの読み込みには `read_excel()` を使いますが、研究室では `read_xlsx()` もよく使います。
+`read_excel()` は `read_xlsx()` のラッパーです。
+使い方は全くおなじです。
+
+**重要：** エクセルでデータの管理をした場合エクセルのオートコレクト機能によってデータがかってに変換されるので気をつけましょう。遺伝子の名前のオートコレクトによく問題が発生すると報告されています。とくに Excel と Google Sheets のオートコレクトはアグレッシブです。[Abeysooriya et al. 2021. PLOS Computational Biology](https://doi.org/10.1371/journal.pcbi.1008984)。
+
+
+## `read_excel()` の主な引数
+
+* `path`：パスとファイル名
+* `sheet = NULL`：読み込むシート名またはシートインデックス
+* `range = NULL`：読み込む範囲, 例えば "B3:D8" または, "Data!B3:D8"
+* `col_names = TRUE`：1行目を列名として使う論理値
+* `col_types = NULL`：読み込む列のデータ型を指定できます (デフォルトは guess)
+* `na = ""`：欠損値の定義, 空セルは欠損値とされます
+* `skip = 0`：無視する行数
+* `n_max = Inf`：読み込む最大行数
+
+## `read_excel()` の使用例（１）
+
+最初のシート (`sheet = 1`) の先頭から1行無視して (`skip = 1`) データを読み込む。
+
+```{r}
+#| eval: false
+filename = "Table 2.xlsx"
+exceldata = read_excel(filename, sheet = 1, skip = 1)
+exceldata
+```
+
+
+```{r}
+#| echo: false
+filename = rprojroot::find_rstudio_root_file("_data/Table 2.xlsx")
+exceldata = read_excel(filename, sheet=1, skip = 1)
+exceldata
+```
+
+
+## `read_excel()` の使用例（２）
+
+先程のように読み込むと、不都合な変数名に変換されました。次は、変数名も指定して読み込みます。
+
+```{r}
+#| eval: false
+filename = "Table 2.xlsx"
+col_names = c("month", "temperature1", "sd1", "empty","temperature2", "sd2")
+exceldata = read_excel(filename, sheet = 1, skip = 2, col_name = col_names)
+exceldata |> print(n = 4)
+```
+
+```{r}
+#| echo: false
+filename = rprojroot::find_rstudio_root_file("_data/Table 2.xlsx")
+col_names = c("month", "temperature1", "sd1", "empty","temperature2", "sd2")
+exceldata = readxl::read_excel(filename, sheet=1, skip = 2, col_name = col_names)
+exceldata |> print(n = 4)
+```
+
+シートの２行目には変数名が記録されているので、`skip = 2` を渡しました。
+
+## データの出力
+
+**CSVファイルの出力**
+
+```{r}
+#| eval: false
+fname = "table2_output.csv"
+exceldata |> write_csv(file = fname) # 文字コードは UTF-8 です。
+```
+
+エクセルにCSVファイルを読み込んで文字化けした場合、`write_excel_csv()`を試してみてください。
+
+```{r}
+#| eval: false
+exceldata |> write_excel_csv(file = fname)
+```
+
+**RDSファイルの出力**
+
+Rのオブジェクトをバイナリファイルとして保存したい場合は `write_rds()` を使います。
+
+```{r}
+#| eval: false
+fname = "table2_output.rds"
+exceldata |> write_rds(file = fname)
+```

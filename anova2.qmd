@@ -1,0 +1,553 @@
+---
+title: "多数群の比較：二元配置分散分析"
+subtitle: Comparing multiple groups with Two-Way ANOVA
+format: 
+  html:
+    html-math-method: katex
+reference-location: margin
+citation-location: margin
+bibliography: references.bib
+---
+
+```{r}
+#| cache: false
+#| echo: false
+#| message: false
+#| warnings: false
+library(tidyverse)
+library(flextable)
+library(magick)
+library(kableExtra)
+library(furrr)
+library(patchwork)
+library(broom)
+library(gnnlab)
+library(emmeans)
+options(mc.cores = 8, scipen = 6)
+plan(multisession)
+
+```
+
+
+**二元配置分散分析 (Two-Way ANOVA)** 2 種類の因子（要因）を同時に比較するときに使用する。
+
+**二元配置分散分析の帰無仮説**
+
+* $\mu_{A1} = \mu_{A2} = \cdots = \mu_{Ai}$ (要因Aの主効果)
+* $\mu_{B1} = \mu_{B2} = \cdots = \mu_{Bj}$ (要因Bの主効果)
+* $\mu_{ABij} = 0\text{ for all }i,j$ (相互作用ABまたは交互作用ABの効果)
+
+**フルモデルは: **
+
+$$x_{ijk} = \mu_{Ai}+\mu_{Bj} + \mu_{ABij} + \epsilon_{ijk}$$
+
+
+水準 $i$, $j$, とサンプル $k$ の値は $x_{ijk}$。 
+因子 $A$ の水準 $i$ ごとの平均値は $\mu_{Ai}$。
+因子 $B$ の水準 $i$ ごとの平均値は $\mu_{Bi}$。
+
+交互作用 $AB$ の $i,j$ 効果の平均値は $\mu_{ABij}$。
+残渣（誤差項）は $\epsilon_{ijk}$。
+
+## Two-Way ANOVA Table (二元配置分散分析表)
+
+
+:::{.smalltable}
+```{r}
+#| echo: false
+#| cache: false
+
+CAP = "Two-Way ANOVA Table (Type I sum of squares; sequential sum of squares)"
+tibble(Factor = c("A","B", "AB", "e", " "),
+       `Degrees-of-freedom (df)` = c("$df_A = I-1$",
+                                     "$df_B = J-1$", 
+                                     "$df_{AB} = (I-1)(J-1)$",
+                                     "$df_R = IJ(K-1)$",
+                                     "$df_T = IJK-1$"),
+       `Sum-of-Squares (SS)` = c("$SS_A$", 
+                                 "$SS_B$",
+                                 "$SS_{AB}$",
+                                 "$SS_R$", 
+                                 "$SS_T$"),
+       `Mean-square (MS)` = c("$MS_A = SS_A / df_A$",
+                              "$MS_B = SS_B / df_B$",
+                              "$MS_{AB} = SS_{AB} / df_{AB}$",
+                              "$MS_R = SS_R / df_R$",
+                              " "),
+       `F-value` = c("$MS_A / MS_R$",
+                     "$MS_B / MS_R$",
+                     "$MS_{AB} / MS_R$",
+                     " ", " "),
+       `P-value` = c("$qf(1-\\alpha, df_A, df_R)$",
+                     "$qf(1-\\alpha, df_B, df_R)$", 
+                     "$qf(1-\\alpha, df_{AB}, df_R)$", 
+                     "", "")) |> 
+  kbl(format = "pipe")
+```
+:::
+
+
+$A$ と $B$ は主効果、
+$e$ は残渣、
+$I$ と $J$ は各因子の水準、
+$K$ はサンプル数です。
+$SS_A$ と $SS_B$ は水準間平方和、
+$SS_{AB}$ は相互作用平方和、
+$SS_R$ は残渣平方和、
+$SS_T$ は総平方和です。
+$MS_A$ と $MS_B$ は水準間平均平方、
+$MS_{AB}$ は相互作用平均平方、
+$MS_R$ は残渣平均平方です。
+平均平方の比率はF値です。
+
+:::{.callout-important}
+## 平方和は他にもある
+上述した分散分析表は Type I 平方和 (SS) を求めています。
+このとき、$SS(A)$, $SS(B|A)$, $SS(AB|A,B)$ です。
+分散分析の結果は因子に順序とに依存し、非釣り合い型データに合わない。
+
+Type II 平方和は、$SS(A|B)$ と $SS(B|A)$ のみです。相互作用はありません。
+分散分析の結果は因子に順序とに依存しないが、非釣り合い型データに合わない。
+
+Type III 平方和は、$SS(A|B, AB)$, $SS(B|A, AB)$, $SS(AB|A,B)$ です。
+分散分析の結果は因子に順序とに依存しない、非釣り合い型データにも使えるが、
+必ず`contr.sum` を設定しなければならない。
+:::
+
+平方和の非釣り合い型データの問題については、@Hector2010, @Langsrud2003 を参考にしてください。
+
+## Type I 平方和の方程式
+
+$$
+\begin{split}
+\overbrace{\sum_{i=1}^I\sum_{j=1}^J\sum_{k=1}^K(x_{ijk} - \overline{\overline{x}})^2 }^{\text{総平方和}\;(SS_T)} =
+\overbrace{JK\sum_{i=1}^I(\overline{x}_{i}-\overline{\overline{x}})^2}^{\text{水準間平方和}\;SS_A} +
+\overbrace{IK\sum_{j=1}^J(\overline{x}_{j}-\overline{\overline{x}})^2}^{\text{水準間平方和}\;SS_B} \\ +
+\underbrace{K\sum_{i=1}^I\sum_{j=1}^J(\overline{x}_{ij} + \overline{\overline{x}})^2}_{\text{相互作用平方和}\;SS_{AB}} +
+\underbrace{\sum_{i=1}^I\sum_{j=1}^J\sum_{k=1}^K(x_{ijk} - \overline{x}_{ij})^2}_{\text{残渣平方和}\;SS_R}
+\end{split}
+$$
+
+$\bar{x}_i$ is the sample mean (標本平均) and $\bar{\bar{x}}$ is the global mean (総平均).
+
+# R コード
+
+データはクラウドからダウンロードしました。
+クラウドに CSV ファイルとして公開していると、そのまま読み込むことができます。
+
+```{r}
+#| eval: false
+URL = "https://raw.githubusercontent.com/dzchilds/stats-for-bio/master/data_csv/FESTUCA.CSV"
+festuca = read_csv(URL)
+```
+
+```{r}
+#| echo: false
+if(!file.exists("festuca.csv")) {
+  URL = "https://raw.githubusercontent.com/dzchilds/stats-for-bio/master/data_csv/FESTUCA.CSV"
+  festuca = read_csv(URL)
+  write_csv(festuca, "festuca.csv")
+} else {
+  festuca = read_csv("festuca.csv", show_col_types = FALSE)
+}
+```
+
+* 観測値: *Festuca ovina* (ウシノケグサ) の康重量　dry weight (g) [K = 5]
+* A因子: 土壌の pH (3.5 or 5.5) [I = 2]
+* B因子: *Calluna vulgaris* (ギョリュウモドキ) の存在 [J = 2]
+
+データの可視化するまえに、変数を因子に変換します。
+
+```{r}
+#| eval: false
+festuca = festuca |> 
+  mutate(
+    pH = factor(pH),
+    Calluna = factor(Calluna))
+```
+
+上のコードは次のように諸略できます。
+
+```{r}
+festuca = festuca |> mutate(across(c(pH, Calluna), factor))
+```
+
+では、作図。
+
+```{r}
+ggplot(festuca) + 
+  geom_point(aes(x = pH, y = Weight, color = Calluna),
+             size = 2,
+             position = position_dodge(0.25)) +
+  scale_x_discrete("pH") + 
+  scale_y_continuous("Dry weight (g)") +
+  scale_color_viridis_d(end = 0.8) + 
+  theme(legend.position = c(0,1),
+        legend.justification = c(0,1),
+        legend.background = element_blank())
+```
+
+## 二元配置分散分析
+
+分散分析の結果。
+
+```{r}
+fullmodel_treatment = lm(Weight ~ pH + Calluna + pH:Calluna, data = festuca)
+anova(fullmodel_treatment)
+```
+
+モデル係数の結果。
+
+```{r}
+summary(fullmodel_treatment)
+```
+
+因子ごとの比較は `emmeans` パッケージの `emmeans()` 関数でします。
+`object` 引数に、処理するモデルを渡します。
+`formula` には、A因子 と B因子をモデル式として、渡します。
+
+```{r}
+emmip(object = fullmodel_treatment, 
+      formula = pH ~ Calluna)
+```
+
+図で確認したと、ペアごとの比較をして、t値を求めます。
+`object` 引数に、処理するモデルを渡します。
+
+B因子の水準内のペアごとの比較をしたい場合は、`specs` に `pairwise ~ A因子 | B因子` を渡します。
+
+```{r}
+emmeans(object = fullmodel_treatment, specs = pairwise ~ pH | Calluna)
+```
+
+全ペア毎の比較は、次の通りです。
+
+```{r}
+emmeans(object = fullmodel_treatment, specs = pairwise ~ pH : Calluna, adjust = "tukey") |> 
+  summary(infer = T)
+```
+
+## 釣り合い型データと直交性について
+
+:::{.callout-notes}
+## 釣り合い型データ (balanced data)
+
+各因子水準のデータ数は同じであること
+:::
+
+:::{.callout-notes}
+## 直行性 (orthogonality)
+
+説明変数同士の内積 (inner product) はゼロと意味します。
+ベクトルとした場合、ベクトル間の角度が 90°であること。
+つまり、説明変数がお互いに相関していないこと。
+
+```{r}
+# Example of calculating the inner product of two 3d vectors.
+#| echo: false
+#| eval: false
+k  = c(rnorm(3))
+x1 = c(rnorm(2),0)
+x1 = x1 - as.vector(x1 %*% k) * k / sqrt(sum(k^2))^2
+x2 = pracma::cross(k,x1)
+```
+
+```{r}
+#| fig-width: 3
+#| fig-height: 3
+#| fig-cap: 著効性のあるベクトルのペア
+ggplot() +
+  geom_segment(aes(x = 0, y = 0, xend = 1, yend = 1)) +
+  geom_segment(aes(x = 0, y = 0, xend = -1, yend = 1)) +
+  geom_text(aes(x = 1, y =1, label = "(1,1)"), vjust = 0) +
+  geom_text(aes(x = -1, y =1, label = "(-1,1)"), vjust = 0) +
+  geom_label(aes(x = 0, y = sqrt(2*(0.5^2)), label = "90°")) +
+  geom_curve(aes(x = 0.5, y = 0.5, xend = -0.5, yend = 0.5),
+             arrow = arrow(ends = "both", type = "closed")) +
+  scale_x_continuous(expand = expansion(add = 0.2)) +
+  scale_y_continuous(expand = expansion(add = 0.2)) +
+  coord_equal()
+```
+
+説明変数の係数 $x_1$ と $x_2$ の内積がゼロになること。
+
+$$
+\begin{aligned}
+x_1 &= \begin{bmatrix}
+-1 & 1
+\end{bmatrix} \\
+x_2 &= \begin{bmatrix}
+1 & 1
+\end{bmatrix} 
+\end{aligned}
+$$
+
+$$
+x_1^T \cdot x_2 = \begin{bmatrix}
+-1 & 1
+\end{bmatrix}
+\begin{bmatrix}
+1 \\ 1
+\end{bmatrix} = (-1 \times 1) + (1 \times 1) = 0
+$$
+:::
+
+
+```{r}
+#| cache: true
+#| echo: false
+set.seed(2021)
+tmp = festuca |> 
+    group_by(pH, Calluna) |> 
+    summarise(across(Weight, list(mean=mean, sd=sd)))
+
+make_data2 = function(i) {
+  tmp |> 
+    mutate(N = 5) |> ungroup() |> 
+    mutate(data = pmap(list(Weight_mean, Weight_sd, N), 
+                       function(m, s, n) {
+                         rnorm(n, m, s) |> abs()
+                       })) |> 
+    dplyr::select(pH, Calluna, data) |> 
+    unnest(data) |> 
+    rename(Weight = data) |> 
+    mutate(pH = as.factor(pH),
+           Calluna = as.factor(Calluna))
+}
+
+make_data1 = function(i) {
+  tmp |> 
+    mutate(N = map_int(1:n(), function(x) {
+      sample(3:7, 1)
+    })) |> ungroup() |> 
+    mutate(data = pmap(list(Weight_mean, Weight_sd, N), 
+                       function(m, s, n) {
+                         rnorm(n, m, s) |> abs()
+                       })) |> 
+    dplyr::select(pH, Calluna, data) |> 
+    unnest(data) |> 
+    rename(Weight = data) |> 
+    mutate(pH = as.factor(pH),
+           Calluna = as.factor(Calluna))
+}
+
+tmp = tibble(n = 1:1000) |> 
+  mutate(data1 = map(n, make_data1), 
+         data2 = map(n, make_data2))
+
+run_anova1 = function(x) {
+    contrasts(x$pH) = contr.treatment
+    contrasts(x$Calluna) = contr.treatment
+    lm(Weight ~ pH * Calluna, x) |> anova()
+}
+
+run_anova2 = function(x) {
+    contrasts(x$pH) = contr.treatment
+    contrasts(x$Calluna) = contr.treatment
+    lm(Weight ~ Calluna * pH, x) |> anova()
+}
+
+tmp = tmp |> 
+  mutate(anova_unbalanced_pH_Calluna = future_map(data1, run_anova1)) |>
+  mutate(anova_unbalanced_Calluna_pH = future_map(data1, run_anova2)) |> 
+  mutate(anova_balanced_pH_Calluna = future_map(data2, run_anova1)) |> 
+  mutate(anova_balanced_Calluna_pH = future_map(data2, run_anova2))
+
+tmp = tmp |> 
+  select(n, contains("anova")) |> 
+  pivot_longer(cols = contains("anova")) |> 
+  mutate(value = map(value, \(x) {tidy(x) |> as_tibble() |> drop_na() |> select(term, p.value)})) |> 
+  unnest(everything())
+
+tmp2 = tmp |> 
+  group_by(name, term) |> 
+  summarise(signif = sum(p.value <= 0.05),
+            N = n()) |> 
+  mutate(signif = signif / N)
+
+tmp2 = tmp2 |> 
+  separate(name, c("x", "balance", "first", "second"))
+```
+
+
+```{r}
+#| fig-cap: 釣り合い型データではないとき、Type-I 平方和を用いたとき,　第2種の誤りを起こすことが高くなります。つまり、誤って帰無仮説を採択することが増えます。
+#| echo: false
+
+tmp2 |> 
+  mutate(group = str_c(first, ":", second)) |> 
+  mutate(term = ifelse(str_detect(term, ":"), "Interaction", term),
+         balance = str_to_sentence(balance)) |> 
+  mutate(signif = 1-signif) |> 
+  mutate(term = factor(term, levels = c("pH", "Calluna", "Interaction"))) |> 
+  ggplot() +
+  geom_col(aes(x = term, y = signif, fill = term),
+           position = position_dodge(1))+
+  geom_text(aes(x = term,y = signif+0.025, label = sprintf("%0.3f", signif), group = term),
+            position = position_dodge(1),
+            family = "notosans",
+            vjust = 1) +
+  scale_y_continuous("Type-II Error") +
+  scale_x_discrete("Effect") +
+  scale_fill_viridis_d(end = 0.8) +
+  facet_grid(cols = vars(group),
+             rows = vars(balance)) +
+  theme_gray(base_family = "notosans") +
+  theme(legend.position = "none")
+```
+
+
+つまり、因子の水準毎のデータ数が異なるとき、係数のデフォルト比 (`contr.treatment`) と デフォルトの平方和 (Type-I) の解析は誤りです。
+
+```{r}
+#| echo: false
+dset = 
+  festuca |> group_by(pH, Calluna) |> 
+  summarise(across(Weight, list(mean = mean, sd = sd))) |> 
+  ungroup() |> 
+    mutate(N = map_int(1:n(), function(x) {
+      sample(5:15, 1)
+    })) |> ungroup() |> 
+    mutate(data = pmap(list(Weight_mean, Weight_sd, N), 
+                       function(m, s, n) {
+                         rnorm(n, m, s) |> abs()
+                       })) |> 
+    dplyr::select(pH, Calluna, data) |> 
+    unnest(data) |> 
+    rename(Weight = data) |> 
+  mutate(across(c(pH, Calluna), factor))
+```
+
+解析用のデータ数の内訳。
+
+```{r}
+dset |> 
+  group_by(pH, Calluna) |> 
+  summarise(N = length(Weight))
+```
+
+デフォルトの平方和と比較の場合、モデルに入れる因子の順序によってF値が変わります。
+
+```{r}
+contrasts(dset$pH) = contr.treatment      # Required
+contrasts(dset$Calluna) = contr.treatment
+# pH first, Calluna second.
+f1 = lm(Weight ~ pH * Calluna, data = dset)
+# Calluna first, pH second.
+f2 = lm(Weight ~ Calluna*pH, data = dset)
+anova(f1)
+anova(f2)
+```
+
+データ数が異なるとき、因子は直交ではないときは、Type-III 平方を使いましょう。
+
+## Type-IIII 平方和の分散分析
+
+Type-I 以外の平方を使うとき、car パッケージが必要です。
+
+```{r}
+library(car)
+```
+
+さらに、比較は 必ず `contr.sum` にすること。
+```{r}
+contrasts(dset$pH) = contr.sum      # Required
+contrasts(dset$Calluna) = contr.sum # Required
+```
+
+```{r}
+fullmodel_1 = lm(Weight ~ pH * Calluna, data = dset)
+fullmodel_2 = lm(Weight ~ Calluna * pH, data = dset)
+```
+
+```{r}
+Anova(fullmodel_1, type = "III")
+Anova(fullmodel_2, type = "III")
+```
+
+モデルに入れる因子の順序が変わっても、結果は同じです。
+
+
+# 解析のまとめ
+
+データは `festuca` に入っています。
+Type-III 平方和を用いて、分散分析をします。
+
+```{r}
+library(car)
+library(emmeans)
+library(ggpubr)
+festuca |> print(n = Inf)
+```
+
+```{r}
+contrasts(festuca$pH) = contr.sum      # Required
+contrasts(festuca$Calluna) = contr.sum # Required
+fullmodel = lm(Weight ~ pH * Calluna, data = festuca)
+```
+
+```{r}
+Anova(fullmodel, type = "III")
+```
+
+* `(Intercept)` は総平均値の結果です。
+* `pH` は総平均に対する pH の効果です。
+* `Calluna` は総平均に対する Calluna の効果です。
+* `ph:Calluna` は総平均に対する 相互作用 の効果です。
+
+
+Calluna の効果がなかったので、Caluna内のpH に対するペア毎の比較をします。
+
+```{r}
+emmeans(fullmodel, pairwise ~ pH|Calluna, data = festuca, adjust = "tukey")
+```
+
+もしも全ペアの比較が必要であれば、次のコードを実行します。
+
+```{r}
+emmeans(fullmodel, pairwise ~ pH * Calluna, data = festuca, adjust = "tukey")
+```
+
+:::{.callout-tips}
+## 結果の書き方
+
+二元配置分散分析を行った結果、pH (F~(1,16)~ = 32.54, P = 0.00003) と
+pH と Calluna の相互作用 (F~(1,16)~ = 7.61, P = 0.0140) に対しては有意の効果があった。
+Calluna (F~(1,16)~ = 0.54, P = 0.4746) に対しては有意な効果がなかった。
+:::
+
+```{r}
+festuca_summary = festuca |> 
+  group_by(pH, Calluna) |> 
+  summarise(mean = mean(Weight),
+            sd = sd(Weight),
+            n = length(Weight)) |> 
+  mutate(se = sd / sqrt(n - 1)) |> 
+  mutate(pH = str_remove(pH, "pH"))
+```
+
+```{r}
+ggplot(festuca_summary) +
+  geom_point(aes(x = pH, y = mean, color = Calluna),
+             size = 2,
+                position = position_dodge(width = 0.2)) +
+  geom_errorbar(aes(x = pH, y = mean,
+                    ymin = mean - se,
+                    ymax = mean + se,
+                    color = Calluna),
+                size = 1,
+                width = 0.25,
+                position = position_dodge(width = 0.2)) +
+  scale_x_discrete("pH") + 
+  scale_y_continuous("Mean weight (mg)",
+                     limits = c(0, 8)) +
+  scale_color_viridis_d(end = 0.8) +
+  theme_pubr() +
+  theme(legend.position = c(0,1),
+        legend.justification = c(0,1),
+        legend.background = element_blank())
+```
+
+
+
+

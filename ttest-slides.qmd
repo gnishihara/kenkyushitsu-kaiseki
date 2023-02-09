@@ -1,0 +1,1272 @@
+---
+title: "Comparing two groups"
+subtitle: t 検定の紹介
+author: Greg Nishihara
+date: today
+format: 
+  revealjs:
+    theme: [default, custom.css]
+fig-width: 4
+fig-asp: 0.3
+execute: 
+  cache: true
+---
+
+## A juvenile *Sargassum macrocarpum*
+
+```{r}
+#| label: setup
+#| include: false
+#| cache: false
+library(tidyverse)
+library(tikzDevice)
+library(lemon)
+library(ggrepel)
+library(ggpubr)
+library(ggpmisc)
+library(knitr)
+library(kableExtra)
+library(magick)
+library(showtext)
+library(furrr)
+library(broom)
+plan(multisession, workers = 20)
+font_add_google("Noto Sans", "notosans")
+font_add_google("Noto Serif", "notoserif")
+Sys.setlocale("LC_TIME", "en_US.UTF-8") # This is to set the server time locate to en_US.UTF-8
+theme_replace(text = element_text(family = "notosans"))
+```
+
+```{r}
+#| cache: false
+set.seed(2021)
+nA = 6
+nB = 6
+meanA = 20
+meanB = 22
+sigmaA = 1
+sigmaB = 1
+groupA = rnorm(nA, meanA, sigmaA) %>% round(., 1)
+groupB = rnorm(nB, meanB, sigmaB) %>% round(., 1)
+dset = tibble(g = c("A", "B"), data = list(groupA, groupB)) %>% unnest(data)
+se = function(x) {sd(x) / sqrt(length(x))}
+```
+
+
+```{r}
+#| fig-cap: The width of the rope is 6 mm, so the juvenile is about 20 mm in width.
+#| label: fig-noko-image
+#| out-width: 40%
+folder = rprojroot::find_rstudio_root_file("images")
+file = dir(folder, full = TRUE) %>% str_subset("juvenile.jpg")
+img = image_read(file) 
+img %>% image_crop("1500x1500+1700+750") %>% 
+  image_annotate(text = "Juvenile", gravity = "southwest",
+                 location = "+50+100",
+                 weight = 700,
+                 color = "white", font = "Noto Sans", size = 80) %>% 
+  image_annotate(text = "Sargassum macrocarpum", gravity = "southwest",
+                 location = "+390+100",
+                 weight = 700,
+                 color = "white", font = "Noto Sans",
+                 style = "italic",
+                 size = 80) %>% 
+  image_annotate(text = "ノコギリモク", gravity = "northwest",
+                 weight = 700,
+                 boxcolor = "white",
+                 color = "black", font = "Noto Sans CJK JP",
+                 size = 80)
+```
+
+## A random sample
+
+```{r}
+#| label: tbl-noko-dimensions
+#| tbl-cap: Size (mm) of juvenile *Sargassum macrocarpum*（ノコギリモク）.
+dset %>% 
+  pivot_wider(names_from = g,
+              values_from = data,
+              values_fn = list) %>% 
+  unnest(everything()) %>% 
+  mutate(sample = 1:n(), .before = A) %>% 
+  kable(format = "pipe", col.names = c("Sample", "Site A", "Site B")) 
+  
+
+```
+
+::: {.notes}
+The table shows two groups  of 6 juvenile \textit{Sargassum macrocarpum} (ノコギリモク) that were sampled randomly.
+The two groups of juveniles are from two sites, A and B.
+
+Each sample is given an sample I.D. of 1 to 6.
+
+These data were generated with the R function \texttt{rnorm()} with a 
+true mean ($\mu$) of `r meanA` and `r meanB` for site A and B, respectively.
+The true standard deviation ($\sigma$) is `r sigmaA` and `r sigmaB` for site A and B, respectively.
+:::
+
+
+## Let's compare the two groups
+
+::: {.columns}
+::: {.column width="50%"}
+
+```{r}
+ggplot(dset) + 
+  geom_point(aes(x = g, y = data, color = g),
+             size = 2,
+             position = position_jitter(0.1)) +
+  scale_color_manual("", values = viridis::viridis(3)) +
+  labs(y = "Size (mm)", x = "Site") +
+  theme(legend.position = "top")
+```
+
+:::
+::: {.column width="50%"}
+
+The mean ($\overline{x}$), standard deviation ($s$), and the 
+standard error (s.e.) for juvenile *S. macrocarpum* from site A and B are:
+
+* $\overline{x}_A=$ `r mean(groupA) %>% round(., 3)`, $s_A=$ `r sd(groupA) %>% round(., 3)`, and s.e. = `r se(groupA) %>% round(., 3)`
+* $\overline{x}_B=$ `r mean(groupB) %>% round(., 3)` and $s_B=$ `r sd(groupB) %>% round(., 3)`, and s.e. = `r se(groupB) %>% round(., 3)`
+
+:::
+:::
+
+## What is our question?
+
+
+* If we want to statistically compare the size from the two sites, we need a question (i.e., a working hypothesis).
+
+
+> **Working hypothesis (作業仮設)**: The size (width) of juvenile *S. macrocarpum* collected from site A and B are different. 
+
+
+* We know that the means for site A and B are different, but the standard deviations  and standard errors are similar.
+  - $\overline{x}_A=$ `r mean(groupA) %>% round(., 3)`; $s=$ `r sd(groupA) %>% round(., 3)`; s.e. = `r se(groupA) %>% round(., 3)`
+  - $\overline{x}_B=$ `r mean(groupB) %>% round(., 3)`; $s=$ `r sd(groupB) %>% round(., 3)`; s.e. = `r se(groupB) %>% round(., 3)`
+
+## Define our hypotheses
+
+
+Let's formally define our statistical hypotheses.
+
+* **$H_0$ (null hypothesis 帰無仮説):** There is no difference in the paired values.
+
+* **$H_A$ (alternative hypothesis 対立仮設):**  There is a difference in the paired values.
+
+Other alternative hypotheses
+
+* $H_P$ (alternative hypothesis):  The difference in paired values is positive.
+* $H_N$ (alternative hypothesis):  The difference in paired values is negative.
+
+::: {.notes}
+
+Important: We can define an infinite number of hypotheses. 
+
+The most common alternative hypothesis is a test for an effect.
+For example, $H_0$: there is no effect. $H_A$: There is an effect.
+
+Note: *hypotheses* is the plural form (複数形) of *hypothesis*.
+
+:::
+
+## Calculate the size differences among pairs
+
+Assume that we can compare the paired differences (e.g., $x_{A,1} - x_{B,1}$, $x_{A,2} - x_{B,2}$, $x_{A,3} - x_{B,3}$, $\cdots$, $x_{A,6} - x_{B,6}$).
+
+```{r}
+dset %>% 
+  pivot_wider(names_from = g,
+              values_from = data,
+              values_fn = list) %>% 
+  unnest(everything()) %>% 
+  mutate(sample = 1:6, .before = A) %>% 
+  mutate(d = sprintf("%0.2f - %0.2f = %0.2f",
+                     A, B, A-B)) %>% 
+  kable(format = "latex", booktabs = TRUE,
+        linesep = "",
+        col.names = c("Sample (pairs)",
+                      "Group A",
+                      "Group B",
+                      "Difference"),
+        caption = "Size (cm) of juvenile \\textit{Sargassum macrocarpum}（ノコギリモク）and the difference between group A and B.")
+```
+
+
+## Recall the hypotheses
+
+The two statistical hypotheses that we defined were:
+
+* $H_0$: There is no difference in the paired values.
+* $H_A$: There is a difference in the paired values.
+
+
+```{r}
+d = dset %>% 
+  pivot_wider(names_from = g,
+              values_from = data,
+              values_fn = list) %>% 
+  unnest(everything()) %>% 
+  mutate(d = A - B) %>% 
+  pull(d)
+```
+
+
+The mean difference ($\overline{x}_{A-B}$) is `r mean(d) %>% round(., 3)`, the 
+standard deviation ($s_{A-B}$) is `r sd(d) %>% round(., 3)`,
+and the standard error ($\text{s.e.}_{A-B}$) is `r se(d) %>% round(., 3)`
+
+*Note: The true difference $\mu_{A-B}$ is `r meanA-meanB`, the 
+true standard deviation $\sigma_A = \sigma_B$ is `r sigmaA`.*
+
+::: {.note}
+If the samples can be paired, then the differences between site A and B are easy to determine.
+
+Therefore, it is easy to calculate the mean, standard deviation, and standard error.
+
+$$
+\begin{aligned}
+\overline{x} &= \frac{1}{n}\sum x \qquad \text{mean} \\
+s &= \sqrt{\frac{1}{n-1} \sum \left(x-\overline{x}\right)^2} \qquad \text{standard deviation} \\
+\text{s.e.} &= \frac{s}{\sqrt{n}} \qquad \text{standard error of the}
+\end{aligned}
+$$
+
+How do we statistically test if the differences are *significant*?
+:::
+
+## Distribution of the mean
+
+Recall that the **central limit theorem (中心極限定理)** states that the distribution of the mean has a Gaussian (normal) distribution (正規分布).
+
+::: {.columns}
+::: {.column width="50%"}
+
+```{r}
+xval    = sigmaA * (qnorm(0.05/2)  * c(1,-1)) + mean(d)
+xlimits = sigmaA * (qnorm(0.001/2) * c(1,-1)) + mean(d)
+
+cl = viridis::viridis(4)
+tibble(x = d) %>% 
+  ggplot() +
+  geom_function(fun = dnorm, color = cl[1],
+                alpha = 0.5,
+                args = list(mean = mean(d), sd = sigmaA),
+                xlim = xlimits) +
+  geom_function(fun = dnorm, color = cl[1],
+                args = list(mean = mean(d), sd = sigmaA),
+                size = 2,
+                xlim = xval) +
+  stat_function(fun = dnorm, fill = cl[1],
+                alpha = 0.5,
+                args = list(mean = mean(d), sd = sigmaA),
+                size = 1, xlim = xval, geom = "area") +
+  geom_vline(aes(xintercept = mean(d)), color = cl[3], size = 2) +
+  scale_x_continuous(parse(text = "bar(x)[A-B]~(cm)")) +
+  scale_y_continuous("Probability") +
+  theme(axis.text.y = element_blank(),
+        axis.title.y = element_blank(),
+        axis.ticks.y = element_blank())
+
+```
+
+:::
+::: {.column width="50%"}
+
+* $\overline{x}_{A-B} =$ `r mean(d) %>% round(., 3)` (mean)
+* $s_{A-B}=$ `r sd(d) %>% round(., 3)` (standard deviation)
+* s.e.~A-B~ = `r se(d) %>% round(., 3)` (standard error)
+
+The shaded area is the 95\% probability region.
+The width of the shaded area is called a **confidence interval (信頼区間)**.
+If the **significance level (有意水準)** is $\alpha = 0.05$, 
+then the confidence interval is called a **95% confidence interval (95% 信頼区間)**.
+:::
+:::
+
+::: {.notes}
+
+The green vertical line is the sample mean ($\overline{x}$).
+
+The thick line and the shaded region indicates the 95\% confidence interval of the sample mean.
+
+The thin line indicates a Gaussian distribution with a 
+sample mean of `r mean(d) %>% round(., 3)`.
+
+The standard deviation is `r se(d) %>% round(., 3)`, which is the standard error of the mean.
+
+We use the standard error because we are interested in the distribution of the mean values.
+If we were interested in the distribution of the observations, then we would use the standard deviation.
+
+Since the value of zero is not included in the 95\% confidence interval,
+we can reject the null hypothesis that $\overline{x}_A = \overline{x}_B$ or 
+$x_{A-B}=0$.
+
+So what is a confidence interval (信頼区間)?
+:::
+
+
+## Developing the confidence interval
+
+The confidence interval is an interval $[l, u]$ with a 
+lower bound of $l$ and an upper bound of $u$.
+
+For a probability $1-\alpha$, the interval $[l, u]$ for $x$ is
+
+$$
+P(l \le x \le u) = 1-\alpha
+$$
+If $\overline{x}$ is a sample mean, then the **z-score (z値)** is
+
+$$
+z = \frac{\overline{x}-\mu}{\sigma}
+$$
+
+where $\mu$ is the population mean and $\sigma$ is the population standard deviation.
+Then, to find $l$ and $u$, we need to solve
+
+$$
+P(l \le z \le u) = 1-\alpha
+$$
+
+for the interval $[l, u]$ of $z$ given a probability of $1-\alpha$.
+
+## Central limit theorem (中心極限定理)
+
+Recall that the central limit theorem states that:
+
+$$
+\lim_{n\rightarrow\infty} \sqrt{n}\overbrace{\left(\frac{\overline{x}_n-\mu}{\sigma}\right)}^{z}  \xrightarrow{d} N(0, 1)
+$$
+
+Therefore, for $\alpha = 0.05$, we can define an $[l, u]$ 
+
+$$
+P\left(l \le z \le u \right) = 1-0.05 = 0.95
+$$
+
+For the standard normal distribution ($N(0,1)$)
+
+* $l$ is the $\alpha/2=0.05/2=0.025$ quantile.
+* $u$ is the $1-\alpha/2=1-0.05/2=0.975$ quantile.
+
+
+::: {.notes}
+
+The z-score appears in the definition of the central limit theorem.
+
+$$
+z = \frac{\overline{x}-\mu}{\sigma}
+$$
+
+As the number of samples increase, the distribution of  $\sqrt{n}\left(\frac{\overline{x}_n-\mu}{\sigma}\right)$ 
+converges to a standard normal distribution.
+
+The symbol $\xrightarrow{d}$ in the model means, "converges in distribution."
+
+There are many different types of intervals.
+
+* **range (レンジ・範囲)**
+* **prediction interval (予測区間)**
+* credible interval (信用区間)
+
+The confidence interval provides information about the precision of our estimate of the mean.
+
+The confidence interval is also a range of observations defined by the quantile of a distribution. 
+For the mean values, a normal distribution is usually assumed because mean values 
+follow the central limit theorem.
+
+How do we find the $l$ and $u$ quantiles?
+:::
+
+
+## Determining the lower and upper quantiles of $N(0, 1)$
+
+```{r, fig.height = 3, fig.width=6}
+xval500 = (qnorm(0.50/2) * c(1,-1))
+xval683 = c(-1,1) # pnorm(1)-pnorm(-1)
+xval950 = (qnorm(0.05/2) * c(1,-1))
+xval954 = c(-2,2) # pnorm(2) -pnorm(-2)
+xval990 = (qnorm(0.01/2) * c(1,-1))
+
+xbreaks = c(xval500, xval683, xval950, xval990, 0) %>% sort()
+xbreaks = xbreaks %>% round(2)
+cl = viridis::viridis(4) %>% rev()
+
+tibble(x = d) %>% 
+  ggplot() +
+  
+  stat_function(fun = dnorm, aes(fill = "99.0%"),
+                alpha = 0.5,
+                size = 1, xlim = xval990, geom = "area") +
+  stat_function(fun = dnorm, aes(fill = "95.0%"),
+                alpha = 0.5,
+                size = 1, xlim = xval950, geom = "area") +
+  stat_function(fun = dnorm, aes(fill = "68.3%"),
+                alpha = 0.5,
+                size = 1, xlim = xval683, geom = "area") +
+  stat_function(fun = dnorm, aes(fill = "50.0%"),
+                alpha = 0.5,
+                size = 1, xlim = xval500, geom = "area") +
+  scale_fill_manual("Interval",values = cl) +
+  scale_x_continuous("z-value or standard deviation",
+                     breaks = xbreaks) +
+  theme(legend.position = c(1,1),
+        legend.justification = c(1,1),
+        legend.background = element_blank(),
+        axis.text.y = element_blank(),
+        axis.title.y = element_blank(),
+        axis.ticks.y = element_blank())
+
+```
+
+Note that 
+$[-1 s, 1 s]$ is the `r 100*round(pnorm(1)-pnorm(-1), 3)`% interval, 
+$[-2 s, 2 s]$ is the `r 100*round(pnorm(2)-pnorm(-2), 3)`% interval, and
+$[-3 s, 3 s]$ is the `r 100*round(pnorm(3)-pnorm(-3), 3)`% interval.
+
+::: {.notes}
+
+The 50%, 68.3%, 95%, and 99% confidence intervals are indicated by the shaded region.
+
+The shaded area indicates the probability.
+
+Along the x-axis are the z-scores or a multiple of the standard deviation.
+
+:::
+
+## Table of quantiles for $N(0, 1)$
+
+```{r}
+x = c(0.5, 0.8, 0.9, 0.95, 0.975, pnorm(1:4) - (1-pnorm(1:4)))
+x = sort(x)
+y = -1*qnorm((1-x)/2)
+
+tibble(alpha = 1-x,
+       prob = x, 
+       quantile = y) %>% 
+  mutate(percent = prob * 100, .after = prob) %>% 
+  select(-prob) %>% 
+  kable(booktabs = TRUE,
+        linesep = "",
+        escape = F,
+        digits = c(3,3,3),
+        col.names = c("Significance level, $\\alpha$",
+                      "Confidence interval (\\%)",
+                      "$\\pm$ quantile"),
+        caption = "Quantiles of the standard normal distribution $N(0,1)$.")
+
+```
+
+
+## Calculating the confidence interval
+
+Let $x = \overline{x}_{A-B} =$ `r mean(d) %>% round(.,3)`,
+$s = \text{s.e.} =$ `r se(d) %>% round(.,3)`,
+$\sigma_A = \sigma_B =$ `r sigmaA`, and
+and $\alpha = 0.05$.
+
+$$
+P\left(l \le \frac{\overline{x}-\mu}{\sigma}\le u\right) = 1-\alpha = 0.95
+$$
+
+$$
+P\left(\overline{x} +l \sigma \le \mu \le \overline{x} + u\sigma\right) = 1-\alpha = 0.95
+$$
+
+When $\alpha= 0.05$, the $l$ and $u$ quantiles are 
+$l=$ `r round(qnorm(0.025),4)` and $u=$ `r round(qnorm(1-0.025),4)`,
+and $\sigma = 1$.
+
+
+$$
+\begin{split}
+P(
+`r round(mean(d),3)` +  `r round(qnorm(0.025),4)` \times `r sigmaA`
+\le x \le 
+`r round(mean(d),3)` +  `r round(qnorm(1-0.025),4)` \times `r sigmaA`
+) &= 
+P(
+`r round(mean(d) + sigmaA * qnorm(0.025),3)`
+\le x \le 
+`r round(mean(d) + sigmaA * qnorm(1-0.025),3)`
+) \\
+&= 0.95
+\end{split}
+$$
+
+The 95% confidence interval of 
+$\overline{x}=$ `r round(mean(d),3)` is 
+$[`r round(mean(d) + sigmaA * qnorm(0.025),3)`, `r round(mean(d) + sigmaA * qnorm(1-0.025),3)` ]$.
+
+## Confidence intervals for each experiment when $\sigma$ is known
+
+```{r, fig.height=3, fig.width=6}
+set.seed(2021)
+mult = qnorm(1-(0.05/2))
+X0 = tibble(n = 1:20) %>% 
+  mutate(data = map(n, function(x) {
+    A = rnorm(nA, meanA, sigmaA)
+    B = rnorm(nB, meanB, sigmaB)
+    tibble(A, B) %>% 
+      mutate(d = A-B)
+  }))
+
+
+X = X0 %>% 
+  unnest(data) %>% 
+  group_by(n) %>% 
+  summarise(mean = mean(d),
+            se = sigmaA) %>% 
+  mutate(lower = mean - mult * se,
+         upper = mean + mult * se) %>% 
+  mutate(col = ifelse((meanA-meanB) > lower & (meanA-meanB) < upper, "Yes", "No"), 
+         col2 = ifelse(0 > lower & 0 < upper, "Yes", "No"))
+
+XX = X %>% summarise(n = sum(str_detect(col, "Yes"))) %>% pull(n)
+XX0 = X %>% summarise(n = sum(str_detect(col2, "Yes"))) %>% pull(n)
+trials = X %>% nrow()
+
+p1 = ggplot(X) +
+  geom_hline(yintercept = meanA-meanB) +
+  geom_hline(yintercept = 0, linetype = "dashed") +
+  geom_pointrange(aes(x = n,
+                      y = mean,
+                      ymin = lower,
+                      ymax = upper, color = col)) +
+  scale_color_manual("Includes true mean (μ = -2)?",
+                     values = viridis::viridis(3)) + 
+  scale_y_continuous("Mean and 95% CI") +
+  scale_x_continuous("Experiment")+
+  theme(legend.position = "top")
+p1
+```
+
+$\sigma_A = \sigma_B=$ `r sigmaA`, $H_0:$ $\overline{x}_A = \overline{x}_B$ or $\overline{x}_{A-B}=0$
+
+
+## How often does the confidence interval contain 0?
+
+::: {.columns}
+::: {.column width="50%"}
+
+```{r, fig.height=4, fig.width=4}
+ggplot(X) +
+  geom_hline(yintercept = meanA-meanB) +
+  geom_hline(yintercept = 0, linetype = "dashed") +
+  geom_pointrange(aes(x = n,
+                      y = mean,
+                      ymin = lower,
+                      ymax = upper, color = col2)) +
+  scale_color_manual("Includes zero?",
+                     values = viridis::viridis(3)) + 
+  scale_y_continuous("Mean and 95% CI") +
+  scale_x_continuous("Experiment")+
+  theme(legend.position = "top")
+```
+:::
+::: {.column width="50%"}
+
+* The true difference is `r meanA - meanB`, therefore $H_0$ is false.
+* If we do not reject $H_0$, we are making a **Type-II Error (第2種の誤り)**.
+* The 95\% confidence intervals of `r XX0` experiments include 0.
+* The error rate is $\beta=$ `r XX0` / `r trials` = `r (XX0)/trials` or `r (XX0)/trials * 100`\%.
+* The power of this analysis ($1 - \beta$) is `r 1-((XX0)/trials)`
+:::
+:::
+
+## We made some wrong assumptions
+
+The z-score when population mean $\mu$ and population standard deviation $\sigma$ is known follows a standard normal distribution.
+
+$$
+z = \frac{\overline{x} - \mu}{\sigma}\sim N(0,1)
+$$
+However, if you **do not know the population standard deviation**, we must calculate the t-value.
+
+$$
+t_{\overline{x}} = \frac{\overline{x} - x_0}{s.e.} = \frac{\overline{x} - x_0}{s / \sqrt{n}}
+$$
+
+Which follows a t-distribution. $x_0$ is a constant, and is often set to zero.
+
+
+## Determining the lower and upper quantiles of $t(d.f.)$?
+
+```{r, fig.height = 3, fig.width=6}
+DF = nA-1
+
+xval500 = (qt(0.50/2, df=DF) * c(1,-1))
+xval659 = c(-1,1) # pt(1, DF)-pt(-1,DF)
+xval950 = (qt(0.05/2, df=DF) * c(1,-1))
+xval927 = c(-2,2) # pt(2,DF) -pt(-2, DF)
+xval990 = (qt(0.01/2, df=DF) * c(1,-1))
+
+xbreaks = c(xval500, xval950, xval990, 0) %>% sort()
+xbreaks = xbreaks %>% round(2)
+cl = viridis::viridis(4) %>% rev()
+
+tibble(x = d) %>% 
+  ggplot() +
+  
+  stat_function(fun = dt, aes(fill = "99.0%"),
+                alpha = 0.5, args = list(df = DF),
+                size = 1, xlim = xval990, geom = "area") +
+  stat_function(fun = dt, aes(fill = "95.0%"),
+                alpha = 0.5, args = list(df = DF),
+                size = 1, xlim = xval950, geom = "area") +
+  stat_function(fun = dt, aes(fill = "65.9%"),
+                alpha = 0.5, args = list(df = DF),
+                size = 1, xlim = xval659, geom = "area") +
+  stat_function(fun = dt, aes(fill = "50.0%"),
+                alpha = 0.5, args = list(df = DF),
+                size = 1, xlim = xval500, geom = "area") +
+  scale_fill_manual("Confidence Interval",values = cl) +
+  scale_x_continuous("t-value or standard deviation",
+                     breaks = xbreaks) +
+  theme(legend.position = c(1,1),
+        legend.justification = c(1,1),
+        legend.background = element_blank(),
+        axis.text.y = element_blank(),
+        axis.title.y = element_blank(),
+        axis.ticks.y = element_blank())
+
+```
+
+Note that the **degrees-of-freedom (d.f., 自由度)** for the t-distribution is $N -1$ = `r nA-1`.
+
+## Table of quantiles for $t(d.f. = `r DF`)$
+
+```{r}
+x = c(0.5, 0.8, 0.9, 0.95, 0.975, pt(1:4, DF) - (1-pt(1:4, DF)))
+x = sort(x)
+y = -1*qt((1-x)/2, DF)
+
+CAP = str_glue("Quantiles of the t distribution for d.f. = {DF}.")
+tibble(alpha = 1-x,
+       prob = x, 
+       quantile = y) %>% 
+  mutate(percent = prob * 100, .after = prob) %>% 
+  select(-prob) %>% 
+  kable(booktabs = TRUE,
+        linesep = "",
+        escape = F,
+        digits = c(3,3,3),
+        col.names = c("Significance level, $\\alpha$",
+                      "Confidence interval (\\%)",
+                      "$\\pm$ quantile"),
+        caption = CAP)
+
+```
+
+
+
+## Confidence intervals for each experiment when $\sigma$ is unknown
+
+```{r, fig.height=3, fig.width=6}
+set.seed(2021)
+mult = qt(1-(0.05/2), df = DF)
+X0 = tibble(n = 1:20) %>% 
+  mutate(data = map(n, function(x) {
+    A = rnorm(nA, meanA, sigmaA)
+    B = rnorm(nB, meanB, sigmaB)
+    tibble(A, B) %>% 
+      mutate(d = A-B)
+  }))
+
+
+X = X0 %>% 
+  unnest(data) %>% 
+  group_by(n) %>% 
+  summarise(mean = mean(d),
+            se = se(d)) %>% 
+  mutate(lower = mean - mult * se,
+         upper = mean + mult * se) %>% 
+  mutate(col = ifelse((meanA-meanB) > lower & (meanA-meanB) < upper, "Yes", "No"), 
+         col2 = ifelse(0 > lower & 0 < upper, "Yes", "No"))
+
+XX = X %>% summarise(n = sum(str_detect(col, "Yes"))) %>% pull(n)
+XX0 = X %>% summarise(n = sum(str_detect(col2, "Yes"))) %>% pull(n)
+trials = X %>% nrow()
+
+p1 = ggplot(X) +
+  geom_hline(yintercept = meanA-meanB) +
+  geom_hline(yintercept = 0, linetype = "dashed") +
+  geom_pointrange(aes(x = n,
+                      y = mean,
+                      ymin = lower,
+                      ymax = upper, color = col)) +
+  scale_color_manual("Includes true mean (μ = -2)?",
+                     values = viridis::viridis(3)) + 
+  scale_y_continuous("Mean and 95% CI") +
+  scale_x_continuous("Experiment")+
+  theme(legend.position = "top")
+p1
+```
+
+$H_0:$ $\overline{x}_A = \overline{x}_B$ or $\overline{x}_{A-B}=0$
+
+::: {.notes}
+This figure shows 20 sample means and their confidence intervals.
+The dashed horizontal line indicates zero and the solid horizontal line indicates the true difference `r sigmaA-sigmaB`.
+
+The dots indicate the sample mean and the vertical lines indicate the range of the 95% confidence interval.
+
+The green symbols indicates that the interval includes the true mean.
+
+Out of `r trials` trials, the 95% confidence included the true difference `r XX` times.
+
+***What does the confidence interval mean?***
+
+A 95% confidence interval implies that after 100 experiments,
+about 95 of the confidence intervals will include the true mean.
+
+* It does not mean that the true mean is in the interval.
+* It does not mean that there is a 95% chance that the true mean in in the interval, since the size of the confidence interval varies with the sample.
+* It also does not mean that there is a 95% chance that the mean of the next experiment will be in the confidence interval.
+:::
+
+
+## How often does the confidence interval contain 0?
+
+::: {.columns}
+::: {.column width="50%"}
+```{r, fig.height=4, fig.width=4}
+ggplot(X) +
+  geom_hline(yintercept = meanA-meanB) +
+  geom_hline(yintercept = 0, linetype = "dashed") +
+  geom_pointrange(aes(x = n,
+                      y = mean,
+                      ymin = lower,
+                      ymax = upper, color = col2)) +
+  scale_color_manual("Includes zero?",
+                     values = viridis::viridis(3)) + 
+  scale_y_continuous("Mean and 95% CI") +
+  scale_x_continuous("Experiment")+
+  theme(legend.position = "top")
+```
+:::
+::: {.column width="50%"}
+
+* The true difference is `r meanA - meanB`, therefore $H_0$ is false.
+* If we do not reject $H_0$, we are making a **Type-II Error (第2種の誤り)**.
+* The 95\% confidence intervals of `r XX0` experiments include 0. So for `r XX0` experiments, we do not reject $H_0$.
+* The error rate is $\beta=$ `r XX0` / `r trials` = `r (XX0)/trials` or `r (XX0)/trials * 100`\%.
+* The power of this analysis ($1 - \beta$) is `r 1-((XX0)/trials)`
+
+:::
+:::
+
+::: {.notes}
+
+These are informal ways of testing differences, howerver in practice we use more sophisticated
+formalized methods.
+
+:::
+
+# Formal tests of group means
+
+## The paired t-test
+
+```{r, fig.width=6, fig.height=3}
+XT = X0 %>% 
+  unnest(data) %>% 
+  select(-d) %>% 
+  group_nest(n) %>% 
+  mutate(result = map(data, function(x) {
+    t.test(Pair(A,B) ~ 1, data = x) 
+  })) %>% 
+  mutate(out = map(result, broom::tidy)) %>% 
+  unnest(out) %>% 
+  mutate(col = ifelse(p.value >= 0.05, "No", "Yes"))
+xtsum = XT %>% 
+  summarise(n = length(p.value),
+            m = sum(p.value >= 0.05)) %>% 
+  mutate(beta = m / n,
+         power = 1-beta)
+XT %>% 
+  ggplot() +
+  geom_point(aes(x = n, y = (p.value), color = col)) +
+  geom_hline(yintercept = (0.05), linetype = "dashed") +
+  scale_color_manual(parse(text = "'Reject'~H[0]~'?'"),
+                     
+                     values = viridis::viridis(3)[c(2,1)]) + 
+  scale_y_continuous("P-value") +
+  scale_x_continuous("Experiment")+
+  theme(legend.position = "top")
+```
+
+Type-II error rate $\beta$ = 
+`r xtsum$m` / `r xtsum$n` = 
+`r round(xtsum$beta,2)*100`% and 
+power ($1-\beta$) is `r round(xtsum$power,2)`.
+
+## t-test (unpaired assuming unequal variance)
+
+```{r, fig.width=6, fig.height=3}
+XT = X0 %>% 
+  unnest(data) %>% 
+  select(-d) %>% 
+  group_nest(n) %>% 
+  mutate(result = map(data, function(x) {
+    z = x %>% pivot_longer(cols = c(A,B))
+    t.test(value ~ name, data = z)
+  })) %>% 
+  mutate(out = map(result, broom::tidy)) %>% 
+  unnest(out) %>% 
+  mutate(col = ifelse(p.value >= 0.05, "No", "Yes"))
+
+xtsum = XT %>% 
+  summarise(n = length(p.value),
+            m = sum(p.value >= 0.05)) %>% 
+  mutate(beta = m / n,
+         power = 1-beta)
+XT %>% 
+  ggplot() +
+  geom_point(aes(x = n, y = (p.value), color = col)) +
+  geom_hline(yintercept = (0.05), linetype = "dashed") +
+  scale_color_manual(parse(text = "'Reject'~H[0]~'?'"),
+                     values = viridis::viridis(3)[c(2,1)]) + 
+  scale_y_continuous("P-value") +
+  scale_x_continuous("Experiment")+
+  theme(legend.position = "top")
+```
+
+Type-II error rate $\beta$ = 
+`r xtsum$m` / `r xtsum$n` = 
+`r round(xtsum$beta,2)*100`% and 
+power ($1-\beta$) is `r round(xtsum$power,2)`.
+
+## The null hypothesis of the t-test
+
+**$H_0$ null hypothesis (帰無仮説):** $\overline{x}_A - \overline{x}_B = \overline{x}_{A-B}=0$
+
+
+## Paired t-test
+
+**Paired  t-test (対応ありのt検定)**
+
+We need to calculate the t-value, which is the statistic for the t-test.
+
+$$
+t^* = \frac{\overline{x}_{A-B} - \mu}{s_{A-B} / \sqrt{n}}
+$$
+
+And determine the **degrees-of-freedom (自由度)** which is $n-1$.
+
+Used when observations can be paired. 
+For example the length of the left and right fin of a fish.
+
+## Independent two sample t-test
+
+There are two versions.
+
+::: {.columns}
+::: {.column width="50%"}
+
+**Equal variance (等分散)**
+
+$$
+t^* = \frac{\overline{x}_A - \overline{x}_B}{s_p \sqrt{1 / n_A + 1/n_B}}
+$$
+$$
+s_p = \sqrt{
+\frac{(n_A-1)s_A^2 + (n_B-1)s_B^2}
+{n_A + n_B -2}}
+$$
+Degrees-of-freedom is $n_A + n_B - 2$.
+
+:::
+::: {.column width="50%"}
+
+**Unequal variance, Welch's t-test (ウェルチのt検定)**
+
+$$
+t^* = \frac{\overline{x}_A - \overline{x}_B}{s_p}
+$$
+
+$$
+s_p = \sqrt{
+\frac{s_A^2}{n_A} +
+\frac{s_B^2}{n_B}}
+$$
+Degrees-of-freedom is calculated with the Welch-Satterthwaite Equation.
+
+:::
+:::
+
+$s$ is the sample standard deviation.
+$n$ is the number of samples.
+$\overline{x}$ is the mean.
+$t^*$ is the t-value.
+
+## Welch-Satterthwaite Equation
+
+
+$$
+\text{degrees-of-freedom} =
+\frac{
+\left(\frac{s_A^2}{n_A} + \frac{s_B^2}{n_B}\right)^2
+}
+{\frac{\left(s_A^2 / n_A\right)^2}{n_A-1} + \frac{\left(s_B^2 / n_B\right)^2}{n_B-1}}
+$$
+
+## The unpaired t-test
+
+
+```{r}
+A = c(9.8,11.1,10.7,10.7,11.8,6.2)
+B = c(12.5,13.8,12.0,15.5,9.8,11.5)
+xbar = mean(A-B)
+s = sd(A-B)
+n = length(A)
+df = n - 1
+tval = xbar / (s / sqrt(n))
+pval = pt(xbar / (s / sqrt(n)), df = df)
+tout = t.test(A,B)
+pval2 = pt(tout$statistic, df = tout$parameter)
+
+```
+
+::: {.columns}
+::: {.column width="50%"}
+
+$$
+\begin{aligned}
+t^* &= \frac{\overline{x}_{A-B} - \mu}{s_{A-B} / \sqrt{n}} \\
+t^* &= \frac{`r round(xbar,3)`}{`r round(s,3)` / \sqrt{`r n`}} \\
+t^* &= `r round(tval,3)`
+\end{aligned}
+$$
+
+:::
+::: {.column width="50%"}
+
+```{r, fig.height=2, fig.width=3}
+cl = viridis::viridis(4)
+ggplot() + 
+  geom_function(fun = dt,
+                args = list(df = df),
+                xlim = c(-3,3)) +
+  geom_function(fun = dt,
+                color = cl[1],
+                args = list(df = df),
+                xlim = c(-tval, tval)) +
+  stat_function(fun = dt,
+                aes(fill = sprintf("%02.3f", pval)),
+                args = list(df = df),
+                xlim = c(-3, tval),
+                geom = "area") +
+  stat_function(fun = dt,
+                aes(fill = sprintf("%02.3f", pval)),
+                args = list(df = df),
+                xlim = c(-tval, 3),
+                geom = "area") +
+  scale_fill_manual("One-sided P-value",
+                    values = viridis::viridis(4)) +
+  labs(x = "t-value", y = "") +
+  theme(axis.ticks.y = element_blank(),
+        axis.title.y = element_blank(),
+        axis.text.y = element_blank(),
+        legend.position = "top",
+        legend.direction = "horizontal",
+        legend.background = element_blank())
+```
+
+
+:::
+:::
+
+
+::: {.columns}
+::: {.column width="50%"}
+
+* $\overline{x}_{A-B}=$ `r round(xbar, 3)`
+* $\mu=0$
+* $n$ = `r n`
+* $s_{A-B}=$ `r round(s, 3)`
+
+::: {.column width="50%"}
+* $\alpha$ =  0.05
+* t-value: `r round(tval, 3)`
+* One-sided P-value: `r round(pval, 3)`
+* Two-sided P-value: `r round(2*pval, 3)`
+
+:::
+:::
+
+The juvenile *S. macrocarpum* size observations cannot be paired, so this is the wrong test.
+
+
+## The correct test is Welch's t-test
+
+
+::: {.columns}
+::: {.column width="50%"}
+
+$$
+\begin{aligned}
+t^* &= \frac{\overline{x}_A -\overline{x}_B}{s_p} \\
+s_p &= \sqrt{\frac{s_A^2}{n_A} + \frac{s_B^2}{n_B}} \\
+s_p &= \sqrt{\frac{`r round(sd(A),3)`^2}{`r n`} + \frac{`r round(sd(B),3)`^2}{`r n`}} \\
+t^* &= \frac{`r round(mean(A),3)` - `r round(mean(B),3)`}{`r round(tout$stderr, 3)`} \\
+t^* &= `r round(tout$statistic,3)` \\
+\text{d.f.} &= `r round(tout$parameter, 3)`
+\end{aligned}
+$$
+
+:::
+::: {.column width="50%"}
+
+```{r, fig.height=2, fig.width=3}
+cl = viridis::viridis(4)
+tval = tout$statistic
+ggplot() + 
+  geom_function(fun = dt,
+                args = list(df = df),
+                xlim = c(-3,3)) +
+  geom_function(fun = dt,
+                color = cl[1],
+                args = list(df = df),
+                xlim = c(-tout$statistic, tout$statistic)) +
+  stat_function(fun = dt,
+                aes(fill = sprintf("%02.3f", pval2)),
+                args = list(df = df),
+                xlim = c(-3, tout$statistic),
+                geom = "area") +
+  stat_function(fun = dt,
+                aes(fill = sprintf("%02.3f", pval2)),
+                args = list(df = df),
+                xlim = c(-tout$statistic, 3),
+                geom = "area") +
+  scale_fill_manual("One-sided P-value",
+                    values = viridis::viridis(4)) +
+  labs(x = "t-value", y = "") +
+  theme(axis.ticks.y = element_blank(),
+        axis.title.y = element_blank(),
+        axis.text.y = element_blank(),
+        legend.position = "top",
+        legend.direction = "horizontal",
+        legend.background = element_blank())
+```
+
+* $\alpha$ =  0.05
+* t-value: `r round(tout$statistic, 3)`
+* One-sided P-value: `r round(pval2, 3)`
+* Two-sided P-value: `r round(2*pval2, 3)`
+
+:::
+:::
+
+The P-value decreases, but $`r round(tout$p.value, 3)` \ge \alpha= 0.05$.
+We can't reject $H_0$.
+
+
+## Behavior of the t-test (equal variance)
+
+
+```{r behavior, fig.width=6, fig.height=3, cache=TRUE}
+makedata = function(N) {
+  A = rnorm(N, meanA, sigmaA)
+  B = rnorm(N, meanB, sigmaB)
+  tibble(A, B) 
+}
+
+Nvals = 2^seq(1, 4, by = 0.1)
+Nvals = as.integer(Nvals) %>% unique()
+Nsim = 2000
+
+X0 = tibble(N = Nvals) %>% 
+  mutate(n = list(n = 1:Nsim)) %>% 
+  unnest(n) %>% 
+  mutate(data = map(N, makedata)) %>% 
+  mutate(result = future_map(data, function(x) {
+    z = x %>% pivot_longer(cols = c(A,B))
+    t.test(value ~ name, data = z)
+  })) %>% 
+  mutate(out = map(result, tidy)) %>% 
+  unnest(out) %>% 
+  mutate(col = ifelse(p.value >= 0.05, "No", "Yes"))
+
+XT = X0 %>% 
+  group_by(N) %>% 
+  summarise(n = length(p.value),
+            m = sum(p.value >= 0.05)) %>% 
+  mutate(beta = m / n, power = 1 - beta) %>% 
+  select(N, beta, power)
+
+ggplot(XT) +
+  geom_hline(aes(yintercept = 0.05, color = "Type-I Error (α)")) +
+  geom_line(aes(x = N, y = power, color = "Power (1-β)")) +
+  geom_line(aes(x = N, y = beta, color = "Type-II Error (β)"))  +
+  scale_color_manual(values = viridis::viridis(4)) +
+  scale_x_continuous("Observations (N)") +
+  scale_y_continuous("Probability") +
+  theme(legend.title = element_blank(),
+        legend.position = c(1, 0.5),
+        legend.justification = c(1, 0.5),
+        legend.direction = "horizontal",
+        legend.background = element_blank())
+
+```
+
+Increasing the number of observations decrease the Type-II error rate and increases the power of the test. 
+The Type-I error rate is fixed at $\alpha=0.05$.
+
+::: {.notes}
+
+The true mean ($\mu$) is for site A and B is `r meanA` and `r meanB`, respectively.
+The true standard deviation ($\sigma$) for site A and B is `r sigmaA` and `r sigmaB`, respectively.
+
+For each sample size of {`r paste(Nvals[1:(length(Nvals)-1)], collapse = ", ") %>% str_glue("{.}, and {Nvals[length(Nvals)]}")`} a total of `r Nsim` simulated samples were created.
+
+When the sample size ($N$) is small, the Type-II error rate is high and the power of the t-test is low.
+
+Increasing the sample size increases the power of the t-test and decreases the Type-II error rate.
+
+When the $N$ = 6, the Type-II error rate is `r filter(XT, near(N, 6)) %>% pull(beta) %>% round(., 3)` and the power of the t-test is `r filter(XT, near(N, 6)) %>% pull(power) %>% round(., 3)`.
+
+When the $N$ = 10, the Type-II error rate is `r filter(XT, near(N, 10)) %>% pull(beta) %>% round(., 3)` and the power of the t-test is `r filter(XT, near(N, 10)) %>% pull(power) %>% round(., 3)`.
+
+The Type-I error rate is predefined and does not change with the number of observations.
+:::
+
+## Behavior of the t-test (unequal variance)
+
+```{r behavior2, fig.width=6, fig.height=3, cache = TRUE}
+makedata2 = function(N, mult) {
+  A = rnorm(N, meanA, sigmaA  * mult)
+  B = rnorm(N, meanB, sigmaA)
+  tibble(A, B) 
+}
+
+X0 = 
+  tibble(mult = seq(1, 5, length = 2*9)) %>% 
+  mutate(N = list(c(5, 10, 50))) %>% 
+  unnest(N) %>% 
+  mutate(n = list(n = 1:1000)) %>% 
+  unnest(everything()) %>% 
+  mutate(data = map2(N,mult, makedata2)) %>% 
+  mutate(result = future_map(data, function(x) {
+    z = x %>% pivot_longer(cols = c(A,B))
+    t.test(value ~ name, data = z)
+  })) %>% 
+  mutate(out = map(result, tidy)) %>% 
+  unnest(out) %>% 
+  mutate(col = ifelse(p.value >= 0.05, "No", "Yes"))
+
+XT = X0 %>% 
+  group_by(N, mult) %>% 
+  summarise(n = length(p.value),
+            m = sum(p.value >= 0.05)) %>% 
+  mutate(beta = m / n, power = 1 - beta) %>% 
+  select(mult, beta, power)
+
+XT %>% 
+  mutate(N = factor(N, 
+                    levels = c(5, 10, 50),
+                    labels = c("N = 5", 
+                               "N = 10",
+                               "N = 50"))) %>% 
+  ggplot() +
+  geom_hline(aes(yintercept = 0.05, color = "Type-I Error (α)")) +
+  geom_line(aes(x = mult, y = power, color = "Power (1-β)")) +
+  geom_line(aes(x = mult, y = beta, color = "Type-II Error (β)"))  +
+  scale_color_manual(values = viridis::viridis(4)) +
+  scale_x_continuous(parse(text = "s[A]:s[B]~'ratio'")) +
+  scale_y_continuous("Probability") +
+  facet_wrap("N", ncol = 3) +
+  theme(legend.title = element_blank(),
+        legend.position = "top",
+        legend.background = element_blank())
+
+```
+
+Unbalanced variances ($s^2$) increase the risk of a Type-II error rate ($\beta$) and decrease the power ($1-\beta$) of the t-test. The Type-I error rate is fixed at $\alpha=0.05$.
+
+::: {.notes}
+
+The true mean ($\mu$) is for site A and B is `r meanA` and `r meanB`, respectively.
+The true standard deviation ($\sigma$) for site A is `r sigmaA` and 
+for site B is $k\times\sigma_B$, respectively. $k$ is a multiplier.
+
+When the standard deviations (variances) are not equal, the Type-II error rate and power of the t-test varies.
+
+When $s_A / s_B \rightarrow\infty$, the Type-II error rate increases and the power decreases.
+
+When the sample size is high, the t-test is less sensitive to unequal variances.
+
+The Type-I error rate is predefined and does not change with the number of observations.
+
+:::
+
+
+## Welch's t-test R code
+
+```{r, include=FALSE}
+A = c(9.8,11.1,10.7,10.7,11.8,6.2)
+B = c(12.5,13.8,12.0,15.5,9.8,11.5)
+data = tibble(A, B)
+data = data %>% pivot_longer(cols = c(A,B))
+t.test(value ~ name, data = data)
+```
+```{r, eval = FALSE, echo=TRUE}
+library(tidyverse)
+A = c(9.8,11.1,10.7,10.7,11.8,6.2)
+B = c(12.5,13.8,12.0,15.5,9.8,11.5)
+data = tibble(A, B)
+data = data %>% pivot_longer(cols = c(A,B))
+t.test(value ~ name, data = data) # ウェルチ t 検定
+# t.test(A, B) # Alternative method
+
+# two-sample, equal variance t-test (等分散 t 検定)
+# t.test(value ~ name, data = data, var.equal = TRUE) 
+```
+
+Welch's t-test does not require equal variances or equal sample size.
+
+The two-sample t-test requires equal variances.
+
+## Unequal variance t-test R output
+
+
+```{r, echo = FALSE}
+t.test(value ~ name, data = data)
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

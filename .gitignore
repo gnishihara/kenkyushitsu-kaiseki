@@ -1,0 +1,13 @@
+.Rproj.user
+.Rhistory
+.RData
+.Ruserdata
+
+/.quarto/
+/_data/
+/_freeze/
+/_site/
+Statistics.Rproj
+*_cache/
+*_files/
+*.csv

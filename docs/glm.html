@@ -1,0 +1,2123 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.2.335">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>データ解析（研究室用） - 線形モデル</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1.6em;
+  vertical-align: middle;
+}
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { color: #008000; } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { color: #008000; font-weight: bold; } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<script src="site_libs/quarto-html/quarto.js"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 20,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit"
+  }
+}</script>
+
+  <script>window.backupDefine = window.define; window.define = undefined;</script><script src="https://cdn.jsdelivr.net/npm/katex@0.15.1/dist/katex.min.js"></script>
+  <script>document.addEventListener("DOMContentLoaded", function () {
+ var mathElements = document.getElementsByClassName("math");
+ var macros = [];
+ for (var i = 0; i < mathElements.length; i++) {
+  var texText = mathElements[i].firstChild;
+  if (mathElements[i].tagName == "SPAN") {
+   katex.render(texText.data, mathElements[i], {
+    displayMode: mathElements[i].classList.contains('display'),
+    throwOnError: false,
+    macros: macros,
+    fleqn: false
+   });
+}}});
+  </script>
+  <script>window.define = window.backupDefine; window.backupDefine = undefined;</script><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.15.1/dist/katex.min.css">
+
+<link rel="stylesheet" href="styles.css">
+</head>
+
+<body class="nav-sidebar docked">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+  <nav class="quarto-secondary-nav" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+    <div class="container-fluid d-flex justify-content-between">
+      <h1 class="quarto-secondary-nav-title">線形モデル</h1>
+      <button type="button" class="quarto-btn-toggle btn" aria-label="Show secondary navigation">
+        <i class="bi bi-chevron-right"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse sidebar-navigation docked overflow-auto">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header">
+    <div class="sidebar-title mb-0 py-0">
+      <a href="./">データ解析（研究室用）</a> 
+    </div>
+      </div>
+      <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Search"></div>
+        </div>
+      </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-expanded="true">Introduction</a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-expanded="true">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./index.html" class="sidebar-item-text sidebar-link">研究室と講義の R コード</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./about.html" class="sidebar-item-text sidebar-link">About</a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-expanded="true">Rの基礎</a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-expanded="true">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./part01.html" class="sidebar-item-text sidebar-link">R の基本操作</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./part02.html" class="sidebar-item-text sidebar-link">R 関数の基本</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./part03.html" class="sidebar-item-text sidebar-link">Tidyverse</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./part04.html" class="sidebar-item-text sidebar-link">データの操作</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./part05.html" class="sidebar-item-text sidebar-link">ggplot の図</a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" aria-expanded="true">Linear models</a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" aria-expanded="true">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./linearmodels.html" class="sidebar-item-text sidebar-link">ノンパラメトリック法</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./ttest.html" class="sidebar-item-text sidebar-link">2群の比較：t 検定</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./anova.html" class="sidebar-item-text sidebar-link">一元配置分散分析</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./anova2.html" class="sidebar-item-text sidebar-link">多数群の比較：二元配置分散分析</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./glm.html" class="sidebar-item-text sidebar-link active">線形モデル</a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" aria-expanded="true">Multivariate</a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" aria-expanded="true">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./pca.html" class="sidebar-item-text sidebar-link">Principal Component Analysis</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./rda.html" class="sidebar-item-text sidebar-link">Redundancy Analysis</a>
+  </div>
+</li>
+      </ul>
+  </li>
+    </ul>
+    </div>
+</nav>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#必要なパッケージ" id="toc-必要なパッケージ" class="nav-link active" data-scroll-target="#必要なパッケージ">必要なパッケージ</a></li>
+  <li><a href="#線形モデルとは" id="toc-線形モデルとは" class="nav-link" data-scroll-target="#線形モデルとは">線形モデルとは？</a></li>
+  <li><a href="#線型モデルは直線じゃなくてもいい" id="toc-線型モデルは直線じゃなくてもいい" class="nav-link" data-scroll-target="#線型モデルは直線じゃなくてもいい">線型モデルは直線じゃなくてもいい</a></li>
+  <li><a href="#線形モデルの仮定" id="toc-線形モデルの仮定" class="nav-link" data-scroll-target="#線形モデルの仮定">線形モデルの仮定</a></li>
+  <li><a href="#一般線形モデルの例-general-linear-model" id="toc-一般線形モデルの例-general-linear-model" class="nav-link" data-scroll-target="#一般線形モデルの例-general-linear-model">一般線形モデルの例 (General Linear Model)</a></li>
+  <li><a href="#モデル診断" id="toc-モデル診断" class="nav-link" data-scroll-target="#モデル診断">モデル診断</a>
+  <ul class="collapse">
+  <li><a href="#残渣の正規性" id="toc-残渣の正規性" class="nav-link" data-scroll-target="#残渣の正規性">残渣の正規性</a></li>
+  <li><a href="#残渣のばらつき" id="toc-残渣のばらつき" class="nav-link" data-scroll-target="#残渣のばらつき">残渣のばらつき</a></li>
+  </ul></li>
+  <li><a href="#ガラパゴス諸島における種数の解析" id="toc-ガラパゴス諸島における種数の解析" class="nav-link" data-scroll-target="#ガラパゴス諸島における種数の解析">ガラパゴス諸島における種数の解析</a></li>
+  <li><a href="#モデルの診断図期待値に対する残差のばらつき" id="toc-モデルの診断図期待値に対する残差のばらつき" class="nav-link" data-scroll-target="#モデルの診断図期待値に対する残差のばらつき">モデルの診断図：期待値に対する残差のばらつき</a></li>
+  <li><a href="#モデル構築の考え方" id="toc-モデル構築の考え方" class="nav-link" data-scroll-target="#モデル構築の考え方">モデル構築の考え方</a>
+  <ul class="collapse">
+  <li><a href="#応答変数の変換" id="toc-応答変数の変換" class="nav-link" data-scroll-target="#応答変数の変換">応答変数の変換</a></li>
+  </ul></li>
+  <li><a href="#応答変数変換した解析" id="toc-応答変数変換した解析" class="nav-link" data-scroll-target="#応答変数変換した解析">応答変数変換した解析</a>
+  <ul class="collapse">
+  <li><a href="#応答変数以外の解決手法" id="toc-応答変数以外の解決手法" class="nav-link" data-scroll-target="#応答変数以外の解決手法">応答変数以外の解決手法</a></li>
+  </ul></li>
+  <li><a href="#単純化したモデル" id="toc-単純化したモデル" class="nav-link" data-scroll-target="#単純化したモデル">単純化したモデル</a></li>
+  <li><a href="#診断図" id="toc-診断図" class="nav-link" data-scroll-target="#診断図">診断図</a></li>
+  <li><a href="#説明変数も変換する" id="toc-説明変数も変換する" class="nav-link" data-scroll-target="#説明変数も変換する">説明変数も変換する</a></li>
+  <li><a href="#一般化線形モデル" id="toc-一般化線形モデル" class="nav-link" data-scroll-target="#一般化線形モデル">一般化線形モデル</a></li>
+  <li><a href="#指数型分布族誤差項" id="toc-指数型分布族誤差項" class="nav-link" data-scroll-target="#指数型分布族誤差項">指数型分布族・誤差項</a>
+  <ul class="collapse">
+  <li><a href="#線形予測子または系統成分" id="toc-線形予測子または系統成分" class="nav-link" data-scroll-target="#線形予測子または系統成分">線形予測子または系統成分</a></li>
+  <li><a href="#連結関数-リンク関数" id="toc-連結関数-リンク関数" class="nav-link" data-scroll-target="#連結関数-リンク関数">連結関数 (リンク関数)</a></li>
+  <li><a href="#一般化線形モデルの推定方法" id="toc-一般化線形モデルの推定方法" class="nav-link" data-scroll-target="#一般化線形モデルの推定方法">一般化線形モデルの推定方法</a></li>
+  <li><a href="#一般的な誤差項" id="toc-一般的な誤差項" class="nav-link" data-scroll-target="#一般的な誤差項">一般的な誤差項</a></li>
+  </ul></li>
+  <li><a href="#ガラパゴス諸島のデータのglm解析例" id="toc-ガラパゴス諸島のデータのglm解析例" class="nav-link" data-scroll-target="#ガラパゴス諸島のデータのglm解析例">ガラパゴス諸島のデータのGLM解析例</a>
+  <ul class="collapse">
+  <li><a href="#ポアソンglm解析の出力" id="toc-ポアソンglm解析の出力" class="nav-link" data-scroll-target="#ポアソンglm解析の出力">ポアソンGLM解析の出力</a></li>
+  <li><a href="#対立モデル" id="toc-対立モデル" class="nav-link" data-scroll-target="#対立モデル">対立モデル</a></li>
+  <li><a href="#対立モデルの出力" id="toc-対立モデルの出力" class="nav-link" data-scroll-target="#対立モデルの出力">対立モデルの出力</a></li>
+  </ul></li>
+  <li><a href="#尤度比検定とaicにおけるモデル比較" id="toc-尤度比検定とaicにおけるモデル比較" class="nav-link" data-scroll-target="#尤度比検定とaicにおけるモデル比較">尤度比検定とAICにおけるモデル比較</a>
+  <ul class="collapse">
+  <li><a href="#ポアソン分布のときに必ず確認する値" id="toc-ポアソン分布のときに必ず確認する値" class="nav-link" data-scroll-target="#ポアソン分布のときに必ず確認する値">ポアソン分布のときに必ず確認する値</a></li>
+  <li><a href="#モデルの改良" id="toc-モデルの改良" class="nav-link" data-scroll-target="#モデルの改良">モデルの改良</a></li>
+  <li><a href="#過分散をパラメータとして扱う" id="toc-過分散をパラメータとして扱う" class="nav-link" data-scroll-target="#過分散をパラメータとして扱う">過分散をパラメータとして扱う</a></li>
+  <li><a href="#負の二項分布glmの診断図" id="toc-負の二項分布glmの診断図" class="nav-link" data-scroll-target="#負の二項分布glmの診断図">負の二項分布GLMの診断図</a></li>
+  <li><a href="#診断図関数残差のヒストグラム" id="toc-診断図関数残差のヒストグラム" class="nav-link" data-scroll-target="#診断図関数残差のヒストグラム">診断図関数：残差のヒストグラム</a></li>
+  <li><a href="#診断図関数残差のqqプロット" id="toc-診断図関数残差のqqプロット" class="nav-link" data-scroll-target="#診断図関数残差のqqプロット">診断図関数：残差のQQプロット</a></li>
+  <li><a href="#診断図関数変数に対する残差のばらつき" id="toc-診断図関数変数に対する残差のばらつき" class="nav-link" data-scroll-target="#診断図関数変数に対する残差のばらつき">診断図関数：変数に対する残差のばらつき</a></li>
+  <li><a href="#診断図関数期待値に対する残差のばらつき" id="toc-診断図関数期待値に対する残差のばらつき" class="nav-link" data-scroll-target="#診断図関数期待値に対する残差のばらつき">診断図関数：期待値に対する残差のばらつき</a></li>
+  <li><a href="#診断図関数スケールロケーションプロット" id="toc-診断図関数スケールロケーションプロット" class="nav-link" data-scroll-target="#診断図関数スケールロケーションプロット">診断図関数：スケール・ロケーションプロット</a></li>
+  <li><a href="#診断図関数クックの距離" id="toc-診断図関数クックの距離" class="nav-link" data-scroll-target="#診断図関数クックの距離">診断図関数：クックの距離</a></li>
+  <li><a href="#η-に対するランダム化残差のばらつき" id="toc-η-に対するランダム化残差のばらつき" class="nav-link" data-scroll-target="#η-に対するランダム化残差のばらつき">η に対するランダム化残差のばらつき</a></li>
+  </ul></li>
+  <li><a href="#結果" id="toc-結果" class="nav-link" data-scroll-target="#結果">結果</a>
+  <ul class="collapse">
+  <li><a href="#負の二項分布の結果係数表" id="toc-負の二項分布の結果係数表" class="nav-link" data-scroll-target="#負の二項分布の結果係数表">負の二項分布の結果（係数表）</a></li>
+  <li><a href="#aic" id="toc-aic" class="nav-link" data-scroll-target="#aic">AIC</a></li>
+  <li><a href="#尤度比検定" id="toc-尤度比検定" class="nav-link" data-scroll-target="#尤度比検定">尤度比検定</a></li>
+  <li><a href="#モデル診断図" id="toc-モデル診断図" class="nav-link" data-scroll-target="#モデル診断図">モデル診断図</a></li>
+  <li><a href="#採択したモデル" id="toc-採択したモデル" class="nav-link" data-scroll-target="#採択したモデル">採択したモデル</a></li>
+  </ul></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title d-none d-lg-block">線形モデル</h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+</header>
+
+<section id="必要なパッケージ" class="level2">
+<h2 class="anchored" data-anchor-id="必要なパッケージ">必要なパッケージ</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>── Attaching packages ─────────────────────────────────────── tidyverse 1.3.2 ──
+✔ ggplot2 3.4.0     ✔ purrr   1.0.1
+✔ tibble  3.1.8     ✔ dplyr   1.1.0
+✔ tidyr   1.3.0     ✔ stringr 1.5.0
+✔ readr   2.1.3     ✔ forcats 1.0.0
+── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──
+✖ dplyr::filter() masks stats::filter()
+✖ dplyr::lag()    masks stats::lag()</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(car)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Loading required package: carData
+
+Attaching package: 'car'
+
+The following object is masked from 'package:dplyr':
+
+    recode
+
+The following object is masked from 'package:purrr':
+
+    some</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(patchwork)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="線形モデルとは" class="level2">
+<h2 class="anchored" data-anchor-id="線形モデルとは">線形モデルとは？</h2>
+<ul>
+<li>線形モデルの <strong>線型 (linear)</strong> は直線 (straight line) と全く関係ないです。</li>
+<li>線型モデルの線型は <strong>線型結合 (linear combination)</strong> を意味しています。</li>
+</ul>
+<p><span class="math display">
+y = b_1 x_1 + b_2 x_2 + b_3 x_3 + \cdots + b_n x_n
+</span> <span class="math inline">b_i</span> は係数，<span class="math inline">x_i</span> はベクトル（変数, 説明変数）です。<span class="math inline">y</span> が <span class="math inline">x_i</span> の線型結合です。</p>
+</section>
+<section id="線型モデルは直線じゃなくてもいい" class="level2">
+<h2 class="anchored" data-anchor-id="線型モデルは直線じゃなくてもいい">線型モデルは直線じゃなくてもいい</h2>
+<p><strong>線形モデル</strong></p>
+<ul>
+<li><span class="math inline">\mu = \beta_0 + \beta_1 x_1</span></li>
+<li><span class="math inline">\mu = \beta_0 + \beta_1 x_1 + \beta_2 x_2^2</span></li>
+<li><span class="math inline">\mu = \beta_0 + \beta_1\exp(x_1)</span></li>
+</ul>
+<p><strong>非線形モデル</strong></p>
+<ul>
+<li><span class="math inline">\mu = \frac{\beta_1 x_1}{\beta_2 + x_1}</span></li>
+<li><span class="math inline">\mu = \beta_1 \left(1-\exp(\beta_2 x_1)\right) + \beta_3</span></li>
+<li><span class="math inline">\mu = \beta_0 + \beta_1\exp(\beta_2 x_1)</span></li>
+</ul>
+<p>線形モデルは直線じゃなくてもいい。 ただし，変数 (<span class="math inline">x_i</span>) は線型結合であることが重要なポイントです。 では、検討しているモデルは線形モデルかどうかを確認したいなら、パラメータに対してモデルの偏微分方程式を求めてください。</p>
+<p>たとえば、モデルパラメータ <span class="math inline">(\beta_i)</span> に対して，<span class="math inline">\mu</span>を微分します。</p>
+<p><span class="math display">
+\mu = \beta_0 + \beta_1 x_1 + \beta_2 x_2^2
+</span></p>
+<p>パラメータの数ほど微分方程式があります。</p>
+<p><span class="math display">
+\frac{\partial \mu}{\partial \beta_0}  = 1 \qquad
+\frac{\partial \mu}{\partial \beta_1}  = x_1 \qquad
+\frac{\partial \mu}{\partial \beta_2}  = x_2
+</span></p>
+<p><span class="math inline">\beta_i</span> はどの微分方程式に残らないので，このモデルは線形モデルでしょう。</p>
+<p>次のモデルは非線形モデルです。</p>
+<p><span class="math display">
+\mu = \frac{\beta_1 x_1}{\beta_2 + x_1}
+</span></p>
+<p>モデルパラメータは <span class="math inline">\beta_1</span>, <span class="math inline">\beta_2</span> ですね。 ではパラメータに対する偏微分方程式は次の通りです。</p>
+<p><span class="math display">
+\begin{aligned}
+\frac{\partial \mu}{\partial \beta_1}  &amp;= \frac{x_1}{\beta_2 x_1} \\
+\frac{\partial \mu}{\partial \beta_2}  &amp;= -\frac{x_1}{(\beta_2 x_2)^2}
+\end{aligned}
+</span></p>
+<p>パラメータはお互いの方程式に残るので，このモデルは線形モデルではないですね。</p>
+</section>
+<section id="線形モデルの仮定" class="level2">
+<h2 class="anchored" data-anchor-id="線形モデルの仮定">線形モデルの仮定</h2>
+<p>線形モデルを用いるときに守るべき仮定は分散分析と同じです。</p>
+<ul>
+<li>残差が正規分布に従うこと。</li>
+<li>残差またはデータはお互いに独立し，同一分布から発生していること。</li>
+</ul>
+<p>モデルに対する注意する点</p>
+<ul>
+<li>説明変数もお互いに関係性（相関関係）が低いこと（関係ないほうがいい）。
+<ul>
+<li>関係性が高いとき，モデルパラメータの推定量の精度 (precision) と正確度 (accuracy) が落ちます。</li>
+<li>この現象は多重共線性 (multicollinearity) とよびます。</li>
+</ul></li>
+<li>説明変数はお互いに関係がなければ，<strong>直交性 (orthogonal)</strong> のあるモデルとなり，変数の推定量はお互いとの相関性がないです。</li>
+</ul>
+<p>野外データは上の条件を満たすことは珍しいが、すべての条件を満たさなくても解析はできます。 ただし、結果の解釈と考察には気をつけましょう。</p>
+</section>
+<section id="一般線形モデルの例-general-linear-model" class="level2">
+<h2 class="anchored" data-anchor-id="一般線形モデルの例-general-linear-model">一般線形モデルの例 (General Linear Model)</h2>
+<p>解析例にはアヤメのデータをつかっています。 ちなみに、一般線形モデルは一般化線形モデル (Generalized Linear Model, GLM) の特例です。</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>iris <span class="ot">=</span> iris <span class="sc">|&gt;</span> <span class="fu">as_tibble</span>()</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>iris <span class="sc">|&gt;</span> <span class="fu">print</span>(<span class="at">n =</span> <span class="dv">3</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 150 × 5
+  Sepal.Length Sepal.Width Petal.Length Petal.Width Species
+         &lt;dbl&gt;       &lt;dbl&gt;        &lt;dbl&gt;       &lt;dbl&gt; &lt;fct&gt;  
+1          5.1         3.5          1.4         0.2 setosa 
+2          4.9         3            1.4         0.2 setosa 
+3          4.7         3.2          1.3         0.2 setosa 
+# … with 147 more rows</code></pre>
+</div>
+</div>
+<p>検討する線型モデルは次の通りです。</p>
+<p><span class="math display">
+E(\text{Petal Length}) = b_0 + b_1\text{Petal Width} + b_2\text{Sepal Length} + b_3\text{Sepal Width}
+</span></p>
+<p><span class="math inline">E(\text{Petal Length})</span> は花びらの長さの<strong>期待値 (expected value)</strong> といいます。</p>
+<p>線形モデルなので，<code>lm()</code> 関数で解析できます。 さらに、分散分析表も存在します。</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>m1 <span class="ot">=</span> <span class="fu">lm</span>(Petal.Length <span class="sc">~</span> Petal.Width <span class="sc">+</span> Sepal.Length <span class="sc">+</span> Sepal.Width, <span class="at">data =</span> iris)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>分散分析表は <code>summary.aov()</code> でだします。</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>m1 <span class="sc">|&gt;</span> <span class="fu">summary.aov</span>() <span class="sc">|&gt;</span> <span class="fu">print</span>(<span class="at">signif.stars =</span> F)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>              Df Sum Sq Mean Sq F value Pr(&gt;F)
+Petal.Width    1  430.5   430.5 4231.49 &lt;2e-16
+Sepal.Length   1    9.9     9.9   97.74 &lt;2e-16
+Sepal.Width    1    9.0     9.0   88.95 &lt;2e-16
+Residuals    146   14.9     0.1               </code></pre>
+</div>
+</div>
+<p>モデルに入れた全ての説明変数のP値は <span class="math inline">&lt; 0.0001</span> ですね。</p>
+<p>では、線形モデルの係数表を出してみましょう。</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>m1 <span class="sc">|&gt;</span> <span class="fu">summary</span>() <span class="sc">|&gt;</span> <span class="fu">print</span>(<span class="at">signif.stars =</span> F)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Call:
+lm(formula = Petal.Length ~ Petal.Width + Sepal.Length + Sepal.Width, 
+    data = iris)
+
+Residuals:
+     Min       1Q   Median       3Q      Max 
+-0.99333 -0.17656 -0.01004  0.18558  1.06909 
+
+Coefficients:
+             Estimate Std. Error t value Pr(&gt;|t|)
+(Intercept)  -0.26271    0.29741  -0.883    0.379
+Petal.Width   1.44679    0.06761  21.399   &lt;2e-16
+Sepal.Length  0.72914    0.05832  12.502   &lt;2e-16
+Sepal.Width  -0.64601    0.06850  -9.431   &lt;2e-16
+
+Residual standard error: 0.319 on 146 degrees of freedom
+Multiple R-squared:  0.968, Adjusted R-squared:  0.9674 
+F-statistic:  1473 on 3 and 146 DF,  p-value: &lt; 2.2e-16</code></pre>
+</div>
+</div>
+<p><code>Petal.Length</code> に対して，<code>Petal.Width</code> と <code>Sepal.Length</code> は正の効果があり，<code>Sepal.Width</code> とは負の効果がありました。 つまり， <code>Petal.Width</code> と <code>Sepal.Length</code> が上昇すると， <code>Petal.Length</code> も上昇します。</p>
+<p>分散分析表の場合は、それぞれの変数に対するF値がでたが、係数表の場合は t値 がでました。 当然それぞれの値も異なった。</p>
+<p>何が違うのか？</p>
+<p>まず、分散分析の平方和って、さまざま求め方がるあることに気づきましょう。</p>
+<ul>
+<li>Type-I Sum-of-squares
+<ul>
+<li>SS(A), SS(B|A), SS(AB|B, A)</li>
+</ul></li>
+<li>Type-II Sum-of-squares
+<ul>
+<li>SS(A|B), SS(B|A)</li>
+</ul></li>
+<li>Type-III Sum-of-squares
+<ul>
+<li>SS(A|B), SS(B|A), SS(AB|B,A)</li>
+</ul></li>
+</ul>
+<p>他にもありますが、この 3 つが一般的にです。</p>
+<p><strong>Type-I</strong> の場合、結果は変数の順序に依存します。 <strong>Type-II</strong> の場合、順序に依存しないが、相互作用はない。 <strong>Type-III</strong> の場合、順序に依存しないが、相互作用の影響も計算されます。</p>
+<p><strong>Type-I</strong> はRのデフォルトなので、<strong>Type-II</strong> または <strong>Type-II</strong> を使いたいなら、 <code>car</code> パッケージの <code>Anova()</code> 関数が必要です。</p>
+<p>といくおとで、説明変数の順序をかえるた、次のように異なる結果が返ってきます。</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>m1a  <span class="ot">=</span> <span class="fu">lm</span>(Petal.Length <span class="sc">~</span> Petal.Width <span class="sc">+</span> Sepal.Length <span class="sc">+</span> Sepal.Width, <span class="at">data =</span> iris)</span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>m1b <span class="ot">=</span> <span class="fu">lm</span>(Petal.Length <span class="sc">~</span> Petal.Width <span class="sc">+</span> Sepal.Width <span class="sc">+</span> Sepal.Length, <span class="at">data =</span> iris)</span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>m1c <span class="ot">=</span> <span class="fu">lm</span>(Petal.Length <span class="sc">~</span> Sepal.Width <span class="sc">+</span> Petal.Width <span class="sc">+</span> Sepal.Length, <span class="at">data =</span> iris)</span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>m1a <span class="sc">|&gt;</span> <span class="fu">summary.aov</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>              Df Sum Sq Mean Sq F value Pr(&gt;F)    
+Petal.Width    1  430.5   430.5 4231.49 &lt;2e-16 ***
+Sepal.Length   1    9.9     9.9   97.74 &lt;2e-16 ***
+Sepal.Width    1    9.0     9.0   88.95 &lt;2e-16 ***
+Residuals    146   14.9     0.1                   
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>m1b <span class="sc">|&gt;</span> <span class="fu">summary.aov</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>              Df Sum Sq Mean Sq F value   Pr(&gt;F)    
+Petal.Width    1  430.5   430.5 4231.49  &lt; 2e-16 ***
+Sepal.Width    1    3.1     3.1   30.37 1.57e-07 ***
+Sepal.Length   1   15.9    15.9  156.31  &lt; 2e-16 ***
+Residuals    146   14.9     0.1                     
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>m1c <span class="sc">|&gt;</span> <span class="fu">summary.aov</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>              Df Sum Sq Mean Sq F value Pr(&gt;F)    
+Sepal.Width    1   85.2    85.2   837.8 &lt;2e-16 ***
+Petal.Width    1  348.3   348.3  3424.1 &lt;2e-16 ***
+Sepal.Length   1   15.9    15.9   156.3 &lt;2e-16 ***
+Residuals    146   14.9     0.1                   
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
+</div>
+</div>
+<p>このとき、<code>car</code> パッケージの <code>Anova()</code> 関数を使って平方和の求め方を指定します。 相互作用なしのモデルなので、Type-II を指定しました。 相互作用も調べたいなら、<code>type="III"</code> を渡してください。</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>m1a <span class="sc">|&gt;</span> <span class="fu">Anova</span>(<span class="at">type =</span> <span class="st">"II"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Anova Table (Type II tests)
+
+Response: Petal.Length
+             Sum Sq  Df F value    Pr(&gt;F)    
+Petal.Width  46.584   1 457.905 &lt; 2.2e-16 ***
+Sepal.Length 15.902   1 156.312 &lt; 2.2e-16 ***
+Sepal.Width   9.049   1  88.947 &lt; 2.2e-16 ***
+Residuals    14.853 146                      
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>m1b <span class="sc">|&gt;</span> <span class="fu">Anova</span>(<span class="at">type =</span> <span class="st">"II"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Anova Table (Type II tests)
+
+Response: Petal.Length
+             Sum Sq  Df F value    Pr(&gt;F)    
+Petal.Width  46.584   1 457.905 &lt; 2.2e-16 ***
+Sepal.Width   9.049   1  88.947 &lt; 2.2e-16 ***
+Sepal.Length 15.902   1 156.312 &lt; 2.2e-16 ***
+Residuals    14.853 146                      
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>m1c <span class="sc">|&gt;</span> <span class="fu">Anova</span>(<span class="at">type =</span> <span class="st">"II"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Anova Table (Type II tests)
+
+Response: Petal.Length
+             Sum Sq  Df F value    Pr(&gt;F)    
+Sepal.Width   9.049   1  88.947 &lt; 2.2e-16 ***
+Petal.Width  46.584   1 457.905 &lt; 2.2e-16 ***
+Sepal.Length 15.902   1 156.312 &lt; 2.2e-16 ***
+Residuals    14.853 146                      
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
+</div>
+</div>
+<p>係数表は t値の結果は Wald’s test と呼びます。</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a>m1 <span class="sc">|&gt;</span> <span class="fu">summary</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Call:
+lm(formula = Petal.Length ~ Petal.Width + Sepal.Length + Sepal.Width, 
+    data = iris)
+
+Residuals:
+     Min       1Q   Median       3Q      Max 
+-0.99333 -0.17656 -0.01004  0.18558  1.06909 
+
+Coefficients:
+             Estimate Std. Error t value Pr(&gt;|t|)    
+(Intercept)  -0.26271    0.29741  -0.883    0.379    
+Petal.Width   1.44679    0.06761  21.399   &lt;2e-16 ***
+Sepal.Length  0.72914    0.05832  12.502   &lt;2e-16 ***
+Sepal.Width  -0.64601    0.06850  -9.431   &lt;2e-16 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Residual standard error: 0.319 on 146 degrees of freedom
+Multiple R-squared:  0.968, Adjusted R-squared:  0.9674 
+F-statistic:  1473 on 3 and 146 DF,  p-value: &lt; 2.2e-16</code></pre>
+</div>
+</div>
+<p>このとき、<span class="math inline">\beta = 0</span> の帰無仮説を検証しています。 つまり、係数の値は 0 か 0 じゃないかですね。</p>
+<p>Wald’s test と F-test のこちらもモデルの解析に使えます。 ところが、一般的には、モデル選択に F-test を使いますが、 係数が 0 か 0 じゃないかの検証には Wald’s test を使います。 ちなみに、このモデルの場合、<span class="math inline">(t_\nu)^2 = F_{(1,\nu)}</span> なので、 係数表のt値の2乗は Type-II 分散分析のF値と同じです。</p>
+</section>
+<section id="モデル診断" class="level2">
+<h2 class="anchored" data-anchor-id="モデル診断">モデル診断</h2>
+<p>モデルを当てはめたあと、最も重要な解析はモデル残渣の確認です。 モデル残渣に異常があると、モデルとデータの相性が悪いです。 モデルとデータが合わない場合、求めた係数を信用できません。</p>
+<p>一般線形モデルのとき、標準化残渣 (standardized residuals) をもとめて、モデルの良さを目で確認します。 つまり、標準化残渣を様々形の図を作ります。</p>
+<p>まず、残渣を持てめて、図に使うデータを準備します。</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a>firis <span class="ot">=</span> <span class="fu">fortify</span>(m1) <span class="sc">|&gt;</span> <span class="fu">as_tibble</span>()</span>
+<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a>firis</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 150 × 10
+   Petal…¹ Petal…² Sepal…³ Sepal…⁴   .hat .sigma .cooksd .fitted  .resid .stdr…⁵
+     &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;
+ 1     1.4     0.2     5.1     3.5 0.0205  0.320 3.73e-4    1.48 -0.0842 -0.267 
+ 2     1.4     0.2     4.9     3   0.0212  0.319 3.71e-3    1.66 -0.261  -0.828 
+ 3     1.3     0.2     4.7     3.2 0.0201  0.320 3.84e-4    1.39 -0.0864 -0.274 
+ 4     1.5     0.2     4.6     3.1 0.0221  0.320 8.46e-4    1.38  0.122   0.387 
+ 5     1.4     0.2     5       3.6 0.0230  0.320 1.68e-4    1.35  0.0533  0.169 
+ 6     1.7     0.4     5.4     3.9 0.0327  0.320 9.86e-5    1.73 -0.0339 -0.108 
+ 7     1.4     0.3     4.6     3.4 0.0255  0.320 3.34e-4    1.33  0.0711  0.226 
+ 8     1.5     0.2     5       3.4 0.0189  0.320 2.81e-5    1.48  0.0241  0.0763
+ 9     1.4     0.2     4.4     2.9 0.0293  0.320 1.14e-4    1.36  0.0386  0.123 
+10     1.5     0.1     4.9     3.1 0.0225  0.320 1.32e-4    1.45  0.0479  0.152 
+# … with 140 more rows, and abbreviated variable names ¹​Petal.Length,
+#   ²​Petal.Width, ³​Sepal.Length, ⁴​Sepal.Width, ⁵​.stdresid</code></pre>
+</div>
+</div>
+<section id="残渣の正規性" class="level3">
+<h3 class="anchored" data-anchor-id="残渣の正規性">残渣の正規性</h3>
+<p>まずは残渣は正規分布に従うかを評価します。 正規性はヒストグラムとQQプロットでします。 残渣が正規分布に従うなら、ヒストグラムは正規分布に似ていて、 QQプロットでは残渣を示す点が赤色の直線上に並びます。</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(firis) <span class="sc">+</span> </span>
+<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_histogram</span>(<span class="fu">aes</span>(<span class="at">x =</span> .stdresid, <span class="at">y =</span> ..density..)) <span class="sc">+</span></span>
+<span id="cb29-3"><a href="#cb29-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">stat_function</span>(<span class="at">fun =</span> dnorm, <span class="at">color =</span> <span class="st">"red"</span>) <span class="sc">+</span></span>
+<span id="cb29-4"><a href="#cb29-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Standardized residual"</span>, <span class="at">y =</span> <span class="st">""</span>) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: The dot-dot notation (`..density..`) was deprecated in ggplot2 3.4.0.
+ℹ Please use `after_stat(density)` instead.</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>`stat_bin()` using `bins = 30`. Pick better value with `binwidth`.</code></pre>
+</div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="glm_files/figure-html/unnamed-chunk-10-1.png" class="img-fluid figure-img" width="672"></p>
+<p></p><figcaption class="figure-caption">残渣のヒストグラムと正規分布</figcaption><p></p>
+</figure>
+</div>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb32"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(firis) <span class="sc">+</span> </span>
+<span id="cb32-2"><a href="#cb32-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_qq</span>(<span class="fu">aes</span>(<span class="at">sample =</span> .stdresid)) <span class="sc">+</span></span>
+<span id="cb32-3"><a href="#cb32-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_abline</span>(<span class="at">color =</span> <span class="st">"red"</span>) <span class="sc">+</span></span>
+<span id="cb32-4"><a href="#cb32-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Theoretical Quantile"</span>, <span class="at">y =</span> <span class="st">"Standardized residual"</span>) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="glm_files/figure-html/unnamed-chunk-11-1.png" class="img-fluid figure-img" width="672"></p>
+<p></p><figcaption class="figure-caption">QQプロット</figcaption><p></p>
+</figure>
+</div>
+</div>
+</div>
+<p>どちらの図を確認しても、標準化残渣は正規分布に従っているように見えます。</p>
+</section>
+<section id="残渣のばらつき" class="level3">
+<h3 class="anchored" data-anchor-id="残渣のばらつき">残渣のばらつき</h3>
+<p>正規性に問題がなければ、次は標準化残渣のばらつきを確認したいです。 すべての変数に対して残渣の図をつくります。 また、求めた期待値に対しても残渣を確認します。 残渣になんかしらのパタンがあると、問題です。</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb33"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a>firis <span class="sc">|&gt;</span> </span>
+<span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="fu">matches</span>(<span class="st">"Petal|Sepal"</span>), .stdresid) <span class="sc">|&gt;</span> </span>
+<span id="cb33-3"><a href="#cb33-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_longer</span>(<span class="fu">matches</span>(<span class="st">"Petal|Sepal"</span>)) <span class="sc">|&gt;</span> </span>
+<span id="cb33-4"><a href="#cb33-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>() <span class="sc">+</span> </span>
+<span id="cb33-5"><a href="#cb33-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="fu">aes</span>(<span class="at">x =</span> value, <span class="at">y =</span> .stdresid)) <span class="sc">+</span> </span>
+<span id="cb33-6"><a href="#cb33-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_hline</span>(<span class="at">yintercept =</span> <span class="dv">0</span>, <span class="at">linetype =</span> <span class="st">"dashed"</span>, <span class="at">color =</span> <span class="st">"red"</span>) <span class="sc">+</span></span>
+<span id="cb33-7"><a href="#cb33-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_wrap</span>(<span class="fu">vars</span>(name), <span class="at">scales =</span> <span class="st">"free"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="glm_files/figure-html/unnamed-chunk-12-1.png" class="img-fluid figure-img" width="672"></p>
+<p></p><figcaption class="figure-caption">標準化残渣と応答変数、それぞれの説明変数との関係</figcaption><p></p>
+</figure>
+</div>
+</div>
+</div>
+<p>残渣は 0 をまたいで均等にばらついていることが確認できました。 さらに、ばらつきに明確なパタンがないので、この点についてモデルには問題なさそうです。 次は残渣と期待値の関係を確認します。</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb34"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a>firis <span class="sc">|&gt;</span> </span>
+<span id="cb34-2"><a href="#cb34-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(.fitted, .stdresid) <span class="sc">|&gt;</span> </span>
+<span id="cb34-3"><a href="#cb34-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>() <span class="sc">+</span> </span>
+<span id="cb34-4"><a href="#cb34-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="fu">aes</span>(<span class="at">x =</span> .fitted, <span class="at">y =</span> .stdresid)) <span class="sc">+</span> </span>
+<span id="cb34-5"><a href="#cb34-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_hline</span>(<span class="at">yintercept =</span> <span class="dv">0</span>, <span class="at">linetype =</span> <span class="st">"dashed"</span>, <span class="at">color =</span> <span class="st">"red"</span>) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="glm_files/figure-html/unnamed-chunk-13-1.png" class="img-fluid figure-img" width="672"></p>
+<p></p><figcaption class="figure-caption">標準化残渣と期待値の関係</figcaption><p></p>
+</figure>
+</div>
+</div>
+</div>
+<p>期待値と標準化残渣の関係を確認すると、特に問題はないですね。 場合によって、標準化残渣の絶対値の平方根で確認しやすい場合もあります。 この解析の場合は不必要ですが、コードと結果は次の通りです。</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb35"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a>firis <span class="sc">|&gt;</span> </span>
+<span id="cb35-2"><a href="#cb35-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(.fitted, .stdresid) <span class="sc">|&gt;</span> </span>
+<span id="cb35-3"><a href="#cb35-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>() <span class="sc">+</span> </span>
+<span id="cb35-4"><a href="#cb35-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="fu">aes</span>(<span class="at">x =</span> .fitted, <span class="at">y =</span> <span class="fu">sqrt</span>(<span class="fu">abs</span>(.stdresid)))) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="glm_files/figure-html/unnamed-chunk-14-1.png" class="img-fluid figure-img" width="672"></p>
+<p></p><figcaption class="figure-caption">標準化残渣の平方根と期待値の関係</figcaption><p></p>
+</figure>
+</div>
+</div>
+</div>
+<p>最後に、クックの距離を確認します。クックの距離 (Cook’s distance) はモデルの当てはめに強く影響する値を検出してくれます。 データ点のクックの距離が <span class="math inline">P(F_{(n, n-p)}=0.5)</span> を超えた場合、ちょっと怪しいかもしれないです。</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb36"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a>dof <span class="ot">=</span> <span class="fu">summary</span>(m1) <span class="sc">|&gt;</span> <span class="fu">pluck</span>(<span class="st">"df"</span>)</span>
+<span id="cb36-2"><a href="#cb36-2" aria-hidden="true" tabindex="-1"></a>thold <span class="ot">=</span> <span class="fu">qf</span>(<span class="fl">0.5</span>, dof[<span class="dv">1</span>], dof[<span class="dv">2</span>])</span>
+<span id="cb36-3"><a href="#cb36-3" aria-hidden="true" tabindex="-1"></a>firis <span class="sc">|&gt;</span> </span>
+<span id="cb36-4"><a href="#cb36-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">n =</span> <span class="dv">1</span><span class="sc">:</span><span class="fu">n</span>()) <span class="sc">|&gt;</span> </span>
+<span id="cb36-5"><a href="#cb36-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">above =</span> <span class="fu">ifelse</span>(.cooksd <span class="sc">&gt;</span> thold, T, F)) <span class="sc">|&gt;</span> </span>
+<span id="cb36-6"><a href="#cb36-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>() <span class="sc">+</span> </span>
+<span id="cb36-7"><a href="#cb36-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="fu">aes</span>(<span class="at">x =</span> n, <span class="at">y =</span> .cooksd, <span class="at">color =</span> above)) <span class="sc">+</span> </span>
+<span id="cb36-8"><a href="#cb36-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_hline</span>(<span class="at">yintercept =</span> thold, <span class="at">color =</span> <span class="st">"red"</span>, <span class="at">linetype =</span> <span class="st">"dashed"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="glm_files/figure-html/unnamed-chunk-15-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<p>診断図から問題ないと判断できたら、説明変数の多重鏡線性を確認しましょう。 まず，説明変数がお互いに相関があるかを確認します。</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb37"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a>iris <span class="sc">|&gt;</span> <span class="fu">select</span>(<span class="sc">-</span>Species, <span class="sc">-</span> Petal.Length) <span class="sc">|&gt;</span> <span class="fu">cor</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>             Sepal.Length Sepal.Width Petal.Width
+Sepal.Length    1.0000000  -0.1175698   0.8179411
+Sepal.Width    -0.1175698   1.0000000  -0.3661259
+Petal.Width     0.8179411  -0.3661259   1.0000000</code></pre>
+</div>
+</div>
+<p><code>Petal.Width</code> と <code>Sepal.Length</code> の相関は高いですが，他は 0 に近いので相関関係は低いです。 多重共線性をしっかりと確認したければ，分散拡大係数 (Variance Inflation Factor; VIF) をもとめます。</p>
+<p>VIF は決定係数 <span class="math inline">(R_i^2)</span> をつかって計算するので，方程式は次の通りです。</p>
+<p><span class="math display">
+\text{VIF} = \frac{1}{1-R_i^2}
+</span></p>
+<p>VIF を計算するには，説明変数 <span class="math inline">x_i</span> を他の説明変数 <span class="math inline">x_{j \neq i}</span> との線形モデル組み立てて，決定係数を求める必要があります。</p>
+<p>つまり，先ほどの相関係数の結果をつかうと，</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb39"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a>x1 <span class="ot">=</span> <span class="fu">lm</span>(Petal.Width <span class="sc">~</span> Sepal.Length <span class="sc">+</span> Sepal.Width, </span>
+<span id="cb39-2"><a href="#cb39-2" aria-hidden="true" tabindex="-1"></a>        <span class="at">data =</span> iris) <span class="sc">|&gt;</span> <span class="fu">summary</span>() <span class="sc">|&gt;</span> <span class="fu">pluck</span>(<span class="st">"r.squared"</span>)</span>
+<span id="cb39-3"><a href="#cb39-3" aria-hidden="true" tabindex="-1"></a>x2 <span class="ot">=</span> <span class="fu">lm</span>(Sepal.Length <span class="sc">~</span> Petal.Width <span class="sc">+</span> Sepal.Width, </span>
+<span id="cb39-4"><a href="#cb39-4" aria-hidden="true" tabindex="-1"></a>        <span class="at">data =</span> iris) <span class="sc">|&gt;</span> <span class="fu">summary</span>() <span class="sc">|&gt;</span> <span class="fu">pluck</span>(<span class="st">"r.squared"</span>)</span>
+<span id="cb39-5"><a href="#cb39-5" aria-hidden="true" tabindex="-1"></a>x3 <span class="ot">=</span> <span class="fu">lm</span>(Sepal.Width <span class="sc">~</span> Sepal.Length <span class="sc">+</span> Petal.Width, </span>
+<span id="cb39-6"><a href="#cb39-6" aria-hidden="true" tabindex="-1"></a>        <span class="at">data =</span> iris) <span class="sc">|&gt;</span> <span class="fu">summary</span>() <span class="sc">|&gt;</span> <span class="fu">pluck</span>(<span class="st">"r.squared"</span>)</span>
+<span id="cb39-7"><a href="#cb39-7" aria-hidden="true" tabindex="-1"></a><span class="dv">1</span> <span class="sc">/</span> (<span class="dv">1</span><span class="sc">-</span><span class="fu">c</span>(x1,x2,x3)) <span class="co"># VIF</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 3.889961 3.415733 1.305515</code></pre>
+</div>
+</div>
+<p><code>car</code> パッケージの <code>vif()</code> 関数の方が便利です。</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb41"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a>car<span class="sc">::</span><span class="fu">vif</span>(m1)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code> Petal.Width Sepal.Length  Sepal.Width 
+    3.889961     3.415733     1.305515 </code></pre>
+</div>
+</div>
+<p><span class="math inline">VIF(\beta_i) &gt; 10</span> であれば，多重共線性の問題は大きいと考えられます。 このときの決定係数は <span class="math inline">1-1/10 = 0.90</span> です。</p>
+</section>
+</section>
+<section id="ガラパゴス諸島における種数の解析" class="level2">
+<h2 class="anchored" data-anchor-id="ガラパゴス諸島における種数の解析">ガラパゴス諸島における種数の解析</h2>
+<p><code>iris</code> データの解析に大きな問題がなかったので、あまり参考にならなかったので、 ガラパゴス諸島のデータを解析してみましょう。</p>
+<p><code>faraway</code> パッケージの <code>gala</code> を解析します。 <code>gala</code> にはガラパゴス諸島の生態系に対しての 7 つの変数があります。<code>Species</code> は植物の種数，<code>Endemics</code> は植物の固有種， <code>Area</code> は島の平面積 (m<sup>2</sup>)，<code>Elevation</code> は島の最も高い場所 (m)，<code>Nearest</code> は最も近い島からの距離 (km)，<code>Scruz</code> はサンタクルス島からの距離 (km)，<code>Adjacent</code> は最も近い島の面積 (m<sup>2</sup>)です。</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb43"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a><span class="fu">data</span>(gala, <span class="at">package =</span> <span class="st">"faraway"</span>)</span>
+<span id="cb43-2"><a href="#cb43-2" aria-hidden="true" tabindex="-1"></a>gala <span class="ot">=</span> gala <span class="sc">|&gt;</span> <span class="fu">as_tibble</span>() <span class="co"># tibble に変換</span></span>
+<span id="cb43-3"><a href="#cb43-3" aria-hidden="true" tabindex="-1"></a>gala <span class="sc">|&gt;</span> <span class="fu">print</span>(<span class="at">n =</span> <span class="dv">3</span>) <span class="co"># 最初の 3 行を表示</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 30 × 7
+  Species Endemics  Area Elevation Nearest Scruz Adjacent
+    &lt;dbl&gt;    &lt;dbl&gt; &lt;dbl&gt;     &lt;dbl&gt;   &lt;dbl&gt; &lt;dbl&gt;    &lt;dbl&gt;
+1      58       23 25.1        346     0.6   0.6     1.84
+2      31       21  1.24       109     0.6  26.3   572.  
+3       3        3  0.21       114     2.8  58.7     0.78
+# … with 27 more rows</code></pre>
+</div>
+</div>
+<p>解析する前に、データの可視化をします。</p>
+<div class="cell">
+<div class="cell-output-display">
+<p><img src="glm_files/figure-html/unnamed-chunk-20-1.png" class="img-fluid" width="576"></p>
+</div>
+</div>
+<p>説明変数 (explanatory variable)、または予測子 (Predictor) に対する種数の変動は予測子によって変わることがわかります。</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb45"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb45-1"><a href="#cb45-1" aria-hidden="true" tabindex="-1"></a>gala_out <span class="ot">=</span> gala <span class="sc">|&gt;</span> <span class="fu">select</span>(<span class="sc">-</span>Endemics) <span class="sc">|&gt;</span> <span class="fu">gather</span>(Variable, Predictor, <span class="sc">-</span>Species)</span>
+<span id="cb45-2"><a href="#cb45-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(gala_out) <span class="sc">+</span> <span class="fu">geom_point</span>(<span class="fu">aes</span>(<span class="at">x=</span>Predictor, <span class="at">y=</span>Species)) <span class="sc">+</span> <span class="fu">facet_wrap</span>(<span class="st">"Variable"</span>, <span class="at">scales =</span> <span class="st">"free_x"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>では、モデルと帰無仮設を決めます。</p>
+<p>「種数の増減は予測子に依存する」を作業仮説にしたとき，モデルは次のようになります。</p>
+<p><span class="math display">
+E(\text{Species}) = b_0 + b_1\text{Area}+b_2\text{Elevation}+b_3\text{Nearest}+b_4\text{Scruz}+b_5\text{Adjacent}
+</span></p>
+<p>ネイマン＝ピアソン (Neyman-Pearson) の枠組みの中で解析するなら，帰無仮設と対立仮設を建てなければなりません。</p>
+<ul>
+<li>帰無仮設： <span class="math inline">b_0 = b_1 = b_2 = b_3 = b_4 = b_5</span></li>
+<li>対立仮説： <span class="math inline">b_0 \neq b_1 \neq b_2 \neq b_3 \neq b_4 \neq b_5</span></li>
+</ul>
+<p>解析は次の通りです。 この度、帰無仮説のモデルもわさわさくみました。</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb46"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb46-1"><a href="#cb46-1" aria-hidden="true" tabindex="-1"></a>H0 <span class="ot">=</span> <span class="fu">lm</span>(Species <span class="sc">~</span> <span class="dv">1</span>, <span class="at">data =</span> gala)  <span class="co"># これが帰無仮設のモデルです。</span></span>
+<span id="cb46-2"><a href="#cb46-2" aria-hidden="true" tabindex="-1"></a>HF <span class="ot">=</span> <span class="fu">lm</span>(Species <span class="sc">~</span> Area <span class="sc">+</span> Elevation <span class="sc">+</span> Nearest <span class="sc">+</span> Scruz <span class="sc">+</span> Adjacent, <span class="at">data =</span> gala) <span class="co"># これが対立仮説のモデルです。</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>相互作用を入れていないが、Type-III SS を求めます。</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb47"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb47-1"><a href="#cb47-1" aria-hidden="true" tabindex="-1"></a><span class="co"># anova(H0, HF) # Type-I SS</span></span>
+<span id="cb47-2"><a href="#cb47-2" aria-hidden="true" tabindex="-1"></a><span class="fu">Anova</span>(H0, HF, <span class="at">type =</span> <span class="st">"III"</span>)   <span class="co"># Type=III SS</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Anova Table (Type III tests)
+
+Response: Species
+            Sum Sq Df F value    Pr(&gt;F)    
+(Intercept) 217942  1  58.618 6.805e-08 ***
+Residuals    89231 24                      
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
+</div>
+</div>
+<p><strong>P値は &lt; 0.0001 なので，0.05 より小さいです。帰無仮設は棄却できます。</strong> 帰無仮設を棄却したら，採択するモデル（モデルは採択できるが，仮説は採択できません）の 診断図を作図して，残差のばらつきや正規性などを確認します。</p>
+<p>では、HF の診断図を確認しましょう。</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb49"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb49-1"><a href="#cb49-1" aria-hidden="true" tabindex="-1"></a>fgala <span class="ot">=</span> <span class="fu">fortify</span>(HF)</span>
+<span id="cb49-2"><a href="#cb49-2" aria-hidden="true" tabindex="-1"></a>p1 <span class="ot">=</span> <span class="fu">ggplot</span>(fgala) <span class="sc">+</span> </span>
+<span id="cb49-3"><a href="#cb49-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_histogram</span>(<span class="fu">aes</span>(<span class="at">x =</span> .stdresid, <span class="at">y =</span> ..density..)) <span class="sc">+</span></span>
+<span id="cb49-4"><a href="#cb49-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">stat_function</span>(<span class="at">fun =</span> dnorm, <span class="at">color =</span> <span class="st">"red"</span>) <span class="sc">+</span></span>
+<span id="cb49-5"><a href="#cb49-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Standardized residual"</span>, <span class="at">y =</span> <span class="st">""</span>) </span>
+<span id="cb49-6"><a href="#cb49-6" aria-hidden="true" tabindex="-1"></a>p2 <span class="ot">=</span> <span class="fu">ggplot</span>(fgala) <span class="sc">+</span> </span>
+<span id="cb49-7"><a href="#cb49-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_qq</span>(<span class="fu">aes</span>(<span class="at">sample =</span> .stdresid)) <span class="sc">+</span></span>
+<span id="cb49-8"><a href="#cb49-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_abline</span>(<span class="at">color =</span> <span class="st">"red"</span>) <span class="sc">+</span></span>
+<span id="cb49-9"><a href="#cb49-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Theoretical Quantile"</span>, <span class="at">y =</span> <span class="st">"Standardized residual"</span>) </span>
+<span id="cb49-10"><a href="#cb49-10" aria-hidden="true" tabindex="-1"></a>p1 <span class="sc">|</span> p2</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>`stat_bin()` using `bins = 30`. Pick better value with `binwidth`.</code></pre>
+</div>
+<div class="cell-output-display">
+<p><img src="glm_files/figure-html/unnamed-chunk-24-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<p>データ数は少ないが，残差は 0 を中心にしていて左右対称です。 殆どの残差はQQプロットの直線に沿っています。 よって，残差の正規性に大きな問題はなさそうです。</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb51"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb51-1"><a href="#cb51-1" aria-hidden="true" tabindex="-1"></a>fgala <span class="sc">|&gt;</span> </span>
+<span id="cb51-2"><a href="#cb51-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(Species, Area, Elevation, Nearest, Scruz, Adjacent, .stdresid) <span class="sc">|&gt;</span> </span>
+<span id="cb51-3"><a href="#cb51-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_longer</span>(<span class="sc">-</span>.stdresid) <span class="sc">|&gt;</span> </span>
+<span id="cb51-4"><a href="#cb51-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>() <span class="sc">+</span> </span>
+<span id="cb51-5"><a href="#cb51-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="fu">aes</span>(<span class="at">x =</span> value, <span class="at">y =</span> .stdresid)) <span class="sc">+</span> </span>
+<span id="cb51-6"><a href="#cb51-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_hline</span>(<span class="at">yintercept =</span> <span class="dv">0</span>, <span class="at">linetype =</span> <span class="st">"dashed"</span>, <span class="at">color =</span> <span class="st">"red"</span>) <span class="sc">+</span></span>
+<span id="cb51-7"><a href="#cb51-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_wrap</span>(<span class="fu">vars</span>(name), <span class="at">scales =</span> <span class="st">"free"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="glm_files/figure-html/unnamed-chunk-25-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<p>予測子に対する残差の分布を確認すると，均等に分布していないように見えます。 例えば <strong>Residual vs.&nbsp;Nearest</strong> の場合，波状を描いているように見えます。</p>
+</section>
+<section id="モデルの診断図期待値に対する残差のばらつき" class="level2">
+<h2 class="anchored" data-anchor-id="モデルの診断図期待値に対する残差のばらつき">モデルの診断図：期待値に対する残差のばらつき</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb52"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb52-1"><a href="#cb52-1" aria-hidden="true" tabindex="-1"></a>p1 <span class="ot">=</span> fgala <span class="sc">|&gt;</span> </span>
+<span id="cb52-2"><a href="#cb52-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(.fitted, .stdresid) <span class="sc">|&gt;</span> </span>
+<span id="cb52-3"><a href="#cb52-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>() <span class="sc">+</span> </span>
+<span id="cb52-4"><a href="#cb52-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="fu">aes</span>(<span class="at">x =</span> .fitted, <span class="at">y =</span> .stdresid)) <span class="sc">+</span> </span>
+<span id="cb52-5"><a href="#cb52-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_hline</span>(<span class="at">yintercept =</span> <span class="dv">0</span>, <span class="at">linetype =</span> <span class="st">"dashed"</span>, <span class="at">color =</span> <span class="st">"red"</span>) </span>
+<span id="cb52-6"><a href="#cb52-6" aria-hidden="true" tabindex="-1"></a>p2 <span class="ot">=</span> fgala <span class="sc">|&gt;</span> </span>
+<span id="cb52-7"><a href="#cb52-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(.fitted, .stdresid) <span class="sc">|&gt;</span> </span>
+<span id="cb52-8"><a href="#cb52-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>() <span class="sc">+</span> </span>
+<span id="cb52-9"><a href="#cb52-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="fu">aes</span>(<span class="at">x =</span> .fitted, <span class="at">y =</span> <span class="fu">sqrt</span>(<span class="fu">abs</span>(.stdresid)))) </span>
+<span id="cb52-10"><a href="#cb52-10" aria-hidden="true" tabindex="-1"></a>p1 <span class="sc">|</span> p2</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="glm_files/figure-html/unnamed-chunk-26-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<p>残差のばらつきは期待値と関係性が有るように見えます (Residual vs.&nbsp;Fitted Values Plot)。 Scale–Location Plot では，その関係が明確です。</p>
+<p>次は異常値を探してみましょう。</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb53"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb53-1"><a href="#cb53-1" aria-hidden="true" tabindex="-1"></a>dof <span class="ot">=</span> <span class="fu">summary</span>(HF) <span class="sc">|&gt;</span> <span class="fu">pluck</span>(<span class="st">"df"</span>)</span>
+<span id="cb53-2"><a href="#cb53-2" aria-hidden="true" tabindex="-1"></a>thold <span class="ot">=</span> <span class="fu">qf</span>(<span class="fl">0.5</span>, dof[<span class="dv">1</span>], dof[<span class="dv">2</span>])</span>
+<span id="cb53-3"><a href="#cb53-3" aria-hidden="true" tabindex="-1"></a>fgala <span class="sc">|&gt;</span> </span>
+<span id="cb53-4"><a href="#cb53-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">n =</span> <span class="dv">1</span><span class="sc">:</span><span class="fu">n</span>()) <span class="sc">|&gt;</span> </span>
+<span id="cb53-5"><a href="#cb53-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">above =</span> <span class="fu">ifelse</span>(.cooksd <span class="sc">&gt;</span> thold, T, F)) <span class="sc">|&gt;</span> </span>
+<span id="cb53-6"><a href="#cb53-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>() <span class="sc">+</span> </span>
+<span id="cb53-7"><a href="#cb53-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="fu">aes</span>(<span class="at">x =</span> n, <span class="at">y =</span> .cooksd, <span class="at">color =</span> above)) <span class="sc">+</span> </span>
+<span id="cb53-8"><a href="#cb53-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_hline</span>(<span class="at">yintercept =</span> thold, <span class="at">color =</span> <span class="st">"red"</span>, <span class="at">linetype =</span> <span class="st">"dashed"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="glm_files/figure-html/unnamed-chunk-27-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<p>クックの距離が <span class="math inline">P(F_{(p, n-p)}=0.5)</span> を超えれば，影響力の高い点だと考えられます。 このとき，16番目のデータが明らかに超えています。</p>
+<p><span class="math inline">P(F_{(p, n-p)}=0.5)</span>は自由度 <span class="math inline">p</span> (パラメータの数) と <span class="math inline">n-p</span> (データ数からパラメータ数の差) のときのF値の中央値です。</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb54"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb54-1"><a href="#cb54-1" aria-hidden="true" tabindex="-1"></a><span class="fu">which</span>(<span class="fu">cooks.distance</span>(HF) <span class="sc">&gt;</span> thold)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>16 
+16 </code></pre>
+</div>
+</div>
+<p>いろいろと問題があったので、モデルの改良は必要ですね。 ところが、モデルを改良するときの問題点を意識してください。</p>
+<p><strong>帰無仮設は棄却できたが，診断図を確認すると多数の問題点がありました。</strong> このようなとき，モデルを改良する必要があります。 ただし，ネイマン=ピアソンの帰無仮設検定法のとき，<strong>検討するモデルが増えれば増えるほど第１種の誤りを起こす確率も上がります。</strong></p>
+<div class="cell">
+
+</div>
+<p>5 つの予測子（変数）があるので，交互作用ありの一次式のモデルの場合，パラメータの数は32 です。 検証できるパラメータ数はデータ数に制限されるので， パラメータ数とデータ数が等しいときのモデルは<a href="https://stats.stackexchange.com/questions/283/what-is-a-saturated-model">飽和モデル</a>とよびます。 ちなみに，32 パラメータのときの第 1 種の誤りを起こす確率は 0.8063 です。 飽和モデルのとき，分散を推定することができないので，飽和モデルは理論上のモデルです。</p>
+</section>
+<section id="モデル構築の考え方" class="level2">
+<h2 class="anchored" data-anchor-id="モデル構築の考え方">モデル構築の考え方</h2>
+<p>モデルを設計するときに最も大事なことは：</p>
+<ul>
+<li>統計解析の仮定を守る</li>
+<li>科学的・統計学的にありえる</li>
+<li>説明しやすい</li>
+<li>シンプル・単純である</li>
+</ul>
+<p>モデルの改良点：</p>
+<ul>
+<li>応答変数を変換する</li>
+<li>説明変数を変換する</li>
+<li>誤差項の分布を変える</li>
+<li>モデルパラメータを増やす（二次関数・三次関数・交互作用など）</li>
+</ul>
+<section id="応答変数の変換" class="level3">
+<h3 class="anchored" data-anchor-id="応答変数の変換">応答変数の変換</h3>
+<p>残差に問題があるとき，応答変数を変換することが一般的に行われています。 応答変数の変換は，残差を正規分布に従わせるためにします。</p>
+<p>たとえば個体数はつねに <span class="math inline">y\ge 0</span> です。負の個体数は存在しません。 このとき，正規分布を仮定したら，0 近辺の値の 95% 信頼区間は負の値をとることもあります。 実データとの整合性がとれなくなります。 または，0 から 1 の値しか取れないデータのときでも正規性に問題がでます。</p>
+<p>応答変数が個体数のような正の整数のとき，ログ変換することが多いです。<code>log(x)</code> または，0 から 1 の比率の様なデータのとき，アークサイン変換をします。 <code>asin(x)</code></p>
+</section>
+</section>
+<section id="応答変数変換した解析" class="level2">
+<h2 class="anchored" data-anchor-id="応答変数変換した解析">応答変数変換した解析</h2>
+<p>応答変数をログ変換した解析と変換していない解析の結果はつぎの通りです。</p>
+<p><strong>ログ変換後の分散分析表</strong></p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb56"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb56-1"><a href="#cb56-1" aria-hidden="true" tabindex="-1"></a>gala <span class="ot">=</span> gala <span class="sc">|&gt;</span> <span class="fu">mutate</span>(<span class="at">logSpecies =</span> <span class="fu">log</span>(Species))</span>
+<span id="cb56-2"><a href="#cb56-2" aria-hidden="true" tabindex="-1"></a>logHF <span class="ot">=</span> <span class="fu">lm</span>(logSpecies<span class="sc">~</span> Area <span class="sc">+</span> Elevation <span class="sc">+</span> Nearest <span class="sc">+</span> Scruz <span class="sc">+</span> Adjacent, <span class="at">data =</span> gala)</span>
+<span id="cb56-3"><a href="#cb56-3" aria-hidden="true" tabindex="-1"></a>logHF <span class="sc">|&gt;</span> <span class="fu">Anova</span>(<span class="at">type =</span> <span class="st">"III"</span>) <span class="sc">|&gt;</span> <span class="fu">print</span>(<span class="at">signif.stars =</span> F)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Anova Table (Type III tests)
+
+Response: logSpecies
+            Sum Sq Df F value    Pr(&gt;F)
+(Intercept) 53.956  1 48.7039 3.238e-07
+Area         3.998  1  3.6088   0.06955
+Elevation   26.168  1 23.6211 5.927e-05
+Nearest      0.918  1  0.8289   0.37164
+Scruz        1.217  1  1.0984   0.30505
+Adjacent     7.597  1  6.8575   0.01505
+Residuals   26.588 24                  </code></pre>
+</div>
+</div>
+<p><strong>変換なしの分散分析表</strong></p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb58"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb58-1"><a href="#cb58-1" aria-hidden="true" tabindex="-1"></a>HF <span class="sc">|&gt;</span> <span class="fu">Anova</span>(<span class="at">type =</span> <span class="st">"III"</span>) <span class="sc">|&gt;</span> <span class="fu">print</span>(<span class="at">signif.stars =</span> F)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Anova Table (Type III tests)
+
+Response: Species
+            Sum Sq Df F value    Pr(&gt;F)
+(Intercept)    506  1  0.1362 0.7153508
+Area          4238  1  1.1398 0.2963180
+Elevation   131767  1 35.4404 3.823e-06
+Nearest          0  1  0.0001 0.9931506
+Scruz         4636  1  1.2469 0.2752082
+Adjacent     66406  1 17.8609 0.0002971
+Residuals    89231 24                  </code></pre>
+</div>
+</div>
+<p>変数（パラメータ）に対するP値はが変わりました。 変換なしの解析に比べて，ログ変換後の<code>Elevation</code> と <code>Nearest</code> のP値は下がりましたが，その他のP値は上がりました。</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb60"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb60-1"><a href="#cb60-1" aria-hidden="true" tabindex="-1"></a>fgala <span class="ot">=</span> <span class="fu">fortify</span>(logHF)</span>
+<span id="cb60-2"><a href="#cb60-2" aria-hidden="true" tabindex="-1"></a>p1 <span class="ot">=</span> <span class="fu">ggplot</span>(fgala) <span class="sc">+</span> </span>
+<span id="cb60-3"><a href="#cb60-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_histogram</span>(<span class="fu">aes</span>(<span class="at">x =</span> .stdresid, <span class="at">y =</span> ..density..)) <span class="sc">+</span></span>
+<span id="cb60-4"><a href="#cb60-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">stat_function</span>(<span class="at">fun =</span> dnorm, <span class="at">color =</span> <span class="st">"red"</span>) <span class="sc">+</span></span>
+<span id="cb60-5"><a href="#cb60-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Standardized residual"</span>, <span class="at">y =</span> <span class="st">""</span>) </span>
+<span id="cb60-6"><a href="#cb60-6" aria-hidden="true" tabindex="-1"></a>p2 <span class="ot">=</span> <span class="fu">ggplot</span>(fgala) <span class="sc">+</span> </span>
+<span id="cb60-7"><a href="#cb60-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_qq</span>(<span class="fu">aes</span>(<span class="at">sample =</span> .stdresid)) <span class="sc">+</span></span>
+<span id="cb60-8"><a href="#cb60-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_abline</span>(<span class="at">color =</span> <span class="st">"red"</span>) <span class="sc">+</span></span>
+<span id="cb60-9"><a href="#cb60-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Theoretical Quantile"</span>, <span class="at">y =</span> <span class="st">"Standardized residual"</span>) </span>
+<span id="cb60-10"><a href="#cb60-10" aria-hidden="true" tabindex="-1"></a>p1 <span class="sc">|</span> p2</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>`stat_bin()` using `bins = 30`. Pick better value with `binwidth`.</code></pre>
+</div>
+<div class="cell-output-display">
+<p><img src="glm_files/figure-html/unnamed-chunk-32-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<p>ログ変換なしの結果よりちょっと良くなったと思います。</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb62"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb62-1"><a href="#cb62-1" aria-hidden="true" tabindex="-1"></a>fgala <span class="sc">|&gt;</span> </span>
+<span id="cb62-2"><a href="#cb62-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(logSpecies, Area, Elevation, Nearest, Scruz, Adjacent, .stdresid) <span class="sc">|&gt;</span> </span>
+<span id="cb62-3"><a href="#cb62-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_longer</span>(<span class="sc">-</span>.stdresid) <span class="sc">|&gt;</span> </span>
+<span id="cb62-4"><a href="#cb62-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>() <span class="sc">+</span> </span>
+<span id="cb62-5"><a href="#cb62-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="fu">aes</span>(<span class="at">x =</span> value, <span class="at">y =</span> .stdresid)) <span class="sc">+</span> </span>
+<span id="cb62-6"><a href="#cb62-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_hline</span>(<span class="at">yintercept =</span> <span class="dv">0</span>, <span class="at">linetype =</span> <span class="st">"dashed"</span>, <span class="at">color =</span> <span class="st">"red"</span>) <span class="sc">+</span></span>
+<span id="cb62-7"><a href="#cb62-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_wrap</span>(<span class="fu">vars</span>(name), <span class="at">scales =</span> <span class="st">"free"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="glm_files/figure-html/unnamed-chunk-33-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<p>説明変数が上昇すると残差のばらつきが減少する傾向があるので，残差のばらつきに問題があります。</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb63"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb63-1"><a href="#cb63-1" aria-hidden="true" tabindex="-1"></a>p1 <span class="ot">=</span> fgala <span class="sc">|&gt;</span> </span>
+<span id="cb63-2"><a href="#cb63-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(.fitted, .stdresid) <span class="sc">|&gt;</span> </span>
+<span id="cb63-3"><a href="#cb63-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>() <span class="sc">+</span> </span>
+<span id="cb63-4"><a href="#cb63-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="fu">aes</span>(<span class="at">x =</span> .fitted, <span class="at">y =</span> .stdresid)) <span class="sc">+</span> </span>
+<span id="cb63-5"><a href="#cb63-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_hline</span>(<span class="at">yintercept =</span> <span class="dv">0</span>, <span class="at">linetype =</span> <span class="st">"dashed"</span>, <span class="at">color =</span> <span class="st">"red"</span>) </span>
+<span id="cb63-6"><a href="#cb63-6" aria-hidden="true" tabindex="-1"></a>p2 <span class="ot">=</span> fgala <span class="sc">|&gt;</span> </span>
+<span id="cb63-7"><a href="#cb63-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(.fitted, .stdresid) <span class="sc">|&gt;</span> </span>
+<span id="cb63-8"><a href="#cb63-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>() <span class="sc">+</span> </span>
+<span id="cb63-9"><a href="#cb63-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="fu">aes</span>(<span class="at">x =</span> .fitted, <span class="at">y =</span> <span class="fu">sqrt</span>(<span class="fu">abs</span>(.stdresid)))) </span>
+<span id="cb63-10"><a href="#cb63-10" aria-hidden="true" tabindex="-1"></a>p1 <span class="sc">|</span> p2</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="glm_files/figure-html/unnamed-chunk-34-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<p>期待値に対しても，残差のばらつきの均一性が問題です。さらに Scale - Location Plot には明らか傾向があります。</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb64"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb64-1"><a href="#cb64-1" aria-hidden="true" tabindex="-1"></a>dof <span class="ot">=</span> <span class="fu">summary</span>(logHF) <span class="sc">|&gt;</span> <span class="fu">pluck</span>(<span class="st">"df"</span>)</span>
+<span id="cb64-2"><a href="#cb64-2" aria-hidden="true" tabindex="-1"></a>thold <span class="ot">=</span> <span class="fu">qf</span>(<span class="fl">0.5</span>, dof[<span class="dv">1</span>], dof[<span class="dv">2</span>])</span>
+<span id="cb64-3"><a href="#cb64-3" aria-hidden="true" tabindex="-1"></a>fgala <span class="sc">|&gt;</span> </span>
+<span id="cb64-4"><a href="#cb64-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">n =</span> <span class="dv">1</span><span class="sc">:</span><span class="fu">n</span>()) <span class="sc">|&gt;</span> </span>
+<span id="cb64-5"><a href="#cb64-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">above =</span> <span class="fu">ifelse</span>(.cooksd <span class="sc">&gt;</span> thold, T, F)) <span class="sc">|&gt;</span> </span>
+<span id="cb64-6"><a href="#cb64-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>() <span class="sc">+</span> </span>
+<span id="cb64-7"><a href="#cb64-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="fu">aes</span>(<span class="at">x =</span> n, <span class="at">y =</span> .cooksd, <span class="at">color =</span> above)) <span class="sc">+</span> </span>
+<span id="cb64-8"><a href="#cb64-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_hline</span>(<span class="at">yintercept =</span> thold, <span class="at">color =</span> <span class="st">"red"</span>, <span class="at">linetype =</span> <span class="st">"dashed"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="glm_files/figure-html/unnamed-chunk-35-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb65"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb65-1"><a href="#cb65-1" aria-hidden="true" tabindex="-1"></a><span class="fu">which</span>(<span class="fu">cooks.distance</span>(logHF) <span class="sc">&gt;</span> thold)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>16 
+16 </code></pre>
+</div>
+</div>
+<p>16番目のデータに対して，クックの距離は下がったが，<span class="math inline">PF_{(n, n-p)}=0.5)</span> 以上のままなので，課題としてのこります。</p>
+<section id="応答変数以外の解決手法" class="level3">
+<h3 class="anchored" data-anchor-id="応答変数以外の解決手法">応答変数以外の解決手法</h3>
+<p>応答変数をログ変換しても問題は解決できませんでした。 次に検討することは説明変数の変換または、削除です。 まずは，VIF の高い変数から外してみみます。</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb67"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb67-1"><a href="#cb67-1" aria-hidden="true" tabindex="-1"></a>car<span class="sc">::</span><span class="fu">vif</span>(logHF)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>     Area Elevation   Nearest     Scruz  Adjacent 
+ 2.928145  3.992545  1.766099  1.675031  1.826403 </code></pre>
+</div>
+</div>
+<p><code>Elevation</code> の値が一番高かったので，<code>Elevation</code> なしのモデルを再解析します。</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb69"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb69-1"><a href="#cb69-1" aria-hidden="true" tabindex="-1"></a>logHF2 <span class="ot">=</span> <span class="fu">lm</span>(logSpecies<span class="sc">~</span> Area <span class="sc">+</span> Nearest <span class="sc">+</span> Scruz <span class="sc">+</span> Adjacent, <span class="at">data =</span> gala)</span>
+<span id="cb69-2"><a href="#cb69-2" aria-hidden="true" tabindex="-1"></a>car<span class="sc">::</span><span class="fu">vif</span>(logHF2)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>    Area  Nearest    Scruz Adjacent 
+1.047496 1.669984 1.658583 1.073529 </code></pre>
+</div>
+</div>
+<p>診断図を確認したら，結果は良くなかったので，<code>Nearest</code> か <code>Scruz</code> も外します。 種数は島と島の間の距離に依存するかもしれないが，一つの島（Santa Cruz島）との距離の影響は考えにくいので，<code>Scruz</code> を外します。</p>
+</section>
+</section>
+<section id="単純化したモデル" class="level2">
+<h2 class="anchored" data-anchor-id="単純化したモデル">単純化したモデル</h2>
+<p>結果として，つぎのモデルを解析することになりました。</p>
+<p><span class="math display">
+E(\log(\text{Species})) = b_0 + b_1\text{Area}+b_2\text{Nearest}+b_3\text{Adjacent}
+</span></p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb71"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb71-1"><a href="#cb71-1" aria-hidden="true" tabindex="-1"></a>logSF <span class="ot">=</span> <span class="fu">lm</span>(logSpecies<span class="sc">~</span> Area <span class="sc">+</span> Nearest <span class="sc">+</span> Adjacent, <span class="at">data =</span> gala)</span>
+<span id="cb71-2"><a href="#cb71-2" aria-hidden="true" tabindex="-1"></a>logSF <span class="sc">|&gt;</span> <span class="fu">Anova</span>(<span class="at">type =</span> <span class="st">"III"</span>) <span class="sc">|&gt;</span> <span class="fu">print</span>(<span class="at">signif.stars =</span> F)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Anova Table (Type III tests)
+
+Response: logSpecies
+             Sum Sq Df F value    Pr(&gt;F)
+(Intercept) 159.281  1 74.7879 3.983e-09
+Area         13.201  1  6.1981   0.01951
+Nearest       2.372  1  1.1139   0.30095
+Adjacent      0.180  1  0.0847   0.77335
+Residuals    55.374 26                  </code></pre>
+</div>
+</div>
+<p><code>Area</code> 以外の変数のP値は 0.05 より高いです。</p>
+</section>
+<section id="診断図" class="level2">
+<h2 class="anchored" data-anchor-id="診断図">診断図</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb73"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb73-1"><a href="#cb73-1" aria-hidden="true" tabindex="-1"></a>fgala <span class="ot">=</span> <span class="fu">fortify</span>(logSF)</span>
+<span id="cb73-2"><a href="#cb73-2" aria-hidden="true" tabindex="-1"></a>p1 <span class="ot">=</span> <span class="fu">ggplot</span>(fgala) <span class="sc">+</span> </span>
+<span id="cb73-3"><a href="#cb73-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_histogram</span>(<span class="fu">aes</span>(<span class="at">x =</span> .stdresid, <span class="at">y =</span> ..density..)) <span class="sc">+</span></span>
+<span id="cb73-4"><a href="#cb73-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">stat_function</span>(<span class="at">fun =</span> dnorm, <span class="at">color =</span> <span class="st">"red"</span>) <span class="sc">+</span></span>
+<span id="cb73-5"><a href="#cb73-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Histogram"</span>, <span class="at">x =</span> <span class="st">"Standardized residual"</span>, <span class="at">y =</span> <span class="st">""</span>) </span>
+<span id="cb73-6"><a href="#cb73-6" aria-hidden="true" tabindex="-1"></a>p2 <span class="ot">=</span> <span class="fu">ggplot</span>(fgala) <span class="sc">+</span> </span>
+<span id="cb73-7"><a href="#cb73-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_qq</span>(<span class="fu">aes</span>(<span class="at">sample =</span> .stdresid)) <span class="sc">+</span></span>
+<span id="cb73-8"><a href="#cb73-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_abline</span>(<span class="at">color =</span> <span class="st">"red"</span>) <span class="sc">+</span></span>
+<span id="cb73-9"><a href="#cb73-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"QQ plot"</span>, <span class="at">x =</span> <span class="st">"Theoretical Quantile"</span>, <span class="at">y =</span> <span class="st">"Standardized residual"</span>) </span>
+<span id="cb73-10"><a href="#cb73-10" aria-hidden="true" tabindex="-1"></a>p3 <span class="ot">=</span> fgala <span class="sc">|&gt;</span> </span>
+<span id="cb73-11"><a href="#cb73-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(logSpecies, Area, Nearest, Adjacent, .stdresid) <span class="sc">|&gt;</span> </span>
+<span id="cb73-12"><a href="#cb73-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_longer</span>(<span class="sc">-</span>.stdresid) <span class="sc">|&gt;</span> </span>
+<span id="cb73-13"><a href="#cb73-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>() <span class="sc">+</span> </span>
+<span id="cb73-14"><a href="#cb73-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="fu">aes</span>(<span class="at">x =</span> value, <span class="at">y =</span> .stdresid)) <span class="sc">+</span> </span>
+<span id="cb73-15"><a href="#cb73-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_hline</span>(<span class="at">yintercept =</span> <span class="dv">0</span>, <span class="at">linetype =</span> <span class="st">"dashed"</span>, <span class="at">color =</span> <span class="st">"red"</span>) <span class="sc">+</span></span>
+<span id="cb73-16"><a href="#cb73-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Resid. vs. predictor"</span>, <span class="at">x =</span> <span class="st">"Predictor value"</span>, <span class="at">y =</span> <span class="st">"Standardized residual"</span>) <span class="sc">+</span></span>
+<span id="cb73-17"><a href="#cb73-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_wrap</span>(<span class="fu">vars</span>(name), <span class="at">scales =</span> <span class="st">"free"</span>)</span>
+<span id="cb73-18"><a href="#cb73-18" aria-hidden="true" tabindex="-1"></a>p4 <span class="ot">=</span> fgala <span class="sc">|&gt;</span> </span>
+<span id="cb73-19"><a href="#cb73-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(.fitted, .stdresid) <span class="sc">|&gt;</span> </span>
+<span id="cb73-20"><a href="#cb73-20" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>() <span class="sc">+</span> </span>
+<span id="cb73-21"><a href="#cb73-21" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="fu">aes</span>(<span class="at">x =</span> .fitted, <span class="at">y =</span> .stdresid)) <span class="sc">+</span> </span>
+<span id="cb73-22"><a href="#cb73-22" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_hline</span>(<span class="at">yintercept =</span> <span class="dv">0</span>, <span class="at">linetype =</span> <span class="st">"dashed"</span>, <span class="at">color =</span> <span class="st">"red"</span>)  <span class="sc">+</span></span>
+<span id="cb73-23"><a href="#cb73-23" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Resid. vs. fit"</span>, <span class="at">x =</span> <span class="st">"Fitted value"</span>, <span class="at">y =</span> <span class="st">"Standardized residual"</span>)</span>
+<span id="cb73-24"><a href="#cb73-24" aria-hidden="true" tabindex="-1"></a>p5 <span class="ot">=</span> fgala <span class="sc">|&gt;</span> </span>
+<span id="cb73-25"><a href="#cb73-25" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(.fitted, .stdresid) <span class="sc">|&gt;</span> </span>
+<span id="cb73-26"><a href="#cb73-26" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>() <span class="sc">+</span> </span>
+<span id="cb73-27"><a href="#cb73-27" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="fu">aes</span>(<span class="at">x =</span> .fitted, <span class="at">y =</span> <span class="fu">sqrt</span>(<span class="fu">abs</span>(.stdresid))))  <span class="sc">+</span></span>
+<span id="cb73-28"><a href="#cb73-28" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Scale - location"</span>, <span class="at">x =</span> <span class="st">"Fitted value"</span>, <span class="at">y =</span> <span class="st">"Standardized residual"</span>)</span>
+<span id="cb73-29"><a href="#cb73-29" aria-hidden="true" tabindex="-1"></a>dof <span class="ot">=</span> <span class="fu">summary</span>(logSF) <span class="sc">|&gt;</span> <span class="fu">pluck</span>(<span class="st">"df"</span>)</span>
+<span id="cb73-30"><a href="#cb73-30" aria-hidden="true" tabindex="-1"></a>thold <span class="ot">=</span> <span class="fu">qf</span>(<span class="fl">0.5</span>, dof[<span class="dv">1</span>], dof[<span class="dv">2</span>])</span>
+<span id="cb73-31"><a href="#cb73-31" aria-hidden="true" tabindex="-1"></a>p6 <span class="ot">=</span> fgala <span class="sc">|&gt;</span> </span>
+<span id="cb73-32"><a href="#cb73-32" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">n =</span> <span class="dv">1</span><span class="sc">:</span><span class="fu">n</span>()) <span class="sc">|&gt;</span> </span>
+<span id="cb73-33"><a href="#cb73-33" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">above =</span> <span class="fu">ifelse</span>(.cooksd <span class="sc">&gt;</span> thold, T, F)) <span class="sc">|&gt;</span> </span>
+<span id="cb73-34"><a href="#cb73-34" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>() <span class="sc">+</span> </span>
+<span id="cb73-35"><a href="#cb73-35" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="fu">aes</span>(<span class="at">x =</span> n, <span class="at">y =</span> .cooksd, <span class="at">color =</span> above)) <span class="sc">+</span> </span>
+<span id="cb73-36"><a href="#cb73-36" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_hline</span>(<span class="at">yintercept =</span> thold, <span class="at">color =</span> <span class="st">"red"</span>, <span class="at">linetype =</span> <span class="st">"dashed"</span>) <span class="sc">+</span></span>
+<span id="cb73-37"><a href="#cb73-37" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Cook's distance"</span>, <span class="at">x =</span> <span class="st">"Index"</span>, <span class="at">y =</span> <span class="st">"Cook's distance"</span>)</span>
+<span id="cb73-38"><a href="#cb73-38" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb73-39"><a href="#cb73-39" aria-hidden="true" tabindex="-1"></a>p1 <span class="sc">+</span> p2 <span class="sc">+</span> p3 <span class="sc">+</span> p4 <span class="sc">+</span> p5 <span class="sc">+</span> p6</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>`stat_bin()` using `bins = 30`. Pick better value with `binwidth`.</code></pre>
+</div>
+<div class="cell-output-display">
+<p><img src="glm_files/figure-html/unnamed-chunk-40-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<p>残差のばらつきや正規性は良くなったが，クックの距離の問題が残っています。</p>
+</section>
+<section id="説明変数も変換する" class="level2">
+<h2 class="anchored" data-anchor-id="説明変数も変換する">説明変数も変換する</h2>
+<p>こんどは，説明変数も変換します。</p>
+<p><span class="math display">
+E(\log(\text{Species})) = b_0 + b_1\log(\text{Area})+b_2\text{Nearest}+b_3\log(\text{Adjacent})
+</span></p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb75"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb75-1"><a href="#cb75-1" aria-hidden="true" tabindex="-1"></a>gala <span class="ot">=</span> gala <span class="sc">|&gt;</span> <span class="fu">mutate</span>(<span class="at">logSpecies =</span> <span class="fu">log</span>(Species), <span class="at">logArea =</span> <span class="fu">log</span>(Area), <span class="at">logAdjacent =</span> <span class="fu">log</span>(Adjacent))</span>
+<span id="cb75-2"><a href="#cb75-2" aria-hidden="true" tabindex="-1"></a>logSF2 <span class="ot">=</span> <span class="fu">lm</span>(logSpecies<span class="sc">~</span> logArea <span class="sc">+</span> Nearest <span class="sc">+</span> logAdjacent, <span class="at">data =</span> gala)</span>
+<span id="cb75-3"><a href="#cb75-3" aria-hidden="true" tabindex="-1"></a>logSF2 <span class="sc">|&gt;</span> <span class="fu">Anova</span>(<span class="at">type =</span> <span class="st">"III"</span>) <span class="sc">|&gt;</span> <span class="fu">print</span>(<span class="at">signif.stars =</span> F)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Anova Table (Type III tests)
+
+Response: logSpecies
+             Sum Sq Df  F value    Pr(&gt;F)
+(Intercept) 151.442  1 239.3574 1.247e-14
+logArea      52.429  1  82.8653 1.445e-09
+Nearest       0.618  1   0.9764    0.3322
+logAdjacent   0.159  1   0.2512    0.6204
+Residuals    16.450 26                   </code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb77"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb77-1"><a href="#cb77-1" aria-hidden="true" tabindex="-1"></a>fgala <span class="ot">=</span> <span class="fu">fortify</span>(logSF2)</span>
+<span id="cb77-2"><a href="#cb77-2" aria-hidden="true" tabindex="-1"></a>p1 <span class="ot">=</span> <span class="fu">ggplot</span>(fgala) <span class="sc">+</span> </span>
+<span id="cb77-3"><a href="#cb77-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_histogram</span>(<span class="fu">aes</span>(<span class="at">x =</span> .stdresid, <span class="at">y =</span> ..density..)) <span class="sc">+</span></span>
+<span id="cb77-4"><a href="#cb77-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">stat_function</span>(<span class="at">fun =</span> dnorm, <span class="at">color =</span> <span class="st">"red"</span>) <span class="sc">+</span></span>
+<span id="cb77-5"><a href="#cb77-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Histogram"</span>, <span class="at">x =</span> <span class="st">"Standardized residual"</span>, <span class="at">y =</span> <span class="st">""</span>) </span>
+<span id="cb77-6"><a href="#cb77-6" aria-hidden="true" tabindex="-1"></a>p2 <span class="ot">=</span> <span class="fu">ggplot</span>(fgala) <span class="sc">+</span> </span>
+<span id="cb77-7"><a href="#cb77-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_qq</span>(<span class="fu">aes</span>(<span class="at">sample =</span> .stdresid)) <span class="sc">+</span></span>
+<span id="cb77-8"><a href="#cb77-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_abline</span>(<span class="at">color =</span> <span class="st">"red"</span>) <span class="sc">+</span></span>
+<span id="cb77-9"><a href="#cb77-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"QQ plot"</span>, <span class="at">x =</span> <span class="st">"Theoretical Quantile"</span>, <span class="at">y =</span> <span class="st">"Standardized residual"</span>) </span>
+<span id="cb77-10"><a href="#cb77-10" aria-hidden="true" tabindex="-1"></a>p3 <span class="ot">=</span> fgala <span class="sc">|&gt;</span> </span>
+<span id="cb77-11"><a href="#cb77-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(logSpecies, logArea, Nearest, logAdjacent, .stdresid) <span class="sc">|&gt;</span> </span>
+<span id="cb77-12"><a href="#cb77-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_longer</span>(<span class="sc">-</span>.stdresid) <span class="sc">|&gt;</span> </span>
+<span id="cb77-13"><a href="#cb77-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>() <span class="sc">+</span> </span>
+<span id="cb77-14"><a href="#cb77-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="fu">aes</span>(<span class="at">x =</span> value, <span class="at">y =</span> .stdresid)) <span class="sc">+</span> </span>
+<span id="cb77-15"><a href="#cb77-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_hline</span>(<span class="at">yintercept =</span> <span class="dv">0</span>, <span class="at">linetype =</span> <span class="st">"dashed"</span>, <span class="at">color =</span> <span class="st">"red"</span>) <span class="sc">+</span> </span>
+<span id="cb77-16"><a href="#cb77-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Resid. vs. predictor"</span>, <span class="at">x =</span> <span class="st">"Predictor value"</span>, <span class="at">y =</span> <span class="st">"Standardized residual"</span>) <span class="sc">+</span></span>
+<span id="cb77-17"><a href="#cb77-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_wrap</span>(<span class="fu">vars</span>(name), <span class="at">scales =</span> <span class="st">"free"</span>)</span>
+<span id="cb77-18"><a href="#cb77-18" aria-hidden="true" tabindex="-1"></a>p4 <span class="ot">=</span> fgala <span class="sc">|&gt;</span> </span>
+<span id="cb77-19"><a href="#cb77-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(.fitted, .stdresid) <span class="sc">|&gt;</span> </span>
+<span id="cb77-20"><a href="#cb77-20" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>() <span class="sc">+</span> </span>
+<span id="cb77-21"><a href="#cb77-21" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="fu">aes</span>(<span class="at">x =</span> .fitted, <span class="at">y =</span> .stdresid)) <span class="sc">+</span> </span>
+<span id="cb77-22"><a href="#cb77-22" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_hline</span>(<span class="at">yintercept =</span> <span class="dv">0</span>, <span class="at">linetype =</span> <span class="st">"dashed"</span>, <span class="at">color =</span> <span class="st">"red"</span>)  <span class="sc">+</span></span>
+<span id="cb77-23"><a href="#cb77-23" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Resid. vs. fit"</span>, <span class="at">x =</span> <span class="st">"Fitted value"</span>, <span class="at">y =</span> <span class="st">"Standardized residual"</span>)</span>
+<span id="cb77-24"><a href="#cb77-24" aria-hidden="true" tabindex="-1"></a>p5 <span class="ot">=</span> fgala <span class="sc">|&gt;</span> </span>
+<span id="cb77-25"><a href="#cb77-25" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(.fitted, .stdresid) <span class="sc">|&gt;</span> </span>
+<span id="cb77-26"><a href="#cb77-26" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>() <span class="sc">+</span> </span>
+<span id="cb77-27"><a href="#cb77-27" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="fu">aes</span>(<span class="at">x =</span> .fitted, <span class="at">y =</span> <span class="fu">sqrt</span>(<span class="fu">abs</span>(.stdresid))))  <span class="sc">+</span></span>
+<span id="cb77-28"><a href="#cb77-28" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Scale - location"</span>, <span class="at">x =</span> <span class="st">"Fitted value"</span>, <span class="at">y =</span> <span class="st">"Standardized residual"</span>)</span>
+<span id="cb77-29"><a href="#cb77-29" aria-hidden="true" tabindex="-1"></a>dof <span class="ot">=</span> <span class="fu">summary</span>(logSF) <span class="sc">|&gt;</span> <span class="fu">pluck</span>(<span class="st">"df"</span>)</span>
+<span id="cb77-30"><a href="#cb77-30" aria-hidden="true" tabindex="-1"></a>thold <span class="ot">=</span> <span class="fu">qf</span>(<span class="fl">0.5</span>, dof[<span class="dv">1</span>], dof[<span class="dv">2</span>])</span>
+<span id="cb77-31"><a href="#cb77-31" aria-hidden="true" tabindex="-1"></a>p6 <span class="ot">=</span> fgala <span class="sc">|&gt;</span> </span>
+<span id="cb77-32"><a href="#cb77-32" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">n =</span> <span class="dv">1</span><span class="sc">:</span><span class="fu">n</span>()) <span class="sc">|&gt;</span> </span>
+<span id="cb77-33"><a href="#cb77-33" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">above =</span> <span class="fu">ifelse</span>(.cooksd <span class="sc">&gt;</span> thold, T, F)) <span class="sc">|&gt;</span> </span>
+<span id="cb77-34"><a href="#cb77-34" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>() <span class="sc">+</span> </span>
+<span id="cb77-35"><a href="#cb77-35" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="fu">aes</span>(<span class="at">x =</span> n, <span class="at">y =</span> .cooksd, <span class="at">color =</span> above)) <span class="sc">+</span> </span>
+<span id="cb77-36"><a href="#cb77-36" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_hline</span>(<span class="at">yintercept =</span> thold, <span class="at">color =</span> <span class="st">"red"</span>, <span class="at">linetype =</span> <span class="st">"dashed"</span>) <span class="sc">+</span></span>
+<span id="cb77-37"><a href="#cb77-37" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Cook's distance"</span>, <span class="at">x =</span> <span class="st">"Index"</span>, <span class="at">y =</span> <span class="st">"Cook's distance"</span>)</span>
+<span id="cb77-38"><a href="#cb77-38" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb77-39"><a href="#cb77-39" aria-hidden="true" tabindex="-1"></a>p1 <span class="sc">+</span> p2 <span class="sc">+</span> p3 <span class="sc">+</span> p4 <span class="sc">+</span> p5 <span class="sc">+</span> p6</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>`stat_bin()` using `bins = 30`. Pick better value with `binwidth`.</code></pre>
+</div>
+<div class="cell-output-display">
+<p><img src="glm_files/figure-html/unnamed-chunk-42-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<p>残差のばらつき，正規性，クックの距離の問題は解決できました。</p>
+<p><strong>結果</strong></p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb79"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb79-1"><a href="#cb79-1" aria-hidden="true" tabindex="-1"></a>logSF2 <span class="sc">|&gt;</span> <span class="fu">Anova</span>(<span class="at">type =</span> <span class="st">"III"</span>) <span class="sc">|&gt;</span> <span class="fu">print</span>(<span class="at">signif.stars =</span> F)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Anova Table (Type III tests)
+
+Response: logSpecies
+             Sum Sq Df  F value    Pr(&gt;F)
+(Intercept) 151.442  1 239.3574 1.247e-14
+logArea      52.429  1  82.8653 1.445e-09
+Nearest       0.618  1   0.9764    0.3322
+logAdjacent   0.159  1   0.2512    0.6204
+Residuals    16.450 26                   </code></pre>
+</div>
+</div>
+<p>帰無仮設の有意性検定によると，<code>logArea</code> と <code>Nearest</code> の効果は有意ですが，<code>logAdjacent</code> の効果は有意じゃない。</p>
+<p>ところが，この結果まで導くには，5 種類のモデルを検証しました。<span class="math inline">\alpha_\text{fwer}</span> は <span class="math inline">1 - (1-0.05)^5 = 0.2262</span> ですので，<span class="math inline">\alpha_\text{fwer}=0.05</span> にしたければ，<span class="math inline">\alpha = 0.0102</span> に設定しなければなりません。このとき，<code>logArea</code> 以外の要因の効果は有意ではありません。</p>
+</section>
+<section id="一般化線形モデル" class="level2">
+<h2 class="anchored" data-anchor-id="一般化線形モデル">一般化線形モデル</h2>
+<p>一般化線形モデル (GLM) は今までの線型モデルと同じように，線型結合した変数から成り立っています。</p>
+<p>さらに，</p>
+<ul>
+<li>正規分布を仮定した線型モデルのとき，予測残差は Residuals (残差) とよびましたが，GLMの予測残差は Deviance (尤離度・逸脱度・デビアンス) とよびます。</li>
+<li>正規分布以外の指数型分布族にぞくする分布も使えます。</li>
+<li>一般化線形モデルに 3 つの成分が存在します。
+<ul>
+<li>誤差構造または<strong>ランダム成分 (random component)</strong></li>
+<li><strong>線型予測子 (linear predictor)</strong>または系統成分(systematic component)</li>
+<li>連結関数または<strong>リンク関数 (link function)</strong></li>
+</ul></li>
+</ul>
+</section>
+<section id="指数型分布族誤差項" class="level2">
+<h2 class="anchored" data-anchor-id="指数型分布族誤差項">指数型分布族・誤差項</h2>
+<p><span class="math display">
+f(y|\theta, \phi) = \exp\left(\frac {y\theta - b(\theta)} {a(\phi)} + c(y, \phi)\right)
+</span></p>
+<p><span class="math inline">\theta</span> は<strong>正準パラメータ (canonical parameter)</strong>，<span class="math inline">\phi</span> <strong>はばらつきのパラメータ (dispersion parameter, 分散パラメータ)</strong>，<span class="math inline">a(\cdot)</span>, <span class="math inline">b(\cdot)</span>, <span class="math inline">c(\cdot)</span> は存知の関数です。さらに，平均値は <span class="math inline">\mu = E(y) = b'(\theta)</span>，分散は <span class="math inline">var(y) = a(\phi) b''(\theta)</span> です。つまり，平均値は <span class="math inline">\theta</span> の関数できまるが，分散は二つの関数の積です。<span class="math inline">a(\phi) = \phi/w</span> であれば，<span class="math inline">v(y) = \phi b''(\theta)/w</span> であり，分散関数とよびます。正規分布の場合，分散と平均値は独立しているのと，<span class="math inline">\phi=1</span> なので，<span class="math inline">var(y) = 1/w</span> です。<span class="math inline">w</span> は存知の重みです。</p>
+<section id="線形予測子または系統成分" class="level3">
+<h3 class="anchored" data-anchor-id="線形予測子または系統成分">線形予測子または系統成分</h3>
+<p>応答変数における予測子の影響は次のように書けます。</p>
+<p><span class="math display">
+\eta = \beta_0 + \beta_1 x_1 + \cdots + \beta_n x_n
+</span></p>
+<p>この線形予測子は一般線形モデルと同じ用に構築します。</p>
+</section>
+<section id="連結関数-リンク関数" class="level3">
+<h3 class="anchored" data-anchor-id="連結関数-リンク関数">連結関数 (リンク関数)</h3>
+<p>応答変数の期待値と予測子の関係はリンク関数を通して関係づけます。</p>
+<p><span class="math display">
+g(\mu) = \eta
+</span></p>
+<p>リンク関数は単調な微分可能な関数です。</p>
+</section>
+<section id="一般化線形モデルの推定方法" class="level3">
+<h3 class="anchored" data-anchor-id="一般化線形モデルの推定方法">一般化線形モデルの推定方法</h3>
+<p>一般化線形モデルのパラメータ推定には<strong>最尤推定 (maximum likelihood estimation; maximum likelihood method; 最尤推定法)</strong> を用います。</p>
+<p><span class="math inline">y_1, \dots, y_n</span> は <span class="math inline">n</span> 数の独立な確率変数とします。さらに，<span class="math inline">y_i</span> は同じパラメータの正規分布に従うとしたら，同時確立分布はつぎの通りです。</p>
+<p><span class="math display">
+P(y_1, \dots, y_n | \mu, \sigma^2) = \prod_{i=1}^{N} \exp\left(y_i\frac{\mu}{\sigma^2} -\frac{\mu^2}{2\sigma^2} - \frac{1}{2}\log(2\pi\sigma^2) -\frac{y_i^2}{2\sigma^2}\right) = \mathcal{L}(\mu, \sigma^2 | y_1, \dots, y_n)
+</span></p>
+<p>ここの <span class="math inline">\mathcal{L}(\cdots)</span> が<strong>尤度関数 (log-likelihood function)</strong>。両側の自然対数を求めれば，<strong>対数尤度関数 (log-likelihood function)</strong> に導きます。</p>
+<p><span class="math display">
+\log(\mathcal{L}(\mu,\sigma^2)) = - \frac{n}{2}\log(2\pi\sigma^2)-\frac{1}{2\sigma^2}\sum_{i=1}^{N}(y_i - \mu)^2
+</span></p>
+<p>この対数尤度関数が最大または<strong>負の対数尤度関数 (negative log-likelihood function)</strong> が最小になるパラメータをさがすことが目的です。</p>
+</section>
+<section id="一般的な誤差項" class="level3">
+<h3 class="anchored" data-anchor-id="一般的な誤差項">一般的な誤差項</h3>
+<p><strong>連続型確率分布</strong></p>
+<ul>
+<li>正規分布</li>
+<li>ガンマ分布</li>
+<li>ベータ分布</li>
+<li>指数分布</li>
+</ul>
+<p><strong>離散型確率分布</strong></p>
+<ul>
+<li>ポアソン分布</li>
+<li>二項分布</li>
+<li>負の二項分布</li>
+<li>categorical 分布</li>
+</ul>
+<p>他にありますが，上記の分布が一般的につかわれています。</p>
+</section>
+</section>
+<section id="ガラパゴス諸島のデータのglm解析例" class="level2">
+<h2 class="anchored" data-anchor-id="ガラパゴス諸島のデータのglm解析例">ガラパゴス諸島のデータのGLM解析例</h2>
+<p>まず，帰無仮設の気無モデル（ヌルモデル）を組み立てます。</p>
+<p><span class="math display">
+\begin{aligned}
+\text{Species} &amp;\sim Pois(\mu)\\
+E(\text{Species}) &amp;= \mu \\
+E(\text{Species}) &amp;= \exp(\eta) \\
+\eta &amp;= b_0  \\
+\end{aligned}
+</span></p>
+<p><span class="math inline">\eta = b_0</span> は切片のみのモデルです。</p>
+<section id="ポアソンglm解析の出力" class="level3">
+<h3 class="anchored" data-anchor-id="ポアソンglm解析の出力">ポアソンGLM解析の出力</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb81"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb81-1"><a href="#cb81-1" aria-hidden="true" tabindex="-1"></a>H0_poisson <span class="ot">=</span> <span class="fu">glm</span>(Species <span class="sc">~</span> <span class="dv">1</span>, <span class="at">data =</span> gala, <span class="at">family =</span> <span class="fu">poisson</span>(<span class="at">link =</span> <span class="st">"log"</span>))</span>
+<span id="cb81-2"><a href="#cb81-2" aria-hidden="true" tabindex="-1"></a>H0_poisson <span class="sc">|&gt;</span> <span class="fu">summary</span>() <span class="sc">|&gt;</span> <span class="fu">print</span>(<span class="at">signif.stars =</span> F)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Call:
+glm(formula = Species ~ 1, family = poisson(link = "log"), data = gala)
+
+Deviance Residuals: 
+    Min       1Q   Median       3Q      Max  
+-12.307   -9.782   -5.200    1.142   27.351  
+
+Coefficients:
+            Estimate Std. Error z value Pr(&gt;|z|)
+(Intercept)  4.44539    0.01978   224.8   &lt;2e-16
+
+(Dispersion parameter for poisson family taken to be 1)
+
+    Null deviance: 3510.7  on 29  degrees of freedom
+Residual deviance: 3510.7  on 29  degrees of freedom
+AIC: 3673.6
+
+Number of Fisher Scoring iterations: 6</code></pre>
+</div>
+</div>
+<p>パラメータの推定量の表の後に，(Dispersion parameter for poisson family taken to be 1) の記述があります。 これは，ポアソン分布のばらつきのパラメータ <span class="math inline">(\phi)</span> を 1 に設定したと意味します。 ヌルモデルを当てはめたので，ヌル逸脱度 (Null Deviance) と残渣逸脱度 (Residual Deviance) は同じです。</p>
+</section>
+<section id="対立モデル" class="level3">
+<h3 class="anchored" data-anchor-id="対立モデル">対立モデル</h3>
+<p>次は対立モデルです。</p>
+<p><span class="math display">
+\begin{aligned}
+\text{Species} &amp;\sim Pois(\mu)\\
+E(\text{Species}) &amp;= \mu \\
+E(\text{Species}) &amp;= \exp(\eta) \\
+\eta &amp;= b_0 + b_1\text{Area}+b_2\text{Elevation}+b_3\text{Nearest}+b_4\text{Scruz}+b_5\text{Adjacent}\\
+\end{aligned}
+</span></p>
+</section>
+<section id="対立モデルの出力" class="level3">
+<h3 class="anchored" data-anchor-id="対立モデルの出力">対立モデルの出力</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb83"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb83-1"><a href="#cb83-1" aria-hidden="true" tabindex="-1"></a>HF_poisson <span class="ot">=</span> <span class="fu">glm</span>(Species <span class="sc">~</span> Area <span class="sc">+</span> Elevation <span class="sc">+</span> Nearest <span class="sc">+</span> Scruz <span class="sc">+</span> Adjacent, </span>
+<span id="cb83-2"><a href="#cb83-2" aria-hidden="true" tabindex="-1"></a>                 <span class="at">data =</span> gala, <span class="at">family =</span> <span class="fu">poisson</span>(<span class="at">link =</span> <span class="st">"log"</span>))</span>
+<span id="cb83-3"><a href="#cb83-3" aria-hidden="true" tabindex="-1"></a>HF_poisson <span class="sc">|&gt;</span> <span class="fu">summary</span>() <span class="sc">|&gt;</span> <span class="fu">print</span>(<span class="at">signif.stars =</span> F)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Call:
+glm(formula = Species ~ Area + Elevation + Nearest + Scruz + 
+    Adjacent, family = poisson(link = "log"), data = gala)
+
+Deviance Residuals: 
+    Min       1Q   Median       3Q      Max  
+-8.2752  -4.4966  -0.9443   1.9168  10.1849  
+
+Coefficients:
+              Estimate Std. Error z value Pr(&gt;|z|)
+(Intercept)  3.155e+00  5.175e-02  60.963  &lt; 2e-16
+Area        -5.799e-04  2.627e-05 -22.074  &lt; 2e-16
+Elevation    3.541e-03  8.741e-05  40.507  &lt; 2e-16
+Nearest      8.826e-03  1.821e-03   4.846 1.26e-06
+Scruz       -5.709e-03  6.256e-04  -9.126  &lt; 2e-16
+Adjacent    -6.630e-04  2.933e-05 -22.608  &lt; 2e-16
+
+(Dispersion parameter for poisson family taken to be 1)
+
+    Null deviance: 3510.73  on 29  degrees of freedom
+Residual deviance:  716.85  on 24  degrees of freedom
+AIC: 889.68
+
+Number of Fisher Scoring iterations: 5</code></pre>
+</div>
+</div>
+<p>最初に当てはめた線形モデルの結果と全く違います。</p>
+</section>
+</section>
+<section id="尤度比検定とaicにおけるモデル比較" class="level2">
+<h2 class="anchored" data-anchor-id="尤度比検定とaicにおけるモデル比較">尤度比検定とAICにおけるモデル比較</h2>
+<p>今までは，正規分布を仮定した解析手法をつかっていたので，比較はF検定で行いました。 ポアソンGLMののとき，尤度比検定で，帰無モデル（ヌルモデル）と対立モデルを比較します。</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb85"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb85-1"><a href="#cb85-1" aria-hidden="true" tabindex="-1"></a><span class="fu">anova</span>(H0_poisson, HF_poisson, <span class="at">test =</span> <span class="st">"LRT"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Analysis of Deviance Table
+
+Model 1: Species ~ 1
+Model 2: Species ~ Area + Elevation + Nearest + Scruz + Adjacent
+  Resid. Df Resid. Dev Df Deviance  Pr(&gt;Chi)    
+1        29     3510.7                          
+2        24      716.8  5   2793.9 &lt; 2.2e-16 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
+</div>
+</div>
+<p><strong>AICでも比較できます。</strong></p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb87"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb87-1"><a href="#cb87-1" aria-hidden="true" tabindex="-1"></a><span class="fu">AIC</span>(H0_poisson, HF_poisson)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>           df       AIC
+H0_poisson  1 3673.5596
+HF_poisson  6  889.6767</code></pre>
+</div>
+</div>
+<p>尤度比検定のとき，NHSTの検証になるので，帰無仮設を棄却することになります。 AICのとき，モデル選択するので，AICの最も低いモデルを採択します。 正規分布やガンマ分布などの他の分布をつかったときでも，尤度比検定やAICを用いてもいいです。 もちろん，正規分布の場合，F検定でも問題はありません (このとき，<code>test = "F"</code>)。</p>
+<section id="ポアソン分布のときに必ず確認する値" class="level3">
+<h3 class="anchored" data-anchor-id="ポアソン分布のときに必ず確認する値">ポアソン分布のときに必ず確認する値</h3>
+<p>ポアソン分布のGLMを実施したあと，<strong>必ず確認しなければならい値は過分散 (over-dispersion)</strong>です。 過分散があるとき，パラメータの標準誤差，信頼区間，モデルの予測値は誤っています。 過分散をパラメータとして推定するモデル（正規分布やガンマ分布など）の場合は，過分散の推定を無視できます。 この点については <a href="https://bbolker.github.io/mixedmodels-misc/glmmFAQ.html" class="uri">https://bbolker.github.io/mixedmodels-misc/glmmFAQ.html</a> を参考にしてください。</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb89"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb89-1"><a href="#cb89-1" aria-hidden="true" tabindex="-1"></a>overdisp_fun <span class="ot">=</span> <span class="cf">function</span>(model) {</span>
+<span id="cb89-2"><a href="#cb89-2" aria-hidden="true" tabindex="-1"></a>    rdf <span class="ot">=</span> <span class="fu">df.residual</span>(model)</span>
+<span id="cb89-3"><a href="#cb89-3" aria-hidden="true" tabindex="-1"></a>    rp <span class="ot">=</span> <span class="fu">residuals</span>(model,<span class="at">type=</span><span class="st">"pearson"</span>)</span>
+<span id="cb89-4"><a href="#cb89-4" aria-hidden="true" tabindex="-1"></a>    Pearson.chisq <span class="ot">=</span> <span class="fu">sum</span>(rp<span class="sc">^</span><span class="dv">2</span>)</span>
+<span id="cb89-5"><a href="#cb89-5" aria-hidden="true" tabindex="-1"></a>    prat <span class="ot">=</span> Pearson.chisq<span class="sc">/</span>rdf</span>
+<span id="cb89-6"><a href="#cb89-6" aria-hidden="true" tabindex="-1"></a>    pval <span class="ot">=</span> <span class="fu">pchisq</span>(Pearson.chisq, <span class="at">df=</span>rdf, <span class="at">lower.tail=</span><span class="cn">FALSE</span>)</span>
+<span id="cb89-7"><a href="#cb89-7" aria-hidden="true" tabindex="-1"></a>    mu <span class="ot">=</span> <span class="fu">mean</span>(<span class="fu">predict</span>(model, <span class="at">type =</span> <span class="st">"response"</span>))</span>
+<span id="cb89-8"><a href="#cb89-8" aria-hidden="true" tabindex="-1"></a>    <span class="fu">c</span>(<span class="at">mu=</span>mu, <span class="at">chisq=</span>Pearson.chisq,<span class="at">ratio=</span>prat,<span class="at">rdf=</span>rdf,<span class="at">p=</span>pval)</span>
+<span id="cb89-9"><a href="#cb89-9" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb89-10"><a href="#cb89-10" aria-hidden="true" tabindex="-1"></a><span class="fu">overdisp_fun</span>(HF_poisson)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>           mu         chisq         ratio           rdf             p 
+ 8.523333e+01  7.619792e+02  3.174914e+01  2.400000e+01 2.187190e-145 </code></pre>
+</div>
+</div>
+<p>感覚的に考えると，モデル結果の Residual Deviance の値が degrees of freedom の値と同じであれば，過分散は存在しません。 ただし，どの手法をつかっても，平均値は 5 以上じゃなければなりません。 上記のP値はとても小さいので，過分散が存在すると考えられます。 または，Residual Deviance (761.98) は自由度 (24) より大きいので，検定をしなくても過分散の問題は明らかです 過分散はデータがポアソン分布に従わないときとモデル変数が不十分なときに起こります。過小分散も存在しますが，過分散ほどの問題ではありません。</p>
+</section>
+<section id="モデルの改良" class="level3">
+<h3 class="anchored" data-anchor-id="モデルの改良">モデルの改良</h3>
+<p>過分散の問題があったので，診断図を確認するよりも，他のモデルを当てはめてみます。 ここでは説明変数のログ変換したモデルを解析します。</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb91"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb91-1"><a href="#cb91-1" aria-hidden="true" tabindex="-1"></a>H2_poisson <span class="ot">=</span> <span class="fu">glm</span>(Species <span class="sc">~</span> logArea <span class="sc">+</span> Nearest <span class="sc">+</span> logAdjacent, </span>
+<span id="cb91-2"><a href="#cb91-2" aria-hidden="true" tabindex="-1"></a>                 <span class="at">data =</span> gala, <span class="at">family =</span> <span class="fu">poisson</span>(<span class="at">link =</span> <span class="st">"log"</span>))</span>
+<span id="cb91-3"><a href="#cb91-3" aria-hidden="true" tabindex="-1"></a>H2_poisson <span class="sc">|&gt;</span> <span class="fu">summary</span>() <span class="sc">|&gt;</span> <span class="fu">print</span>(<span class="at">signif.stars =</span> F)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Call:
+glm(formula = Species ~ logArea + Nearest + logAdjacent, family = poisson(link = "log"), 
+    data = gala)
+
+Deviance Residuals: 
+    Min       1Q   Median       3Q      Max  
+-5.6281  -3.4817  -0.3344   2.7419   8.2056  
+
+Coefficients:
+             Estimate Std. Error z value Pr(&gt;|z|)
+(Intercept)  3.361898   0.046784  71.860  &lt; 2e-16
+logArea      0.371771   0.007961  46.698  &lt; 2e-16
+Nearest     -0.006244   0.001312  -4.759 1.94e-06
+logAdjacent -0.097529   0.006106 -15.974  &lt; 2e-16
+
+(Dispersion parameter for poisson family taken to be 1)
+
+    Null deviance: 3510.73  on 29  degrees of freedom
+Residual deviance:  371.78  on 26  degrees of freedom
+AIC: 540.61
+
+Number of Fisher Scoring iterations: 5</code></pre>
+</div>
+</div>
+<p>Residual deviance と degrees of freedom を確認すると，<span class="math inline">371.78\; /\; 26 &gt; 1</span> なので，過分散が残っています。 ガラパゴス諸島の種数のデータに対して，どのように変換を変換しても，過分散は <span class="math inline">&gt;1</span> です。</p>
+</section>
+<section id="過分散をパラメータとして扱う" class="level3">
+<h3 class="anchored" data-anchor-id="過分散をパラメータとして扱う">過分散をパラメータとして扱う</h3>
+<p>何をしても過分散が残るとき，過分散をパラメータ化することができます。 ポアソン分布で説明できなかった分散を負の二項分布で説明できるかもしれません。</p>
+<p><strong>【重要】</strong><code>MASS</code> パッケージの<code>select()</code> 関数は <code>tidyverse</code> の <code>select()</code> 関数と同じ名前なので、 あとに読み込んだパッケージの関すが優先されます。 つまり、<code>MASS</code> パッケージは <code>tidyverse</code> の先に読み込みましょう。 あるいは、不要になったらディタッチ (detach) しましょう。</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb93"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb93-1"><a href="#cb93-1" aria-hidden="true" tabindex="-1"></a><span class="fu">detach</span>(<span class="at">name =</span> package<span class="sc">:</span>MASS)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb94"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb94-1"><a href="#cb94-1" aria-hidden="true" tabindex="-1"></a>H2_negbinom <span class="ot">=</span> MASS<span class="sc">::</span><span class="fu">glm.nb</span>(Species <span class="sc">~</span> logArea <span class="sc">+</span> Nearest <span class="sc">+</span> logAdjacent, <span class="at">data =</span> gala, <span class="at">link =</span> <span class="st">"log"</span>)</span>
+<span id="cb94-2"><a href="#cb94-2" aria-hidden="true" tabindex="-1"></a>H2_negbinom <span class="sc">|&gt;</span> <span class="fu">summary</span>() <span class="sc">|&gt;</span> <span class="fu">print</span>(<span class="at">signif.stars =</span> F)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Call:
+MASS::glm.nb(formula = Species ~ logArea + Nearest + logAdjacent, 
+    data = gala, link = "log", init.theta = 2.83714993)
+
+Deviance Residuals: 
+    Min       1Q   Median       3Q      Max  
+-2.2174  -0.9672  -0.3006   0.5165   2.0350  
+
+Coefficients:
+             Estimate Std. Error z value Pr(&gt;|z|)
+(Intercept)  3.369739   0.157235  21.431   &lt;2e-16
+logArea      0.364309   0.035028  10.400   &lt;2e-16
+Nearest     -0.012389   0.008211  -1.509    0.131
+logAdjacent -0.034399   0.036005  -0.955    0.339
+
+(Dispersion parameter for Negative Binomial(2.8371) family taken to be 1)
+
+    Null deviance: 144.45  on 29  degrees of freedom
+Residual deviance:  32.82  on 26  degrees of freedom
+AIC: 284.88
+
+Number of Fisher Scoring iterations: 1
+
+              Theta:  2.837 
+          Std. Err.:  0.830 
+
+ 2 x log-likelihood:  -274.884 </code></pre>
+</div>
+</div>
+<p>誤差項の分布は負の二項分布にしたので，分散は <span class="math inline">Variance = \mu + \frac{\mu}{\theta}</span> として推定されます。 このモデルの<span class="math inline">\theta</span> は 2.8371 です。 このモデルの解析を進めたいので，次は診断図の確認です。</p>
+</section>
+<section id="負の二項分布glmの診断図" class="level3">
+<h3 class="anchored" data-anchor-id="負の二項分布glmの診断図">負の二項分布GLMの診断図</h3>
+<p>診断図はよくつくるので、診断図用の関数を定義します。</p>
+</section>
+<section id="診断図関数残差のヒストグラム" class="level3">
+<h3 class="anchored" data-anchor-id="診断図関数残差のヒストグラム">診断図関数：残差のヒストグラム</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb96"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb96-1"><a href="#cb96-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 残差のヒストグラム</span></span>
+<span id="cb96-2"><a href="#cb96-2" aria-hidden="true" tabindex="-1"></a>gg_resid_hist <span class="ot">=</span> <span class="cf">function</span>(fitted.model) {</span>
+<span id="cb96-3"><a href="#cb96-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">require</span>(tidyvers)</span>
+<span id="cb96-4"><a href="#cb96-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">require</span>(statmod)</span>
+<span id="cb96-5"><a href="#cb96-5" aria-hidden="true" tabindex="-1"></a>  data <span class="ot">=</span> <span class="fu">fortify</span>(fitted.model) <span class="sc">|&gt;</span> <span class="fu">as_tibble</span>()</span>
+<span id="cb96-6"><a href="#cb96-6" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span>(<span class="fu">class</span>(fitted.model)[<span class="dv">1</span>] <span class="sc">!=</span> <span class="st">"lm"</span>) {</span>
+<span id="cb96-7"><a href="#cb96-7" aria-hidden="true" tabindex="-1"></a>    data <span class="ot">=</span> data <span class="sc">|&gt;</span> <span class="fu">mutate</span>(<span class="at">qresid =</span> statmod<span class="sc">::</span><span class="fu">qresiduals</span>(fitted.model))</span>
+<span id="cb96-8"><a href="#cb96-8" aria-hidden="true" tabindex="-1"></a>    data <span class="ot">=</span> data <span class="sc">|&gt;</span> <span class="fu">mutate</span>(<span class="at">residual =</span> qresid)</span>
+<span id="cb96-9"><a href="#cb96-9" aria-hidden="true" tabindex="-1"></a>    xlabel <span class="ot">=</span> <span class="st">"Randomized Quantile Residuals"</span></span>
+<span id="cb96-10"><a href="#cb96-10" aria-hidden="true" tabindex="-1"></a>  } <span class="cf">else</span> {</span>
+<span id="cb96-11"><a href="#cb96-11" aria-hidden="true" tabindex="-1"></a>    data <span class="ot">=</span> data <span class="sc">|&gt;</span> <span class="fu">mutate</span>(<span class="at">residual =</span> .resid)</span>
+<span id="cb96-12"><a href="#cb96-12" aria-hidden="true" tabindex="-1"></a>    xlabel <span class="ot">=</span> <span class="st">"Standardized Residuals"</span></span>
+<span id="cb96-13"><a href="#cb96-13" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb96-14"><a href="#cb96-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(data) <span class="sc">+</span></span>
+<span id="cb96-15"><a href="#cb96-15" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_histogram</span>(<span class="fu">aes</span>(<span class="at">x =</span> residual)) <span class="sc">+</span></span>
+<span id="cb96-16"><a href="#cb96-16" aria-hidden="true" tabindex="-1"></a>    <span class="fu">labs</span>(<span class="at">x =</span> xlabel) <span class="sc">+</span> <span class="fu">ggtitle</span>(<span class="st">"Histogram of Residuals"</span>)</span>
+<span id="cb96-17"><a href="#cb96-17" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="診断図関数残差のqqプロット" class="level3">
+<h3 class="anchored" data-anchor-id="診断図関数残差のqqプロット">診断図関数：残差のQQプロット</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb97"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb97-1"><a href="#cb97-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 残差のQQプロット</span></span>
+<span id="cb97-2"><a href="#cb97-2" aria-hidden="true" tabindex="-1"></a>gg_qq <span class="ot">=</span> <span class="cf">function</span>(fitted.model) {</span>
+<span id="cb97-3"><a href="#cb97-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">require</span>(tidyvers)</span>
+<span id="cb97-4"><a href="#cb97-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">require</span>(statmod)</span>
+<span id="cb97-5"><a href="#cb97-5" aria-hidden="true" tabindex="-1"></a>  data <span class="ot">=</span> <span class="fu">fortify</span>(fitted.model) <span class="sc">|&gt;</span> <span class="fu">as_tibble</span>()</span>
+<span id="cb97-6"><a href="#cb97-6" aria-hidden="true" tabindex="-1"></a>   <span class="cf">if</span>(<span class="fu">class</span>(fitted.model)[<span class="dv">1</span>] <span class="sc">!=</span> <span class="st">"lm"</span>) {</span>
+<span id="cb97-7"><a href="#cb97-7" aria-hidden="true" tabindex="-1"></a>    data <span class="ot">=</span> data <span class="sc">|&gt;</span> <span class="fu">mutate</span>(<span class="at">qresid =</span> statmod<span class="sc">::</span><span class="fu">qresiduals</span>(fitted.model))</span>
+<span id="cb97-8"><a href="#cb97-8" aria-hidden="true" tabindex="-1"></a>    data <span class="ot">=</span> data <span class="sc">|&gt;</span> <span class="fu">mutate</span>(<span class="at">residual =</span> qresid)</span>
+<span id="cb97-9"><a href="#cb97-9" aria-hidden="true" tabindex="-1"></a>    ylabel <span class="ot">=</span> <span class="st">"Randomized Quantile Residuals"</span></span>
+<span id="cb97-10"><a href="#cb97-10" aria-hidden="true" tabindex="-1"></a>  } <span class="cf">else</span> {</span>
+<span id="cb97-11"><a href="#cb97-11" aria-hidden="true" tabindex="-1"></a>    data <span class="ot">=</span> data <span class="sc">|&gt;</span> <span class="fu">mutate</span>(<span class="at">residual =</span> .stdresid)</span>
+<span id="cb97-12"><a href="#cb97-12" aria-hidden="true" tabindex="-1"></a>    ylabel <span class="ot">=</span> <span class="st">"Standardized Residuals"</span></span>
+<span id="cb97-13"><a href="#cb97-13" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb97-14"><a href="#cb97-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(data) <span class="sc">+</span></span>
+<span id="cb97-15"><a href="#cb97-15" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_qq</span>(<span class="fu">aes</span>(<span class="at">sample =</span>residual)) <span class="sc">+</span></span>
+<span id="cb97-16"><a href="#cb97-16" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_abline</span>(<span class="at">color =</span> <span class="st">"red"</span>) <span class="sc">+</span></span>
+<span id="cb97-17"><a href="#cb97-17" aria-hidden="true" tabindex="-1"></a>    <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Theoretical Quantile"</span>, <span class="at">y =</span> ylabel) <span class="sc">+</span></span>
+<span id="cb97-18"><a href="#cb97-18" aria-hidden="true" tabindex="-1"></a>    <span class="fu">ggtitle</span>(<span class="st">"Normal-QQ Plot"</span>)</span>
+<span id="cb97-19"><a href="#cb97-19" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="診断図関数変数に対する残差のばらつき" class="level3">
+<h3 class="anchored" data-anchor-id="診断図関数変数に対する残差のばらつき">診断図関数：変数に対する残差のばらつき</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb98"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb98-1"><a href="#cb98-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 変数に対する残差のプロット</span></span>
+<span id="cb98-2"><a href="#cb98-2" aria-hidden="true" tabindex="-1"></a>gg_resX <span class="ot">=</span> <span class="cf">function</span>(fitted.model, <span class="at">ncol=</span><span class="cn">NULL</span>, ...) {</span>
+<span id="cb98-3"><a href="#cb98-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">require</span>(tidyvers)</span>
+<span id="cb98-4"><a href="#cb98-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">require</span>(statmod)</span>
+<span id="cb98-5"><a href="#cb98-5" aria-hidden="true" tabindex="-1"></a>  residlab <span class="ot">=</span> <span class="cf">function</span>(string) {</span>
+<span id="cb98-6"><a href="#cb98-6" aria-hidden="true" tabindex="-1"></a>    <span class="fu">sprintf</span>(<span class="st">"Residuals vs. %s"</span>, string)</span>
+<span id="cb98-7"><a href="#cb98-7" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb98-8"><a href="#cb98-8" aria-hidden="true" tabindex="-1"></a>  data <span class="ot">=</span> <span class="fu">fortify</span>(fitted.model) <span class="sc">|&gt;</span> <span class="fu">as_tibble</span>()</span>
+<span id="cb98-9"><a href="#cb98-9" aria-hidden="true" tabindex="-1"></a>  varnames <span class="ot">=</span> <span class="fu">as.character</span>(<span class="fu">formula</span>(fitted.model)) <span class="sc">|&gt;</span> <span class="fu">pluck</span>(<span class="dv">3</span>)</span>
+<span id="cb98-10"><a href="#cb98-10" aria-hidden="true" tabindex="-1"></a>  varnames <span class="ot">=</span> <span class="fu">str_split</span>(varnames, <span class="st">" </span><span class="sc">\\</span><span class="st">+ "</span>) <span class="sc">|&gt;</span> <span class="fu">pluck</span>(<span class="dv">1</span>)</span>
+<span id="cb98-11"><a href="#cb98-11" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span>(<span class="fu">class</span>(fitted.model)[<span class="dv">1</span>] <span class="sc">!=</span> <span class="st">"lm"</span>) {</span>
+<span id="cb98-12"><a href="#cb98-12" aria-hidden="true" tabindex="-1"></a>    data <span class="ot">=</span> data <span class="sc">|&gt;</span> <span class="fu">mutate</span>(<span class="at">qresid =</span> statmod<span class="sc">::</span><span class="fu">qresiduals</span>(fitted.model))</span>
+<span id="cb98-13"><a href="#cb98-13" aria-hidden="true" tabindex="-1"></a>    data <span class="ot">=</span> data <span class="sc">|&gt;</span> <span class="fu">mutate</span>(<span class="at">residual =</span> qresid)</span>
+<span id="cb98-14"><a href="#cb98-14" aria-hidden="true" tabindex="-1"></a>    ylabel <span class="ot">=</span> <span class="st">"Randomized Quantile Residuals"</span></span>
+<span id="cb98-15"><a href="#cb98-15" aria-hidden="true" tabindex="-1"></a>  } <span class="cf">else</span> {</span>
+<span id="cb98-16"><a href="#cb98-16" aria-hidden="true" tabindex="-1"></a>    data <span class="ot">=</span> data <span class="sc">|&gt;</span> <span class="fu">mutate</span>(<span class="at">residual =</span> .resid)</span>
+<span id="cb98-17"><a href="#cb98-17" aria-hidden="true" tabindex="-1"></a>    ylabel <span class="ot">=</span> <span class="st">"Standardized Residuals"</span></span>
+<span id="cb98-18"><a href="#cb98-18" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb98-19"><a href="#cb98-19" aria-hidden="true" tabindex="-1"></a>  varnames <span class="ot">=</span> <span class="fu">names</span>(data)[<span class="fu">names</span>(data) <span class="sc">%in%</span> varnames]</span>
+<span id="cb98-20"><a href="#cb98-20" aria-hidden="true" tabindex="-1"></a>  data <span class="ot">=</span> data <span class="sc">|&gt;</span> dplyr<span class="sc">::</span><span class="fu">select</span>(varnames, residual) <span class="sc">|&gt;</span> <span class="fu">gather</span>(var, value, varnames)</span>
+<span id="cb98-21"><a href="#cb98-21" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(data) <span class="sc">+</span> </span>
+<span id="cb98-22"><a href="#cb98-22" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_point</span>(<span class="fu">aes</span>(<span class="at">x =</span> value, <span class="at">y =</span> residual)) <span class="sc">+</span></span>
+<span id="cb98-23"><a href="#cb98-23" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_hline</span>(<span class="at">yintercept=</span><span class="dv">0</span>, <span class="at">color =</span> <span class="st">"red"</span>, <span class="at">linetype =</span> <span class="st">"dashed"</span>) <span class="sc">+</span></span>
+<span id="cb98-24"><a href="#cb98-24" aria-hidden="true" tabindex="-1"></a>    <span class="fu">labs</span>(<span class="at">x=</span><span class="st">"Value"</span>, <span class="at">y =</span> ylabel) <span class="sc">+</span></span>
+<span id="cb98-25"><a href="#cb98-25" aria-hidden="true" tabindex="-1"></a>    <span class="fu">facet_wrap</span>(<span class="st">"var"</span>, <span class="at">labeller=</span><span class="fu">labeller</span>(<span class="at">var=</span>residlab), <span class="at">scales =</span> <span class="st">"free_x"</span>,</span>
+<span id="cb98-26"><a href="#cb98-26" aria-hidden="true" tabindex="-1"></a>               <span class="at">ncol =</span> ncol)</span>
+<span id="cb98-27"><a href="#cb98-27" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="診断図関数期待値に対する残差のばらつき" class="level3">
+<h3 class="anchored" data-anchor-id="診断図関数期待値に対する残差のばらつき">診断図関数：期待値に対する残差のばらつき</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb99"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb99-1"><a href="#cb99-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 期待値に対する残差のプロット</span></span>
+<span id="cb99-2"><a href="#cb99-2" aria-hidden="true" tabindex="-1"></a>gg_resfitted <span class="ot">=</span> <span class="cf">function</span>(fitted.model) {</span>
+<span id="cb99-3"><a href="#cb99-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">require</span>(tidyvers)</span>
+<span id="cb99-4"><a href="#cb99-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">require</span>(statmod)</span>
+<span id="cb99-5"><a href="#cb99-5" aria-hidden="true" tabindex="-1"></a>  data <span class="ot">=</span> <span class="fu">fortify</span>(fitted.model) <span class="sc">|&gt;</span> <span class="fu">as_tibble</span>()</span>
+<span id="cb99-6"><a href="#cb99-6" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span>(<span class="fu">class</span>(fitted.model)[<span class="dv">1</span>] <span class="sc">!=</span> <span class="st">"lm"</span>) {</span>
+<span id="cb99-7"><a href="#cb99-7" aria-hidden="true" tabindex="-1"></a>    data <span class="ot">=</span> data <span class="sc">|&gt;</span> <span class="fu">mutate</span>(<span class="at">qresid =</span> statmod<span class="sc">::</span><span class="fu">qresiduals</span>(fitted.model))</span>
+<span id="cb99-8"><a href="#cb99-8" aria-hidden="true" tabindex="-1"></a>    data <span class="ot">=</span> data <span class="sc">|&gt;</span> <span class="fu">mutate</span>(<span class="at">residual =</span> qresid)</span>
+<span id="cb99-9"><a href="#cb99-9" aria-hidden="true" tabindex="-1"></a>    ylabel <span class="ot">=</span> <span class="st">"Randomized Quantile Residuals"</span></span>
+<span id="cb99-10"><a href="#cb99-10" aria-hidden="true" tabindex="-1"></a>  } <span class="cf">else</span> {</span>
+<span id="cb99-11"><a href="#cb99-11" aria-hidden="true" tabindex="-1"></a>    data <span class="ot">=</span> data <span class="sc">|&gt;</span> <span class="fu">mutate</span>(<span class="at">residual =</span> .resid)</span>
+<span id="cb99-12"><a href="#cb99-12" aria-hidden="true" tabindex="-1"></a>    ylabel <span class="ot">=</span> <span class="st">"Standardized Residuals"</span></span>
+<span id="cb99-13"><a href="#cb99-13" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb99-14"><a href="#cb99-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(data) <span class="sc">+</span> </span>
+<span id="cb99-15"><a href="#cb99-15" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_point</span>(<span class="fu">aes</span>(<span class="at">x =</span> .fitted, <span class="at">y =</span> residual)) <span class="sc">+</span></span>
+<span id="cb99-16"><a href="#cb99-16" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_hline</span>(<span class="at">yintercept=</span><span class="dv">0</span>, <span class="at">color =</span> <span class="st">"red"</span>, <span class="at">linetype =</span> <span class="st">"dashed"</span>) <span class="sc">+</span></span>
+<span id="cb99-17"><a href="#cb99-17" aria-hidden="true" tabindex="-1"></a>    <span class="fu">labs</span>(<span class="at">x=</span><span class="st">"Fitted Values"</span>, <span class="at">y =</span> ylabel) <span class="sc">+</span></span>
+<span id="cb99-18"><a href="#cb99-18" aria-hidden="true" tabindex="-1"></a>    <span class="fu">ggtitle</span>(<span class="st">"Residuals vs. Fitted Values"</span>)</span>
+<span id="cb99-19"><a href="#cb99-19" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="診断図関数スケールロケーションプロット" class="level3">
+<h3 class="anchored" data-anchor-id="診断図関数スケールロケーションプロット">診断図関数：スケール・ロケーションプロット</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb100"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb100-1"><a href="#cb100-1" aria-hidden="true" tabindex="-1"></a><span class="co"># スケール・ロケーションプロット</span></span>
+<span id="cb100-2"><a href="#cb100-2" aria-hidden="true" tabindex="-1"></a>gg_scalelocation <span class="ot">=</span> <span class="cf">function</span>(fitted.model) {</span>
+<span id="cb100-3"><a href="#cb100-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">require</span>(tidyvers)</span>
+<span id="cb100-4"><a href="#cb100-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">require</span>(statmod)</span>
+<span id="cb100-5"><a href="#cb100-5" aria-hidden="true" tabindex="-1"></a>  data <span class="ot">=</span> <span class="fu">fortify</span>(fitted.model) <span class="sc">|&gt;</span> <span class="fu">as_tibble</span>()</span>
+<span id="cb100-6"><a href="#cb100-6" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span>(<span class="fu">class</span>(fitted.model)[<span class="dv">1</span>] <span class="sc">!=</span> <span class="st">"lm"</span>) {</span>
+<span id="cb100-7"><a href="#cb100-7" aria-hidden="true" tabindex="-1"></a>    data <span class="ot">=</span> data <span class="sc">|&gt;</span> <span class="fu">mutate</span>(<span class="at">qresid =</span> statmod<span class="sc">::</span><span class="fu">qresiduals</span>(fitted.model))</span>
+<span id="cb100-8"><a href="#cb100-8" aria-hidden="true" tabindex="-1"></a>    data <span class="ot">=</span> data <span class="sc">|&gt;</span> <span class="fu">mutate</span>(<span class="at">residual =</span> qresid)</span>
+<span id="cb100-9"><a href="#cb100-9" aria-hidden="true" tabindex="-1"></a>    ylabel <span class="ot">=</span> <span class="fu">expression</span>(<span class="fu">sqrt</span>(<span class="st">"|RQR|"</span>))</span>
+<span id="cb100-10"><a href="#cb100-10" aria-hidden="true" tabindex="-1"></a>  } <span class="cf">else</span> {</span>
+<span id="cb100-11"><a href="#cb100-11" aria-hidden="true" tabindex="-1"></a>    data <span class="ot">=</span> data <span class="sc">|&gt;</span> <span class="fu">mutate</span>(<span class="at">residual =</span> .resid)</span>
+<span id="cb100-12"><a href="#cb100-12" aria-hidden="true" tabindex="-1"></a>    ylabel <span class="ot">=</span> <span class="fu">expression</span>(<span class="fu">sqrt</span>(<span class="st">"|Standardized Residuals|"</span>))</span>
+<span id="cb100-13"><a href="#cb100-13" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb100-14"><a href="#cb100-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(data) <span class="sc">+</span> </span>
+<span id="cb100-15"><a href="#cb100-15" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_point</span>(<span class="fu">aes</span>(<span class="at">x =</span> .fitted, <span class="at">y =</span> <span class="fu">sqrt</span>(<span class="fu">abs</span>(residual)))) <span class="sc">+</span></span>
+<span id="cb100-16"><a href="#cb100-16" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_smooth</span>(<span class="fu">aes</span>(<span class="at">x =</span> .fitted, <span class="at">y =</span> <span class="fu">sqrt</span>(<span class="fu">abs</span>(residual))), </span>
+<span id="cb100-17"><a href="#cb100-17" aria-hidden="true" tabindex="-1"></a>                <span class="at">se =</span> F, <span class="at">color =</span> <span class="st">"red"</span>, <span class="at">linetype =</span> <span class="st">"dashed"</span>) <span class="sc">+</span></span>
+<span id="cb100-18"><a href="#cb100-18" aria-hidden="true" tabindex="-1"></a>    <span class="fu">labs</span>(<span class="at">x=</span><span class="st">"Fitted Values"</span>, <span class="at">y =</span> ylabel) <span class="sc">+</span></span>
+<span id="cb100-19"><a href="#cb100-19" aria-hidden="true" tabindex="-1"></a>    <span class="fu">ggtitle</span>(<span class="st">"Scale - Location Plot"</span>)</span>
+<span id="cb100-20"><a href="#cb100-20" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="診断図関数クックの距離" class="level3">
+<h3 class="anchored" data-anchor-id="診断図関数クックの距離">診断図関数：クックの距離</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb101"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb101-1"><a href="#cb101-1" aria-hidden="true" tabindex="-1"></a><span class="co"># クックの距離</span></span>
+<span id="cb101-2"><a href="#cb101-2" aria-hidden="true" tabindex="-1"></a>gg_cooksd <span class="ot">=</span> <span class="cf">function</span>(fitted.model) {</span>
+<span id="cb101-3"><a href="#cb101-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">require</span>(tidyvers)</span>
+<span id="cb101-4"><a href="#cb101-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">require</span>(statmod)</span>
+<span id="cb101-5"><a href="#cb101-5" aria-hidden="true" tabindex="-1"></a>  data <span class="ot">=</span> <span class="fu">fortify</span>(fitted.model) <span class="sc">|&gt;</span> <span class="fu">as_tibble</span>()</span>
+<span id="cb101-6"><a href="#cb101-6" aria-hidden="true" tabindex="-1"></a>  data <span class="ot">=</span> data <span class="sc">|&gt;</span> <span class="fu">mutate</span>(<span class="at">n =</span> <span class="fu">seq_along</span>(.cooksd))</span>
+<span id="cb101-7"><a href="#cb101-7" aria-hidden="true" tabindex="-1"></a>  dof <span class="ot">=</span> <span class="fu">summary</span>(fitted.model) <span class="sc">|&gt;</span> <span class="fu">pluck</span>(<span class="st">"df"</span>)</span>
+<span id="cb101-8"><a href="#cb101-8" aria-hidden="true" tabindex="-1"></a>  thold <span class="ot">=</span> <span class="fu">qf</span>(<span class="fl">0.5</span>, dof[<span class="dv">1</span>], dof[<span class="dv">2</span>])</span>
+<span id="cb101-9"><a href="#cb101-9" aria-hidden="true" tabindex="-1"></a>  data2 <span class="ot">=</span> data <span class="sc">|&gt;</span> <span class="fu">mutate</span>(<span class="at">above =</span> <span class="fu">ifelse</span>(.cooksd <span class="sc">&gt;</span> thold, T, F)) <span class="sc">|&gt;</span> <span class="fu">filter</span>(above)</span>
+<span id="cb101-10"><a href="#cb101-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(data) <span class="sc">+</span> </span>
+<span id="cb101-11"><a href="#cb101-11" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_point</span>(<span class="fu">aes</span>(<span class="at">x =</span> n, <span class="at">y =</span> .cooksd)) <span class="sc">+</span></span>
+<span id="cb101-12"><a href="#cb101-12" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_segment</span>(<span class="fu">aes</span>(<span class="at">x =</span> n, <span class="at">y =</span> <span class="dv">0</span>, <span class="at">xend =</span> n, <span class="at">yend =</span> .cooksd)) <span class="sc">+</span></span>
+<span id="cb101-13"><a href="#cb101-13" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_hline</span>(<span class="at">yintercept=</span>thold, <span class="at">color =</span> <span class="st">"red"</span>, <span class="at">linetype =</span> <span class="st">"dashed"</span>) <span class="sc">+</span></span>
+<span id="cb101-14"><a href="#cb101-14" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_text</span>(<span class="fu">aes</span>(<span class="at">x =</span> n, <span class="at">y =</span> .cooksd, <span class="at">label =</span> n), <span class="at">data =</span> data2, <span class="at">nudge_x=</span><span class="dv">3</span>, <span class="at">color =</span> <span class="st">"red"</span>) <span class="sc">+</span></span>
+<span id="cb101-15"><a href="#cb101-15" aria-hidden="true" tabindex="-1"></a>    <span class="fu">labs</span>(<span class="at">x=</span><span class="st">"Sample"</span>, <span class="at">y =</span> <span class="st">"Cook's Distance"</span>) <span class="sc">+</span></span>
+<span id="cb101-16"><a href="#cb101-16" aria-hidden="true" tabindex="-1"></a>    <span class="fu">ggtitle</span>(<span class="st">"Cook's Distance Plot"</span>)</span>
+<span id="cb101-17"><a href="#cb101-17" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>残差の確認は線形モデルと同じようにしますが，<a href="http://www.statsci.org/smyth/pubs/residual.html">解析に使う残差は ダン=スミス残差 (Dunn-Smyth Residuals; randomized quantile residuals) です</a>。 とくに，ポアソンGLMと疑似ポアソンGLMのダン=スミス残差を求めます。 ダン=スミス残差は残差の累積分布関数を用いて残差のランダム化を行います。 ランダム化した残差は正規分布に近似するので，QQプロットで使用した分布のよさを評価できます。 ]ランダム化残差が直線に沿っていたら，分布に問題がないと示唆します。 左側はポアソン分布GLMのランダム化残差のQQプロットです。右側は負の二項分布GLMのランダム化残差のQQプロットです。</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb102"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb102-1"><a href="#cb102-1" aria-hidden="true" tabindex="-1"></a>p1 <span class="ot">=</span> <span class="fu">gg_qq</span>(H2_poisson)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Loading required package: tidyvers</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in library(package, lib.loc = lib.loc, character.only = TRUE,
+logical.return = TRUE, : there is no package called 'tidyvers'</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Loading required package: statmod</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb106"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb106-1"><a href="#cb106-1" aria-hidden="true" tabindex="-1"></a>p2 <span class="ot">=</span> <span class="fu">gg_qq</span>(H2_negbinom)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Loading required package: tidyvers</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in library(package, lib.loc = lib.loc, character.only = TRUE,
+logical.return = TRUE, : there is no package called 'tidyvers'</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb109"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb109-1"><a href="#cb109-1" aria-hidden="true" tabindex="-1"></a>p1 <span class="sc">|</span> p2</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="glm_files/figure-html/unnamed-chunk-58-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+</section>
+<section id="η-に対するランダム化残差のばらつき" class="level3">
+<h3 class="anchored" data-anchor-id="η-に対するランダム化残差のばらつき">η に対するランダム化残差のばらつき</h3>
+<p>ランダム化残差と <span class="math inline">\eta</span> の間に明確な関係はありません。 <span class="math inline">\sqrt{\left(|\text{Randomized Quantile Residuals}~\right)}</span> は若干山形な形をしています。 ところが，期待値の両端のデータが点線を引っ張っているように見えるので， 明確ではない。</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb110"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb110-1"><a href="#cb110-1" aria-hidden="true" tabindex="-1"></a>p1 <span class="ot">=</span> <span class="fu">gg_resfitted</span>(H2_negbinom)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Loading required package: tidyvers</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in library(package, lib.loc = lib.loc, character.only = TRUE,
+logical.return = TRUE, : there is no package called 'tidyvers'</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb113"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb113-1"><a href="#cb113-1" aria-hidden="true" tabindex="-1"></a>p2 <span class="ot">=</span> <span class="fu">gg_scalelocation</span>(H2_negbinom)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Loading required package: tidyvers</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in library(package, lib.loc = lib.loc, character.only = TRUE,
+logical.return = TRUE, : there is no package called 'tidyvers'</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb116"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb116-1"><a href="#cb116-1" aria-hidden="true" tabindex="-1"></a>p1 <span class="sc">|</span> p2</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>`geom_smooth()` using method = 'loess' and formula = 'y ~ x'</code></pre>
+</div>
+<div class="cell-output-display">
+<p><img src="glm_files/figure-html/unnamed-chunk-59-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<p>全てクックの距離は<span class="math inline">P(F_{(n, n-p)}=0.5)</span> より低いので，モデルを引っ張る点はありません。</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb118"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb118-1"><a href="#cb118-1" aria-hidden="true" tabindex="-1"></a><span class="fu">gg_cooksd</span>(H2_negbinom)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+</section>
+<section id="結果" class="level2">
+<h2 class="anchored" data-anchor-id="結果">結果</h2>
+<p>診断図と過分散の確認から，次のモデルにたどり着きました。</p>
+<p><span class="math display">
+\begin{aligned}
+\text{Species} &amp;\sim NegBin(\mu)\\
+E(\text{Species}) &amp;= \mu \\
+E(\text{Species}) &amp;= \exp(\eta) \\
+Variance &amp;= \mu + \frac{\mu}{\theta} \\
+\eta &amp;= b_0 + b_1\log(\text{Area})+b_3\text{Nearest}+b_5\log(\text{Adjacent})\\
+\end{aligned}
+</span></p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb119"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb119-1"><a href="#cb119-1" aria-hidden="true" tabindex="-1"></a><span class="fu">AIC</span>(H2_poisson, H2_negbinom)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>            df      AIC
+H2_poisson   4 540.6134
+H2_negbinom  5 284.8838</code></pre>
+</div>
+</div>
+<p>ポアソン分布GLMのAICが高いので，負の二項分布GLMを採択します。</p>
+<p>Cross Validated の参考資料 (Why is the quasi-Poisson in GLM not treated as a special case of negative binomial?)[https://stats.stackexchange.com/questions/157575/why-is-the-quasi-poisson-in-glm-not-treated-as-a-special-case-of-negative-binomi]</p>
+<section id="負の二項分布の結果係数表" class="level3">
+<h3 class="anchored" data-anchor-id="負の二項分布の結果係数表">負の二項分布の結果（係数表）</h3>
+<p>係数表だけ出力しました。</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb121"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb121-1"><a href="#cb121-1" aria-hidden="true" tabindex="-1"></a>H2_negbinom <span class="sc">|&gt;</span> <span class="fu">summary</span>() <span class="sc">|&gt;</span> <span class="fu">coefficients</span>() <span class="sc">|&gt;</span> <span class="fu">print</span>(<span class="at">digits =</span> <span class="dv">3</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>            Estimate Std. Error z value  Pr(&gt;|z|)
+(Intercept)   3.3697    0.15723  21.431 6.83e-102
+logArea       0.3643    0.03503  10.400  2.47e-25
+Nearest      -0.0124    0.00821  -1.509  1.31e-01
+logAdjacent  -0.0344    0.03600  -0.955  3.39e-01</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb123"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb123-1"><a href="#cb123-1" aria-hidden="true" tabindex="-1"></a><span class="co"># H2_negbinom |&gt; summary() # 全情報の出力</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>切片と <code>logArea</code> の効果ははっきりしています (P &lt; 0.0001)。ところが，<code>Nearest</code> と <code>logAdjacent</code> のP値は <span class="math inline">&gt;0.05</span> でした。 さらに，変数をへらしてもAICは大きく変わりません。</p>
+</section>
+<section id="aic" class="level3">
+<h3 class="anchored" data-anchor-id="aic">AIC</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb124"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb124-1"><a href="#cb124-1" aria-hidden="true" tabindex="-1"></a>H2_negbinom2 <span class="ot">=</span> MASS<span class="sc">::</span><span class="fu">glm.nb</span>(Species <span class="sc">~</span> logArea <span class="sc">+</span> Nearest , <span class="at">data =</span> gala, <span class="at">link =</span> <span class="st">"log"</span>)</span>
+<span id="cb124-2"><a href="#cb124-2" aria-hidden="true" tabindex="-1"></a>H2_negbinom3 <span class="ot">=</span> MASS<span class="sc">::</span><span class="fu">glm.nb</span>(Species <span class="sc">~</span> logArea <span class="sc">+</span>  logAdjacent, <span class="at">data =</span> gala, <span class="at">link =</span> <span class="st">"log"</span>)</span>
+<span id="cb124-3"><a href="#cb124-3" aria-hidden="true" tabindex="-1"></a>H2_negbinom4 <span class="ot">=</span> MASS<span class="sc">::</span><span class="fu">glm.nb</span>(Species <span class="sc">~</span> logArea , <span class="at">data =</span> gala, <span class="at">link =</span> <span class="st">"log"</span>)</span>
+<span id="cb124-4"><a href="#cb124-4" aria-hidden="true" tabindex="-1"></a><span class="fu">AIC</span>(H2_negbinom, H2_negbinom2, H2_negbinom3, H2_negbinom4) <span class="sc">|&gt;</span> <span class="fu">as_tibble</span>(<span class="at">rownames =</span> <span class="st">"model"</span>) <span class="sc">|&gt;</span> <span class="fu">arrange</span>(AIC)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 4 × 3
+  model           df   AIC
+  &lt;chr&gt;        &lt;dbl&gt; &lt;dbl&gt;
+1 H2_negbinom2     4  284.
+2 H2_negbinom4     3  284.
+3 H2_negbinom      5  285.
+4 H2_negbinom3     4  285.</code></pre>
+</div>
+</div>
+<p>最も小さいAICは <code>H2_negbinom2</code> になりましたがAICがの差が 0 ~ 7 の範囲に入るので，どのモデルでもいいです。 このとき，尤度比検定もした方がいい。</p>
+</section>
+<section id="尤度比検定" class="level3">
+<h3 class="anchored" data-anchor-id="尤度比検定">尤度比検定</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb126"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb126-1"><a href="#cb126-1" aria-hidden="true" tabindex="-1"></a><span class="fu">anova</span>(H2_negbinom, H2_negbinom2, H2_negbinom3, H2_negbinom4, <span class="at">test =</span> <span class="st">"LRT"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in anova.negbin(H2_negbinom, H2_negbinom2, H2_negbinom3, H2_negbinom4,
+: only Chi-squared LR tests are implemented</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Likelihood ratio tests of Negative Binomial Models
+
+Response: Species
+                            Model    theta Resid. df    2 x log-lik.   Test
+1                         logArea 2.533343        28       -277.7721       
+2               logArea + Nearest 2.730433        27       -275.7711 1 vs 2
+3           logArea + logAdjacent 2.619569        27       -276.9859 2 vs 3
+4 logArea + Nearest + logAdjacent 2.837150        26       -274.8838 3 vs 4
+     df  LR stat.   Pr(Chi)
+1                          
+2     1  2.000994 0.1571961
+3     0 -1.214826 1.0000000
+4     1  2.102117 0.1470954</code></pre>
+</div>
+</div>
+<p>自由度の高い順からペア毎の尤度比検定を行っています。<span class="math inline">E(\text{Species})\sim b_0 + b_1\text{logArea}</span> のモデルでいいかもしれないです。</p>
+</section>
+<section id="モデル診断図" class="level3">
+<h3 class="anchored" data-anchor-id="モデル診断図">モデル診断図</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb129"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb129-1"><a href="#cb129-1" aria-hidden="true" tabindex="-1"></a>p1 <span class="ot">=</span> <span class="fu">gg_qq</span>(H2_negbinom4)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Loading required package: tidyvers</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in library(package, lib.loc = lib.loc, character.only = TRUE,
+logical.return = TRUE, : there is no package called 'tidyvers'</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb132"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb132-1"><a href="#cb132-1" aria-hidden="true" tabindex="-1"></a>p2 <span class="ot">=</span> <span class="fu">gg_resX</span>(H2_negbinom4, <span class="at">ncol =</span> <span class="dv">2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Loading required package: tidyvers</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in library(package, lib.loc = lib.loc, character.only = TRUE,
+logical.return = TRUE, : there is no package called 'tidyvers'</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: Using an external vector in selections was deprecated in tidyselect 1.1.0.
+ℹ Please use `all_of()` or `any_of()` instead.
+  # Was:
+  data %&gt;% select(varnames)
+
+  # Now:
+  data %&gt;% select(all_of(varnames))
+
+See &lt;https://tidyselect.r-lib.org/reference/faq-external-vector.html&gt;.</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb136"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb136-1"><a href="#cb136-1" aria-hidden="true" tabindex="-1"></a>p3 <span class="ot">=</span> <span class="fu">gg_resfitted</span>(H2_negbinom4)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Loading required package: tidyvers</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in library(package, lib.loc = lib.loc, character.only = TRUE,
+logical.return = TRUE, : there is no package called 'tidyvers'</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb139"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb139-1"><a href="#cb139-1" aria-hidden="true" tabindex="-1"></a>p4 <span class="ot">=</span> <span class="fu">gg_cooksd</span>(H2_negbinom4)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Loading required package: tidyvers</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in library(package, lib.loc = lib.loc, character.only = TRUE,
+logical.return = TRUE, : there is no package called 'tidyvers'</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb142"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb142-1"><a href="#cb142-1" aria-hidden="true" tabindex="-1"></a>p1 <span class="sc">+</span> p2 <span class="sc">+</span> p3 <span class="sc">+</span> p4</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="glm_files/figure-html/unnamed-chunk-65-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<p>モデル診断図を確認したら，残差の問題はないですので，<span class="math inline">E(\text{Species})\sim b_0 + b_1\text{logArea}</span> のモデルを採択することになりました。</p>
+</section>
+<section id="採択したモデル" class="level3">
+<h3 class="anchored" data-anchor-id="採択したモデル">採択したモデル</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb143"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb143-1"><a href="#cb143-1" aria-hidden="true" tabindex="-1"></a>H2_negbinom4 <span class="sc">|&gt;</span> <span class="fu">summary</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Call:
+MASS::glm.nb(formula = Species ~ logArea, data = gala, link = "log", 
+    init.theta = 2.533342912)
+
+Deviance Residuals: 
+    Min       1Q   Median       3Q      Max  
+-1.9737  -0.9216  -0.2155   0.5056   1.8969  
+
+Coefficients:
+            Estimate Std. Error z value Pr(&gt;|z|)    
+(Intercept)  3.22480    0.13669  23.592   &lt;2e-16 ***
+logArea      0.34989    0.03543   9.877   &lt;2e-16 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+(Dispersion parameter for Negative Binomial(2.5333) family taken to be 1)
+
+    Null deviance: 130.161  on 29  degrees of freedom
+Residual deviance:  32.604  on 28  degrees of freedom
+AIC: 283.77
+
+Number of Fisher Scoring iterations: 1
+
+              Theta:  2.533 
+          Std. Err.:  0.719 
+
+ 2 x log-likelihood:  -277.772 </code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb145"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb145-1"><a href="#cb145-1" aria-hidden="true" tabindex="-1"></a>ndata <span class="ot">=</span> gala <span class="sc">|&gt;</span> <span class="fu">expand</span>(<span class="at">logArea =</span> <span class="fu">seq</span>(<span class="fu">min</span>(logArea), <span class="fu">max</span>(logArea), <span class="at">length =</span> <span class="dv">21</span>)) </span>
+<span id="cb145-2"><a href="#cb145-2" aria-hidden="true" tabindex="-1"></a>ndata <span class="ot">=</span> <span class="fu">bind_cols</span>(ndata, <span class="fu">predict</span>(H2_negbinom4, <span class="at">newdata =</span> ndata, <span class="at">type =</span> <span class="st">"link"</span>, <span class="at">se =</span> T) <span class="sc">|&gt;</span> <span class="fu">as_tibble</span>())</span>
+<span id="cb145-3"><a href="#cb145-3" aria-hidden="true" tabindex="-1"></a>ndata <span class="ot">=</span> ndata <span class="sc">|&gt;</span> </span>
+<span id="cb145-4"><a href="#cb145-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">expect =</span> <span class="fu">exp</span>(fit),</span>
+<span id="cb145-5"><a href="#cb145-5" aria-hidden="true" tabindex="-1"></a>         <span class="at">lower =</span> <span class="fu">exp</span>(fit <span class="sc">-</span> se.fit),</span>
+<span id="cb145-6"><a href="#cb145-6" aria-hidden="true" tabindex="-1"></a>         <span class="at">upper =</span> <span class="fu">exp</span>(fit <span class="sc">+</span> se.fit))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb146"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb146-1"><a href="#cb146-1" aria-hidden="true" tabindex="-1"></a>gala <span class="sc">|&gt;</span> </span>
+<span id="cb146-2"><a href="#cb146-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> logArea)) <span class="sc">+</span></span>
+<span id="cb146-3"><a href="#cb146-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_ribbon</span>(<span class="fu">aes</span>(<span class="at">ymin =</span> lower, <span class="at">ymax =</span> upper), <span class="at">data =</span> ndata, <span class="at">alpha =</span> <span class="fl">0.5</span>) <span class="sc">+</span></span>
+<span id="cb146-4"><a href="#cb146-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="fu">aes</span>(<span class="at">y =</span> Species)) <span class="sc">+</span></span>
+<span id="cb146-5"><a href="#cb146-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="fu">aes</span>(<span class="at">y =</span> expect), <span class="at">data =</span> ndata)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="glm_files/figure-html/unnamed-chunk-68-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+
+
+</section>
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    target: function(trigger) {
+      return trigger.previousElementSibling;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  function tippyHover(el, contentFn) {
+    const config = {
+      allowHTML: true,
+      content: contentFn,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start'
+    };
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+</div> <!-- /content -->
+
+
+
+</body></html>

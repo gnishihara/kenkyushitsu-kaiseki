@@ -1,0 +1,1358 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.2.335">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>データ解析（研究室用） - 一元配置分散分析</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1.6em;
+  vertical-align: middle;
+}
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { color: #008000; } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { color: #008000; font-weight: bold; } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<script src="site_libs/quarto-html/quarto.js"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 20,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit"
+  }
+}</script>
+
+<script src="site_libs/kePrint-0.0.1/kePrint.js"></script>
+<link href="site_libs/lightable-0.0.1/lightable.css" rel="stylesheet">
+
+  <script>window.backupDefine = window.define; window.define = undefined;</script><script src="https://cdn.jsdelivr.net/npm/katex@0.15.1/dist/katex.min.js"></script>
+  <script>document.addEventListener("DOMContentLoaded", function () {
+ var mathElements = document.getElementsByClassName("math");
+ var macros = [];
+ for (var i = 0; i < mathElements.length; i++) {
+  var texText = mathElements[i].firstChild;
+  if (mathElements[i].tagName == "SPAN") {
+   katex.render(texText.data, mathElements[i], {
+    displayMode: mathElements[i].classList.contains('display'),
+    throwOnError: false,
+    macros: macros,
+    fleqn: false
+   });
+}}});
+  </script>
+  <script>window.define = window.backupDefine; window.backupDefine = undefined;</script><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.15.1/dist/katex.min.css">
+
+<link rel="stylesheet" href="styles.css">
+</head>
+
+<body class="nav-sidebar docked slimcontent">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+  <nav class="quarto-secondary-nav" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+    <div class="container-fluid d-flex justify-content-between">
+      <h1 class="quarto-secondary-nav-title">一元配置分散分析</h1>
+      <button type="button" class="quarto-btn-toggle btn" aria-label="Show secondary navigation">
+        <i class="bi bi-chevron-right"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse sidebar-navigation docked overflow-auto">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header">
+    <div class="sidebar-title mb-0 py-0">
+      <a href="./">データ解析（研究室用）</a> 
+    </div>
+      </div>
+      <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Search"></div>
+        </div>
+      </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-expanded="true">Introduction</a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-expanded="true">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./index.html" class="sidebar-item-text sidebar-link">研究室と講義の R コード</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./about.html" class="sidebar-item-text sidebar-link">About</a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-expanded="true">Rの基礎</a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-expanded="true">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./part01.html" class="sidebar-item-text sidebar-link">R の基本操作</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./part02.html" class="sidebar-item-text sidebar-link">R 関数の基本</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./part03.html" class="sidebar-item-text sidebar-link">Tidyverse</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./part04.html" class="sidebar-item-text sidebar-link">データの操作</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./part05.html" class="sidebar-item-text sidebar-link">ggplot の図</a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" aria-expanded="true">Linear models</a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" aria-expanded="true">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./linearmodels.html" class="sidebar-item-text sidebar-link">ノンパラメトリック法</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./ttest.html" class="sidebar-item-text sidebar-link">2群の比較：t 検定</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./anova.html" class="sidebar-item-text sidebar-link active">一元配置分散分析</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./anova2.html" class="sidebar-item-text sidebar-link">多数群の比較：二元配置分散分析</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./glm.html" class="sidebar-item-text sidebar-link">線形モデル</a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" aria-expanded="true">Multivariate</a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" aria-expanded="true">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./pca.html" class="sidebar-item-text sidebar-link">Principal Component Analysis</a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./rda.html" class="sidebar-item-text sidebar-link">Redundancy Analysis</a>
+  </div>
+</li>
+      </ul>
+  </li>
+    </ul>
+    </div>
+</nav>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#ノコギリモク-sargassum-macrocarpum-の疑似データ" id="toc-ノコギリモク-sargassum-macrocarpum-の疑似データ" class="nav-link active" data-scroll-target="#ノコギリモク-sargassum-macrocarpum-の疑似データ">ノコギリモク (<em>Sargassum macrocarpum</em>) の疑似データ</a></li>
+  <li><a href="#データの可視化" id="toc-データの可視化" class="nav-link" data-scroll-target="#データの可視化">データの可視化</a></li>
+  <li><a href="#hypothesis" id="toc-hypothesis" class="nav-link" data-scroll-target="#hypothesis">仮説を決める</a>
+  <ul class="collapse">
+  <li><a href="#帰無仮説と対立仮説" id="toc-帰無仮説と対立仮説" class="nav-link" data-scroll-target="#帰無仮説と対立仮説">帰無仮説と対立仮説</a></li>
+  </ul></li>
+  <li><a href="#ナイーブな-ペア毎の-t-検定" id="toc-ナイーブな-ペア毎の-t-検定" class="nav-link" data-scroll-target="#ナイーブな-ペア毎の-t-検定">ナイーブな ペア毎の t 検定</a>
+  <ul class="collapse">
+  <li><a href="#site-a-and-b-の-t-検定" id="toc-site-a-and-b-の-t-検定" class="nav-link" data-scroll-target="#site-a-and-b-の-t-検定">Site A and B の t 検定</a></li>
+  <li><a href="#site-a-and-c-の-t-検定" id="toc-site-a-and-c-の-t-検定" class="nav-link" data-scroll-target="#site-a-and-c-の-t-検定">Site A and C の t 検定</a></li>
+  <li><a href="#site-b-and-c-の-t-検定" id="toc-site-b-and-c-の-t-検定" class="nav-link" data-scroll-target="#site-b-and-c-の-t-検定">Site B and C の t 検定</a></li>
+  </ul></li>
+  <li><a href="#第１種の誤り-accepting-a-false-h0" id="toc-第１種の誤り-accepting-a-false-h0" class="nav-link" data-scroll-target="#第１種の誤り-accepting-a-false-h0">第１種の誤り (accepting a false H<sub>0</sub>)</a>
+  <ul class="collapse">
+  <li><a href="#群が増えると大変なことなる" id="toc-群が増えると大変なことなる" class="nav-link" data-scroll-target="#群が増えると大変なことなる">群が増えると大変なことなる</a></li>
+  </ul></li>
+  <li><a href="#一元配置分散分析" id="toc-一元配置分散分析" class="nav-link" data-scroll-target="#一元配置分散分析">一元配置分散分析</a>
+  <ul class="collapse">
+  <li><a href="#one-way-anova-一元配置分散分析" id="toc-one-way-anova-一元配置分散分析" class="nav-link" data-scroll-target="#one-way-anova-一元配置分散分析">One-Way ANOVA (一元配置分散分析)</a></li>
+  <li><a href="#一元配置分散分析表" id="toc-一元配置分散分析表" class="nav-link" data-scroll-target="#一元配置分散分析表">一元配置分散分析表</a></li>
+  <li><a href="#平方和の方程式" id="toc-平方和の方程式" class="nav-link" data-scroll-target="#平方和の方程式">平方和の方程式</a></li>
+  <li><a href="#decomposing-the-sum-of-squares" id="toc-decomposing-the-sum-of-squares" class="nav-link" data-scroll-target="#decomposing-the-sum-of-squares">Decomposing the sum-of-squares</a></li>
+  <li><a href="#分散分析の統計量" id="toc-分散分析の統計量" class="nav-link" data-scroll-target="#分散分析の統計量">分散分析の統計量</a></li>
+  <li><a href="#f値の確率密度関数" id="toc-f値の確率密度関数" class="nav-link" data-scroll-target="#f値の確率密度関数">F値の確率密度関数</a></li>
+  <li><a href="#一元配置分散分析表の仮定" id="toc-一元配置分散分析表の仮定" class="nav-link" data-scroll-target="#一元配置分散分析表の仮定">一元配置分散分析表の仮定</a></li>
+  <li><a href="#rにおける解析" id="toc-rにおける解析" class="nav-link" data-scroll-target="#rにおける解析">Rにおける解析</a></li>
+  <li><a href="#分散分析の結果" id="toc-分散分析の結果" class="nav-link" data-scroll-target="#分散分析の結果">分散分析の結果</a></li>
+  </ul></li>
+  <li><a href="#多重比較" id="toc-多重比較" class="nav-link" data-scroll-target="#多重比較">多重比較</a>
+  <ul class="collapse">
+  <li><a href="#多重比較-1" id="toc-多重比較-1" class="nav-link" data-scroll-target="#多重比較-1">多重比較</a></li>
+  <li><a href="#多重比較用-r-パッケージ" id="toc-多重比較用-r-パッケージ" class="nav-link" data-scroll-target="#多重比較用-r-パッケージ">多重比較用 R パッケージ</a></li>
+  <li><a href="#繰り返しウェルチの-t-検定" id="toc-繰り返しウェルチの-t-検定" class="nav-link" data-scroll-target="#繰り返しウェルチの-t-検定">繰り返しウェルチの t 検定</a></li>
+  <li><a href="#繰り返し-t-検定" id="toc-繰り返し-t-検定" class="nav-link" data-scroll-target="#繰り返し-t-検定">繰り返し t 検定</a></li>
+  <li><a href="#ボンフェロニ法" id="toc-ボンフェロニ法" class="nav-link" data-scroll-target="#ボンフェロニ法">ボンフェロニ法</a></li>
+  <li><a href="#ホルムボンフェロニ法" id="toc-ホルムボンフェロニ法" class="nav-link" data-scroll-target="#ホルムボンフェロニ法">ホルム=ボンフェロニ法</a></li>
+  <li><a href="#テューキーのhsd法" id="toc-テューキーのhsd法" class="nav-link" data-scroll-target="#テューキーのhsd法">テューキーのHSD法</a></li>
+  <li><a href="#シェッフェの方法" id="toc-シェッフェの方法" class="nav-link" data-scroll-target="#シェッフェの方法">シェッフェの方法</a></li>
+  <li><a href="#ダネットの検定" id="toc-ダネットの検定" class="nav-link" data-scroll-target="#ダネットの検定">ダネットの検定</a></li>
+  <li><a href="#多重比較のおすすめ" id="toc-多重比較のおすすめ" class="nav-link" data-scroll-target="#多重比較のおすすめ">多重比較のおすすめ</a></li>
+  </ul></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content page-columns page-full" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title d-none d-lg-block">一元配置分散分析</h1>
+<p class="subtitle lead">Comparing multiple groups with ANOVA</p>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+</header>
+
+<div class="cell" data-warnings="false">
+
+</div>
+<div class="callout-note callout callout-style-default callout-captioned">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-caption-container flex-fill">
+Note
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>解析の紹介に使った疑似データは次のようにつくりました。</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">2021</span>) <span class="co"># 疑似乱数のシードを設定する</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>nA <span class="ot">=</span> <span class="dv">6</span>         <span class="co"># サンプル数を決める</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>nB <span class="ot">=</span> <span class="dv">6</span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>nC <span class="ot">=</span> <span class="dv">6</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>meanA <span class="ot">=</span> <span class="dv">20</span>     <span class="co"># 真の平均値</span></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>meanB <span class="ot">=</span> <span class="dv">22</span></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>meanC <span class="ot">=</span> <span class="dv">18</span></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>sigmaA <span class="ot">=</span> <span class="dv">1</span>     <span class="co"># 真の標準偏差</span></span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>sigmaB <span class="ot">=</span> <span class="dv">1</span></span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>sigmaC <span class="ot">=</span> <span class="dv">1</span></span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>siteA <span class="ot">=</span> <span class="fu">rnorm</span>(nA, meanA, sigmaA) <span class="sc">|&gt;</span> <span class="fu">round</span>(<span class="dv">1</span>) <span class="co"># データを発生する</span></span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>siteB <span class="ot">=</span> <span class="fu">rnorm</span>(nB, meanB, sigmaB) <span class="sc">|&gt;</span> <span class="fu">round</span>(<span class="dv">1</span>)</span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>siteC <span class="ot">=</span> <span class="fu">rnorm</span>(nC, meanC, sigmaC) <span class="sc">|&gt;</span> <span class="fu">round</span>(<span class="dv">1</span>)</span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a><span class="co"># tibble を組み立てる</span></span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a>dset <span class="ot">=</span> <span class="fu">tibble</span>(<span class="at">g =</span> <span class="fu">c</span>(<span class="st">"A"</span>, <span class="st">"B"</span>, <span class="st">"C"</span>), <span class="at">data =</span> <span class="fu">list</span>(siteA, siteB, siteC)) <span class="sc">|&gt;</span> </span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">unnest</span>(data) <span class="sc">|&gt;</span> </span>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">g =</span> <span class="fu">factor</span>(g))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</div>
+</div>
+<section id="ノコギリモク-sargassum-macrocarpum-の疑似データ" class="level2">
+<h2 class="anchored" data-anchor-id="ノコギリモク-sargassum-macrocarpum-の疑似データ">ノコギリモク (<em>Sargassum macrocarpum</em>) の疑似データ</h2>
+<div class="grid">
+<div class="g-col-4">
+<div class="cell" data-hash="anova_cache/html/juvenile-sargassum-figure_3a78b6ea7286e06c5539cdc163a125fb">
+
+</div>
+</div>
+<div class="g-col-8">
+<div class="cell">
+<div class="cell-output-display">
+<div id="tbl-juvenile-dataset" class="anchored">
+
+<table class="table table-striped table-hover table-condensed table-responsive" style="margin-left: auto; margin-right: auto;"><caption>Table&nbsp;1:  Size (mm) of juvenile Sargassum macrocarpum（ノコギリモク）. </caption>
+ <thead>
+  <tr>
+   <th style="text-align:right;"> Sample </th>
+   <th style="text-align:right;"> Site A </th>
+   <th style="text-align:right;"> Site B </th>
+   <th style="text-align:right;"> Site C </th>
+  </tr>
+ </thead>
+<tbody>
+  <tr>
+   <td style="text-align:right;"> 1 </td>
+   <td style="text-align:right;"> 19.9 </td>
+   <td style="text-align:right;"> 22.3 </td>
+   <td style="text-align:right;"> 18.2 </td>
+  </tr>
+  <tr>
+   <td style="text-align:right;"> 2 </td>
+   <td style="text-align:right;"> 20.6 </td>
+   <td style="text-align:right;"> 22.9 </td>
+   <td style="text-align:right;"> 19.5 </td>
+  </tr>
+  <tr>
+   <td style="text-align:right;"> 3 </td>
+   <td style="text-align:right;"> 20.3 </td>
+   <td style="text-align:right;"> 22.0 </td>
+   <td style="text-align:right;"> 19.6 </td>
+  </tr>
+  <tr>
+   <td style="text-align:right;"> 4 </td>
+   <td style="text-align:right;"> 20.4 </td>
+   <td style="text-align:right;"> 23.7 </td>
+   <td style="text-align:right;"> 16.2 </td>
+  </tr>
+  <tr>
+   <td style="text-align:right;"> 5 </td>
+   <td style="text-align:right;"> 20.9 </td>
+   <td style="text-align:right;"> 20.9 </td>
+   <td style="text-align:right;"> 19.6 </td>
+  </tr>
+  <tr>
+   <td style="text-align:right;"> 6 </td>
+   <td style="text-align:right;"> 18.1 </td>
+   <td style="text-align:right;"> 21.7 </td>
+   <td style="text-align:right;"> 18.1 </td>
+  </tr>
+</tbody>
+</table>
+
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="callout-note callout callout-style-default callout-captioned">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-caption-container flex-fill">
+Note
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>ノコギモクの大きさは <a href="#tbl-juvenile-dataset">Table&nbsp;1</a> に示しています。 サンプルは 3 箇所（3群）から採取しました。 各サンプルに個体数番号もふっています。</p>
+<p>データは 上のノートに紹介したコードで発生しました。</p>
+</div>
+</div>
+</section>
+<section id="データの可視化" class="level2">
+<h2 class="anchored" data-anchor-id="データの可視化">データの可視化</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(dset) <span class="sc">+</span> </span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="fu">aes</span>(<span class="at">x =</span> g, <span class="at">y =</span> data, <span class="at">color =</span> g),</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>             <span class="at">size =</span> <span class="dv">2</span>,</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>             <span class="at">position =</span> <span class="fu">position_jitter</span>(<span class="fl">0.1</span>)) <span class="sc">+</span></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_color_manual</span>(<span class="st">""</span>, <span class="at">values =</span> viridis<span class="sc">::</span><span class="fu">viridis</span>(<span class="dv">4</span>)) <span class="sc">+</span></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">y =</span> <span class="st">"Width (mm)"</span>, <span class="at">x =</span> <span class="st">"Site"</span>) <span class="sc">+</span></span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">"top"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="anova_files/figure-html/unnamed-chunk-5-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<p>各サイトの平均値 (<span class="math inline">\overline{x}</span>), 標準偏差 (<span class="math inline">s</span>), と標準誤差 (s.e.) は、</p>
+<ul>
+<li><span class="math inline">\overline{x}_A=</span> 20; <span class="math inline">s_A=</span> 1; s.e. = 0.41</li>
+<li><span class="math inline">\overline{x}_B=</span> 22.2; <span class="math inline">s_B=</span> 0.97; s.e. = 0.4</li>
+<li><span class="math inline">\overline{x}_C=</span> 18.5; <span class="math inline">s_C=</span> 1.34; s.e. = 0.55</li>
+</ul>
+</section>
+<section id="hypothesis" class="level2">
+<h2 class="anchored" data-anchor-id="hypothesis">仮説を決める</h2>
+<div class="callout-important callout callout-style-default callout-captioned">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-caption-container flex-fill">
+Important
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>解析する前に作業仮説、帰無仮説、対立仮説を設定する必要があります。</p>
+</div>
+</div>
+<div class="callout-note callout callout-style-simple callout-captioned">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-caption-container flex-fill">
+Working hypothesis
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p><strong>作業仮設</strong>: ノコギリモクの大きさは採取した場所によって異なる。</p>
+</div>
+</div>
+<ul>
+<li>記述統計量によって、平均値以外の統計量（標準偏差と標準誤差）は似ています。</li>
+<li><span class="math inline">\overline{x}_A=</span> 20; <span class="math inline">s=</span> 1; s.e. = 0.41</li>
+<li><span class="math inline">\overline{x}_B=</span> 22.2; <span class="math inline">s=</span> 0.97; s.e. = 0.4</li>
+<li><span class="math inline">\overline{x}_C=</span> 18.5; <span class="math inline">s=</span> 1.34; s.e. = 0.55</li>
+</ul>
+<section id="帰無仮説と対立仮説" class="level3">
+<h3 class="anchored" data-anchor-id="帰無仮説と対立仮説">帰無仮説と対立仮説</h3>
+<p>統計学的に解析するための帰無仮説と対立仮説を決めます。</p>
+<ul>
+<li><strong><span class="math inline">H_0</span> (null hypothesis 帰無仮説・ヌル仮説):</strong> ノコギリモクの大きさは場所によって異ならない</li>
+<li><strong><span class="math inline">H_A</span> (alternative hypothesis 対立仮設):</strong> ノコギリモクの大きさは場所によって異なる</li>
+</ul>
+</section>
+</section>
+<section id="ナイーブな-ペア毎の-t-検定" class="level2 page-columns page-full">
+<h2 class="anchored" data-anchor-id="ナイーブな-ペア毎の-t-検定">ナイーブな ペア毎の t 検定</h2>
+<p>とりあえず、場所のペア毎の t 検定を実施します。 このとき、3 つの帰無仮説が必要なので、<span class="citation" data-cites="hypothesis">(<a href="#ref-hypothesis" role="doc-biblioref"><strong>hypothesis?</strong></a>)</span> と違います。</p>
+<ul>
+<li>H<sub>0,A-B</sub>: Site A と Site B の大きさは同じ</li>
+<li>H<sub>0,A-C</sub>: Site A と Site C の大きさは同じ</li>
+<li>H<sub>0,B-C</sub>: Site B と Site C の大きさは同じ</li>
+</ul>
+<p>では、それぞれの t 検定を実施します。</p>
+<section id="site-a-and-b-の-t-検定" class="level3">
+<h3 class="anchored" data-anchor-id="site-a-and-b-の-t-検定">Site A and B の t 検定</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>resultAB <span class="ot">=</span> dset <span class="sc">|&gt;</span> <span class="fu">filter</span>(<span class="sc">!</span><span class="fu">str_detect</span>(g, <span class="st">"C"</span>))</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>resultAB <span class="ot">=</span> <span class="fu">t.test</span>(data <span class="sc">~</span> g, <span class="at">data =</span> resultAB)</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>resultAB</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+    Welch Two Sample t-test
+
+data:  data by g
+t = -3.8886, df = 9.9893, p-value = 0.003022
+alternative hypothesis: true difference in means between group A and group B is not equal to 0
+95 percent confidence interval:
+ -3.486976 -0.946357
+sample estimates:
+mean in group A mean in group B 
+       20.03333        22.25000 </code></pre>
+</div>
+</div>
+<p>t値は -3.889、P値は 0.003 です。 0.003 <span class="math inline">\le</span> 0.05 なので、帰無仮説は棄却できます。</p>
+</section>
+<section id="site-a-and-c-の-t-検定" class="level3">
+<h3 class="anchored" data-anchor-id="site-a-and-c-の-t-検定">Site A and C の t 検定</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>resultAC <span class="ot">=</span> dset <span class="sc">|&gt;</span> <span class="fu">filter</span>(<span class="sc">!</span><span class="fu">str_detect</span>(g, <span class="st">"B"</span>))</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>resultAC <span class="ot">=</span> <span class="fu">t.test</span>(data <span class="sc">~</span> g, <span class="at">data =</span> resultAC)</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>resultAC</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+    Welch Two Sample t-test
+
+data:  data by g
+t = 2.1968, df = 9.2717, p-value = 0.05477
+alternative hypothesis: true difference in means between group A and group C is not equal to 0
+95 percent confidence interval:
+ -0.03773888  3.03773888
+sample estimates:
+mean in group A mean in group C 
+       20.03333        18.53333 </code></pre>
+</div>
+</div>
+<p>t値は 2.197、P値は 0.0548 です。 0.0548 <span class="math inline">\ge</span> 0.05 なので、帰無仮説は棄却できません。</p>
+</section>
+<section id="site-b-and-c-の-t-検定" class="level3 page-columns page-full">
+<h3 class="anchored" data-anchor-id="site-b-and-c-の-t-検定">Site B and C の t 検定</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>resultBC <span class="ot">=</span> dset <span class="sc">|&gt;</span> <span class="fu">filter</span>(<span class="sc">!</span><span class="fu">str_detect</span>(g, <span class="st">"A"</span>))</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>resultBC <span class="ot">=</span> <span class="fu">t.test</span>(data <span class="sc">~</span> g, <span class="at">data =</span> resultBC)</span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>resultBC</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+    Welch Two Sample t-test
+
+data:  data by g
+t = 5.5063, df = 9.1228, p-value = 0.0003595
+alternative hypothesis: true difference in means between group B and group C is not equal to 0
+95 percent confidence interval:
+ 2.192862 5.240472
+sample estimates:
+mean in group B mean in group C 
+       22.25000        18.53333 </code></pre>
+</div>
+</div>
+<p>t値は 5.506、P値は 0.0004 です。 0.0004 <span class="math inline">\le</span> 0.05 なので、帰無仮説は棄却できます。</p>
+<p><strong>t検定の結果をまとめました。</strong></p>
+<div class="cell">
+<div class="cell-output-display">
+<div id="tbl-three-t-tests" class="anchored">
+
+<table class="table table-striped table-hover table-condensed table-responsive" style="margin-left: auto; margin-right: auto;"><caption>Table&nbsp;2:  Summary of three t-tests. </caption>
+ <thead>
+  <tr>
+   <th style="text-align:left;"> Pair </th>
+   <th style="text-align:right;"> Difference </th>
+   <th style="text-align:right;"> t-value </th>
+   <th style="text-align:right;"> P-value </th>
+   <th style="text-align:right;"> d.f. </th>
+   <th style="text-align:left;"> 95% CI </th>
+   <th style="text-align:left;"> Is P ≤ 0.05? </th>
+  </tr>
+ </thead>
+<tbody>
+  <tr>
+   <td style="text-align:left;"> B-A </td>
+   <td style="text-align:right;"> -2.216667 </td>
+   <td style="text-align:right;"> -3.888623 </td>
+   <td style="text-align:right;"> 0.0030224 </td>
+   <td style="text-align:right;"> 9.989348 </td>
+   <td style="text-align:left;"> -3.487 to -0.95 </td>
+   <td style="text-align:left;"> Yes </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> C-A </td>
+   <td style="text-align:right;"> 1.500000 </td>
+   <td style="text-align:right;"> 2.196821 </td>
+   <td style="text-align:right;"> 0.0547748 </td>
+   <td style="text-align:right;"> 9.271711 </td>
+   <td style="text-align:left;"> -0.038 to  3.04 </td>
+   <td style="text-align:left;"> No </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> C-B </td>
+   <td style="text-align:right;"> 3.716667 </td>
+   <td style="text-align:right;"> 5.506257 </td>
+   <td style="text-align:right;"> 0.0003595 </td>
+   <td style="text-align:right;"> 9.122821 </td>
+   <td style="text-align:left;"> 2.193 to  5.24 </td>
+   <td style="text-align:left;"> Yes </td>
+  </tr>
+</tbody>
+</table>
+
+</div>
+</div>
+</div>
+<div class="page-columns page-full"><p>d.f. は Welch-Satterthwaite 式で求めた自由度<a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a>、95% CI は 95% 信頼区間です。</p><div class="no-row-height column-margin column-container"><li id="fn1"><p><sup>1</sup>&nbsp;degrees-of-freedom</p></li></div></div>
+</section>
+</section>
+<section id="第１種の誤り-accepting-a-false-h0" class="level2">
+<h2 class="anchored" data-anchor-id="第１種の誤り-accepting-a-false-h0">第１種の誤り (accepting a false H<sub>0</sub>)</h2>
+<div class="callout-note callout callout-style-default callout-captioned">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-caption-container flex-fill">
+第１種の誤り
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>H<sub>0</sub> が <strong>FALSE</strong> のときに帰無仮説を棄却できなかった誤りです。</p>
+</div>
+</div>
+<p>t 検定を 1 回実施したときの誤りは</p>
+<p><span class="math display">
+\text{Type I error rate} = \alpha = 0.05
+</span></p>
+<p>t 検定を 2 回実施したときの誤りは</p>
+<p><span class="math display">
+1 - (1 - \alpha) \times (1 - \alpha) = 1 - (1-\alpha)^2=0.0975
+</span></p>
+<p>t 検定を 3 回実施したときの誤りは</p>
+<p><span class="math display">
+1 - (1 - \alpha) \times (1 - \alpha) \times (1 - \alpha)= 1 - (1-\alpha)^3=0.142625
+</span></p>
+<p>t 検定を <span class="math inline">h</span> 回実施したとき、第１種の誤りは <span class="math inline">1 - (1-\alpha)^h</span> です。</p>
+<section id="群が増えると大変なことなる" class="level3">
+<h3 class="anchored" data-anchor-id="群が増えると大変なことなる">群が増えると大変なことなる</h3>
+<p><span class="math inline">n</span> 群のサンプルの全ペア毎の比較がしたい場合、 <span class="math inline">h</span> のペア <span class="math inline">(k = 2)</span> が存在します。</p>
+<p><span class="math display">
+h = \binom{n}{k}=\frac{n!}{k!(n-k!)}
+</span></p>
+<p>ペア毎の <span class="math inline">h</span> の数を求める式は次のようになります。</p>
+<p><span class="math display">
+h = \binom{n}{2}=\frac{n!}{2!(n-2!)} = \frac{n(n-1)}{2}
+</span></p>
+<p>例えば、5 site の場合、10 のペアが存在します。 ペア毎の t 検定をしたら、第１種の誤りは</p>
+<p><span class="math display">
+1 - (1-0.05)^{10}=0.4012631
+</span></p>
+<div class="callout-note callout callout-style-default callout-captioned">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-caption-container flex-fill">
+R での求め方
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>alpha <span class="ot">=</span> <span class="fl">0.05</span>       <span class="co"># 有意水準</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>k <span class="ot">=</span> <span class="dv">2</span>              <span class="co"># ペアだから 2</span></span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>n <span class="ot">=</span> <span class="dv">5</span>              <span class="co"># 比較する群・場所・グループの数</span></span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>h <span class="ot">=</span> <span class="fu">choose</span>(n, k)   <span class="co"># ペアの数</span></span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a><span class="dv">1</span> <span class="sc">-</span> (<span class="dv">1</span> <span class="sc">-</span> alpha)<span class="sc">^</span>h  <span class="co"># 第１種の誤り</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 0.4012631</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="cell">
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: Using `size` aesthetic for lines was deprecated in ggplot2 3.4.0.
+ℹ Please use `linewidth` instead.</code></pre>
+</div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="anova_files/figure-html/unnamed-chunk-11-1.png" class="img-fluid figure-img" width="672"></p>
+<p></p><figcaption class="figure-caption">比較する群が増えると、t 検定を繰り返して実施すると、第１種の誤りを起こしやすい。</figcaption><p></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+</section>
+<section id="一元配置分散分析" class="level1 page-columns page-full">
+<h1>一元配置分散分析</h1>
+<section id="one-way-anova-一元配置分散分析" class="level2 page-columns page-full">
+<h2 class="anchored" data-anchor-id="one-way-anova-一元配置分散分析">One-Way ANOVA (一元配置分散分析)</h2>
+<div class="page-columns page-full"><p>複数群（因子の水準）の解析は <strong>一元配置分散分析)</strong><a href="#fn2" class="footnote-ref" id="fnref2" role="doc-noteref"><sup>2</sup></a> 用います。</p><div class="no-row-height column-margin column-container"><li id="fn2"><p><sup>2</sup>&nbsp;One-Way ANOVA (One-Way Analysis of Variance</p></li></div></div>
+<ul>
+<li>因子・要因<a href="#fn3" class="footnote-ref" id="fnref3" role="doc-noteref"><sup>3</sup></a>：説明変数、一般的には離散型な変数</li>
+<li>水準<a href="#fn4" class="footnote-ref" id="fnref4" role="doc-noteref"><sup>4</sup></a>：説明変数における値、レベル、要素</li>
+</ul>
+<div class="no-row-height column-margin column-container"><li id="fn3"><p><sup>3</sup>&nbsp;factor</p></li><li id="fn4"><p><sup>4</sup>&nbsp;level, factor level</p></li></div><p>分散分析の帰無仮説は、</p>
+<p><span class="math display">
+\mu_1 = \mu_2 = \cdots = \mu_i
+</span></p>
+<p>つまり、一つの検定で複数群の平均値を同時に解析するから、第１種の誤りは 0.05 に抑えられる。</p>
+<p>分散分析のモデル式は次のように表せます。</p>
+<p><span class="math display">
+x_{ij} = \mu_i + \epsilon_{ij}
+</span></p>
+<p>水準 <span class="math inline">i</span> とサンプル <span class="math inline">j</span> の値は <span class="math inline">x_{ij}</span>です。 水準 <span class="math inline">i</span> の平均値は <span class="math inline">\mu_i</span> です。 モデルの残渣<sup>[residual]または誤差項</sup>[error term]は <span class="math inline">\epsilon_{ij}</span> です。</p>
+</section>
+<section id="一元配置分散分析表" class="level2 page-columns page-full">
+<h2 class="anchored" data-anchor-id="一元配置分散分析表">一元配置分散分析表</h2>
+<div class="cell">
+<div class="cell-output-display">
+
+<table class="table table-striped table-hover table-condensed table-responsive" style="margin-left: auto; margin-right: auto;">
+ <thead>
+  <tr>
+   <th style="text-align:left;"> Factor </th>
+   <th style="text-align:left;"> Degrees-of-freedom (df) </th>
+   <th style="text-align:left;"> Sum-of-Squares (SS) </th>
+   <th style="text-align:left;"> Mean-square (MS) </th>
+   <th style="text-align:left;"> F-value </th>
+   <th style="text-align:left;"> P-value </th>
+  </tr>
+ </thead>
+<tbody>
+  <tr>
+   <td style="text-align:left;"> A </td>
+   <td style="text-align:left;"> $df_A = I-1$ </td>
+   <td style="text-align:left;"> $SS_A$ </td>
+   <td style="text-align:left;"> $MS_A = SS_A / df_A$ </td>
+   <td style="text-align:left;"> $MS_A / MS_R$ </td>
+   <td style="text-align:left;"> $qf(1-α, df_A, df_R)$ </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> e </td>
+   <td style="text-align:left;"> $df_R = I(J-1)$ </td>
+   <td style="text-align:left;"> $SS_R$ </td>
+   <td style="text-align:left;"> $MS_R = SS_R / df_R$ </td>
+   <td style="text-align:left;">  </td>
+   <td style="text-align:left;">  </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;">  </td>
+   <td style="text-align:left;"> $df_T =IJ-1$ </td>
+   <td style="text-align:left;"> $SS_T$ </td>
+   <td style="text-align:left;">  </td>
+   <td style="text-align:left;">  </td>
+   <td style="text-align:left;">  </td>
+  </tr>
+</tbody>
+</table>
+
+</div>
+</div>
+<ul>
+<li>因子は <span class="math inline">A</span><a href="#fn5" class="footnote-ref" id="fnref5" role="doc-noteref"><sup>5</sup></a></li>
+<li>残渣は <span class="math inline">e</span><a href="#fn6" class="footnote-ref" id="fnref6" role="doc-noteref"><sup>6</sup></a></li>
+<li>水準数は <span class="math inline">I</span><a href="#fn7" class="footnote-ref" id="fnref7" role="doc-noteref"><sup>7</sup></a></li>
+<li>サンプル数は　<span class="math inline">J</span><a href="#fn8" class="footnote-ref" id="fnref8" role="doc-noteref"><sup>8</sup></a></li>
+<li>水準間平方和は <span class="math inline">SS_A</span><a href="#fn9" class="footnote-ref" id="fnref9" role="doc-noteref"><sup>9</sup></a></li>
+<li>残渣平方和は <span class="math inline">SS_R</span><a href="#fn10" class="footnote-ref" id="fnref10" role="doc-noteref"><sup>10</sup></a></li>
+<li>総平方和は <span class="math inline">SS_T</span><a href="#fn11" class="footnote-ref" id="fnref11" role="doc-noteref"><sup>11</sup></a></li>
+<li>水準間平均平方は <span class="math inline">MS_A</span><a href="#fn12" class="footnote-ref" id="fnref12" role="doc-noteref"><sup>12</sup></a></li>
+<li>残渣平均平方は <span class="math inline">MS_R</span><a href="#fn13" class="footnote-ref" id="fnref13" role="doc-noteref"><sup>13</sup></a></li>
+<li>F値<a href="#fn14" class="footnote-ref" id="fnref14" role="doc-noteref"><sup>14</sup></a>は MS の比です。</li>
+</ul>
+<div class="no-row-height column-margin column-container"><li id="fn5"><p><sup>5</sup>&nbsp;factor</p></li><li id="fn6"><p><sup>6</sup>&nbsp;residual</p></li><li id="fn7"><p><sup>7</sup>&nbsp;number of levels</p></li><li id="fn8"><p><sup>8</sup>&nbsp;number of samples</p></li><li id="fn9"><p><sup>9</sup>&nbsp;among levels sum-of-squares (SS)</p></li><li id="fn10"><p><sup>10</sup>&nbsp;residual SS</p></li><li id="fn11"><p><sup>11</sup>&nbsp;total SS</p></li><li id="fn12"><p><sup>12</sup>&nbsp;among levels mean square (MS)</p></li><li id="fn13"><p><sup>13</sup>&nbsp;residual mean square (MS)</p></li><li id="fn14"><p><sup>14</sup>&nbsp;F-value</p></li></div></section>
+<section id="平方和の方程式" class="level2">
+<h2 class="anchored" data-anchor-id="平方和の方程式">平方和の方程式</h2>
+<p><span class="math display">
+\underbrace{\sum_{i=1}^I\sum_{j=1}^J(x_{ij} - \overline{\overline{x}})^2 }_{\text{総平方和}\;(SS_T)} =
+\overbrace{J\sum_{i=1}^I(\overline{x}_{i}-\overline{\overline{x}})^2}^{\text{水準間平方和}\;SS_A} +
+\underbrace{\sum_{i=1}^I\sum_{j=1}^J(x_{ij} - \overline{x}_i)^2}_{\text{残渣平方和}\;SS_R}
+</span></p>
+<p>標本平均は <span class="math inline">\bar{x}_i</span>、総平均は <span class="math inline">\bar{\bar{x}}</span> です。</p>
+</section>
+<section id="decomposing-the-sum-of-squares" class="level2">
+<h2 class="anchored" data-anchor-id="decomposing-the-sum-of-squares">Decomposing the sum-of-squares</h2>
+<div class="cell">
+
+</div>
+<div class="cell quarto-layout-panel">
+<div class="quarto-layout-row quarto-layout-valign-top">
+<div class="cell-output-display quarto-layout-cell" style="flex-basis: 50.0%;justify-content: center;">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="anova_files/figure-html/unnamed-chunk-14-1.png" class="img-fluid figure-img" width="672"></p>
+<p></p><figcaption class="figure-caption">残渣平方和：各サンプルの値は点、グループ毎の平均値は黒線で示しています。黒線から点の縦線は残渣を表しています。</figcaption><p></p>
+</figure>
+</div>
+</div>
+<div class="cell-output-display quarto-layout-cell" style="flex-basis: 50.0%;justify-content: center;">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="anova_files/figure-html/unnamed-chunk-14-2.png" class="img-fluid figure-img" width="672"></p>
+<p></p><figcaption class="figure-caption">水準間平方和：各グループの平均値は点、総平均は黒線で示しています。黒線から点の縦線はグループ毎の平均値と総平均の違いを表しています。</figcaption><p></p>
+</figure>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section id="分散分析の統計量" class="level2 page-columns page-full">
+<h2 class="anchored" data-anchor-id="分散分析の統計量">分散分析の統計量</h2>
+<p><span class="math display">
+F = \left . \frac{SS_A}{I-1} \right / \frac{SS_R}{I(J-1)}  = \frac{SS_A}{SS_R} \frac{I(J-1)}{I-1} = \frac{MS_A}{MS_R}
+</span></p>
+<p>F値は 自由度 <span class="math inline">\text{df}_1 = I-1, \text{df}_2 = I(J-1)</span> のF分布に従います。 水準の数は <span class="math inline">I</span>、水準ごとのサンプルの数は <span class="math inline">J</span> です。</p>
+<div class="callout-note callout callout-style-default callout-captioned page-columns page-full">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-caption-container flex-fill">
+Note
+</div>
+</div>
+<div class="callout-body-container callout-body page-columns page-full">
+<ul>
+<li>F値の分子<a href="#fn15" class="footnote-ref" id="fnref15" role="doc-noteref"><sup>15</sup></a> が大きとき、または分母<a href="#fn16" class="footnote-ref" id="fnref16" role="doc-noteref"><sup>16</sup></a>が小さいとき、F値は大きいです。</li>
+<li>F値とP値は反比例します。</li>
+</ul>
+<div class="no-row-height column-margin column-container"><li id="fn15"><p><sup>15</sup>&nbsp;numerator</p></li><li id="fn16"><p><sup>16</sup>&nbsp;denominator</p></li></div></div>
+</div>
+</section>
+<section id="f値の確率密度関数" class="level2 page-columns page-full">
+<h2 class="anchored" data-anchor-id="f値の確率密度関数">F値の確率密度関数</h2>
+<div class="page-columns page-full"><p><span class="math display">
+P(x|\text{df}_1, \text{df}_2) = \frac{1}{\mathrm{B}\left(\frac{\text{df}_1}{2}, \frac{\text{df}_2}{2}\right)}\left(\frac{\text{df}_1}{\text{df}_2}\right)^{\left(\frac{\text{df}_1}{2}\right)}x^{\left(\frac{\text{df}_1}{2}-1\right)}\left(1+\frac{\text{df}_1}{\text{df}_2}x\right)^{\left(-\frac{\text{df}_1+\text{df}_2}{2}\right)}
+</span> <span class="math inline">\mathrm{B}(\text{df}_1, \text{df}_2)=\int_0^1t^{x-1}(1-t)^{y-1}dt</span> は ベータ関数<a href="#fn17" class="footnote-ref" id="fnref17" role="doc-noteref"><sup>17</sup></a> といいます。 <span class="math inline">\text{df}_1</span> と <span class="math inline">\text{df}_2</span> は自由度、<span class="math inline">x</span> は確率変数です。</p><div class="no-row-height column-margin column-container"><li id="fn17"><p><sup>17</sup>&nbsp;Beta function</p></li></div></div>
+<div class="cell">
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="anova_files/figure-html/unnamed-chunk-15-1.png" class="img-fluid figure-img" width="672"></p>
+<p></p><figcaption class="figure-caption">自由度が変わるとF分布の形が変わります。</figcaption><p></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="一元配置分散分析表の仮定" class="level2 page-columns page-full">
+<h2 class="anchored" data-anchor-id="一元配置分散分析表の仮定">一元配置分散分析表の仮定</h2>
+<p>分散分析するときに注意する仮定</p>
+<ul>
+<li>水準毎の母分散は等しい</li>
+<li>残渣は正規分布に従う</li>
+<li>観測値はお互いに独立であり、同一分布に従う</li>
+<li>観測変数は連続変数<a href="#fn18" class="footnote-ref" id="fnref18" role="doc-noteref"><sup>18</sup></a></li>
+<li>説明変数は離散変数<a href="#fn19" class="footnote-ref" id="fnref19" role="doc-noteref"><sup>19</sup></a></li>
+</ul>
+<div class="no-row-height column-margin column-container"><li id="fn18"><p><sup>18</sup>&nbsp;continuous</p></li><li id="fn19"><p><sup>19</sup>&nbsp;discrete</p></li></div></section>
+<section id="rにおける解析" class="level2">
+<h2 class="anchored" data-anchor-id="rにおける解析">Rにおける解析</h2>
+<p>解析例に使うデータは <code>thedata.csv</code> に保存したので、まずは読み込みます。</p>
+<div class="cell">
+
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Read data from a csv file</span></span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>dset <span class="ot">=</span> <span class="fu">read_csv</span>(<span class="st">"thedata.csv"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>データをグループ化したあと、最初の 2 行を表示する。</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>dset <span class="sc">|&gt;</span> <span class="fu">group_by</span>(site) <span class="sc">|&gt;</span> <span class="fu">slice</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 6 × 2
+# Groups:   site [3]
+  site    obs
+  &lt;fct&gt; &lt;dbl&gt;
+1 A      19.9
+2 A      20.6
+3 B      22.3
+4 B      22.9
+5 C      18.2
+6 C      19.5</code></pre>
+</div>
+</div>
+<p>帰無仮説を当てはめる。</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>nullmodel <span class="ot">=</span> <span class="fu">lm</span>(obs <span class="sc">~</span> <span class="dv">1</span>, <span class="at">data =</span> dset) <span class="co"># 帰無モデル、ヌルモデル</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>フルモデル（対立仮説）を当てはめる。</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>fullmodel <span class="ot">=</span> <span class="fu">lm</span>(obs <span class="sc">~</span> site, <span class="at">data =</span> dset) <span class="co"># 対立モデル、フルモデル</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="分散分析の結果" class="level2">
+<h2 class="anchored" data-anchor-id="分散分析の結果">分散分析の結果</h2>
+<p><strong>帰無仮説と対立仮説のモデル結果を用いた方法。</strong></p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="fu">anova</span>(nullmodel, fullmodel, <span class="at">test =</span> <span class="st">"F"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Analysis of Variance Table
+
+Model 1: obs ~ 1
+Model 2: obs ~ site
+  Res.Df    RSS Df Sum of Sq      F    Pr(&gt;F)    
+1     17 60.656                                  
+2     15 18.702  2    41.954 16.825 0.0001471 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
+</div>
+</div>
+<div class="cell">
+
+</div>
+<p>F値は 16.825、自由度は df<sub>1</sub> = 2 と df<sub>2</sub> = 15 です。 よって、P値は 0.000147 です。 有意水準が <span class="math inline">\alpha = 0.05</span> 、自由度が　(2, 15) のときのF値は 3.682.</p>
+<p><strong>フルモデルの結果でけ用いた解析</strong></p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="fu">anova</span>(fullmodel)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Analysis of Variance Table
+
+Response: obs
+          Df Sum Sq Mean Sq F value    Pr(&gt;F)    
+site       2 41.954 20.9772  16.825 0.0001471 ***
+Residuals 15 18.702  1.2468                      
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
+</div>
+</div>
+<p><strong><code>aov()</code> 関数を用いた方法</strong></p>
+<p>このとき、<code>lm()</code> は不要です。</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>aovout <span class="ot">=</span> <span class="fu">aov</span>(obs <span class="sc">~</span> site, <span class="at">data =</span> dset)</span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(aovout)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>            Df Sum Sq Mean Sq F value   Pr(&gt;F)    
+site         2  41.95  20.977   16.82 0.000147 ***
+Residuals   15  18.70   1.247                     
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
+</div>
+</div>
+<div class="callout-important callout callout-style-default callout-captioned">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-caption-container flex-fill">
+Important
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>分散分析の帰無仮説は <span class="math inline">\mu_0 = \mu_1 = \cdots \mu_i</span> なので、 ペア間の検定ではないです。</p>
+</div>
+</div>
+</section>
+</section>
+<section id="多重比較" class="level1 page-columns page-full">
+<h1 class="page-columns page-full">多重比較<a href="#fn20" class="footnote-ref" id="fnref20" role="doc-noteref"><sup>20</sup></a><div class="no-row-height column-margin column-container"><li id="fn20"><p><sup>20</sup>&nbsp;multiple comparisons</p></li></div></h1>
+<section id="多重比較-1" class="level2">
+<h2 class="anchored" data-anchor-id="多重比較-1">多重比較</h2>
+<p>分散分析の帰無仮説を棄却したら、ペア毎の比較がしたくなります。 第１種の誤りを抑える多重比較の検定は豊富に存在します。</p>
+<ol type="1">
+<li>Bonferroni Procedure (ボンフェロニ法)</li>
+<li>Holm-Bonferroni Method (ホルム = ボンフェロニ法)</li>
+<li>Tukey’s Honest Signiﬁcant Difference Test (テューキーの HSD 検定)</li>
+<li>Tukey-Kramer method, Tukey’s test</li>
+<li>Scheffe’s Method (シェッフェの方法)</li>
+<li>Dunnett’s Test (ダネットの検定)</li>
+<li>Fisher’s Least Signiﬁcant Difference (フィッシャーの最小有意差法)</li>
+<li>Duncan’s new multiple range test (ダンカンの新多重範囲検定)</li>
+</ol>
+<p>1 から 4 はペア毎の比較です。 ダネットの検定は水準に対する比較です。 フィッシャーとダンカンの検定の第１種の誤りは高いので、使用しないでください。</p>
+</section>
+<section id="多重比較用-r-パッケージ" class="level2">
+<h2 class="anchored" data-anchor-id="多重比較用-r-パッケージ">多重比較用 R パッケージ</h2>
+<p>多重比較用の関数は次のパッケージにあります。</p>
+<ul>
+<li><code>multcomp</code></li>
+<li><code>emmeans</code></li>
+</ul>
+<p>ここでは、<code>emmeans</code> を紹介します。</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(emmeans) <span class="co"># 多重比較用パッケージ</span></span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(nlme)    <span class="co"># gls() 関数はこのパッケージにある</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>
+Attaching package: 'nlme'</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>The following object is masked from 'package:dplyr':
+
+    collapse</code></pre>
+</div>
+</div>
+</section>
+<section id="繰り返しウェルチの-t-検定" class="level2">
+<h2 class="anchored" data-anchor-id="繰り返しウェルチの-t-検定">繰り返しウェルチの t 検定</h2>
+<p><strong>説明のために紹介しています。実際の解析には使わないでください。</strong></p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a>glsmodel <span class="ot">=</span> <span class="fu">gls</span>(obs <span class="sc">~</span> site, <span class="at">data =</span> dset, </span>
+<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a>               <span class="at">weights =</span> <span class="fu">varIdent</span>(<span class="at">form =</span> <span class="sc">~</span> <span class="dv">1</span><span class="sc">|</span>site))</span>
+<span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a>emout <span class="ot">=</span> <span class="fu">emmeans</span>(glsmodel, <span class="at">specs =</span> pairwise <span class="sc">~</span> site, <span class="at">adjust =</span> <span class="st">"none"</span>)</span>
+<span id="cb26-4"><a href="#cb26-4" aria-hidden="true" tabindex="-1"></a>emout<span class="sc">$</span>contrasts <span class="sc">|&gt;</span> <span class="fu">summary</span>(<span class="at">infer =</span>T)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code> contrast estimate    SE   df lower.CL upper.CL t.ratio p.value
+ A - B       -2.22 0.570 9.99  -3.4870   -0.946  -3.889  0.0030
+ A - C        1.50 0.683 9.26  -0.0381    3.038   2.197  0.0548
+ B - C        3.72 0.675 9.11   2.1925    5.241   5.506  0.0004
+
+Degrees-of-freedom method: satterthwaite 
+Confidence level used: 0.95 </code></pre>
+</div>
+</div>
+<p>第１種の誤りを調整していません。</p>
+</section>
+<section id="繰り返し-t-検定" class="level2">
+<h2 class="anchored" data-anchor-id="繰り返し-t-検定">繰り返し t 検定</h2>
+<p><strong>説明のために紹介しています。実際の解析には使わないでください。</strong></p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a>emout <span class="ot">=</span> <span class="fu">emmeans</span>(fullmodel, <span class="at">specs =</span> pairwise <span class="sc">~</span> site, <span class="at">data =</span> dset, <span class="at">adjust =</span> <span class="st">"none"</span>)</span>
+<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a>emout<span class="sc">$</span>contrasts <span class="sc">|&gt;</span> <span class="fu">summary</span>(<span class="at">infer =</span>T)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code> contrast estimate    SE df lower.CL upper.CL t.ratio p.value
+ A - B       -2.22 0.645 15   -3.591   -0.843  -3.438  0.0037
+ A - C        1.50 0.645 15    0.126    2.874   2.327  0.0344
+ B - C        3.72 0.645 15    2.343    5.091   5.765  &lt;.0001
+
+Confidence level used: 0.95 </code></pre>
+</div>
+</div>
+<p>第１種の誤りを調整していません。</p>
+</section>
+<section id="ボンフェロニ法" class="level2">
+<h2 class="anchored" data-anchor-id="ボンフェロニ法">ボンフェロニ法</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a>emout <span class="ot">=</span> <span class="fu">emmeans</span>(fullmodel, <span class="at">specs =</span> pairwise <span class="sc">~</span> site, <span class="at">data=</span>dset, <span class="at">adjust =</span> <span class="st">"bonferroni"</span>)</span>
+<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a>emout<span class="sc">$</span>contrasts <span class="sc">|&gt;</span> <span class="fu">summary</span>(<span class="at">infer =</span>T)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code> contrast estimate    SE df lower.CL upper.CL t.ratio p.value
+ A - B       -2.22 0.645 15   -3.953    -0.48  -3.438  0.0110
+ A - C        1.50 0.645 15   -0.237     3.24   2.327  0.1032
+ B - C        3.72 0.645 15    1.980     5.45   5.765  0.0001
+
+Confidence level used: 0.95 
+Conf-level adjustment: bonferroni method for 3 estimates 
+P value adjustment: bonferroni method for 3 tests </code></pre>
+</div>
+</div>
+<p>P値は <span class="math inline">p_{adj} =m\times p</span> によって求められました.</p>
+</section>
+<section id="ホルムボンフェロニ法" class="level2">
+<h2 class="anchored" data-anchor-id="ホルムボンフェロニ法">ホルム=ボンフェロニ法</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb32"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a>emout <span class="ot">=</span> <span class="fu">emmeans</span>(fullmodel, <span class="at">specs =</span> pairwise <span class="sc">~</span> site, <span class="at">data=</span>dset, <span class="at">adjust =</span> <span class="st">"holm"</span>)</span>
+<span id="cb32-2"><a href="#cb32-2" aria-hidden="true" tabindex="-1"></a>emout<span class="sc">$</span>contrasts <span class="sc">|&gt;</span> <span class="fu">summary</span>(<span class="at">infer =</span>T)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code> contrast estimate    SE df lower.CL upper.CL t.ratio p.value
+ A - B       -2.22 0.645 15   -3.953    -0.48  -3.438  0.0073
+ A - C        1.50 0.645 15   -0.237     3.24   2.327  0.0344
+ B - C        3.72 0.645 15    1.980     5.45   5.765  0.0001
+
+Confidence level used: 0.95 
+Conf-level adjustment: bonferroni method for 3 estimates 
+P value adjustment: holm method for 3 tests </code></pre>
+</div>
+</div>
+<p>P値は低い値から高い値へ並べ替えてから、<span class="math inline">p_{adj} = (m+1-k)\times p</span> によって求めます。 <span class="math inline">m</span> は比較の数、 <span class="math inline">k</span> は比較の指数です。</p>
+<div class="callout-note callout callout-style-default callout-captioned">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-caption-container flex-fill">
+Note
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>ボンフェロニ法とホルム=ボンフェロニ法の P値は次のように求められます。</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb34"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a>emout <span class="ot">=</span> <span class="fu">emmeans</span>(fullmodel, <span class="at">specs =</span> pairwise <span class="sc">~</span> site, <span class="at">adjust =</span> <span class="st">"none"</span>)</span>
+<span id="cb34-2"><a href="#cb34-2" aria-hidden="true" tabindex="-1"></a>x <span class="ot">=</span> emout<span class="sc">$</span>contrasts  <span class="sc">|&gt;</span>  <span class="fu">as_tibble</span>()</span>
+<span id="cb34-3"><a href="#cb34-3" aria-hidden="true" tabindex="-1"></a>x  <span class="sc">|&gt;</span>  <span class="fu">arrange</span>(p.value)  <span class="sc">|&gt;</span> </span>
+<span id="cb34-4"><a href="#cb34-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">k =</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">3</span>)  <span class="sc">|&gt;</span> <span class="fu">mutate</span>(<span class="at">m =</span> <span class="fu">n</span>())  <span class="sc">|&gt;</span> </span>
+<span id="cb34-5"><a href="#cb34-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">p.bonferroni =</span> p.value <span class="sc">*</span> m,</span>
+<span id="cb34-6"><a href="#cb34-6" aria-hidden="true" tabindex="-1"></a>         <span class="at">p.holm =</span> p.value <span class="sc">*</span> (m <span class="sc">+</span> <span class="dv">1</span> <span class="sc">-</span> k))  <span class="sc">|&gt;</span> </span>
+<span id="cb34-7"><a href="#cb34-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(contrast, m, k, <span class="fu">starts_with</span>(<span class="st">"p"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 3 × 6
+  contrast     m     k   p.value p.bonferroni   p.holm
+  &lt;chr&gt;    &lt;int&gt; &lt;int&gt;     &lt;dbl&gt;        &lt;dbl&gt;    &lt;dbl&gt;
+1 B - C        3     1 0.0000373     0.000112 0.000112
+2 A - B        3     2 0.00366       0.0110   0.00731 
+3 A - C        3     3 0.0344        0.103    0.0344  </code></pre>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section id="テューキーのhsd法" class="level2 page-columns page-full">
+<h2 class="anchored" data-anchor-id="テューキーのhsd法">テューキーのHSD法</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb36"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a>emout <span class="ot">=</span> <span class="fu">emmeans</span>(fullmodel, <span class="at">specs =</span> pairwise <span class="sc">~</span> site, <span class="at">data=</span>dset, <span class="at">adjust =</span> <span class="st">"tukey"</span>)</span>
+<span id="cb36-2"><a href="#cb36-2" aria-hidden="true" tabindex="-1"></a>emout<span class="sc">$</span>contrasts <span class="sc">|&gt;</span> <span class="fu">summary</span>(<span class="at">infer =</span>T)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code> contrast estimate    SE df lower.CL upper.CL t.ratio p.value
+ A - B       -2.22 0.645 15   -3.891   -0.542  -3.438  0.0096
+ A - C        1.50 0.645 15   -0.174    3.174   2.327  0.0826
+ B - C        3.72 0.645 15    2.042    5.391   5.765  0.0001
+
+Confidence level used: 0.95 
+Conf-level adjustment: tukey method for comparing a family of 3 estimates 
+P value adjustment: tukey method for comparing a family of 3 estimates </code></pre>
+</div>
+</div>
+<div class="page-columns page-full"><p>P値はステュデント化範囲の分布<a href="#fn21" class="footnote-ref" id="fnref21" role="doc-noteref"><sup>21</sup></a>に従います。</p><div class="no-row-height column-margin column-container"><li id="fn21"><p><sup>21</sup>&nbsp;Studentized range distribution</p></li></div></div>
+</section>
+<section id="シェッフェの方法" class="level2">
+<h2 class="anchored" data-anchor-id="シェッフェの方法">シェッフェの方法</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb38"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a>emout <span class="ot">=</span> <span class="fu">emmeans</span>(fullmodel, <span class="at">specs =</span> pairwise <span class="sc">~</span> site, <span class="at">data=</span>dset, <span class="at">adjust =</span> <span class="st">"scheffe"</span>)</span>
+<span id="cb38-2"><a href="#cb38-2" aria-hidden="true" tabindex="-1"></a>emout<span class="sc">$</span>contrasts <span class="sc">|&gt;</span> <span class="fu">summary</span>(<span class="at">infer =</span>T)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code> contrast estimate    SE df lower.CL upper.CL t.ratio p.value
+ A - B       -2.22 0.645 15   -3.966   -0.467  -3.438  0.0128
+ A - C        1.50 0.645 15   -0.249    3.249   2.327  0.0991
+ B - C        3.72 0.645 15    1.967    5.466   5.765  0.0002
+
+Confidence level used: 0.95 
+Conf-level adjustment: scheffe method with rank 2 
+P value adjustment: scheffe method with rank 2 </code></pre>
+</div>
+</div>
+<p>P値はF分布に従います。</p>
+</section>
+<section id="ダネットの検定" class="level2">
+<h2 class="anchored" data-anchor-id="ダネットの検定">ダネットの検定</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb40"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a>emout <span class="ot">=</span> <span class="fu">emmeans</span>(fullmodel, <span class="at">specs =</span> trt.vs.ctrl <span class="sc">~</span> site, <span class="at">ref =</span> <span class="dv">2</span>)</span>
+<span id="cb40-2"><a href="#cb40-2" aria-hidden="true" tabindex="-1"></a>emout<span class="sc">$</span>contrasts <span class="sc">|&gt;</span> <span class="fu">summary</span>(<span class="at">infer =</span>T)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code> contrast estimate    SE df lower.CL upper.CL t.ratio p.value
+ A - B       -2.22 0.645 15     -3.8   -0.633  -3.438  0.0070
+ C - B       -3.72 0.645 15     -5.3   -2.133  -5.765  0.0001
+
+Confidence level used: 0.95 
+Conf-level adjustment: dunnettx method for 2 estimates 
+P value adjustment: dunnettx method for 2 tests </code></pre>
+</div>
+</div>
+<p>ダネットの検定は、各水準は標準水準と比較する方法です。 P値は多変量 t 分布に従います。</p>
+</section>
+<section id="多重比較のおすすめ" class="level2">
+<h2 class="anchored" data-anchor-id="多重比較のおすすめ">多重比較のおすすめ</h2>
+<ul>
+<li>比較: A – B, A – C, B – C <i class="bi bi-arrow-right"></i> <strong>テューキーのHSD法</strong></li>
+<li>比較: A – B, A – C, A – D <i class="bi bi-arrow-right"></i> <strong>ダネット法</strong></li>
+</ul>
+
+
+</section>
+</section>
+
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    target: function(trigger) {
+      return trigger.previousElementSibling;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  function tippyHover(el, contentFn) {
+    const config = {
+      allowHTML: true,
+      content: contentFn,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start'
+    };
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+</div> <!-- /content -->
+
+
+
+</body></html>
