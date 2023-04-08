@@ -13,11 +13,13 @@ z = sessionInfo() |> pluck(1)
 
 ```
 
-[水圏植物生態学研究室](https://nagaremo.jp) の基礎統計学, 教育関係共同利用拠点の [水産海洋データ解析演習](http://www-mri.fish.nagasaki-u.ac.jp/ja/kyoten/) の講義資料です。
+[水圏植物生態学研究室](https://nagaremo.jp) では藻場生態系の機能と保全について研究しています。
+
+このサイトは研究室と学部生用の基礎統計学と教育関係共同利用拠点の [水産海洋データ解析演習](http://www-mri.fish.nagasaki-u.ac.jp/ja/kyoten/) のために準備しました。
 
 マニュアルの更新日：`r format(Sys.time(), "%x %T %Z")`
 
-**【重要】R コードに自身あるが、日本語はチンプンカンプンかも。It is easier to explain this stuff in English.**
+**【重要】R コードに自身あるが、日本語は怪しいです。It is easier to explain this stuff in English.**
 
 コードは考えずにコピペしないでください。
 コードに使用したデータは研究室のサーバにあるので、公開されていません。
@@ -27,7 +29,7 @@ z = sessionInfo() |> pluck(1)
 
 [`r fontawesome::fa("r-project", height = "1.5em")`](https://cran.r-project.org/) はここ <https://cran.r-project.org/> からダウンロードできます。Windows ユーザは [Rtools42](https://cran.r-project.org/bin/windows/Rtools/rtools42/rtools.html) もインストールしましょう。ページ内の Rtools42 installer のリンクを探してね。
 
-[RStudio](https://www.rstudio.com/products/rstudio/download/) もインストールしましょう。Rのデフォルトの IDE はとても使いにくいです。
+[RStudio](https://posit.co/download/rstudio-desktop/) もインストールしましょう。Rのデフォルトの IDE はとても使いにくいです。
 
 **重要: Windows にインストールするとき、OneDrive にインストールされないように注意してください。**
 詳細は [奥村先生のサイト](https://okumuralab.org/~okumura/stat/R-win.html) を参考にしてください。
@@ -41,7 +43,7 @@ library(tidyverse)
 library(patchwork)
 link1 = "https://cran.r-project.org/"
 link2 = "https://cran.r-project.org/bin/windows/Rtools/rtools42/rtools.html"
-link3 = "https://www.rstudio.com/products/rstudio/download/"
+link3 = "https://posit.co/download/rstudio-desktop/"
 fix_name = \(x) sprintf("V%04d", 1:length(x))
 z1 = qrcode::qr_code(link1, "H") |> as_tibble(.name_repair = fix_name) |> 
   mutate(y = 1:n()) |> 

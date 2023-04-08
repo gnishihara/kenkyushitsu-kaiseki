@@ -1,0 +1,837 @@
+---
+title: "Law of large numbers, the central limit theorem, and null hypothesis significance testing"
+shorttitle: "NHST, LLN, CLT"
+author: "Greg Nishihara"
+date: today
+date-format: "YYYY / MM / DD"
+slide-number: true
+transition: slide
+progress: true
+fig-align: center
+format: revealjs
+editor: 
+  markdown: 
+    wrap: 72
+bibliography: references.bib
+execute: 
+  cache: true
+---
+
+```{r}
+#| include: false
+#| cache: false
+#| echo: false
+library(tidyverse)
+library(tikzDevice)
+library(lemon)
+library(ggrepel)
+library(ggpubr)
+library(knitr)
+library(kableExtra)
+options(knitr.kable.NA = '')
+Sys.setlocale("LC_TIME", "en_US.UTF-8") # This is to set the server time locate to en_US.UTF-8
+```
+
+
+## Law of large numbers
+
+**Law of large numbers (大数の法則)**
+
+
+> An event (事象) occurs with a probability of $P$. For $n$ experiments (試行), the event 事象 occurs $r$ times. The law of large number states that when $n$ increases, then the ratio $r/n$ approaches $P$.
+
+
+## Weak law of large numbers
+
+**Weak law of large numbers (大数の弱法則)**
+
+
+$$
+\overline{X}_n \xrightarrow{P} \mu \; \text{when}\; n\rightarrow \infty
+$$
+
+or,
+
+$$
+\forall{\epsilon}>0;\;\lim_{n\rightarrow\infty}P(|\overline{X}-\mu|<\epsilon)=1
+$$
+
+
+::: {.notes}
+1. The expected mean approaches the true mean in probability as the sample size increases.
+
+2. For all $\epsilon>0$, as the sample size increases, the probability that the absolute value of the difference between the expected value and the true mean is less than $\epsilon$ is 1.
+:::
+
+## Strong law of large numbers 
+
+**Strong law of large numbers (大数の強法則)**
+
+$$
+\overline{X}_n \xrightarrow{a.s.} \mu \; \text{when}\; n\rightarrow \infty
+$$
+
+or
+
+$$
+P(\lim_{n\rightarrow\infty}\overline{X}=\mu)=1
+$$
+
+::: {.notes}
+1. The expected mean almost surely approaches the true mean as the sample size increases.
+
+2. The probability that the expected value is the true mean in the limit of large sample sizes is 1.
+:::
+
+## Simulation demonstration: Bernoulli trials
+
+
+:::: {.columns}
+::: {.column width="50%"}
+
+```{r lltplot01, echo = F, fig.out = 3, fig.height = 3}
+library(tidyverse)
+set.seed(123) # 疑似乱数のシード
+p = 0.2  # 真の比率
+n =c(1:200) # 試行回数 1 から 200
+r = sapply(n, rbinom, n = 1, p=p) # 二項分布の疑似乱数,1 は発生させる乱数の数
+
+# データのティブル化
+df1 = tibble(r = r, n = n)
+df1 = df1  |>  mutate(rate =r/n) # 比率の計算
+
+ggplot(df1) +
+  geom_line(aes(x=n,y=rate), size = 0.1) +
+  geom_hline(yintercept = p, 
+             color = "orangered") +
+  scale_x_continuous("試行回数 (n)") +
+  scale_y_continuous("比率 (r/n)",
+                     breaks = c(0, 0.25, 0.50, 0.75, 1.0),
+                     labels = c(0,  0.25, 0.50,
+                                0.75, 1.0), limits = c(0, 1)) +
+  geom_text_repel(aes(x=n, y=rate, label = label), 
+                  data = tibble(n = 100, rate = 0.2,
+                                label = "真の比率 (p = 0.20)"),
+                  color = "navy",
+                  ylim = c(0.75),
+                  xlim = c(50))
+```
+
+:::
+::: {.column width="50%"}
+Bernoulli trials (ベルヌーイ試行)
+
+* When $n$ increases, $r/n$ approaches the true value.
+
+* True value is $p = 0.2$
+
+* The trials range start at $1$ and end at $200$
+
+
+:::
+::::
+
+## Simulation demonstration: Bernoulli trials
+
+
+
+```{r, eval = FALSE, ref.label = "lltplot01"}
+
+```
+
+## Simulation demonstration: mean
+
+:::: {.columns}
+::: {.column width="50%"}
+```{r lltplot02, echo=FALSE}
+mu = 10
+sigma2 = mu^2
+n = 2:1000
+fn1 = function(n,mu,sd) mean(rnorm(n, mu, sd))
+m = sapply(n, fn1,mu=mu,sd=sqrt(sigma2))
+df1 = data.frame(m = m, n = n)
+ggplot(df1) +
+  geom_line(aes(x=n,y=m), size = 0.1) +
+  geom_hline(yintercept = mu, 
+             color = "orangered") +
+  scale_x_continuous("データ数 (n)") +
+  scale_y_continuous("平均値",
+                     limits = c(floor(min(df1$m)), ceiling(max(df1$m))),
+                     breaks = c(floor(min(df1$m)), mu, ceiling(max(df1$m)))) +
+    geom_text_repel(aes(x=n, y=mu, label = label), 
+                  data = tibble(n = 500, mu = mu,
+                                label = "真の平均値 (μ = 10)"),
+                  color = "navy",
+                  ylim = c(14),
+                  xlim = c(250))
+```
+:::
+::: {.column width="50%"}
+
+* True mean $\mu=10$
+
+* True variance $\sigma^2 = 10^2$
+
+* Number of data ranged from $1$ to $1000$
+
+**Code for the pseudo-random values from the normal distribution**
+
+
+
+```{r, eval=F}
+mu = 10              # 真の平均値
+sd = 10              # 真の標準偏差
+n = 5                # データ回数
+m = rnorm(n, mu, sd) # 正規分布の疑似乱数
+```
+
+:::
+::::
+
+# Central limit theorem
+
+## Central limit theorem (中心極限定理)
+
+The random variables (確率変数) $X_1, X_2, ..., X_n$ are independent and identically distributed (独立同分布) with a mean of $\mu$ and a variance of $\sigma^2$.
+Therefore the sample mean is  $S_n \equiv \frac{1}{n}\sum_{k=1}^n X_k$.
+
+The law of large numbers ensures that when $S_n \rightarrow \mu$, then $n\rightarrow \infty$.
+Then the central limit theorem (中心極限定理) states that the difference between the sample mean and the true mean follows a standard normal distribution.
+
+
+## Central limit theorem (中心極限定理)
+
+
+$$
+\lim_{n\rightarrow \infty}\sqrt{n}\left(\frac{\overline{X}_n - \mu}{\sigma}\right) \xrightarrow{d} N(0, \sigma^2)
+$$
+
+
+
+## Demonstration
+:::: {.columns}
+::: {.column width="50%"}
+
+* Each trial is the mean of 6 dice rolls.
+* When $N$ increases, the sample mean converges to the normal distribution (CLT).
+* The law of large numbers ensures that the sample mean converges to the true mean($\mu = 3.5$).
+
+:::
+::: {.column width="50%"}
+
+```{r clt-animation-prep, echo = F, fig.height = 5, fig.width = 5, out.width = "80%"}
+set.seed(2020)
+N=c(5, 10, 100, 10^3, 10^4, 10^5)
+X = tibble(n = N) |> 
+  mutate(x = map(n, function(x) {
+    replicate(x, mean(sample(1:6, 5, replace = TRUE), na.rm = T))
+  })) |> mutate(state = (n))
+
+X = X |> unnest(x)
+Y = X |> group_by(state) |> summarise(m = mean(x))
+
+wraplabel = function(x) sprintf("試行回数 = %s",x)
+
+ggplot(X , aes(x = x, group = state)) +
+  geom_histogram(aes(y = ..density..), binwidth = 0.2) +
+  stat_function(fun = dnorm, args = list(mean = 3.5, sd = 0.8)) +
+  scale_y_continuous("確率密度") +
+  scale_x_continuous("平均値", limits = c(1, 6), breaks = 1:6) +
+  geom_vline(aes(xintercept = m, group = state), data = Y, color = "orangered") +
+  facet_wrap("state", labeller = as_labeller(wraplabel)) +
+  ggtitle("試行回数が増えると真の平均値に収束しする")
+```
+
+:::
+::::
+
+## Binomial distribution
+
+
+The mean and variance of the binomial distribution (二項分布)
+
+* $\mu=np$
+* $\sigma^2 = np(1-p)$
+
+
+## Demonstration
+
+:::: {.columns}
+::: {.column width="50%"}
+
+```{r, echo=FALSE}
+p = 0.45
+n = 40
+m = c(10,100,200,500)
+
+df1 = tibble(m = c(5,10,50,10000)) |> 
+  mutate(data = map(m, function(x) {
+    p = 0.45
+    n = 40
+    tibble(r = replicate(x, rbinom(1,n,p)))
+  }))
+
+df1 |> unnest(data) |> 
+  ggplot() +
+  geom_histogram(aes(x = r, y = ..density..),
+                 binwidth = 1) +
+  stat_function(fun = dnorm, args = list(mean = n*p, sd = sqrt(n*p*(1-p)))) +
+  scale_x_continuous(limit = c(0, 40)) + 
+  facet_wrap("m")
+
+```
+
+
+:::
+::: {.column width="50%"}
+
+* $n = 40$
+* $p = 0.45$
+* number of trials = 100,000
+* $np = `r n*p`$ (mean)
+* $np(1-p) = `r n*p*(1-p)`$ (variance)
+
+:::
+::::
+
+
+# Scientific Method
+
+## Scientific Method (科学的方法)
+
+\centering
+\begin{tikzpicture}[transform canvas = {scale = 0.8},
+base/.style = {draw, minimum width=20ex, align=center, rectangle, rounded corners, text width = 20ex, white, fill=blue},
+noarrow/.style =  {->, arrows={-Stealth[inset = 0pt, angle=40:15pt]}, red, line width = 4pt},]
+\draw[color=blue, dashed, ultra thick] (0,4) to (0,-4);
+
+\node (c) at (0,0) [draw, rounded corners, blue, fill=white] {Scientific method};
+\node (s1) [base, above=of c] {Hypothesis\\Inference};
+\node (s2) [base, left=of c]  {Results};
+\node (s3) [base, below=of c] {Data};
+\node (s4) [base, right=of c] {Inference\\Testing theory};
+
+\node (a) [below left=1.0cm and 0.5cm of s3]{Inferential data analysis};
+\node (b) [below right=1.0cm and 0.5cm of s3]{Exploratory data analysis};
+\draw[noarrow] (s1) to[out=180, in=90]  (s2);
+\draw[noarrow] (s2) to[out=270, in=180] (s3);
+\draw[noarrow] (s3) to[out=0,   in=270] (s4);
+\draw[noarrow] (s4) to[out=90,  in=0]   (s1);
+\path[decorate, decoration={text align={center},text along path, text={|\small| Deduction},     raise=4mm}]  (s2) to [out=90, in=180, looseness=1]  (s1);
+\path[decorate, decoration={text align={center},text along path, text={|\small| Plan experiments},       raise=-6.0mm}] (s2) to [out=270,in=180, looseness=1]  (s3);
+\path[decorate, decoration={text align={center},text along path, text={|\small| Induction},     raise=-6.0mm}] (s3) to [out=0,  in=270, looseness=1]  (s4);
+\path[decorate, decoration={text align={center},text along path, text={|\small| New thought}, raise=4.0mm}]  (s1) to [out=0,  in=90,  looseness=1]  (s4);
+\end{tikzpicture}
+
+\note{
+Scientific method consists of: Forming a question, developing a hypothesis, predicting an outcome,
+testing the prediction using experiments to gather data, and analyzing the results with statistical techniques. The results are then presented, and typically a new question and hypothesis is made.
+
+科学的方法: 問題の定義，仮説の設定，実験による観察とデータ収集，データ分析，結論からなります。
+}
+
+\note[item]{帰納的手法（きのうてきしゅほう）：methods of induction (Bayesian methods), 証拠を集めていく方法，ベイズ法に基づいた解析手法}
+\note[item]{演繹的手法（えんえきてきしゅほう）：methods of deduction (Frequentist methods), 否定していく方法，頻度論に基づいた解析手法}
+
+
+# How to choose the model
+
+## Model selection
+
+> Models are needed to explain scientific phenomena.
+> Models can be equations or theory.
+> Therefore, to explain scientific phenomena, we must define a hypothesis 
+> and be able to choose the correct model.
+
+## Hypothesis (仮説)
+
+* An idea that is defined before the experiment.
+* Generally, we want to prove (証明) or accept (採択) a hypothesis. However, in practice we define a null hypothesis (帰無仮説) and attempt to reject (棄却) it.
+* Rejecting a null hypothesis is a deductive method (演繹法).
+
+## Model (モデルと)
+
+* We develop models after looking at the data.
+* Models need to be tested.
+* We can predict new data with models.
+* Testing a model is an inductive method (帰納法).
+
+## Deductive methods (演繹法)
+
+* Statistics tests such as the t-test (t検定), analysis of variance (分散分析), and linear regressions (回帰曲線) are deductive methods.
+* We continue testing until the most likely hypothesis remains.
+* **We can NEVER proove a hypothesis!** 
+    - We can only reject a hypothesis
+
+\note[item]{Deductive methods use frequentis methods to analyze data.}
+\note[item]{Hypothesis are continuously rejected until the most plausible hypothesis remains.}
+\note[item]{A hypothesis can never be proven. They can only be disproven.}
+
+## Significance testing and hypothesis testing
+
+:::: {.columns}
+::: {.column width="50%"}
+
+**Significance testing (有意性検定論)**
+
+* R.A. Fisher developed this method in the 1920s.
+* Given a null hypothesis $H_0$, what is the strength of evidence that it produced data $X$? 
+* When the probability of significance is small, the evidence is weak
+    - $\text{P-value} = P(T(X) \ge T_0(X)|H_0)$
+* We do not accept or reject a hypothesis with this method.
+
+:::
+::: {.column width="50%"}
+
+**Hypothesis testing (仮説検定論)**
+
+* Developed by J. Neyman and E.S. Pearson in the 1930s.
+* The most commonly used method.
+* We define the null hypothesis $H_0$ and the alternative hypothesis (対立仮説) $H_A$.
+* We accept or reject $H_A$ at a significance level (有意水準) $\alpha$.
+
+:::
+::::
+
+
+::: {.notes}
+Sir Ronald Aylmer Fisher was a British statistician and geneticist. His work win agricultural experiments led to the development of the Analysis of Variance. In 1925 he published the book Statistical Methods for Research Workers, that introduced the concept of the P-value.
+
+Jerzy Neyman was a Polish mathematician and statician, and Egon Sharpe Pearson was a British statician. They co-invented and popularized the hypothesis testing techniques and the rejection and acceptance of the null hypothesis or the alternative hypothesis. 
+:::
+
+# The P-value and Hypothesis Test
+
+
+## What is the P-value (P値とは)?
+
+Whenever you conduct a statistical test, you almost always calculate a P-value.
+
+$$
+\text{P-value} = P(T(X) \ge T_0(X)|H_0)
+$$
+
+* For the null hypothesis $H_0$, it is the probability of observing a value $T(X)$ that is greater than $T_0(X)$.
+* It is an index to determine the consistency (整合性) of the data $X$ given the hypothesis $H$. 
+* P-values range from 0 to 1 ($0 \leq \text{P-value} \leq 1$)。
+* When the null hypothesis is true, P-values have a uniform distribution (一様分布).
+* When the null hypothesis is false,$\displaystyle \lim_{n \rightarrow \infty} P \rightarrow 0$。
+* **P-values are used to evaluate the if the data is consistent given the hypothesis.**
+
+::: {.notes}
+
+- The P-value only makes sense when the null hypothesis is true. This is why we assume a true null, so that we can get a P-value.
+- The original definition of the P-value: the chance of obtaining an effect equal to or more extreme than the one observed considering the null hypothesis is true.
+
+**Links to StackExchange: Cross Validated Questions.**S
+
+- [Intepretation of p-value in hypothesis testing.](https://stats.stackexchange.com/questions/46856/interpretation-of-p-value-in-hypothesis-testing)
+- [What is the relationship between p values and type I errors](https://stats.stackexchange.com/questions/129628/what-is-the-relationship-between-p-values-and-type-i-errors)
+- [How do I find the probability of type II errors](https://stats.stackexchange.com/questions/7402/how-do-i-find-the-probability-of-a-type-ii-error/7404)
+
+:::
+
+## P-value distribution when $H_0$ is true
+
+```{r}
+#| echo: false
+#| warning: false
+#| message: false
+t_test = function(x) {t.test(x$x1, x$x2, var.equal = TRUE)}
+X= tibble(n = 1:10000) |> 
+  mutate(data = map(n, function(x) {
+    tibble(x1 = rnorm(10, mean = 50),
+           x2 = rnorm(10, mean = 50))
+  })) |> 
+  mutate(tout = map(data, t_test)) |> 
+  mutate(tout2 = map(tout, broom::glance)) |> 
+  unnest(tout2) 
+X |> 
+  ggplot() +
+  geom_histogram(aes(x = p.value), binwidth = 0.05) + 
+  geom_vline(xintercept = 0.05, color = "orangered") +
+  scale_x_continuous("P-values") + 
+  scale_y_continuous("") +
+  theme(axis.text.y = element_blank(),
+        axis.ticks.y = element_blank(),
+        legend.title = element_blank(), 
+        panel.grid = element_blank())
+x = X |> summarise(cnt = sum(p.value < 0.05) / length(p.value))
+```
+
+**When the null hypothesis is true, ($(\mu_0=50) = (\mu_A=50)$) and the P-value has a uniform distribution.**
+For 10000 simulations $P(\text{P-value}<0.05) = `r round(x, 4)`$.
+
+## P-value distribution when $H_0$ is false
+
+```{r}
+#| echo: false
+#| warning: false
+#| message: false
+
+t_test = function(x) {t.test(x$x1, x$x2, var.equal = TRUE)}
+
+X = tibble(n = 1:10000) |> 
+  mutate(data = map(n, function(x) {
+    tibble(x1 = rnorm(10, mean = 50),
+           x2 = rnorm(10, mean = 51))
+  })) |> 
+  mutate(tout = map(data, t_test)) |> 
+  mutate(tout2 = map(tout, broom::glance)) |> 
+  unnest(tout2)
+X |> 
+  ggplot() +
+  geom_histogram(aes(x = p.value)) + 
+  geom_vline(xintercept = 0.05, color = "orangered") +
+  scale_x_continuous("P-values") +
+  scale_y_continuous("") +
+  theme(axis.text.y = element_blank(),
+        axis.ticks.y = element_blank(),
+        legend.title = element_blank(), 
+        panel.grid = element_blank())
+x = X |> summarise(cnt = sum(p.value <= 0.05) / length(p.value))  
+```
+
+**When the null hypothesis is false, ($(\mu_0=50) \ne (\mu_A=51)$), and the P-value approaches 0.**
+For 10000 simulations$P(\text{P-value}<0.05) = `r round(x, 4)`$.
+However, the Type-II error rate (第 2 種の誤り) is `r round(1-x, 4)`.
+
+## Hypothesis testing
+
+
+**Hypothesis testing is used to make decisions.**
+
+* We use the P-value to compare the null hypothesis and the alternative hypothesis.
+* The rule to reject the null hypothesis is to compare the significance level ($\alpha$) with the P-value.
+* If $\text{P-value} \leq \alpha$, then we reject the null hypothesis.
+* Rejecting or accepting the null hypothesis can cause error.
+    - Type-I Error (第１種の誤り, α過誤）
+    - Type-II Error (第２種の誤り, β過誤）
+
+## Beware of hypothesis testing
+
+Neyman-Pearson hypothesis testing method is called the **Null Hypothesis Significance Test (NHST) (帰無仮説の有意性検定).** 
+It is decision making method (accept or reject), so sometimes mistakes can occurr.
+
+* **Type-I Error (第１種の誤り):** Rejecting the null hypothesis when it is true. The error rate is $\alpha$.
+* **Type-II Error (第２種の誤り):** Not reject the null hypothesis when it is false. The error rate is $\beta$.
+
+## Beware of hypothesis testing
+
+* $\alpha$ is the significance level and is also the Type-I error rate.
+* $\beta$ is the Type-II error rate.
+* $1-\beta$ is the power of the test and it is the probability of rejecting a false null hypothesis.
+* The Type-I error rate and the Type-I error rate are indirectly proportional (反比例)
+
+$$
+\alpha \propto 1/\beta
+$$
+
+*If you decrease the significance level, you increase the Type-II error rate.*
+
+## Type-I and Type-II error rates, and the power
+
+```{r}
+#| echo: false
+#| warning: false
+#| message: false
+#| cache: false
+
+sigma = 15
+mu0 = 100
+mu1 = 130
+alpha = 0.05
+critval = qnorm(1-alpha, mu0, sigma)
+power = pnorm(critval, mu1, sigma, lower.tail = FALSE)
+kago2 = 1 - power
+tibble(x = seq(50, 200, by = 0.25)) |> 
+ggplot(aes(x=x)) +
+  stat_function(fun = dnorm, args = list(mean = mu0, sd = sigma), aes(color = "H0"), size = 2) +
+  stat_function(fun = dnorm, args = list(mean = mu1, sd = sigma), aes(color = "HA"), size = 2) +
+  stat_function(fun = dnorm, args = list(mean = mu1, sd = sigma), geom = "area", xlim = c(50, critval),
+                fill = "blue", alpha = 0.5) +
+  stat_function(fun = dnorm, args = list(mean = mu1, sd = sigma), geom = "area", xlim = c(critval, 200),
+                fill = "orangered", alpha = 0.5) +
+  stat_function(fun = dnorm, args = list(mean = mu0, sd = sigma), geom = "area", xlim = c(critval, 200),
+                fill = "red", alpha = 0.5) +
+  geom_vline(xintercept = critval, size =2) +
+  annotate("text", x = 115, y = 0.005, label = "β") +
+  annotate("text", x = 130, y = 0.005/3, label = "α") +
+  annotate("text", x = 140, y = 0.005, label = "1-β") +
+  annotate("text", x = critval+25, y = 0.03, label = "Critical value") +
+  annotate("segment", x = critval + 10, xend = critval, y = 0.03, yend = 0.03) +
+  scale_x_continuous("x-values") +
+  scale_y_continuous("") + 
+  scale_color_brewer(palette = "Dark2") +
+  theme(axis.text.y = element_blank(),
+        axis.ticks.y = element_blank(),
+        legend.background = element_blank(),
+        legend.position = c(1,1),
+        legend.justification = c(1,1),
+        legend.title = element_blank(), 
+        panel.grid = element_blank())
+```
+
+The mean of the null hypothesis ($H_0$) is `r mu0`,
+the mean of the alternative hypothesis ($H_A$) is `r mu1`.
+The variance is 15 for both.
+Here, $H_A: \mu_0 > \mu_1$.
+
+
+::: .{notes}
+
+- Under the null distribution, we can determine a critical value for some alpha.
+- We can determine the distribution of the random variable for the alternative distribution.
+- If the critical value intersects the alternative distribution, and the hypothesis is $\mu_1 > \mu0$
+then the type-II error rate is the left-hand side of the distribution. The reason for this is because, we would erroneously not reject the null hypothesis if the random variable for the alternative distribution was on the left of the critical value. 
+- The farther the alternative distribution is from the critical value, the lower the chances of making a type-II error, since there is less area under the distribution that is on the left of the critical value.
+
+:::
+
+## The relationship between the Type-I and II error rates
+
+:::: {.columns}
+::: {.column width="50%"}
+
+If we decrease the risk of a Type-I error, we increase the risk of a Type-II error.
+Therefore, we are lowering the chance of getting a correct result.
+We must always consider these two problems.
+
+:::
+::: {.column width="50%"}
+
+```{r}
+#| echo: false
+#| warning: false
+#| message: false
+
+sigma = 15
+mu0 = 100
+mu1 = 130
+alpha = 0.05
+critval = qnorm(1-alpha, mu0, sigma)
+power = pnorm(critval, mu1, sigma, lower.tail = FALSE)
+kago2 = 1 - power
+
+tibble(alpha = seq(0.10, 0.001, by = -0.001)) |> 
+  mutate(critval = qnorm(1-alpha, mu0, sigma)) |> 
+  mutate(power = pnorm(critval, mu1, sigma, lower.tail = FALSE),
+         kago2 = 1 - power) |> 
+  ggplot(aes(x = alpha)) +
+  geom_line(aes(y = kago2, color = "β"), size = 2) +
+  geom_line(aes(y = power, color = "1-β"), size = 2)+
+  scale_x_continuous("Type-I Error（α）") +
+  scale_y_continuous("Type-II Error（β）and power（1-β）") + 
+  scale_color_brewer(palette = "Dark2") +
+  theme(axis.text.y = element_blank(),
+        axis.ticks.y = element_blank(),
+        legend.background = element_blank(),
+        legend.position = c(1,0.5),
+        legend.justification = c(1,0.5),
+        legend.title = element_blank(), 
+        panel.grid = element_blank())
+
+```
+:::
+::::
+
+
+
+## Type-I and II error: Correctly rejecting a test
+
+```{r}
+#| echo: false
+#| eval: true
+A = c(0.05, 0.10)
+B = c(0.36, 0.24)
+c1 = 900 * A # 誤って棄却
+c2 = 900 - c1 # 正しく棄却
+c4 = 100 * B # 誤って棄却しない
+c3 = 100 - c4 # 正しく棄却
+rat = c3 / (c3+c1)
+```
+
+```{r}
+#| echo: false
+#| cache: false
+#| fig-align: center
+
+magick::image_read_pdf("~/Documents/QTIKZ/statchart.pdf") |> 
+  magick::image_border(color = "white")
+
+```
+
+
+::: {.notes}
+
+[Biau et al. 2010. Clin. Orthop. Relat. Res. 468: 885-892.](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC2816758/)
+
+Fig. 2 of Biau et al. 2010 is wrong, since if the Type-I error rate decreases, then the Type-II error rate increases.
+
+There is a false impression that if experiments are conducted with a low Type I error, then significant results almost always corresponds to a true effect. 
+
+Out of 1000 null hypothesis, 10% are actually false. 
+In otherwords, the null hypothesis is rarely false.
+So, 900 are true null hypothesis and 100 are false null hypothesis.
+However, we do not know this.
+Suppose that we perform tests that have an α of 0.10 and a β of 0.24,
+Among the true null hypothesis, since our Type-I error rate is 0.10, then 90 experiments will be erroneously rejected.
+Among the false null hypothesis, since our Type-II error rate is 0.24, then 24 experiments will be
+erroneously not rejected and 80 will be correctly rejected.
+
+Therefore, a total of 90+76 null hypotheses will be rejected, but only 76 / (90+76) = 0.46 of these were correctly rejected.
+
+**I am not sure if this is a good example, since the null hypothesis is only rare false. What is the point of this?**
+
+:::
+
+## Differences between significance testing and NHST
+
+:::: {.columns}
+::: {.column width="50%"}
+
+**Significance testing (有意性検定)**
+
+* Fisher's method
+* P-value is important
+* P-values are used to reject a null hypothesis
+* Calculate after observing the data
+* Valid only for the data that was analyzed
+* Subjective decision (主観的な判断)
+* Decisions are based on the evidence
+
+:::
+::: {.column width="50%"}
+
+**NHST (仮説検定)**
+
+* Neyman and Pearson Method
+* The Type-I error is important (α)
+* We use to minimize α and β
+* We choose α and β before observing the data
+* Based on the belief that the experiments were well replicated and the results are stable for long times
+* Objective decision (客観的)
+* Decisions are based on rules and not evidence
+
+:::
+::::
+
+Most scientists mix the two methods, which is wrong!
+
+
+::: {.notes}
+
+- [Biau et al. 2010. Clin. Orthop. Relat. Res. 468: 885-892.](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC2816758/)
+
+See Fig. 1A-B in this paper. Since Fisher's P-value is valid for each experiment
+individually, some experiments will provide evidence for rejecting the null and some won't.
+
+- The p value is not the probability of the null hypothesis being true; it is the probability of observing these data, or more extreme data, if the null is true.
+- However, for Neyman-Pearson method, there is only a chance of making an error of rejecting or accepting a hypothesis based on an α and β value.
+
+:::
+
+
+# Introduction to the Null Hypothesis Significance Test (NHST)
+
+
+## Example
+
+:::: {.columns}
+::: {.column width="50%"}
+```{r}
+#| echo: false
+set.seed(2020)
+data = tibble(experiment = LETTERS[1:2]) |> 
+  mutate(data = map(experiment, function(x) {
+    mu = ifelse(x == "A", 10, 12)
+    tibble(observation = rnorm(20, 10))
+  })) |> 
+  unnest(data)
+data |> 
+  ggplot(aes(x = experiment, y = observation)) + 
+  geom_boxplot(width = 0.5) +
+  geom_point(position = position_jitter(0.1), color = "orangered") 
+```
+:::
+
+::: {.column width="50%"}
+
+
+```{r}
+out = t.test(observation ~ experiment, data = data)
+t.test(observation ~ experiment, data = data)
+```
+
+* $H_0: \overline{\mu_A}=\overline{\mu_B}~:\text{Null hypothesis}$
+* $H_1: \overline{\mu_A}\neq\overline{\mu_B}~:\text{Alternative hypothesis}$
+* True standard deviation：$\sigma_A=\sigma_B$
+* True mean: $\overline{\mu_A}=10$ and $\overline{\mu_B}=12$
+* In this case, $P = `r round(out$p.value, 4)`  \nless \alpha = 0.05$
+
+:::
+::::
+
+::: {.notes}
+The true means are different, yet the P-value for the Welch's two sample t-test is greater than 0.05.
+What does this mean?
+
+Do we accept the alternative hypothesis?
+
+Do we reject the null hypothesis?
+:::
+
+## Amerhein et al. 2019. Nature 567: 305-307
+
+:::: {.columns}
+::: {.column width="50%"}
+
+
+> Let's be clear about what must stop: we should never conclude there is 'no difference' or 'no association' just because a P-value is larger than a threshold such as 0.05 or, equivalently, because a confidense interval includes zero. --Amerhein et al. 2019
+
+:::
+::: {.column width="50%"}
+
+```{r}
+
+#| echo: false
+set.seed(2020)
+data = 
+  tibble(experiment = LETTERS[1:2],
+         n = c(200, 200),
+         sd = c(1, 2)) |> 
+  mutate(data = map2(n, sd, function(n, sd) {
+    tibble(observation = rnorm(n, 10, sd)) |> 
+      mutate(observation = scale(observation, scale=F)[,1] + 10)
+  })) |> 
+  unnest(data)
+
+data2 = data |> group_by(experiment) |> 
+  summarise(ymin = min(observation),
+            ymax = max(observation),
+            y25 = quantile(observation, 0.25),
+            y50 = quantile(observation, 0.50),
+            y75 = quantile(observation, 0.75))
+
+data |> 
+  ggplot() + 
+  geom_boxplot(aes(x = experiment,
+                   ymin = ymin, ymax = ymax, middle = y50,
+                   lower = y25, upper = y75), 
+               stat = "identity",
+               width = 0.5,
+               data = data2) +
+  geom_point(aes(x = experiment, y = observation),
+             position = position_jitter(0.1), color = "orangered",
+             data = data)  +
+  geom_hline(aes(yintercept = 6)) +
+  scale_x_discrete("", labels = c("Technician A", "Technician B")) +
+  scale_y_continuous("Decreasing effect ⬅　Effect　➡ Increasing effect") +
+  coord_flip()
+
+```
+:::
+::::
+
+
+

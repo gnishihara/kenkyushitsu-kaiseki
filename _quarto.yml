@@ -3,7 +3,6 @@ project:
   output-dir: docs
   render:
     - index.qmd
-    - about.qmd
     - pca.qmd
     - rda.qmd
     - "part*.qmd"
@@ -11,6 +10,7 @@ project:
     - ttest.qmd
     - glm.qmd
     - linearmodels.qmd
+    - nhst-slide.qmd
 
 website:
   title: "データ解析（研究室用）"
@@ -23,7 +23,6 @@ website:
       - section: Introduction
         contents:
         - index.qmd
-        - about.qmd
       - section: Rの基礎
         contents:
         - part01.qmd
@@ -42,6 +41,11 @@ website:
         contents:
         - pca.qmd
         - rda.qmd
+      - section: 基礎統計学用スライド
+        contents:
+        - descriptive_statistics-slide.qmd
+        - ttest-slide.qmd
+        - nhst-slide.qmd
 
 format:
   html:

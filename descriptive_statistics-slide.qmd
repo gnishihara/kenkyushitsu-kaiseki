@@ -1,0 +1,740 @@
+---
+title: "記述統計量"
+author: "Greg Nishihara"
+date: today
+date-format: "YYYY / MM / DD"
+slide-number: true
+transition: slide
+progress: true
+fig-align: center
+format: revealjs
+editor: 
+  markdown: 
+    wrap: 72
+bibliography: references.bib
+execute: 
+  cache: true
+---
+
+
+
+```{r}
+#| include: false
+#| cache: false
+library(tidyverse)
+library(showtext)
+library(lemon)
+library(ggpubr)
+library(knitr)
+library(kableExtra)
+options(knitr.kable.NA = '')
+options(kableExtra.latex.load_packages = FALSE, tidyverse.quiet = TRUE)
+Sys.setlocale("LC_TIME", "en_US.UTF-8") # This is to set the server time locate to en_US.UTF-8
+```
+
+## Mean and expectation
+
+**Mean, average (平均値)**
+
+Add all values $(x_i)$ and divide by the total number of samples $(i)$.
+The population mean is $\mu$ and the sample mean is $\overline{X}$.
+
+$$
+\mu \equiv \overline{X} = \frac{1}{n} \sum_{i=1}^{n} x_i
+$$
+
+**Expected value, expectation (期待値)**
+
+A sum of the product of the weighted random variable $(x_i)$ and its probability $(p_i)$.
+The expection is $E[X] = \overline{X}$.
+
+$$
+\mu \equiv E[X]= \sum_{i=1}^{n} x_i p_i
+$$
+
+## Properties of the expectation
+
+
+:::: {.columns}
+::: {.column width="50%"}
+**Linearity of the expectation (線形性)** 
+
+$a$ and $b$ are constants (定数) and $X$ and $Y$ are random variables (確率変数).
+
+$$
+E[aX + bY] = aE[X] + bE[Y]
+$$
+
+**Monotonicity (単調性)**
+
+
+$$
+X \leq Y \rightarrow E[X] \leq E[Y]
+$$
+
+
+:::
+
+::: {.column width="50%"}
+**Non-multiplicativity (非乗法性)**
+
+If the random variables $X$ and $Y$ are **not independent (非独立性)** of each other,
+
+$$
+E[XY] \neq E[X]\cdot E[Y]
+$$ 
+
+If the random variables are **independent (独立性)** of each other,
+
+$$
+E[XY] = E[X]\cdot E[Y]
+$$
+:::
+::::
+
+
+
+
+
+## What is the difference between the mean and expectation
+
+Let's find the sum of two dice.
+We will create three trials.
+
+
+
+```{r}
+set.seed(2020) # 疑似乱数関数のシードを設定する
+dice = c(1,2,3,4,5,6) # dice = 1:6
+X1 = sample(dice, size = 2, replace = TRUE) %>%  sum() # 2回投げる
+X2 = sample(dice, size = 2, replace = TRUE) %>%  sum() # 2回投げる
+X3 = sample(dice, size = 2, replace = TRUE) %>%  sum() # 2回投げる
+mean(c(X1, X2, X3)) # 平均値
+```
+
+
+The mean is `r round(mean(c(X1,X2,X3)), 4)`.
+
+However, if you want to know the **expectation**, we need to create a model.
+
+## The expectation of two dice.
+
+```{r}
+#| include: false
+# https://mathworld.wolfram.com/Dice.html
+# https://www.lucamoroni.it/the-dice-roll-sum-problem/
+
+pdice = function(p,n,s) {
+  nk = function(n,k) {
+    factorial(n) / (factorial(k) * factorial(n-k))
+  }
+  if(p < n) stop("p < n")
+  if(p > n*s) stop("p > n s") 
+  kmax = floor((p - n) / s)
+  tmp = 0
+  for(k in 0:kmax) {
+    tmp = tmp + (-1)^k * nk(n = n, k = k) * nk(n = p-s*k-1, k = n-1)
+  }
+  sum(tmp)
+}
+```
+
+
+
+$$
+\qquad E[X] = \frac{1}{36}\cdot 2  +   \cdots + \frac{6}{36}\cdot7 + \cdots + \frac{1}{36}\cdot 12 = 7
+$$
+:::: {.columns}
+::: {.column width="50%"}
+
+
+```{r}
+#| echo: false
+value = tibble(n = 1:50) %>% 
+  mutate(value = map_dbl(n, function(x) {
+    sum(sample(dice, size = 2, replace = TRUE))
+  })) %>% pull(value)
+```
+
+We run 50 trials to get `r paste0("x = {", paste0(value, collapse = ", "), "}")` .
+
+\vspace*{2ex}
+The mean for this data set is `r round(mean(value), 4)`.
+
+:::
+
+::: {.column width="50%"}
+
+```{r}
+#| echo: false
+labfn = function(x,z=36) {
+  sprintf("%i / %i", x, z)
+}
+
+tibble(n = 2:12) %>% 
+  mutate(counts = map_dbl(n, pdice, n = 2, s = 6)) %>% 
+  ggplot() +
+  geom_col(aes(x = n, y = counts)) +
+  scale_x_continuous("Dice total", breaks = 2:12) +
+  scale_y_continuous("Probability", breaks = 0:6,
+                     labels = labfn) +
+  ggtitle("Probability of dice rolls")
+```
+:::
+::::
+
+
+
+## Let's find the expectation of three dice
+
+
+$$
+\qquad E[X] = \frac{1}{216}\cdot 3  +   \cdots + \frac{27}{216}\cdot 10 + \frac{27}{216}\cdot 11 + \cdots + \frac{1}{216}\cdot 18 = 10.5
+$$
+:::: {.columns}
+::: {.column width="50%"}
+
+
+```{r}
+#| echo: false
+value = tibble(n = 1:50) %>% 
+  mutate(value = map_dbl(n, function(x) {
+    sum(sample(dice, size = 3, replace = TRUE))
+  })) %>% pull(value)
+```
+
+The data for fifty trials, `r paste0("x = {", paste0(value, collapse = ", "), "}")`.
+
+\vspace*{2ex}
+The mean for this dataset is `r round(mean(value), 4)`.
+
+:::
+
+::: {.column width="50%"}
+
+```{r}
+#| echo: false
+labfn = function(x,z=216) {
+  sprintf("%i / %i", x, z)
+}
+
+tibble(n = 3:18) %>% 
+  mutate(counts = map_dbl(n, pdice, n = 3, s = 6)) %>% 
+  ggplot() +
+  geom_col(aes(x = n, y = counts)) +
+  scale_x_continuous("Dice total", breaks = 2:18) +
+  scale_y_continuous("Probability", breaks = seq(0, 28, by = 2),
+                     labels = labfn) +
+  ggtitle("Probability of dice rolls")
+# tibble(n = 3:18) %>% 
+#   mutate(counts = map_dbl(n, pdice, n = 3, s = 6)) %>% 
+#   mutate(P = n * counts/216) %>% pull(P) %>% sum()
+```
+:::
+::::
+
+## Determining the probability of dice
+
+:::: {.columns}
+::: {.column width="50%"}
+```{r}
+expand_grid(d1 = 1:6, d2 = 1:6) %>% 
+  mutate(sum = d1 + d2) %>% 
+  mutate(denominator = max(d1)^2) %>% 
+  group_by(sum, denominator) %>% 
+  summarise(numerator = length(sum)) %>% 
+  mutate(probability = numerator / denominator) %>% 
+  print(n = 15)
+```
+
+:::
+::: {.column width="50%"}
+
+```{r}
+expand_grid(d1 = 1:6, d2 = 1:6, d3 = 1:6) %>% 
+  mutate(sum = d1 + d2 + d3) %>% 
+  mutate(denominator = max(d1)^3) %>% 
+  group_by(sum, denominator) %>% 
+  summarise(numerator = length(sum)) %>% 
+  mutate(probability = numerator / denominator) %>% 
+  print(n = 15)
+```
+:::
+::::
+
+
+
+## Calculating the probability of dice
+
+
+:::: {.columns}
+::: {.column width="50%"}
+
+$$
+P(p, n, s) = \frac{1}{s^n}\cdot\sum_{k = 0}^{\lfloor \frac{p-n}{s} \rfloor} \left[ (-1)^k \binom{n}{k} \binom{p-s\cdot k -1}{n-1} \right]
+$$
+
+* $P(p, n, s)$: Probability given $p$, $n$, $s$
+* $p$: Sum of dice
+* $n$: Number of dice
+* $s$: Number of die faces
+* $\lfloor \frac{p-n}{s} \rfloor$ indicates the floor of $\frac{p-n}{s}$.
+
+:::
+
+::: {.column width="50%"}
+ 
+```{r}
+# https://mathworld.wolfram.com/Dice.html
+# https://www.lucamoroni.it/the-dice-roll-sum-problem/
+pdice = function(p,n,s) {
+  nk = function(n,k) {
+    factorial(n) / (factorial(k) * factorial(n-k))
+  }
+  kmax = floor((p - n) / s)
+  tmp = 0
+  for(k in 0:kmax) {
+    tmp = tmp + (-1)^k * nk(n=n, k=k) * nk(n=p-s*k-1, k=n-1)
+  }
+  list(numerator = sum(tmp), denominator = s^n, 
+       probability = sum(tmp) / s^n)
+}
+```
+
+```{r}
+pdice(p = 5, n = 2, s = 6)
+```
+
+
+:::
+::::
+
+
+## Variance (分散)
+
+The **variance (分散)** is the square of the difference of the random variable and $E[X]$.
+
+$$
+\sigma^2\equiv Var(X) = E[(X - E[X])^2] = E[X^2] - E[X]^2
+$$
+
+It is a measure of scale (スケール) and decribes the amount of scatter in the data.
+
+## Properties of variance
+
+\footnotesize
+
+**Variance of a constant (定数) is zero**
+
+$$
+Var(a) = 0
+$$
+
+**Non-positive (非負性)**
+
+$$
+Var(X) \geq 0
+$$
+
+**Scale invarance (スケール普遍性)**
+
+$$
+Var(X+b) = Var(X)
+$$
+
+$$
+Var(aX) = a^2Var(X)
+$$
+
+## Population variance (母分散)
+
+When the population mean $(\mu)$ is known, then the **population variance ($\sigma^2$, 母分散)** is
+
+$$
+\sigma^2 = \frac{1}{n}\sum_{i=1}^n\left(x_i - \mu\right)^2
+$$
+However, we usually do not know the population mean. So, we must calculate the **sample variance (標本分散)**. 
+
+## Sample variance and the unbiased sample variance)
+
+There are two ways to calculate the sample variance.
+
+:::: {.columns}
+::: {.column width="50%"}
+
+**Sample variance (標本分散)**
+
+$$
+\widehat{\sigma}^2=\frac{1}{n}\sum_{i=1}^n\left(x_i - \overline{x}\right)^2
+$$
+The value of the sample variance $(\widehat{\sigma}^2)$ is smaller than the population variance (母分散).
+In otherwords, if $n$ is small, then  $\widehat{\sigma}^2 \ll \sigma^2$.
+
+:::
+
+::: {.column width="50%"}
+
+**Unbiased sample variance (不偏標本分散)**
+
+$$
+s^2=\frac{1}{n-1}\sum_{i=1}^n\left(x_i - \overline{x}\right)^2
+$$
+When $n$ is small, use the unbiased sample variance (不偏標本分散 $(s^2)$).
+
+:::
+::::
+
+
+## Standard deviation (標準偏差)
+
+**Variance (分散)** describes how much the data is scattered around the expectation (mean).
+Since the sample variance is $\sim\sum(x - \overline{x})^2$, it cannot be directly compared with the mean.
+
+**Standard deviation (標準偏差)** (Std. Dev., S.D.)
+
+$$
+\sigma = \sqrt{\sigma^2} \equiv \sqrt{Var(X)}
+$$
+
+The standard deviation is the positive root of the variance.
+Both variance and standard deviation describe the scatter of the data.
+Which variance to use? $\widehat{\sigma}^2$ or $s^2$
+
+## Use the unbiased sample variance
+
+$$
+\text{Std. Dev.}=\sqrt{s^2}=\sqrt{\frac{1}{n-1}\sum_{i=1}^n (x_i -\overline{x})^2}
+$$
+
+## Standard error
+
+The **standard error (標準誤差)** describes the precision of a statistic.
+All statistics have a standard error.
+
+$$
+S.E. = \frac{s}{\sqrt{n}}
+$$
+The S.E. decreases when sample size increase!
+
+$$
+\lim_{n\rightarrow\infty} \frac{s}{\sqrt{n}} = 0
+$$
+
+## Example 1 (n = 5)
+
+\footnotesize
+```{r}
+set.seed(2021)
+x = sample(0:10, size = 5, replace = TRUE)
+x
+```
+
+:::: {.columns}
+::: {.column width="50%"}
+```{r}
+# mean
+mean(x)
+# variance
+var(x)
+```
+:::
+::: {.column width="50%"}
+```{r}
+# standard deviation
+sd(x)
+# standard error
+sd(x) / sqrt(length(x))
+```
+:::
+::::
+
+## Example 2 (n = 50)
+
+```{r}
+set.seed(2021)
+x = sample(0:10, size = 50, replace = TRUE)
+```
+
+:::: {.columns}
+::: {.column width="50%"}
+```{r}
+# mean
+mean(x)
+# variance
+var(x)
+```
+:::
+::: {.column width="50%"}
+```{r}
+# standard deviation
+sd(x)
+# standard error
+sd(x) / sqrt(length(x))
+```
+:::
+::::
+
+## Median (中央値・メディアン)
+
+:::: {.columns}
+::: {.column width="50%"}
+
+The **median (中央値・メディアン)** is another statistic to describe data.
+It is the midpoint of data that is sorted from small to large values.
+When the number of data is odd, the median is the value at the midpoint.
+When the number of data is even, the median is the average of the two values nearest to the middle.
+
+ 
+```{r}
+#| cache: false
+set.seed(2020)
+x = sample(1:9, size = 5, replace = TRUE)
+sort(x)
+```
+
+The value in the middle is `r sort(x)[3]` so the median is  `r median(x)`.
+ 
+```{r}
+median(x)
+```
+
+:::
+
+::: {.column width="50%"}
+
+ 
+```{r}
+#| cache: false
+set.seed(2020)
+x = sample(1:9, size = 4, replace = TRUE)
+sort(x)
+median(x)
+```
+
+\footnotesize
+The two values near the middle are `r sort(x)[2]` and `r sort(x)[3]`,
+so the median is $(`r sort(x)[2]` + `r sort(x)[3]`) / 2 = `r median(x)`$.
+
+:::
+::::
+
+\note{
+中央値はデータをまとめるために使う代表値の一種です。
+データを小さい順に並べたときの中央に一致する値です。
+データ数が奇数の場合は, 中央値は真ん中の値です。
+データ数が偶数の場合は, 真ん中2つの値の平均値です。
+}
+
+
+## Mode (最頻値・モード)
+
+The mode is the most common value in a dataset.
+
+ 
+```{r}
+set.seed(2020)
+x = sample(1:9, size = 100, replace = TRUE)
+z = table(x) %>% as_tibble() %>% arrange(desc(n))
+z
+```
+
+
+The value `r z %>% slice(1) %>% pull(x)` 
+occurs `r z %>% slice(1) %>% pull(n)` times, so 
+it is the mode.
+
+## Median Absolute Deviation (中央絶対偏差)
+
+The **median absolute deviation (MAD, 中央絶対偏差)** is another measure of variation.
+
+$$
+MAD = \text{median}(|x_i - \tilde{x}|)
+$$
+
+$\tilde{x}$ is the median.
+
+ 
+```{r}
+mad = function(x) {
+  xtilde = median(x)
+  median(abs(x - xtilde))
+}
+x = rnorm(100)
+list(mad = mad(x), sd = sd(x))
+```
+
+
+## Quantile (四分位数・クォンタイル)
+
+:::: {.columns}
+::: {.column width="50%"}
+
+ 
+There are many ways to define the **quantile (四分位数・クォンタイル)**.
+In any case, we first need to sort the values from smallest to largest.
+Then we separate the values in to four groups.
+The value used to separate the groups are called the quantile.
+
+ 
+```{r}
+set.seed(2020)
+x = sample(20:40, size = 9, replace = TRUE)
+z = sort(x)
+z
+```
+
+```{r}
+# 文科省の定義：
+N = length(z)
+Q1 = median(z[1:(floor(N/2))])
+Q2 = median(z)
+Q3 = median(z[(ceiling(N/2)+1):N])
+c(min(z), Q1, Q2, Q3, max(z))
+```
+
+ 
+```{r}
+# R では, Tukey の定義で計算します。
+quantile(z)
+```
+
+:::
+
+::: {.column width="50%"}
+
+```{r}
+#| echo: false
+y = fivenum(z)
+df1 = tibble(x = 2,
+       y0 = min(z),
+       y25 = Q1,
+       y50 = Q2,
+       y75 = Q3,
+       y1 = max(z))
+df2 = tibble(x = 1,
+             y0 = y[1],
+             y25 = y[2], y50=y[3], y75=y[4], y1=y[5])
+
+ggplot() +
+  geom_boxplot(aes(x = x, ymin = y0, lower = y25, 
+                   middle = y50, upper = y75, ymax = y1,
+                   fill = "文科省の定義"),
+               stat = "identity", data = df1) +
+  geom_boxplot(aes(x = x, ymin = y0, lower = y25, 
+                   middle = y50, upper = y75, ymax = y1,
+                   fill = "Tukey, R の定義"),
+               stat = "identity", data = df2) +
+  
+  geom_point(aes(x = x, z),
+             data = tibble(x=rep(2, length(z)), z), 
+             color = "black", size = 4) +
+  geom_point(aes(x = x, z),
+             data = tibble(x=rep(1, length(z)), z), 
+             color = "black", size = 4) +
+  
+  theme(legend.title = element_blank(),
+        legend.position = "top",
+        axis.title = element_blank(),
+        axis.text.x = element_blank(),
+        axis.ticks.x = element_blank())
+```
+
+
+
+In this boxplot, the whiskers indicate the minimum and maximum values.
+The line in the center of the box is the median (i.e., second quantile, 第2四分位数).
+The bottom edge of the box is the first quantile (第1四分位数)
+and the top edge of the box is the third quantile (第3四分位数).
+The distance between the first and third quantile is called the Inter-Quantile Range (IQR, 四分位範囲).
+:::
+::::
+
+
+## Quantile in R
+
+
+:::: {.columns}
+::: {.column width="50%"}
+
+```{r}
+set.seed(2021)
+z = rpois(100, 10) 
+quantile(z)
+```
+
+:::
+
+::: {.column width="50%"}
+
+```{r}
+
+tibble(value = z) %>% 
+  ggplot() +
+  geom_point(aes(x = "Example2", y = value),
+             position = position_jitter(width = 0.2, height = 0, seed = 2021),
+             size = 5) +
+  geom_boxplot(aes(x = "Example", y = value)) +
+  theme(legend.title = element_blank(),
+        legend.position = "top",
+        axis.title = element_blank(),
+        axis.text.x = element_blank(),
+        axis.ticks.x = element_blank())
+```
+
+
+
+In the standard boxplot, the dots beyond the whiskers indicate outliers.
+The whiskers extend to the largest value within 1.5 times the IQR from the each edge.
+:::
+::::
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

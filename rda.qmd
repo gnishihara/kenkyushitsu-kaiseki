@@ -471,108 +471,95 @@ full_join(rdavariables, svdvariables, by = "variables")
 ```
 
 
-## Bayesian method
+## Example analysis
+
+Example data set.
+
+Dune meadow vegetation data.
+
+- A1 soil thickness
+- Moisture ordered factor of levels 1 < 2 < 4 < 5
+- Management factor of 4 levels
+- Use ordered factor Hayfield < Haypastu < Pasture
+- Manure Ordered factor 0 < 1 < 2 < 3 < 4
 
 ```{r}
-#| echo: true
-Y = iris[, 1:2]
-X = iris[, 3:4]
-X = apply(X, 2, scale)
-Y = apply(Y, 2, scale)
-```
-
-Next, fit the `rda()` version for comparison.
-```{r}
-#| echo: true
-rdaout = rda(Y~X)
-```
-
-Then find $\mathbf{\hat{Y}}$ multivariate linear regression $\mathbf{Y} \sim \mathbf{X}$.
-
-```{r}
-#| echo: true
-sxxinv = solve(t(X) %*% X)
-syx = t(Y) %*% X
-syxtr = t(syx)
-Yhat = X %*% sxxinv %*% syxtr
-Yres = Y - Yhat
+data(dune)
+dune[dune > 0] = 1
+dune
 ```
 
 
 ```{r}
-library(brms)
+data(dune.env)
+dune.env
+```
 
-iris_tib = iris |> as_tibble()
-iris_tib = iris_tib |> 
-  rename_with(~str_remove_all(., "[a-z|\\.]"), .cols = matches("Leng|Wid")) 
 
-iris_tib = iris_tib |> mutate(across(-Species, \(x) scale(x)[,1]))
 
-bmod = bf(mvbind(SL, SW) ~ PL + PW) + set_rescor(T)
-bout = brm(bmod, data = iris_tib, chains = 4, cores = 4)
+
+
+```{r}
+Y = decostand(dune, "hellinger")
+X = dune.env |> as_tibble() |> print()
 ```
 
 
 ```{r}
-Yresb = predictive_error(bout)
-Yhatb = posterior_predict(bout)
+nullmodel = rda(dune ~ 1)
+rdamodel = rda(dune ~ A1 + Moisture + Use + Manure, dune.env)
+scaling = 1
+nullsites = scores(nullmodel, scaling = scaling, display = "sites") |> as_tibble()
+rdasites = scores(rdamodel, scaling = scaling, display = "sites") |> as_tibble()
+nullsites = bind_cols(X, nullsites)
+rdasites = bind_cols(X, rdasites)
 
-pcaeigs = apply(Yresb, 1, \(x) { svd(x)$d^2 / (149) })
-rdaeigs = apply(Yhatb, 1, \(x) { svd(x)$d^2 / (149) })
-
-apply(pcaeigs, 1, tidybayes::mean_hdci)
-rdaout$CA$eig
-
-apply(rdaeigs, 1, tidybayes::mean_hdci)
-rdaout$CCA$eig
-
-```
-
-## Confirm the eigenvalues
-
-Calculate the eigenvalues for the PCA part.
-
-```{r}
-#| echo: true
-# PCA part
-svd(Yres)$d^2 / (nrow(Y) -1)
-rdaout$CA$eig
-```
-
-Calculate the eigenvalues for the RDA part.
-
-```{r}
-#| echo: true
-# RDA part
-svd(Yhat)$d^2 / (nrow(Y) - 1)
-rdaout$CCA$eig
-```
-
-## Confirm the eigenvectors
-
-```{r}
-#| echo: true
-svd(Yres)$v
-rdaout$CA$v
+nullbp = scores(nullmodel, scaling = scaling, display = "bp") |> as_tibble()
+rdabp = scores(rdamodel, scaling = scaling, display = "bp") |> as_tibble(rownames = "variable")
 ```
 
 ```{r}
-#| echo: true
-svd(Yhat)$v
-rdaout$CCA$v
+rdamodel |> summary(display = NULL)
+rdamodel |> anova(by = "terms")
+rdamodel |> anova(by = "axis")
 ```
 
-## Calcualte inertias
 
 ```{r}
-#| echo: true
-n = nrow(Y)
-constrained = sum(svd(Yhat)$d^2 / (n - 1))
-unconstrained = sum(svd(Yres)$d^2 / (n - 1))
-total = constrained + unconstrained
+return_hull = function(df, x, y){
+  x = df |> pull({{x}})
+  y = df |> pull({{y}})
+  df[chull(x, y), ]
+} 
 
-tibble(type = c("Total", "Constrained", "Unconstrained"),
-       Inertia = c(total, constrained, unconstrained)) |> 
-  mutate(Proportion = Inertia / total)
+nhull = nullsites |> 
+  group_nest(Management) |> 
+  mutate(data = map(data, return_hull, PC1, PC2)) |> 
+  unnest(data)
+rhull = rdasites |> 
+  group_nest(Management) |> 
+  mutate(data = map(data, return_hull, RDA1, RDA2)) |> 
+  unnest(data)
 ```
+
+
+```{r}
+p1 = ggplot() + 
+  geom_point(aes(x = PC1, y = PC2, color = Management), data = nullsites, size = 4)  +
+  geom_polygon(aes(x = PC1, y = PC2, fill = Management), data = nhull, alpha = 0.2)
+p2 = ggplot() + 
+  geom_point(aes(x = RDA1, y = RDA2, color = Management), data = rdasites, size = 4)  +
+  geom_segment(aes(x = 0, y = 0,
+                   xend = RDA1, yend = RDA2), 
+               data = rdabp |> filter(str_detect(variable, "L|A1|Manage")))+
+  geom_text(aes(x = RDA1, y = RDA2, label = variable), 
+            data = rdabp |> filter(str_detect(variable, "L|A1|Manage"))) +
+    geom_polygon(aes(x = RDA1, y = RDA2, fill = Management), data = rhull, alpha = 0.2)
+p1 + p2
+```
+
+
+
+
+
 

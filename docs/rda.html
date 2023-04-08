@@ -7,7 +7,7 @@
 <link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
 <link href="site_libs/quarto-html/quarto-html.min.css" rel="stylesheet" data-mode="light">
 <link href="site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles"><meta charset="utf-8">
-  <meta name="generator" content="quarto-1.2.335">
+  <meta name="generator" content="quarto-1.2.475">
 
   <meta name="author" content="Greg Nishihara">
   <title>データ解析（研究室用） - Redundancy Analysis</title>
@@ -398,7 +398,7 @@ Greg Nishihara
 </div>
 </div>
 
-  <p class="date">2023 / 02 / 09</p>
+  <p class="date">2023 / 04 / 08</p>
 </section>
 <section>
 <section id="redundancy-analysis" class="title-slide slide level1 center">
@@ -867,140 +867,249 @@ Eigenvalues for unconstrained axes:
 </div>
 </div>
 </section>
-<section id="bayesian-method" class="slide level2">
-<h2>Bayesian method</h2>
-<div class="cell" data-hash="rda_cache/revealjs/unnamed-chunk-32_3bc242543f85b29e71065f9915adb535">
-<div class="sourceCode cell-code" id="cb46"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb46-1"><a href="#cb46-1"></a>Y <span class="ot">=</span> iris[, <span class="dv">1</span><span class="sc">:</span><span class="dv">2</span>]</span>
-<span id="cb46-2"><a href="#cb46-2"></a>X <span class="ot">=</span> iris[, <span class="dv">3</span><span class="sc">:</span><span class="dv">4</span>]</span>
-<span id="cb46-3"><a href="#cb46-3"></a>X <span class="ot">=</span> <span class="fu">apply</span>(X, <span class="dv">2</span>, scale)</span>
-<span id="cb46-4"><a href="#cb46-4"></a>Y <span class="ot">=</span> <span class="fu">apply</span>(Y, <span class="dv">2</span>, scale)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<section id="example-analysis" class="slide level2">
+<h2>Example analysis</h2>
+<p>Example data set.</p>
+<p>Dune meadow vegetation data.</p>
+<ul>
+<li>A1 soil thickness</li>
+<li>Moisture ordered factor of levels 1 &lt; 2 &lt; 4 &lt; 5</li>
+<li>Management factor of 4 levels</li>
+<li>Use ordered factor Hayfield &lt; Haypastu &lt; Pasture</li>
+<li>Manure Ordered factor 0 &lt; 1 &lt; 2 &lt; 3 &lt; 4</li>
+</ul>
+<div class="cell" data-hash="rda_cache/revealjs/unnamed-chunk-32_31eae54414992dd50adddad4cce16697">
+<div class="cell-output cell-output-stdout">
+<pre><code>   Achimill Agrostol Airaprae Alopgeni Anthodor Bellpere Bromhord Chenalbu
+1         1        0        0        0        0        0        0        0
+2         1        0        0        1        0        1        1        0
+3         0        1        0        1        0        1        0        0
+4         0        1        0        1        0        1        1        0
+5         1        0        0        0        1        1        1        0
+6         1        0        0        0        1        0        0        0
+7         1        0        0        0        1        0        1        0
+8         0        1        0        1        0        0        0        0
+9         0        1        0        1        0        0        0        0
+10        1        0        0        0        1        1        1        0
+11        0        0        0        0        0        0        0        0
+12        0        1        0        1        0        0        0        0
+13        0        1        0        1        0        0        0        1
+14        0        1        0        0        0        0        0        0
+15        0        1        0        0        0        0        0        0
+16        0        1        0        1        0        0        0        0
+17        1        0        1        0        1        0        0        0
+18        0        0        0        0        0        1        0        0
+19        0        0        1        0        1        0        0        0
+20        0        1        0        0        0        0        0        0
+   Cirsarve Comapalu Eleopalu Elymrepe Empenigr Hyporadi Juncarti Juncbufo
+1         0        0        0        1        0        0        0        0
+2         0        0        0        1        0        0        0        0
+3         0        0        0        1        0        0        0        0
+4         1        0        0        1        0        0        0        0
+5         0        0        0        1        0        0        0        0
+6         0        0        0        0        0        0        0        0
+7         0        0        0        0        0        0        0        1
+8         0        0        1        0        0        0        1        0
+9         0        0        0        1        0        0        1        1
+10        0        0        0        0        0        0        0        0
+11        0        0        0        0        0        1        0        0
+12        0        0        0        0        0        0        0        1
+13        0        0        0        0        0        0        0        1
+14        0        1        1        0        0        0        0        0
+15        0        1        1        0        0        0        1        0
+16        0        0        1        0        0        0        1        0
+17        0        0        0        0        0        1        0        0
+18        0        0        0        0        0        0        0        0
+19        0        0        0        0        1        1        0        0
+20        0        0        1        0        0        0        1        0
+   Lolipere Planlanc Poaprat Poatriv Ranuflam Rumeacet Sagiproc Salirepe
+1         1        0       1       1        0        0        0        0
+2         1        0       1       1        0        0        0        0
+3         1        0       1       1        0        0        0        0
+4         1        0       1       1        0        0        1        0
+5         1        1       1       1        0        1        0        0
+6         1        1       1       1        0        1        0        0
+7         1        1       1       1        0        1        0        0
+8         1        0       1       1        1        0        1        0
+9         1        0       1       1        0        1        1        0
+10        1        1       1       1        0        0        0        0
+11        1        1       1       0        0        0        1        0
+12        0        0       0       1        0        1        1        0
+13        0        0       1       1        1        0        1        0
+14        0        0       0       0        1        0        0        0
+15        0        0       0       0        1        0        0        0
+16        0        0       0       1        1        0        0        0
+17        0        1       1       0        0        0        0        0
+18        1        1       1       0        0        0        0        1
+19        0        0       0       0        0        0        1        1
+20        0        0       0       0        1        0        0        1
+   Scorautu Trifprat Trifrepe Vicilath Bracruta Callcusp
+1         0        0        0        0        0        0
+2         1        0        1        0        0        0
+3         1        0        1        0        1        0
+4         1        0        1        0        1        0
+5         1        1        1        0        1        0
+6         1        1        1        0        1        0
+7         1        1        1        0        1        0
+8         1        0        1        0        1        0
+9         1        0        1        0        1        0
+10        1        0        1        1        1        0
+11        1        0        1        1        1        0
+12        1        0        1        0        1        0
+13        1        0        1        0        0        0
+14        1        0        1        0        0        1
+15        1        0        1        0        1        0
+16        0        0        0        0        1        1
+17        1        0        0        0        0        0
+18        1        0        1        1        1        0
+19        1        0        1        0        1        0
+20        1        0        0        0        1        1</code></pre>
 </div>
-<p>Next, fit the <code>rda()</code> version for comparison.</p>
-<div class="cell" data-hash="rda_cache/revealjs/unnamed-chunk-33_7ef5533d02532849bc182dd02b93cb03">
-<div class="sourceCode cell-code" id="cb47"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb47-1"><a href="#cb47-1"></a>rdaout <span class="ot">=</span> <span class="fu">rda</span>(Y<span class="sc">~</span>X)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<p>Then find <span class="math inline">\(\mathbf{\hat{Y}}\)</span> multivariate linear regression <span class="math inline">\(\mathbf{Y} \sim \mathbf{X}\)</span>.</p>
-<div class="cell" data-hash="rda_cache/revealjs/unnamed-chunk-34_cfbf55d9b52e34cf0a31a4cc13a1c372">
-<div class="sourceCode cell-code" id="cb48"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb48-1"><a href="#cb48-1"></a>sxxinv <span class="ot">=</span> <span class="fu">solve</span>(<span class="fu">t</span>(X) <span class="sc">%*%</span> X)</span>
-<span id="cb48-2"><a href="#cb48-2"></a>syx <span class="ot">=</span> <span class="fu">t</span>(Y) <span class="sc">%*%</span> X</span>
-<span id="cb48-3"><a href="#cb48-3"></a>syxtr <span class="ot">=</span> <span class="fu">t</span>(syx)</span>
-<span id="cb48-4"><a href="#cb48-4"></a>Yhat <span class="ot">=</span> X <span class="sc">%*%</span> sxxinv <span class="sc">%*%</span> syxtr</span>
-<span id="cb48-5"><a href="#cb48-5"></a>Yres <span class="ot">=</span> Y <span class="sc">-</span> Yhat</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell" data-hash="rda_cache/revealjs/unnamed-chunk-33_99fae65b61188ae2be8127b7fbddebb3">
+<div class="cell-output cell-output-stdout">
+<pre><code>     A1 Moisture Management      Use Manure
+1   2.8        1         SF Haypastu      4
+2   3.5        1         BF Haypastu      2
+3   4.3        2         SF Haypastu      4
+4   4.2        2         SF Haypastu      4
+5   6.3        1         HF Hayfield      2
+6   4.3        1         HF Haypastu      2
+7   2.8        1         HF  Pasture      3
+8   4.2        5         HF  Pasture      3
+9   3.7        4         HF Hayfield      1
+10  3.3        2         BF Hayfield      1
+11  3.5        1         BF  Pasture      1
+12  5.8        4         SF Haypastu      2
+13  6.0        5         SF Haypastu      3
+14  9.3        5         NM  Pasture      0
+15 11.5        5         NM Haypastu      0
+16  5.7        5         SF  Pasture      3
+17  4.0        2         NM Hayfield      0
+18  4.6        1         NM Hayfield      0
+19  3.7        5         NM Hayfield      0
+20  3.5        5         NM Hayfield      0</code></pre>
 </div>
-<div class="cell" data-hash="rda_cache/revealjs/unnamed-chunk-35_e196a08899c1985add3a9ae9b4db84d0">
+</div>
+<div class="cell" data-hash="rda_cache/revealjs/unnamed-chunk-34_7e1f6e44d19213f68273b82cc30159db">
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 20 × 5
+      A1 Moisture Management Use      Manure
+   &lt;dbl&gt; &lt;ord&gt;    &lt;fct&gt;      &lt;ord&gt;    &lt;ord&gt; 
+ 1   2.8 1        SF         Haypastu 4     
+ 2   3.5 1        BF         Haypastu 2     
+ 3   4.3 2        SF         Haypastu 4     
+ 4   4.2 2        SF         Haypastu 4     
+ 5   6.3 1        HF         Hayfield 2     
+ 6   4.3 1        HF         Haypastu 2     
+ 7   2.8 1        HF         Pasture  3     
+ 8   4.2 5        HF         Pasture  3     
+ 9   3.7 4        HF         Hayfield 1     
+10   3.3 2        BF         Hayfield 1     
+11   3.5 1        BF         Pasture  1     
+12   5.8 4        SF         Haypastu 2     
+13   6   5        SF         Haypastu 3     
+14   9.3 5        NM         Pasture  0     
+15  11.5 5        NM         Haypastu 0     
+16   5.7 5        SF         Pasture  3     
+17   4   2        NM         Hayfield 0     
+18   4.6 1        NM         Hayfield 0     
+19   3.7 5        NM         Hayfield 0     
+20   3.5 5        NM         Hayfield 0     </code></pre>
+</div>
+</div>
+<div class="cell" data-hash="rda_cache/revealjs/unnamed-chunk-35_191128fda1dc568574dae704bd8a5e39">
 
 </div>
-<div class="cell" data-hash="rda_cache/revealjs/unnamed-chunk-36_0aa9fab003a0b4bf3048951e4b59e2e6">
+<div class="cell" data-hash="rda_cache/revealjs/unnamed-chunk-36_9c2a32335a6946ccc948be56095b44e9">
 <div class="cell-output cell-output-stdout">
-<pre><code>[[1]]
-         y     ymin     ymax .width .point .interval
-1 1.850176 1.456871 2.291322   0.95   mean      hdci
+<pre><code>
+Call:
+rda(formula = dune ~ A1 + Moisture + Use + Manure, data = dune.env) 
 
-[[2]]
-          y      ymin      ymax .width .point .interval
-1 0.2558739 0.1965835 0.3133494   0.95   mean      hdci</code></pre>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>      PC1       PC2 
-0.8965380 0.1240973 </code></pre>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>[[1]]
-         y      ymin     ymax .width .point .interval
-1 1.196392 0.9794478 1.449671   0.95   mean      hdci
+Partitioning of variance:
+              Inertia Proportion
+Total           5.261     1.0000
+Constrained     3.384     0.6432
+Unconstrained   1.877     0.3568
 
-[[2]]
-          y      ymin     ymax .width .point .interval
-1 0.8670403 0.6314886 1.085612   0.95   mean      hdci</code></pre>
+Eigenvalues, and their contribution to the variance 
+
+Importance of components:
+                        RDA1   RDA2    RDA3    RDA4    RDA5    RDA6    RDA7
+Eigenvalue            1.4129 0.7859 0.28559 0.24176 0.17851 0.15076 0.12636
+Proportion Explained  0.2686 0.1494 0.05429 0.04596 0.03393 0.02866 0.02402
+Cumulative Proportion 0.2686 0.4180 0.47226 0.51822 0.55215 0.58081 0.60483
+                        RDA8    RDA9    RDA10     PC1     PC2     PC3     PC4
+Eigenvalue            0.1021 0.06278 0.037263 0.43922 0.43799 0.29683 0.22855
+Proportion Explained  0.0194 0.01193 0.007083 0.08349 0.08326 0.05643 0.04345
+Cumulative Proportion 0.6242 0.63616 0.643248 0.72674 0.81000 0.86643 0.90988
+                          PC5     PC6     PC7     PC8      PC9
+Eigenvalue            0.16015 0.12726 0.09615 0.06368 0.026875
+Proportion Explained  0.03044 0.02419 0.01828 0.01210 0.005109
+Cumulative Proportion 0.94032 0.96451 0.98279 0.99489 1.000000
+
+Accumulated constrained eigenvalues
+Importance of components:
+                        RDA1   RDA2   RDA3    RDA4    RDA5    RDA6    RDA7
+Eigenvalue            1.4129 0.7859 0.2856 0.24176 0.17851 0.15076 0.12636
+Proportion Explained  0.4175 0.2322 0.0844 0.07144 0.05275 0.04455 0.03734
+Cumulative Proportion 0.4175 0.6498 0.7342 0.80563 0.85838 0.90293 0.94027
+                         RDA8    RDA9   RDA10
+Eigenvalue            0.10206 0.06278 0.03726
+Proportion Explained  0.03016 0.01855 0.01101
+Cumulative Proportion 0.97043 0.98899 1.00000
+
+Scaling 2 for species and site scores
+* Species are scaled proportional to eigenvalues
+* Sites are unscaled: weighted dispersion equal on all dimensions
+* General scaling constant of scores:  </code></pre>
 </div>
 <div class="cell-output cell-output-stdout">
-<pre><code>      RDA1       RDA2 
-0.96547259 0.01389207 </code></pre>
+<pre><code>Permutation test for rda under reduced model
+Terms added sequentially (first to last)
+Permutation: free
+Number of permutations: 999
+
+Model: rda(formula = dune ~ A1 + Moisture + Use + Manure, data = dune.env)
+         Df Variance      F Pr(&gt;F)   
+A1        1  0.54865 2.6311  0.006 **
+Moisture  3  1.44897 2.3162  0.002 **
+Use       2  0.50253 1.2050  0.257   
+Manure    4  0.88368 1.0595  0.406   
+Residual  9  1.87670                 
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
 </div>
-</div>
-</section>
-<section id="confirm-the-eigenvalues-1" class="slide level2">
-<h2>Confirm the eigenvalues</h2>
-<p>Calculate the eigenvalues for the PCA part.</p>
-<div class="cell" data-hash="rda_cache/revealjs/unnamed-chunk-37_db005f3349fc1150a01edc16c40dbfae">
-<div class="sourceCode cell-code" id="cb53"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb53-1"><a href="#cb53-1"></a><span class="co"># PCA part</span></span>
-<span id="cb53-2"><a href="#cb53-2"></a><span class="fu">svd</span>(Yres)<span class="sc">$</span>d<span class="sc">^</span><span class="dv">2</span> <span class="sc">/</span> (<span class="fu">nrow</span>(Y) <span class="sc">-</span><span class="dv">1</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>[1] 0.8965380 0.1240973</code></pre>
-</div>
-<div class="sourceCode cell-code" id="cb55"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb55-1"><a href="#cb55-1"></a>rdaout<span class="sc">$</span>CA<span class="sc">$</span>eig</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>      PC1       PC2 
-0.8965380 0.1240973 </code></pre>
-</div>
-</div>
-<p>Calculate the eigenvalues for the RDA part.</p>
-<div class="cell" data-hash="rda_cache/revealjs/unnamed-chunk-38_1fd45f1f13878de74bce0c06a6ba6361">
-<div class="sourceCode cell-code" id="cb57"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb57-1"><a href="#cb57-1"></a><span class="co"># RDA part</span></span>
-<span id="cb57-2"><a href="#cb57-2"></a><span class="fu">svd</span>(Yhat)<span class="sc">$</span>d<span class="sc">^</span><span class="dv">2</span> <span class="sc">/</span> (<span class="fu">nrow</span>(Y) <span class="sc">-</span> <span class="dv">1</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>[1] 0.96547259 0.01389207</code></pre>
-</div>
-<div class="sourceCode cell-code" id="cb59"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb59-1"><a href="#cb59-1"></a>rdaout<span class="sc">$</span>CCA<span class="sc">$</span>eig</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>      RDA1       RDA2 
-0.96547259 0.01389207 </code></pre>
-</div>
-</div>
-</section>
-<section id="confirm-the-eigenvectors-1" class="slide level2">
-<h2>Confirm the eigenvectors</h2>
-<div class="cell" data-hash="rda_cache/revealjs/unnamed-chunk-39_5c7af1b7a62298e0cd0d68e5410a7575">
-<div class="sourceCode cell-code" id="cb61"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb61-1"><a href="#cb61-1"></a><span class="fu">svd</span>(Yres)<span class="sc">$</span>v</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>          [,1]       [,2]
-[1,] 0.3767512  0.9263145
-[2,] 0.9263145 -0.3767512</code></pre>
-</div>
-<div class="sourceCode cell-code" id="cb63"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb63-1"><a href="#cb63-1"></a>rdaout<span class="sc">$</span>CA<span class="sc">$</span>v</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>                   PC1        PC2
-Sepal.Length 0.3767512  0.9263145
-Sepal.Width  0.9263145 -0.3767512</code></pre>
+<pre><code>Permutation test for rda under reduced model
+Forward tests for axes
+Permutation: free
+Number of permutations: 999
+
+Model: rda(formula = dune ~ A1 + Moisture + Use + Manure, data = dune.env)
+         Df Variance      F Pr(&gt;F)   
+RDA1      1  1.41288 6.7757  0.002 **
+RDA2      1  0.78586 3.7687  0.117   
+RDA3      1  0.28559 1.3696  0.996   
+RDA4      1  0.24176 1.1594  1.000   
+RDA5      1  0.17851 0.8561  0.999   
+RDA6      1  0.15076 0.7230  1.000   
+RDA7      1  0.12636 0.6060  1.000   
+RDA8      1  0.10206 0.4894  1.000   
+RDA9      1  0.06278 0.3011  1.000   
+RDA10     1  0.03726 0.1787  0.999   
+Residual  9  1.87670                 
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
 </div>
 </div>
-<div class="cell" data-hash="rda_cache/revealjs/unnamed-chunk-40_31b4de2d69c4015d637f11cc0ae0b596">
-<div class="sourceCode cell-code" id="cb65"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb65-1"><a href="#cb65-1"></a><span class="fu">svd</span>(Yhat)<span class="sc">$</span>v</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>           [,1]      [,2]
-[1,]  0.8891863 0.4575454
-[2,] -0.4575454 0.8891863</code></pre>
-</div>
-<div class="sourceCode cell-code" id="cb67"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb67-1"><a href="#cb67-1"></a>rdaout<span class="sc">$</span>CCA<span class="sc">$</span>v</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>                   RDA1      RDA2
-Sepal.Length  0.8891863 0.4575454
-Sepal.Width  -0.4575454 0.8891863</code></pre>
-</div>
-</div>
-</section>
-<section id="calcualte-inertias-1" class="slide level2">
-<h2>Calcualte inertias</h2>
-<div class="cell" data-hash="rda_cache/revealjs/unnamed-chunk-41_cbcd10dd577e665094db4ac53433e364">
-<div class="sourceCode cell-code" id="cb69"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb69-1"><a href="#cb69-1"></a>n <span class="ot">=</span> <span class="fu">nrow</span>(Y)</span>
-<span id="cb69-2"><a href="#cb69-2"></a>constrained <span class="ot">=</span> <span class="fu">sum</span>(<span class="fu">svd</span>(Yhat)<span class="sc">$</span>d<span class="sc">^</span><span class="dv">2</span> <span class="sc">/</span> (n <span class="sc">-</span> <span class="dv">1</span>))</span>
-<span id="cb69-3"><a href="#cb69-3"></a>unconstrained <span class="ot">=</span> <span class="fu">sum</span>(<span class="fu">svd</span>(Yres)<span class="sc">$</span>d<span class="sc">^</span><span class="dv">2</span> <span class="sc">/</span> (n <span class="sc">-</span> <span class="dv">1</span>))</span>
-<span id="cb69-4"><a href="#cb69-4"></a>total <span class="ot">=</span> constrained <span class="sc">+</span> unconstrained</span>
-<span id="cb69-5"><a href="#cb69-5"></a></span>
-<span id="cb69-6"><a href="#cb69-6"></a><span class="fu">tibble</span>(<span class="at">type =</span> <span class="fu">c</span>(<span class="st">"Total"</span>, <span class="st">"Constrained"</span>, <span class="st">"Unconstrained"</span>),</span>
-<span id="cb69-7"><a href="#cb69-7"></a>       <span class="at">Inertia =</span> <span class="fu">c</span>(total, constrained, unconstrained)) <span class="sc">|&gt;</span> </span>
-<span id="cb69-8"><a href="#cb69-8"></a>  <span class="fu">mutate</span>(<span class="at">Proportion =</span> Inertia <span class="sc">/</span> total)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code># A tibble: 3 × 3
-  type          Inertia Proportion
-  &lt;chr&gt;           &lt;dbl&gt;      &lt;dbl&gt;
-1 Total           2.00       1    
-2 Constrained     0.979      0.490
-3 Unconstrained   1.02       0.510</code></pre>
-</div>
+<div class="cell" data-hash="rda_cache/revealjs/unnamed-chunk-37_fc8a8b256244b4b11c612ceed2549f3c">
+
 </div>
 
-<div class="footer footer-default">
+
+<img data-src="rda_files/figure-revealjs/unnamed-chunk-38-1.png" width="960" class="r-stretch"><div class="footer footer-default">
 
 </div>
 </section></section>
