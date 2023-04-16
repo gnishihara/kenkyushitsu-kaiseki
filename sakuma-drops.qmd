@@ -1,0 +1,641 @@
+---
+title: "データの可視化と記述統計量"
+subtitle: "サクマドロップス"
+shorttitle: "サクマドロップス"
+author: "Greg Nishihara"
+date: today
+date-format: "YYYY / MM / DD"
+slide-number: true
+transition: slide
+progress: true
+fig-align: center
+fig-width: 8
+fig-height: 4.5
+format: revealjs
+editor: 
+  markdown: 
+    wrap: 72
+bibliography: references.bib
+execute: 
+  cache: true
+---
+
+## サクマドロップスのサンプル表 {.smaller}
+
+```{r}
+#| include: false
+#| cache: false
+#| echo: false
+library(tidyverse)
+library(gt)
+library(patchwork)
+library(gtExtras)
+
+Sys.setlocale("LC_TIME", "en_US.UTF-8") # This is to set the server time locate to en_US.UTF-8
+set.seed(2020)
+sakuma = tibble(
+  type = c("イチゴ", "ハッカ", "リンゴ", "スモモ", "レモン","メロン","オレンジ", "パイン"),
+  count = c(26,11,20,26,23,27,26,15)
+)
+get_handful = function() {sample(30:50, 1)}
+
+bag = sakuma |> mutate(u = map2(type, count, \(type, count) {rep(type, count)})) |> 
+  pull(u) |> list_c()
+
+d1 = tibble(Student = LETTERS[1:5]) |> 
+  mutate(samples = map(Student, \(x) sample(bag, get_handful()))) |> 
+  unnest(samples)
+```
+
+一回目の講義には、キャンバスバッグからサクマドロップスを採取しました。
+キャンバスバッグにあるサクマドロップスの種類ごと数を知ることが目的です。
+本来知りたい集団全体のことを**母集団 (population)**とよび、母集団から採取したデータは**標本 (sample)**といいます。
+
+```{r}
+d1 |> 
+  group_by(Student, samples) |> 
+  summarise(count = n(), .groups = "drop") |> 
+  pivot_wider(names_from = samples,
+              values_from = count) |> 
+  gt() |> 
+  gt_theme_dot_matrix()
+```
+
+学生ごとに一度だけ標本をとったので、表には５つの標本を示している。
+
+標本から母数団の情報を推定するので、標本の代表的な値を求めます。
+
+
+## データを代表する値 {.smaller}
+
+
+**平均値 (mean, average)：** 総和を標本数で割った値
+
+$$
+\bar{x} = \frac{1}{N} \sum_{n=1}^{N} x_n 
+$$
+
+**中央値 (median)：** 標本を上順に並べたときに、データの中央に位置する値
+
+$$
+M = \cases{
+x_{[\frac{1}{2}(N + 1)]} & $N$ が奇数 \\
+\frac{1}{2}\left(x_{[\frac{N}{2}]} + x_{[\frac{N}{2} + 1]}\right) & $N$ が偶数 
+}
+$$
+
+**最頻値 (mode)：** 標本で最も頻繁に現れる値
+
+## 平均値の求め方
+
+オレンジサクマドロップスのサンプルをまとめます。
+
+```{r}
+orange = d1 |> 
+  group_by(Student, samples) |> 
+  summarise(count = n(), .groups = "drop") |> 
+  pivot_wider(names_from = samples,
+              values_from = count) |> pull(オレンジ)
+
+out = str_flatten(orange, collapse = " + ")
+```
+
+$$
+\bar{x} = \frac{1}{5} (`r out`) = `r mean(orange)`
+$$
+
+## 中央値の求め方
+
+オレンジサクマドロップスの中央値を求めるなら、サンプルを上順に並べる必要があります。
+
+```{r}
+out = str_flatten(sort(orange), collapse = ", ")
+```
+
+$$
+(`r out`)
+$$
+
+$n = 5$ なので、中央値は、
+
+$$
+x_{[\frac{1}{2}(5 + 1)]} = x_{[3]} = `r sort(orange)[3]`
+$$
+
+
+## サクマドロップスの統計量 {.smaller}
+
+全種類のサクマドロップスの平均値、中央値、最頻値を求めます。
+少量のデータなら、表でまとめることもあるが、データ数が増えると図のほうが見やすい。
+
+```{r}
+m1 = d1 |> 
+  group_by(Student, samples) |> 
+  summarise(count = n(), .groups = "drop") |> 
+  pivot_wider(names_from = samples,
+              values_from = count) |> 
+  summarise(across(-Student, mean))
+m2 = d1 |> 
+  group_by(Student, samples) |> 
+  summarise(count = n(), .groups = "drop") |> 
+  pivot_wider(names_from = samples,
+              values_from = count) |> 
+  summarise(across(-Student, median))
+m3 = d1 |> 
+  group_by(Student, samples) |> 
+  summarise(count = n(), .groups = "drop") |> 
+  pivot_wider(names_from = samples,
+              values_from = count) |> 
+  summarise(across(-Student, \(x) as.numeric(names(sort(-table(x)))[1]))
+  )
+
+bind_rows(
+  d1 |> 
+    group_by(Student, samples) |> 
+    summarise(count = n(), .groups = "drop") |> 
+    pivot_wider(names_from = samples,
+                values_from = count),
+  bind_cols(
+    tibble(Student = c("Mean", "Median", "Mode")),
+    bind_rows(m1,m2,m3)
+  )
+) |> 
+  gt() |> 
+  gt_theme_dot_matrix()
+
+```
+
+## 棒グラフ
+
+```{r}
+#| fig-cap: Stacked bar chart
+d1 |> group_by(Student, samples) |> summarise(n=n()) |> 
+  ggplot() +
+  geom_col(aes(x = samples, y = n, fill = Student)) +
+  scale_x_discrete("Flavor") +
+  scale_y_continuous("Samples (n)")
+```
+
+## 棒グラフ
+
+```{r}
+#| fig-cap: Grouped bar chart
+d1 |> group_by(Student, samples) |> summarise(n=n()) |> 
+  ggplot() +
+  geom_col(aes(x = samples, y = n, fill = Student),
+           position = "dodge") +
+  scale_x_discrete("Flavor") +
+  scale_y_continuous("Samples (n)")
+```
+
+## 散布図
+
+```{r}
+#| fig-cap: Scatter plot
+d1 |> group_by(Student, samples) |> summarise(n=n()) |> 
+  ggplot() +
+  geom_point(aes(x = samples, y = n, color = Student), size = 5) +
+  scale_x_discrete("Flavor") +
+  scale_y_continuous("Samples (n)")
+```
+
+
+## 散布図
+
+```{r}
+#| fig-cap: Jittered scatter plot
+d1 |> group_by(Student, samples) |> summarise(n=n()) |> 
+  ggplot() +
+  geom_point(aes(x = samples, y = n, color = Student),
+             size = 5,
+             position = position_jitter(0.3)) +
+  scale_x_discrete("Flavor") +
+  scale_y_continuous("Samples (n)")
+```
+
+
+## 箱ひげ図
+
+```{r}
+#| fig-cap: Box-and-whisker plot
+d1 |> group_by(Student, samples) |> summarise(n=n()) |> 
+  ggplot() +
+  geom_boxplot(aes(x = samples, y = n)) +
+  scale_x_discrete("Flavor") +
+  scale_y_continuous("Samples (n)")
+```
+
+## 箱ひげ図について {.smaller}
+
+:::: {.columns}
+::: {.column width="40%"}
+```{r}
+#| fig-width: 3
+#| fig-height: 4
+#| out-width: 100%
+set.seed(202)
+z = rt(50, df = 3)
+pout = ggplot() + 
+  geom_boxplot(aes(x = "Data", y = z), width = 0.25) +
+  theme(axis.title = element_blank(),
+        axis.text = element_blank(),
+        axis.ticks = element_blank(),
+        plot.background = element_blank(),
+        panel.background = element_blank()) 
+tmp = ggplot_build(pout)$data
+tmp = tmp[[1]] |> as_tibble()
+n = length(tmp$outliers[[1]])
+pout +
+  geom_segment(aes(x = rep(0.61, n),
+                   xend = rep(1, n),
+                   y = rep(tmp$middle, n),
+                   yend = tmp$outliers[[1]]),
+               color = "orangered") +
+  geom_point(aes(x = 1, y = tmp$outliers[[1]]),
+             size = 3,
+             shape = 21, fill = "orangered", color = "orangered") + 
+  geom_boxplot(aes(x = "Data", y = z), width = 0.25) +
+  geom_text(aes(x = 1.25, y = middle, label = "Median"), data = tmp) +
+  geom_text(aes(x = 1.25, y = lower, label = "25%"), data = tmp) +
+  geom_text(aes(x = 1.25, y = upper, label = "75%"), data = tmp) +
+  geom_text(aes(x = 1.25, y = ymin, label = "Lower"), data = tmp) +
+  geom_text(aes(x = 1.25, y = ymax, label = "Upper"), data = tmp) +
+  geom_text(aes(x = 0.5, y = middle, label = "外れ値"), data = tmp) +
+  NULL
+```
+:::
+::: {.column width="60%"}
+
+- Median: 中央値または第2分位点
+- 箱の上下の辺は第1 (25%) と第3四分位点 (75%)を示す。50%のサンプルは箱内にある。
+- 上下のヒゲ (Upper & Lower) は、それぞれの四分位点の位置から、極値までの間を示す。 極値とは、第1または第3四分位点から箱の高さの 1.5 倍以内にあるサンプルのうちの最大値と最小値です。
+- ひげの範囲外のサンプルは点として示される。
+:::
+::::
+
+
+## データの可視化の重要なポイント {.smaller}
+
+- 複雑なデータの関係を明確に、簡潔に、雑味のないように示す
+- 相手に重要なポイントをすぐに把握できるように示す
+- 適切な視覚的要素を用いて、データに含まれる情報やアイデアを効果的に伝える
+- フォント、フォントサイズ、色、記号の種類を相手にあわせる
+- 読みやすいフォントを選ぶ
+- 色覚異常を意識すること
+- シンプルでわかりやすい図を作図する・不必要な要素をいれない。
+- 信頼できる正確な、最新なデータを用いる
+
+## 区別しづらい色の組み合わせ
+
+```{r}
+magick::image_read("https://resources.morisawa.co.jp/uploads/tmg_block_page_image/file/7046/_E8_89_B2_E3_81_AE_E9_81_95_E3_81_84.png")
+```
+
+参考：(https://www.morisawa.co.jp/blogs/MVP/5369)
+
+## サンプル数の総和で表す
+
+```{r}
+d1 |> group_by(samples) |> summarise(n=n()) |> 
+  ggplot() +
+  geom_col(aes(x = samples, y = n)) +
+  scale_x_discrete("Flavor") +
+  scale_y_continuous("Total number of samples (n)")
+```
+
+## サンプル数の総和で表す {.smaller}
+
+```{r}
+d1 |> group_by(samples) |> summarise(n=n()) |> 
+  ggplot() +
+  geom_col(aes(x = samples, y = n , fill = samples)) +
+  scale_x_discrete("Flavor") +
+  scale_y_continuous("Total number of samples (n)") +
+  scale_fill_manual(values = c("red", 
+                               "orange", 
+                               "skyblue",
+                               "yellow",
+                               "white",
+                               "green",
+                               "pink",
+                               "beige")) +
+  guides(fill = "none")
+```
+
+色を加えるなら、資料と合わせる。
+
+## サンプル数の総和で表す {.smaller}
+
+```{r}
+d1 |> group_by(samples) |> summarise(n=n()) |> 
+  ggplot() +
+  geom_col(aes(x = samples, y = n , fill = samples)) +
+  geom_text(aes(x = samples, y = n + 2, label = n), family = "notosans", fontface = "bold") +
+  scale_x_discrete("Flavor") +
+  scale_y_continuous("Total number of samples (n)") +
+  scale_fill_manual(values = c("red", 
+                               "orange", 
+                               "skyblue",
+                               "yellow",
+                               "white",
+                               "green",
+                               "pink",
+                               "beige")) +
+  guides(fill = "none")
+```
+
+場合によって、図に数値情報も加えるといい。ここでは、棒の上に総数を追加した。
+
+## 平均値で表す {.smaller}
+
+```{r}
+d1 |> group_by(Student, samples) |> summarise(n=n()) |>
+  group_by(samples) |> 
+  summarise(mean = mean(n),
+            sd = sd(n)) |> 
+  ggplot() +
+  geom_point(aes(x = samples, y = mean)) +
+  scale_x_discrete("Flavor") +
+  scale_y_continuous("Mean samples (n / grab)")
+```
+
+学生が採取したサンプルの学生ごとの合計は異なる。
+5回分の情報を総数で示すのはあまりよろしくない。*Why?*
+
+## 平均値で表す
+
+```{r}
+d1 |> group_by(Student, samples) |> summarise(n=n()) |>
+  group_by(samples) |> 
+  summarise(mean = mean(n),
+            sd = sd(n)) |> 
+  ggplot() +
+  geom_point(aes(x = samples, y = mean, fill = samples), size = 5,
+             shape = 21, stroke = 2, color = "black") +
+  scale_x_discrete("Flavor") +
+  scale_y_continuous("Mean samples (n / grab)") +
+  scale_fill_manual(values = c("red", 
+                               "orange", 
+                               "skyblue",
+                               "yellow",
+                               "white",
+                               "green",
+                               "pink",
+                               "beige")) +
+  guides(fill = "none")
+```
+
+
+## データの分布
+
+```{r}
+d1 |> 
+  group_by(Student, samples) |> 
+  summarise(n=n()) |>
+  ggplot() +
+  geom_point(aes(x = samples, y = n, fill = samples), size = 5,
+             shape = 21, stroke = 2, color = "black", position = position_jitter(0.2)) +
+  scale_x_discrete("Flavor") +
+  scale_y_continuous("Total number of samples (n)") +
+  scale_fill_manual(values = c("red", 
+                               "orange", 
+                               "skyblue",
+                               "yellow",
+                               "white",
+                               "green",
+                               "pink",
+                               "beige")) +
+  guides(fill = "none")
+```
+
+## データの見せ方
+
+```{r}
+#| fig-width: 10
+y0 = sample(1:10, 5, replace = T)
+p1 = ggplot() + 
+  geom_point(aes(x = "Points", y = y0)) +
+  geom_boxplot(aes(x = "Box-plot", y = y0)) +
+  geom_errorbar(aes(x = "Mean + SD", y = mean(y0), ymin = mean(y0) - sd(y0), ymax = mean(y0) + sd(y0)),
+                width = 0) +
+  geom_point(aes(x = "Mean + SD", y = mean(y0))) + 
+  geom_errorbar(aes(x = "Mean + SE", y = mean(y0), ymin = mean(y0) - sd(y0)/sqrt(length(y0)), ymax = mean(y0) + sd(y0)/sqrt(length(y0))),
+                width = 0) +
+  geom_point(aes(x = "Mean + SE", y = mean(y0))) +
+  geom_text(aes(x = 1, y = 0, label = "n = 5"), hjust = 0) +
+  scale_y_continuous("", limits = c(0, 10)) +
+  scale_x_discrete("")
+
+y = sample(1:10, 200, replace = T)
+p2 = ggplot() + 
+  geom_point(aes(x = "Points", y = y)) +
+  geom_point(aes(x = "Points + jitter", y = y), position = position_jitter(0.25, 0), alpha = 0.5) +
+  geom_boxplot(aes(x = "Box-plot", y = y)) +
+  geom_errorbar(aes(x = "Mean + SD", y = mean(y), ymin = mean(y) - sd(y), ymax = mean(y) + sd(y)),
+                width = 0) +
+  geom_point(aes(x = "Mean + SD", y = mean(y))) +
+  geom_errorbar(aes(x = "Mean + SE", y = mean(y), ymin = mean(y) - sd(y)/sqrt(length(y)), ymax = mean(y) + sd(y)/sqrt(length(y))),
+                width = 0) +
+  geom_point(aes(x = "Mean + SE", y = mean(y))) +
+  geom_text(aes(x = 1, y = 0, label = "n = 200"), hjust = 0) +
+  scale_y_continuous("", limits = c(0, 10)) +
+  scale_x_discrete("")
+
+p1 + p2 
+```
+
+図はサンプル数に合わせて、見せ方を工夫する。
+
+
+## データのばらつき {.smaller}
+
+
+**標準偏差 (standard deviation)：** 
+
+$$
+s = \sqrt{\frac{1}{N-1} \sum_{n=1}^N\left(x - \bar{x}\right)^2}
+$$
+
+$x - \bar{x}$ は残渣と呼ぶ。
+
+**平均絶対偏差 (mean absolute deviation) & 中央絶対残渣 (median absolute deviation)**
+
+$$
+\text{MAD} = \frac{1}{N} \sum_{n = 1}^{N} |x - m(x)|
+$$
+
+$$
+\text{MAD} = median(|x - \tilde{x}|)
+$$
+$m(x)$ は平均値または中央値、$\tilde{x}$ は中央値。一般的には MAD が諸略なので、何が計算されたのかをよく調べること。
+
+
+## 標準偏差の求め方{.smaller}
+
+$$
+\bar{x} = `r mean(orange)`
+$$
+
+```{r}
+
+out = str_c("(", orange, "-", mean(orange),")^2")
+out = str_flatten(out, collapse = " + ")
+
+```
+
+$$
+s = \sqrt{\frac{1}{5-1} `r out`} 
+$$
+$$
+s =  `r sd(orange)`
+$$
+
+
+
+
+## 標準偏差付き散布図
+
+```{r}
+d1 |> 
+  group_by(Student, samples) |> 
+  summarise(n=n()) |>
+  group_by(samples) |> 
+  summarise(mean = mean(n),
+            sd = sd(n)) |> 
+  ggplot() +
+  geom_errorbar(aes(x = samples, ymin = mean - sd, ymax = mean + sd),
+                width = 0, linewidth = 1) +
+  geom_point(aes(x = samples, y = mean, fill = samples), size = 5,
+             shape = 21, stroke = 2, color = "black") +
+  scale_x_discrete("Flavor") +
+  scale_y_continuous("Mean samples (n / grab)") +
+  scale_fill_manual(values = c("red", 
+                               "orange", 
+                               "skyblue",
+                               "yellow",
+                               "white",
+                               "green",
+                               "pink",
+                               "beige")) +
+  guides(fill = "none")
+```
+
+## 平均の制度
+
+$$
+\text{S.E.} = \frac{s}{N}
+$$
+
+$s$ は標準偏差、$\text{S.E.}$ は Standard Error の諸略（標準誤差）。
+
+
+
+## 標準誤差の求め方 {.smaller}
+
+$$
+\bar{x} = `r mean(orange)`
+$$
+
+```{r}
+
+out = str_c("(", orange, "-", mean(orange),")^2")
+out = str_flatten(out, collapse = " + ")
+
+```
+
+$$
+\text{S.E.} = \frac{1}{5}\sqrt{\frac{1}{5-1} `r out`} 
+$$
+$$
+\text{S.E.} = `r sd(orange)/5`
+$$
+
+
+## 標準誤差付き散布図
+
+```{r}
+p2 = d1 |> 
+  group_by(Student, samples) |> 
+  summarise(n=n()) |>
+  group_by(samples) |> 
+  summarise(mean = mean(n),
+            l =length(n),
+            sd = sd(n)/sqrt(length(n))) |> 
+  ggplot() +
+  geom_errorbar(aes(x = samples, ymin = mean - sd, ymax = mean + sd),
+                width = 0, linewidth = 1) +
+  geom_point(aes(x = samples, y = mean, fill = samples), size = 5,
+             shape = 21, stroke = 2, color = "black") +
+  scale_x_discrete("Flavor") +
+  scale_y_continuous("Mean samples (n / grab)") +
+  scale_fill_manual(values = c("red", 
+                               "orange", 
+                               "skyblue",
+                               "yellow",
+                               "white",
+                               "green",
+                               "pink",
+                               "beige")) +
+  guides(fill = "none")
+p2
+```
+
+## 母集団と平均値の比較
+
+```{r}
+p0 = sakuma |> 
+  rename(samples = type, n = count) |> 
+  ggplot()+
+  geom_col(aes(x = samples, y = n , fill = samples)) +
+  geom_text(aes(x = samples, y = n + 2, label = n), family = "notosans", fontface = "bold") +
+  geom_text(aes(x = 1, y = 0, label = "母集団")) +
+  scale_x_discrete("Flavor") +
+  scale_y_continuous("Total number of samples (n)") +
+  scale_fill_manual(values = c("red", 
+                               "orange", 
+                               "skyblue",
+                               "yellow",
+                               "white",
+                               "green",
+                               "pink",
+                               "beige")) +
+  guides(fill = "none")
+
+p0 + p2 + plot_layout(ncol= 1)
+```
+
+## 割合の比較
+
+```{r}
+s2 = 
+  sakuma |> 
+  rename(samples = type, n = count) |> 
+  mutate(n = n / 11)
+r2 = d1 |> 
+  group_by(Student, samples) |> 
+  summarise(n=n()) |>
+  group_by(samples) |> 
+  summarise(mean = mean(n))
+r2 = r2 |> mutate(n = mean / min(mean))
+
+ggplot() +
+  geom_point(aes(x = samples, y = n, color = samples, shape = "母集団"), data = s2, size = 5,
+             position = position_nudge(-0.2)) +
+  geom_point(aes(x = samples, y = n, color = samples, shape = "標本"), data = r2, size = 5,
+             position = position_nudge(0.2)) +
+  scale_x_discrete("Flavor") +
+  scale_y_continuous("Ratio with respect to peppermint") +
+  scale_shape_discrete("") +
+  guides(color = "none") +
+  scale_fill_manual(values = c("red", 
+                               "orange", 
+                               "skyblue",
+                               "yellow",
+                               "white",
+                               "green",
+                               "pink",
+                               "beige")) +
+  theme(legend.position = c(0,0),
+        legend.justification = c(0,0),
+        legend.background = element_blank())
+```

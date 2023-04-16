@@ -1664,5 +1664,201 @@
     "title": "Law of large numbers, the central limit theorem, and null hypothesis significance testing",
     "section": "Amerhein et al. 2019. Nature 567: 305-307",
     "text": "Amerhein et al. 2019. Nature 567: 305-307\n\n\n\nLet’s be clear about what must stop: we should never conclude there is ‘no difference’ or ‘no association’ just because a P-value is larger than a threshold such as 0.05 or, equivalently, because a confidense interval includes zero. –Amerhein et al. 2019"
+  },
+  {
+    "objectID": "sakuma-drops.html#サクマドロップスのサンプル表",
+    "href": "sakuma-drops.html#サクマドロップスのサンプル表",
+    "title": "データの可視化と記述統計量",
+    "section": "サクマドロップスのサンプル表",
+    "text": "サクマドロップスのサンプル表\n一回目の講義には、キャンバスバッグからサクマドロップスを採取しました。 キャンバスバッグにあるサクマドロップスの種類ごと数を知ることが目的です。 本来知りたい集団全体のことを母集団 (population)とよび、母集団から採取したデータは標本 (sample)といいます。\n\n\n\n\n\n\n  \n  \n    \n      Student\n      イチゴ\n      オレンジ\n      スモモ\n      ハッカ\n      パイン\n      メロン\n      リンゴ\n      レモン\n    \n  \n  \n    A\n4\n3\n8\n2\n4\n10\n5\n5\n    B\n8\n6\n5\n3\n4\n3\n3\n3\n    C\n8\n5\n7\n3\n4\n8\n5\n6\n    D\n8\n6\n4\n3\n7\n6\n5\n5\n    E\n5\n8\n4\n3\n3\n6\n8\n4\n  \n  \n  \n\n\n\n\n学生ごとに一度だけ標本をとったので、表には５つの標本を示している。\n標本から母数団の情報を推定するので、標本の代表的な値を求めます。"
+  },
+  {
+    "objectID": "sakuma-drops.html#データを代表する値",
+    "href": "sakuma-drops.html#データを代表する値",
+    "title": "データの可視化と記述統計量",
+    "section": "データを代表する値",
+    "text": "データを代表する値\n平均値 (mean, average)： 総和を標本数で割った値\n\\[\n\\bar{x} = \\frac{1}{N} \\sum_{n=1}^{N} x_n\n\\]\n中央値 (median)： 標本を上順に並べたときに、データの中央に位置する値\n\\[\nM = \\cases{\nx_{[\\frac{1}{2}(N + 1)]} & $N$ が奇数 \\\\\n\\frac{1}{2}\\left(x_{[\\frac{N}{2}]} + x_{[\\frac{N}{2} + 1]}\\right) & $N$ が偶数\n}\n\\]\n最頻値 (mode)： 標本で最も頻繁に現れる値"
+  },
+  {
+    "objectID": "sakuma-drops.html#平均値の求め方",
+    "href": "sakuma-drops.html#平均値の求め方",
+    "title": "データの可視化と記述統計量",
+    "section": "平均値の求め方",
+    "text": "平均値の求め方\nオレンジサクマドロップスのサンプルをまとめます。\n\n\n\n\\[\n\\bar{x} = \\frac{1}{5} (3 + 6 + 5 + 6 + 8) = 5.6\n\\]"
+  },
+  {
+    "objectID": "sakuma-drops.html#中央値の求め方",
+    "href": "sakuma-drops.html#中央値の求め方",
+    "title": "データの可視化と記述統計量",
+    "section": "中央値の求め方",
+    "text": "中央値の求め方\nオレンジサクマドロップスの中央値を求めるなら、サンプルを上順に並べる必要があります。\n\n\n\n\\[\n(3, 5, 6, 6, 8)\n\\]\n\\(n = 5\\) なので、中央値は、\n\\[\nx_{[\\frac{1}{2}(5 + 1)]} = x_{[3]} = 6\n\\]"
+  },
+  {
+    "objectID": "sakuma-drops.html#サクマドロップスの統計量",
+    "href": "sakuma-drops.html#サクマドロップスの統計量",
+    "title": "データの可視化と記述統計量",
+    "section": "サクマドロップスの統計量",
+    "text": "サクマドロップスの統計量\n全種類のサクマドロップスの平均値、中央値、最頻値を求めます。 少量のデータなら、表でまとめることもあるが、データ数が増えると図のほうが見やすい。\n\n\n\n\n\n\n  \n  \n    \n      Student\n      イチゴ\n      オレンジ\n      スモモ\n      ハッカ\n      パイン\n      メロン\n      リンゴ\n      レモン\n    \n  \n  \n    A\n4.0\n3.0\n8.0\n2.0\n4.0\n10.0\n5.0\n5.0\n    B\n8.0\n6.0\n5.0\n3.0\n4.0\n3.0\n3.0\n3.0\n    C\n8.0\n5.0\n7.0\n3.0\n4.0\n8.0\n5.0\n6.0\n    D\n8.0\n6.0\n4.0\n3.0\n7.0\n6.0\n5.0\n5.0\n    E\n5.0\n8.0\n4.0\n3.0\n3.0\n6.0\n8.0\n4.0\n    Mean\n6.6\n5.6\n5.6\n2.8\n4.4\n6.6\n5.2\n4.6\n    Median\n8.0\n6.0\n5.0\n3.0\n4.0\n6.0\n5.0\n5.0\n    Mode\n8.0\n6.0\n4.0\n3.0\n4.0\n6.0\n5.0\n5.0"
+  },
+  {
+    "objectID": "sakuma-drops.html#棒グラフ",
+    "href": "sakuma-drops.html#棒グラフ",
+    "title": "データの可視化と記述統計量",
+    "section": "棒グラフ",
+    "text": "棒グラフ\n\nStacked bar chart"
+  },
+  {
+    "objectID": "sakuma-drops.html#棒グラフ-1",
+    "href": "sakuma-drops.html#棒グラフ-1",
+    "title": "データの可視化と記述統計量",
+    "section": "棒グラフ",
+    "text": "棒グラフ\n\nGrouped bar chart"
+  },
+  {
+    "objectID": "sakuma-drops.html#散布図",
+    "href": "sakuma-drops.html#散布図",
+    "title": "データの可視化と記述統計量",
+    "section": "散布図",
+    "text": "散布図\n\nScatter plot"
+  },
+  {
+    "objectID": "sakuma-drops.html#散布図-1",
+    "href": "sakuma-drops.html#散布図-1",
+    "title": "データの可視化と記述統計量",
+    "section": "散布図",
+    "text": "散布図\n\nJittered scatter plot"
+  },
+  {
+    "objectID": "sakuma-drops.html#箱ひげ図",
+    "href": "sakuma-drops.html#箱ひげ図",
+    "title": "データの可視化と記述統計量",
+    "section": "箱ひげ図",
+    "text": "箱ひげ図\n\nBox-and-whisker plot"
+  },
+  {
+    "objectID": "sakuma-drops.html#箱ひげ図について",
+    "href": "sakuma-drops.html#箱ひげ図について",
+    "title": "データの可視化と記述統計量",
+    "section": "箱ひげ図について",
+    "text": "箱ひげ図について\n\n\n\n\n\n\n\n\n\nMedian: 中央値または第2分位点\n箱の上下の辺は第1 (25%) と第3四分位点 (75%)を示す。50%のサンプルは箱内にある。\n上下のヒゲ (Upper & Lower) は、それぞれの四分位点の位置から、極値までの間を示す。 極値とは、第1または第3四分位点から箱の高さの 1.5 倍以内にあるサンプルのうちの最大値と最小値です。\nひげの範囲外のサンプルは点として示される。"
+  },
+  {
+    "objectID": "sakuma-drops.html#データの可視化の重要なポイント",
+    "href": "sakuma-drops.html#データの可視化の重要なポイント",
+    "title": "データの可視化と記述統計量",
+    "section": "データの可視化の重要なポイント",
+    "text": "データの可視化の重要なポイント\n\n複雑なデータの関係を明確に、簡潔に、雑味のないように示す\n相手に重要なポイントをすぐに把握できるように示す\n適切な視覚的要素を用いて、データに含まれる情報やアイデアを効果的に伝える\nフォント、フォントサイズ、色、記号の種類を相手にあわせる\n読みやすいフォントを選ぶ\n色覚異常を意識すること\nシンプルでわかりやすい図を作図する・不必要な要素をいれない。\n信頼できる正確な、最新なデータを用いる"
+  },
+  {
+    "objectID": "sakuma-drops.html#区別しづらい色の組み合わせ",
+    "href": "sakuma-drops.html#区別しづらい色の組み合わせ",
+    "title": "データの可視化と記述統計量",
+    "section": "区別しづらい色の組み合わせ",
+    "text": "区別しづらい色の組み合わせ\n\n参考：(https://www.morisawa.co.jp/blogs/MVP/5369)"
+  },
+  {
+    "objectID": "sakuma-drops.html#サンプル数の総和で表す",
+    "href": "sakuma-drops.html#サンプル数の総和で表す",
+    "title": "データの可視化と記述統計量",
+    "section": "サンプル数の総和で表す",
+    "text": "サンプル数の総和で表す"
+  },
+  {
+    "objectID": "sakuma-drops.html#サンプル数の総和で表す-1",
+    "href": "sakuma-drops.html#サンプル数の総和で表す-1",
+    "title": "データの可視化と記述統計量",
+    "section": "サンプル数の総和で表す",
+    "text": "サンプル数の総和で表す\n\n色を加えるなら、資料と合わせる。"
+  },
+  {
+    "objectID": "sakuma-drops.html#サンプル数の総和で表す-2",
+    "href": "sakuma-drops.html#サンプル数の総和で表す-2",
+    "title": "データの可視化と記述統計量",
+    "section": "サンプル数の総和で表す",
+    "text": "サンプル数の総和で表す\n\n場合によって、図に数値情報も加えるといい。ここでは、棒の上に総数を追加した。"
+  },
+  {
+    "objectID": "sakuma-drops.html#平均値で表す",
+    "href": "sakuma-drops.html#平均値で表す",
+    "title": "データの可視化と記述統計量",
+    "section": "平均値で表す",
+    "text": "平均値で表す\n\n学生が採取したサンプルの学生ごとの合計は異なる。 5回分の情報を総数で示すのはあまりよろしくない。Why?"
+  },
+  {
+    "objectID": "sakuma-drops.html#平均値で表す-1",
+    "href": "sakuma-drops.html#平均値で表す-1",
+    "title": "データの可視化と記述統計量",
+    "section": "平均値で表す",
+    "text": "平均値で表す"
+  },
+  {
+    "objectID": "sakuma-drops.html#データの分布",
+    "href": "sakuma-drops.html#データの分布",
+    "title": "データの可視化と記述統計量",
+    "section": "データの分布",
+    "text": "データの分布"
+  },
+  {
+    "objectID": "sakuma-drops.html#データの見せ方",
+    "href": "sakuma-drops.html#データの見せ方",
+    "title": "データの可視化と記述統計量",
+    "section": "データの見せ方",
+    "text": "データの見せ方\n\n図はサンプル数に合わせて、見せ方を工夫する。"
+  },
+  {
+    "objectID": "sakuma-drops.html#データのばらつき",
+    "href": "sakuma-drops.html#データのばらつき",
+    "title": "データの可視化と記述統計量",
+    "section": "データのばらつき",
+    "text": "データのばらつき\n標準偏差 (standard deviation)：\n\\[\ns = \\sqrt{\\frac{1}{N-1} \\sum_{n=1}^N\\left(x - \\bar{x}\\right)^2}\n\\]\n\\(x - \\bar{x}\\) は残渣と呼ぶ。\n平均絶対偏差 (mean absolute deviation) & 中央絶対残渣 (median absolute deviation)\n\\[\n\\text{MAD} = \\frac{1}{N} \\sum_{n = 1}^{N} |x - m(x)|\n\\]\n\\[\n\\text{MAD} = median(|x - \\tilde{x}|)\n\\] \\(m(x)\\) は平均値または中央値、\\(\\tilde{x}\\) は中央値。一般的には MAD が諸略なので、何が計算されたのかをよく調べること。"
+  },
+  {
+    "objectID": "sakuma-drops.html#標準偏差の求め方",
+    "href": "sakuma-drops.html#標準偏差の求め方",
+    "title": "データの可視化と記述統計量",
+    "section": "標準偏差の求め方",
+    "text": "標準偏差の求め方\n\\[\n\\bar{x} = 5.6\n\\]\n\n\n\n\\[\ns = \\sqrt{\\frac{1}{5-1} (3-5.6)^2 + (6-5.6)^2 + (5-5.6)^2 + (6-5.6)^2 + (8-5.6)^2}\n\\] \\[\ns =  1.8165902\n\\]"
+  },
+  {
+    "objectID": "sakuma-drops.html#標準偏差付き散布図",
+    "href": "sakuma-drops.html#標準偏差付き散布図",
+    "title": "データの可視化と記述統計量",
+    "section": "標準偏差付き散布図",
+    "text": "標準偏差付き散布図"
+  },
+  {
+    "objectID": "sakuma-drops.html#平均の制度",
+    "href": "sakuma-drops.html#平均の制度",
+    "title": "データの可視化と記述統計量",
+    "section": "平均の制度",
+    "text": "平均の制度\n\\[\n\\text{S.E.} = \\frac{s}{N}\n\\]\n\\(s\\) は標準偏差、\\(\\text{S.E.}\\) は Standard Error の諸略（標準誤差）。"
+  },
+  {
+    "objectID": "sakuma-drops.html#標準誤差の求め方",
+    "href": "sakuma-drops.html#標準誤差の求め方",
+    "title": "データの可視化と記述統計量",
+    "section": "標準誤差の求め方",
+    "text": "標準誤差の求め方\n\\[\n\\bar{x} = 5.6\n\\]\n\n\n\n\\[\n\\text{S.E.} = \\frac{1}{5}\\sqrt{\\frac{1}{5-1} (3-5.6)^2 + (6-5.6)^2 + (5-5.6)^2 + (6-5.6)^2 + (8-5.6)^2}\n\\] \\[\n\\text{S.E.} = 0.363318\n\\]"
+  },
+  {
+    "objectID": "sakuma-drops.html#標準誤差付き散布図",
+    "href": "sakuma-drops.html#標準誤差付き散布図",
+    "title": "データの可視化と記述統計量",
+    "section": "標準誤差付き散布図",
+    "text": "標準誤差付き散布図"
+  },
+  {
+    "objectID": "sakuma-drops.html#母集団と平均値の比較",
+    "href": "sakuma-drops.html#母集団と平均値の比較",
+    "title": "データの可視化と記述統計量",
+    "section": "母集団と平均値の比較",
+    "text": "母集団と平均値の比較"
+  },
+  {
+    "objectID": "sakuma-drops.html#割合の比較",
+    "href": "sakuma-drops.html#割合の比較",
+    "title": "データの可視化と記述統計量",
+    "section": "割合の比較",
+    "text": "割合の比較"
   }
 ]
