@@ -1481,14 +1481,14 @@
     "href": "nhst-slide.html#strong-law-of-large-numbers",
     "title": "Law of large numbers, the central limit theorem, and null hypothesis significance testing",
     "section": "Strong law of large numbers",
-    "text": "Strong law of large numbers\nStrong law of large numbers (大数の強法則)\n\\[\n\\overline{X}_n \\xrightarrow{a.s.} \\mu \\; \\text{when}\\; n\\rightarrow \\infty\n\\]\nor\n\\[\nP(\\lim_{n\\rightarrow\\infty}\\overline{X}=\\mu)=1\n\\]\n\n\nThe expected mean almost surely approaches the true mean as the sample size increases.\nThe probability that the expected value is the true mean in the limit of large sample sizes is 1."
+    "text": "Strong law of large numbers\nStrong law of large numbers (大数の強法則)\n\\[\n\\overline{X}_n \\xrightarrow{a.s.} \\mu \\; \\text{when}\\; n\\rightarrow \\infty\n\\]\nor\n\\[\nP(\\lim_{n\\rightarrow\\infty}\\overline{X}=\\mu)=1\n\\]\n\n\nThe sample mean X-bar converges almost surely to the population mean mu as the sample size n approaches infinity.\n標本平均 X-bar が、標本サイズ n が無限に近づくにつれて、ほとんど確実に母集団平均 mu に収束する。\nThe probability that the sample mean X-bar will approach the population mean mu as the sample size approaches infinity is equal to 1.\n標本サイズが無限に近づくにつれて、標本平均 X-bar が母集団平均 mu に近づく確率は1に等しい。"
   },
   {
     "objectID": "nhst-slide.html#simulation-demonstration-bernoulli-trials",
     "href": "nhst-slide.html#simulation-demonstration-bernoulli-trials",
     "title": "Law of large numbers, the central limit theorem, and null hypothesis significance testing",
     "section": "Simulation demonstration: Bernoulli trials",
-    "text": "Simulation demonstration: Bernoulli trials\n\n\n\n\n\n\n\n\nBernoulli trials (ベルヌーイ試行)\n\nWhen \\(n\\) increases, \\(r/n\\) approaches the true value.\nTrue value is \\(p = 0.2\\)\nThe trials range start at \\(1\\) and end at \\(200\\)"
+    "text": "Simulation demonstration: Bernoulli trials"
   },
   {
     "objectID": "nhst-slide.html#simulation-demonstration-bernoulli-trials-1",
@@ -1500,168 +1500,168 @@
   {
     "objectID": "nhst-slide.html#simulation-demonstration-mean",
     "href": "nhst-slide.html#simulation-demonstration-mean",
-    "title": "Law of large numbers, the central limit theorem, and null hypothesis significance testing",
+    "title": "大数の法則と中心極限定理",
     "section": "Simulation demonstration: mean",
     "text": "Simulation demonstration: mean\n\n\n\n\n\n\n\n\n\nTrue mean \\(\\mu=10\\)\nTrue variance \\(\\sigma^2 = 10^2\\)\nNumber of data ranged from \\(1\\) to \\(1000\\)\n\nCode for the pseudo-random values from the normal distribution"
   },
   {
     "objectID": "nhst-slide.html#central-limit-theorem-中心極限定理",
     "href": "nhst-slide.html#central-limit-theorem-中心極限定理",
-    "title": "Law of large numbers, the central limit theorem, and null hypothesis significance testing",
+    "title": "大数の法則と中心極限定理",
     "section": "Central limit theorem (中心極限定理)",
-    "text": "Central limit theorem (中心極限定理)\nThe random variables (確率変数) \\(X_1, X_2, ..., X_n\\) are independent and identically distributed (独立同分布) with a mean of \\(\\mu\\) and a variance of \\(\\sigma^2\\). Therefore the sample mean is \\(S_n \\equiv \\frac{1}{n}\\sum_{k=1}^n X_k\\).\nThe law of large numbers ensures that when \\(S_n \\rightarrow \\mu\\), then \\(n\\rightarrow \\infty\\). Then the central limit theorem (中心極限定理) states that the difference between the sample mean and the true mean follows a standard normal distribution."
+    "text": "Central limit theorem (中心極限定理)\n\\[\n\\lim_{n\\rightarrow \\infty}\\sqrt{n}\\left(\\frac{\\overline{X}_n - \\mu}{\\sigma}\\right) \\xrightarrow{d} N(0, \\sigma^2)\n\\]\n\nThis equation expresses that as the sample size \\(n\\) approaches infinity, the standardized sample mean \\(\\frac{\\overline{X}_n - \\mu}{\\sigma}\\) multiplied by \\(\\sqrt{n}\\) approaches a normal distribution with mean \\(0\\) and variance \\(\\sigma^2\\).\nこの式は、標本数 \\(n\\) が無限大に近づくにつれて、\\(\\sqrt{n}\\) と \\(\\frac{\\overline{X}_n - \\mu}{\\sigma}\\) の積は、平均 \\(0\\)、分散 \\(\\sigma^2\\) の正規分布に近づくことを表す。"
   },
   {
     "objectID": "nhst-slide.html#central-limit-theorem-中心極限定理-1",
     "href": "nhst-slide.html#central-limit-theorem-中心極限定理-1",
-    "title": "Law of large numbers, the central limit theorem, and null hypothesis significance testing",
+    "title": "大数の法則と中心極限定理",
     "section": "Central limit theorem (中心極限定理)",
     "text": "Central limit theorem (中心極限定理)\n\\[\n\\lim_{n\\rightarrow \\infty}\\sqrt{n}\\left(\\frac{\\overline{X}_n - \\mu}{\\sigma}\\right) \\xrightarrow{d} N(0, \\sigma^2)\n\\]"
   },
   {
     "objectID": "nhst-slide.html#demonstration",
     "href": "nhst-slide.html#demonstration",
-    "title": "Law of large numbers, the central limit theorem, and null hypothesis significance testing",
+    "title": "大数の法則と中心極限定理",
     "section": "Demonstration",
-    "text": "Demonstration\n\n\n\nEach trial is the mean of 6 dice rolls.\nWhen \\(N\\) increases, the sample mean converges to the normal distribution (CLT).\nThe law of large numbers ensures that the sample mean converges to the true mean(\\(\\mu = 3.5\\))."
+    "text": "Demonstration\n\n\n\n\n\n\n\n\n\n\\(n = 40\\)\n\\(p = 0.45\\)\nnumber of trials = 100,000\n\\(np = 18\\) (mean)\n\\(np(1-p) = 9.9\\) (variance)"
   },
   {
     "objectID": "nhst-slide.html#binomial-distribution",
     "href": "nhst-slide.html#binomial-distribution",
-    "title": "Law of large numbers, the central limit theorem, and null hypothesis significance testing",
+    "title": "大数の法則と中心極限定理",
     "section": "Binomial distribution",
     "text": "Binomial distribution\nThe mean and variance of the binomial distribution (二項分布)\n\n\\(\\mu=np\\)\n\\(\\sigma^2 = np(1-p)\\)"
   },
   {
     "objectID": "nhst-slide.html#demonstration-1",
     "href": "nhst-slide.html#demonstration-1",
-    "title": "Law of large numbers, the central limit theorem, and null hypothesis significance testing",
+    "title": "大数の法則と中心極限定理",
     "section": "Demonstration",
     "text": "Demonstration\n\n\n\n\n\n\n\n\n\n\\(n = 40\\)\n\\(p = 0.45\\)\nnumber of trials = 100,000\n\\(np = 18\\) (mean)\n\\(np(1-p) = 9.9\\) (variance)"
   },
   {
     "objectID": "nhst-slide.html#scientific-method-科学的方法",
     "href": "nhst-slide.html#scientific-method-科学的方法",
-    "title": "Law of large numbers, the central limit theorem, and null hypothesis significance testing",
-    "section": "Scientific Method (科学的方法)",
-    "text": "Scientific Method (科学的方法)"
+    "title": "大数の法則と中心極限定理",
+    "section": "Scientific Method (科学的方法)　",
+    "text": "Scientific Method (科学的方法)　\n合理的に研究をするためには、科学的方法を用います。 科学的方法には6つのステップがあり、切り返して行うことが一般的です。\n\n観察：まず、自然界を観察します。\n質問：観察した自然現象について、科学的に検証できる（実験）課題を考えます。\n仮説：仮説は、質問に対する合理的な推測です。実験で検証できるものです。\n実験：実験を行い、考えた仮説が正しいかどうかを確認します。ここでデータ収集します。\n分析：実験で得たデータを統計学的に解析します。データは、考え上げた仮説を支持するか否定するかを検証します。\n結論：仮説が支持された場合は、考え上げた仮説が現段階で正しいと結論つけられますが、否定された場合は、仮説を修正するかまたは新たな仮説を開発します。\n\n\n科学的方法は周期的なプロセスです。実験を終了した後、最初に戻って新しい観察を行うか、新しい質問をする必要が生じる場合があります。これは、科学的方法が自然界について学ぶ方法だからです。より多くのことを学ぶにつれて、仮説や理論を変更する必要があるかもしれません。\n科学的方法は、自然界を理解するための強力なツールです。科学者はこの方法を使用して、原子から銀河までのあらゆるものを理解するための大きな進歩を遂げました。科学的方法は、継続的な学習と発見のプロセスです。それは、自然界の真実を見つける方法です"
   },
   {
     "objectID": "nhst-slide.html#model-selection",
     "href": "nhst-slide.html#model-selection",
-    "title": "Law of large numbers, the central limit theorem, and null hypothesis significance testing",
+    "title": "大数の法則と中心極限定理",
     "section": "Model selection",
     "text": "Model selection\n\nModels are needed to explain scientific phenomena. Models can be equations or theory. Therefore, to explain scientific phenomena, we must define a hypothesis and be able to choose the correct model."
   },
   {
     "objectID": "nhst-slide.html#hypothesis-仮説",
     "href": "nhst-slide.html#hypothesis-仮説",
-    "title": "Law of large numbers, the central limit theorem, and null hypothesis significance testing",
+    "title": "大数の法則と中心極限定理",
     "section": "Hypothesis (仮説)",
-    "text": "Hypothesis (仮説)\n\nAn idea that is defined before the experiment.\nGenerally, we want to prove (証明) or accept (採択) a hypothesis. However, in practice we define a null hypothesis (帰無仮説) and attempt to reject (棄却) it.\nRejecting a null hypothesis is a deductive method (演繹法)."
+    "text": "Hypothesis (仮説)\n\n仮説は実験を行う前に決めるもの。データ見てから仮説を決めません。\n一般的には、仮説を証明（採択）したいが、統計学の視点から考えると、仮説は棄却するものです。\n\n仮説を証明（採択）することはできません。仮説は棄却するものです。"
   },
   {
     "objectID": "nhst-slide.html#model-モデルと",
     "href": "nhst-slide.html#model-モデルと",
-    "title": "Law of large numbers, the central limit theorem, and null hypothesis significance testing",
+    "title": "大数の法則と中心極限定理",
     "section": "Model (モデルと)",
     "text": "Model (モデルと)\n\nWe develop models after looking at the data.\nModels need to be tested.\nWe can predict new data with models.\nTesting a model is an inductive method (帰納法)."
   },
   {
     "objectID": "nhst-slide.html#deductive-methods-演繹法",
     "href": "nhst-slide.html#deductive-methods-演繹法",
-    "title": "Law of large numbers, the central limit theorem, and null hypothesis significance testing",
+    "title": "大数の法則と中心極限定理",
     "section": "Deductive methods (演繹法)",
     "text": "Deductive methods (演繹法)\n\nStatistics tests such as the t-test (t検定), analysis of variance (分散分析), and linear regressions (回帰曲線) are deductive methods.\nWe continue testing until the most likely hypothesis remains.\nWe can NEVER proove a hypothesis!\n\nWe can only reject a hypothesis"
   },
   {
     "objectID": "nhst-slide.html#significance-testing-and-hypothesis-testing",
     "href": "nhst-slide.html#significance-testing-and-hypothesis-testing",
-    "title": "Law of large numbers, the central limit theorem, and null hypothesis significance testing",
+    "title": "大数の法則と中心極限定理",
     "section": "Significance testing and hypothesis testing",
     "text": "Significance testing and hypothesis testing\n\n\nSignificance testing (有意性検定論)\n\nR.A. Fisher developed this method in the 1920s.\nGiven a null hypothesis \\(H_0\\), what is the strength of evidence that it produced data \\(X\\)?\nWhen the probability of significance is small, the evidence is weak\n\n\\(\\text{P-value} = P(T(X) \\ge T_0(X)|H_0)\\)\n\nWe do not accept or reject a hypothesis with this method.\n\n\nHypothesis testing (仮説検定論)\n\nDeveloped by J. Neyman and E.S. Pearson in the 1930s.\nThe most commonly used method.\nWe define the null hypothesis \\(H_0\\) and the alternative hypothesis (対立仮説) \\(H_A\\).\nWe accept or reject \\(H_A\\) at a significance level (有意水準) \\(\\alpha\\).\n\n\n\n\nSir Ronald Aylmer Fisher was a British statistician and geneticist. His work win agricultural experiments led to the development of the Analysis of Variance. In 1925 he published the book Statistical Methods for Research Workers, that introduced the concept of the P-value.\nJerzy Neyman was a Polish mathematician and statician, and Egon Sharpe Pearson was a British statician. They co-invented and popularized the hypothesis testing techniques and the rejection and acceptance of the null hypothesis or the alternative hypothesis."
   },
   {
     "objectID": "nhst-slide.html#what-is-the-p-value-p値とは",
     "href": "nhst-slide.html#what-is-the-p-value-p値とは",
-    "title": "Law of large numbers, the central limit theorem, and null hypothesis significance testing",
+    "title": "大数の法則と中心極限定理",
     "section": "What is the P-value (P値とは)?",
-    "text": "What is the P-value (P値とは)?\nWhenever you conduct a statistical test, you almost always calculate a P-value.\n\\[\n\\text{P-value} = P(T(X) \\ge T_0(X)|H_0)\n\\]\n\nFor the null hypothesis \\(H_0\\), it is the probability of observing a value \\(T(X)\\) that is greater than \\(T_0(X)\\).\nIt is an index to determine the consistency (整合性) of the data \\(X\\) given the hypothesis \\(H\\).\nP-values range from 0 to 1 (\\(0 \\leq \\text{P-value} \\leq 1\\))。\nWhen the null hypothesis is true, P-values have a uniform distribution (一様分布).\nWhen the null hypothesis is false,\\(\\displaystyle \\lim_{n \\rightarrow \\infty} P \\rightarrow 0\\)。\nP-values are used to evaluate the if the data is consistent given the hypothesis.\n\n\n\nThe P-value only makes sense when the null hypothesis is true. This is why we assume a true null, so that we can get a P-value.\nThe original definition of the P-value: the chance of obtaining an effect equal to or more extreme than the one observed considering the null hypothesis is true.\n\nLinks to StackExchange: Cross Validated Questions.S\n\nIntepretation of p-value in hypothesis testing.\nWhat is the relationship between p values and type I errors\nHow do I find the probability of type II errors"
+    "text": "What is the P-value (P値とは)?\n統計解析をすることで、P値を求めることは当たり前のようになりました。\n\\[\n\\text{P-value} = P(T(X) \\ge T_0(X)|H_0)\n\\]\n\n帰無仮説 \\(H_0\\) にたいして、\\(T(X) &gt; T_0(X)\\) がおきる確率\n帰無仮説に対して、収集したデータの整合性を指標科した値\nP値は 0 ~ 1 (\\(0 \\leq \\text{P-value} \\leq 1\\)) の範囲をとる。\n帰無仮説が正しいとき、P値は一様分布に従う。\n帰無仮説が正しくとき：\\(\\displaystyle \\lim_{n \\rightarrow \\infty} P \\rightarrow 0\\)。\n\n\n\nThe P-value only makes sense when the null hypothesis is true. This is why we assume a true null, so that we can get a P-value.\nThe original definition of the P-value: the chance of obtaining an effect equal to or more extreme than the one observed considering the null hypothesis is true.\n\nLinks to StackExchange: Cross Validated Questions.S\n\nIntepretation of p-value in hypothesis testing.\nWhat is the relationship between p values and type I errors\nHow do I find the probability of type II errors"
   },
   {
     "objectID": "nhst-slide.html#p-value-distribution-when-h_0-is-true",
     "href": "nhst-slide.html#p-value-distribution-when-h_0-is-true",
-    "title": "Law of large numbers, the central limit theorem, and null hypothesis significance testing",
+    "title": "大数の法則と中心極限定理",
     "section": "P-value distribution when \\(H_0\\) is true",
-    "text": "P-value distribution when \\(H_0\\) is true\n\nWhen the null hypothesis is true, (\\((\\mu_0=50) = (\\mu_A=50)\\)) and the P-value has a uniform distribution. For 10000 simulations \\(P(\\text{P-value}<0.05) = 0.0487\\)."
+    "text": "P-value distribution when \\(H_0\\) is true\n\nWhen the null hypothesis is true, (\\((\\mu_0=50) = (\\mu_A=50)\\)) and the P-value has a uniform distribution. For 10000 simulations \\(P(\\text{P-value}&lt;0.05) = 0.0487\\)."
   },
   {
     "objectID": "nhst-slide.html#p-value-distribution-when-h_0-is-false",
     "href": "nhst-slide.html#p-value-distribution-when-h_0-is-false",
-    "title": "Law of large numbers, the central limit theorem, and null hypothesis significance testing",
+    "title": "大数の法則と中心極限定理",
     "section": "P-value distribution when \\(H_0\\) is false",
-    "text": "P-value distribution when \\(H_0\\) is false\n\nWhen the null hypothesis is false, (\\((\\mu_0=50) \\ne (\\mu_A=51)\\)), and the P-value approaches 0. For 10000 simulations\\(P(\\text{P-value}<0.05) = 0.5546\\). However, the Type-II error rate (第 2 種の誤り) is 0.4454."
+    "text": "P-value distribution when \\(H_0\\) is false\n\nWhen the null hypothesis is false, (\\((\\mu_0=50) \\ne (\\mu_A=51)\\)), and the P-value approaches 0. For 10000 simulations\\(P(\\text{P-value}&lt;0.05) = 0.5546\\). However, the Type-II error rate (第 2 種の誤り) is 0.4454."
   },
   {
     "objectID": "nhst-slide.html#hypothesis-testing",
     "href": "nhst-slide.html#hypothesis-testing",
-    "title": "Law of large numbers, the central limit theorem, and null hypothesis significance testing",
+    "title": "大数の法則と中心極限定理",
     "section": "Hypothesis testing",
     "text": "Hypothesis testing\nHypothesis testing is used to make decisions.\n\nWe use the P-value to compare the null hypothesis and the alternative hypothesis.\nThe rule to reject the null hypothesis is to compare the significance level (\\(\\alpha\\)) with the P-value.\nIf \\(\\text{P-value} \\leq \\alpha\\), then we reject the null hypothesis.\nRejecting or accepting the null hypothesis can cause error.\n\nType-I Error (第１種の誤り, α過誤）\nType-II Error (第２種の誤り, β過誤）"
   },
   {
     "objectID": "nhst-slide.html#beware-of-hypothesis-testing",
     "href": "nhst-slide.html#beware-of-hypothesis-testing",
-    "title": "Law of large numbers, the central limit theorem, and null hypothesis significance testing",
+    "title": "大数の法則と中心極限定理",
     "section": "Beware of hypothesis testing",
     "text": "Beware of hypothesis testing\nNeyman-Pearson hypothesis testing method is called the Null Hypothesis Significance Test (NHST) (帰無仮説の有意性検定). It is decision making method (accept or reject), so sometimes mistakes can occurr.\n\nType-I Error (第１種の誤り): Rejecting the null hypothesis when it is true. The error rate is \\(\\alpha\\).\nType-II Error (第２種の誤り): Not reject the null hypothesis when it is false. The error rate is \\(\\beta\\)."
   },
   {
     "objectID": "nhst-slide.html#beware-of-hypothesis-testing-1",
     "href": "nhst-slide.html#beware-of-hypothesis-testing-1",
-    "title": "Law of large numbers, the central limit theorem, and null hypothesis significance testing",
+    "title": "大数の法則と中心極限定理",
     "section": "Beware of hypothesis testing",
     "text": "Beware of hypothesis testing\n\n\\(\\alpha\\) is the significance level and is also the Type-I error rate.\n\\(\\beta\\) is the Type-II error rate.\n\\(1-\\beta\\) is the power of the test and it is the probability of rejecting a false null hypothesis.\nThe Type-I error rate and the Type-I error rate are indirectly proportional (反比例)\n\n\\[\n\\alpha \\propto 1/\\beta\n\\]\nIf you decrease the significance level, you increase the Type-II error rate."
   },
   {
     "objectID": "nhst-slide.html#type-i-and-type-ii-error-rates-and-the-power",
     "href": "nhst-slide.html#type-i-and-type-ii-error-rates-and-the-power",
-    "title": "Law of large numbers, the central limit theorem, and null hypothesis significance testing",
+    "title": "大数の法則と中心極限定理",
     "section": "Type-I and Type-II error rates, and the power",
-    "text": "Type-I and Type-II error rates, and the power\n\nThe mean of the null hypothesis (\\(H_0\\)) is 100, the mean of the alternative hypothesis (\\(H_A\\)) is 130. The variance is 15 for both. Here, \\(H_A: \\mu_0 > \\mu_1\\).\n\n\nUnder the null distribution, we can determine a critical value for some alpha.\nWe can determine the distribution of the random variable for the alternative distribution.\nIf the critical value intersects the alternative distribution, and the hypothesis is \\(\\mu_1 > \\mu0\\) then the type-II error rate is the left-hand side of the distribution. The reason for this is because, we would erroneously not reject the null hypothesis if the random variable for the alternative distribution was on the left of the critical value.\nThe farther the alternative distribution is from the critical value, the lower the chances of making a type-II error, since there is less area under the distribution that is on the left of the critical value."
+    "text": "Type-I and Type-II error rates, and the power\n\nThe mean of the null hypothesis (\\(H_0\\)) is 100, the mean of the alternative hypothesis (\\(H_A\\)) is 130. The variance is 15 for both. Here, \\(H_A: \\mu_0 &gt; \\mu_1\\).\n\n\nUnder the null distribution, we can determine a critical value for some alpha.\nWe can determine the distribution of the random variable for the alternative distribution.\nIf the critical value intersects the alternative distribution, and the hypothesis is \\(\\mu_1 &gt; \\mu0\\) then the type-II error rate is the left-hand side of the distribution. The reason for this is because, we would erroneously not reject the null hypothesis if the random variable for the alternative distribution was on the left of the critical value.\nThe farther the alternative distribution is from the critical value, the lower the chances of making a type-II error, since there is less area under the distribution that is on the left of the critical value."
   },
   {
     "objectID": "nhst-slide.html#the-relationship-between-the-type-i-and-ii-error-rates",
     "href": "nhst-slide.html#the-relationship-between-the-type-i-and-ii-error-rates",
-    "title": "Law of large numbers, the central limit theorem, and null hypothesis significance testing",
+    "title": "大数の法則と中心極限定理",
     "section": "The relationship between the Type-I and II error rates",
     "text": "The relationship between the Type-I and II error rates\n\n\nIf we decrease the risk of a Type-I error, we increase the risk of a Type-II error. Therefore, we are lowering the chance of getting a correct result. We must always consider these two problems."
   },
   {
     "objectID": "nhst-slide.html#type-i-and-ii-error-correctly-rejecting-a-test",
     "href": "nhst-slide.html#type-i-and-ii-error-correctly-rejecting-a-test",
-    "title": "Law of large numbers, the central limit theorem, and null hypothesis significance testing",
+    "title": "大数の法則と中心極限定理",
     "section": "Type-I and II error: Correctly rejecting a test",
-    "text": "Type-I and II error: Correctly rejecting a test\n\n\n\n\n\nBiau et al. 2010. Clin. Orthop. Relat. Res. 468: 885-892.\nFig. 2 of Biau et al. 2010 is wrong, since if the Type-I error rate decreases, then the Type-II error rate increases.\nThere is a false impression that if experiments are conducted with a low Type I error, then significant results almost always corresponds to a true effect.\nOut of 1000 null hypothesis, 10% are actually false. In otherwords, the null hypothesis is rarely false. So, 900 are true null hypothesis and 100 are false null hypothesis. However, we do not know this. Suppose that we perform tests that have an α of 0.10 and a β of 0.24, Among the true null hypothesis, since our Type-I error rate is 0.10, then 90 experiments will be erroneously rejected. Among the false null hypothesis, since our Type-II error rate is 0.24, then 24 experiments will be erroneously not rejected and 80 will be correctly rejected.\nTherefore, a total of 90+76 null hypotheses will be rejected, but only 76 / (90+76) = 0.46 of these were correctly rejected.\nI am not sure if this is a good example, since the null hypothesis is only rare false. What is the point of this?"
+    "text": "Type-I and II error: Correctly rejecting a test\n\n\nBiau et al. 2010. Clin. Orthop. Relat. Res. 468: 885-892.\nFig. 2 of Biau et al. 2010 is wrong, since if the Type-I error rate decreases, then the Type-II error rate increases.\nThere is a false impression that if experiments are conducted with a low Type I error, then significant results almost always corresponds to a true effect.\nOut of 1000 null hypothesis, 10% are actually false. In otherwords, the null hypothesis is rarely false. So, 900 are true null hypothesis and 100 are false null hypothesis. However, we do not know this. Suppose that we perform tests that have an α of 0.10 and a β of 0.24, Among the true null hypothesis, since our Type-I error rate is 0.10, then 90 experiments will be erroneously rejected. Among the false null hypothesis, since our Type-II error rate is 0.24, then 24 experiments will be erroneously not rejected and 80 will be correctly rejected.\nTherefore, a total of 90+76 null hypotheses will be rejected, but only 76 / (90+76) = 0.46 of these were correctly rejected.\nI am not sure if this is a good example, since the null hypothesis is only rare false. What is the point of this?"
   },
   {
     "objectID": "nhst-slide.html#differences-between-significance-testing-and-nhst",
     "href": "nhst-slide.html#differences-between-significance-testing-and-nhst",
-    "title": "Law of large numbers, the central limit theorem, and null hypothesis significance testing",
+    "title": "大数の法則と中心極限定理",
     "section": "Differences between significance testing and NHST",
     "text": "Differences between significance testing and NHST\n\n\nSignificance testing (有意性検定)\n\nFisher’s method\nP-value is important\nP-values are used to reject a null hypothesis\nCalculate after observing the data\nValid only for the data that was analyzed\nSubjective decision (主観的な判断)\nDecisions are based on the evidence\n\n\nNHST (仮説検定)\n\nNeyman and Pearson Method\nThe Type-I error is important (α)\nWe use to minimize α and β\nWe choose α and β before observing the data\nBased on the belief that the experiments were well replicated and the results are stable for long times\nObjective decision (客観的)\nDecisions are based on rules and not evidence\n\n\n\nMost scientists mix the two methods, which is wrong!\n\n\nBiau et al. 2010. Clin. Orthop. Relat. Res. 468: 885-892.\n\nSee Fig. 1A-B in this paper. Since Fisher’s P-value is valid for each experiment individually, some experiments will provide evidence for rejecting the null and some won’t.\n\nThe p value is not the probability of the null hypothesis being true; it is the probability of observing these data, or more extreme data, if the null is true.\nHowever, for Neyman-Pearson method, there is only a chance of making an error of rejecting or accepting a hypothesis based on an α and β value."
   },
   {
     "objectID": "nhst-slide.html#example",
     "href": "nhst-slide.html#example",
-    "title": "Law of large numbers, the central limit theorem, and null hypothesis significance testing",
+    "title": "大数の法則と中心極限定理",
     "section": "Example",
     "text": "Example\n\n\n\n\n\n\n\n\n\n\n\n    Welch Two Sample t-test\n\ndata:  observation by experiment\nt = -1.4885, df = 31.452, p-value = 0.1466\nalternative hypothesis: true difference in means between group A and group B is not equal to 0\n95 percent confidence interval:\n -1.3181200  0.2055077\nsample estimates:\nmean in group A mean in group B \n       9.897632       10.453938 \n\n\n\n\\(H_0: \\overline{\\mu_A}=\\overline{\\mu_B}~:\\text{Null hypothesis}\\)\n\\(H_1: \\overline{\\mu_A}\\neq\\overline{\\mu_B}~:\\text{Alternative hypothesis}\\)\nTrue standard deviation：\\(\\sigma_A=\\sigma_B\\)\nTrue mean: \\(\\overline{\\mu_A}=10\\) and \\(\\overline{\\mu_B}=12\\)\nIn this case, \\(P = 0.1466 \\nless \\alpha = 0.05\\)\n\n\n\n\nThe true means are different, yet the P-value for the Welch’s two sample t-test is greater than 0.05. What does this mean?\nDo we accept the alternative hypothesis?\nDo we reject the null hypothesis?"
   },
   {
     "objectID": "nhst-slide.html#amerhein-et-al.-2019.-nature-567-305-307",
     "href": "nhst-slide.html#amerhein-et-al.-2019.-nature-567-305-307",
-    "title": "Law of large numbers, the central limit theorem, and null hypothesis significance testing",
+    "title": "大数の法則と中心極限定理",
     "section": "Amerhein et al. 2019. Nature 567: 305-307",
     "text": "Amerhein et al. 2019. Nature 567: 305-307\n\n\n\nLet’s be clear about what must stop: we should never conclude there is ‘no difference’ or ‘no association’ just because a P-value is larger than a threshold such as 0.05 or, equivalently, because a confidense interval includes zero. –Amerhein et al. 2019"
   },
@@ -1860,5 +1860,96 @@
     "title": "データの可視化と記述統計量",
     "section": "割合の比較",
     "text": "割合の比較"
+  },
+  {
+    "objectID": "nhst-slide.html#大数の法則",
+    "href": "nhst-slide.html#大数の法則",
+    "title": "大数の法則と中心極限定理",
+    "section": "大数の法則",
+    "text": "大数の法則\nLaw of large numbers (大数の法則)\n\n\n\n\n\n\n大数の法則は、\n\n\nランダムな試行を繰り返す回数が増えるにつれて、 試行の平均的な結果がその試行の期待値により近づいていく過程です。\nつまり、ランダムな出来事は時間の経過とともに均等になる傾向があるという考えに基づいています。"
+  },
+  {
+    "objectID": "nhst-slide.html#大数の弱法則",
+    "href": "nhst-slide.html#大数の弱法則",
+    "title": "大数の法則と中心極限定理",
+    "section": "大数の弱法則",
+    "text": "大数の弱法則\nWeak law of large numbers (大数の弱法則)\n\\[\n\\overline{X}_n \\xrightarrow{P} \\mu \\; \\text{when}\\; n\\rightarrow \\infty\n\\]\nor,\n\\[\n\\forall{\\epsilon}&gt;0;\\;\\lim_{n\\rightarrow\\infty}P(|\\overline{X}-\\mu|&lt;\\epsilon)=1\n\\]\n\n\n\n\n\n\n大数の弱法則\n\n\n観測回数が増えるにつれて、標本平均は確率収束に従って母集団平均に収束していきます。 つまり、標本の大きさが増えるにつれて、標本平均が母集団平均に近くなる確率が高くなります。\n\n\n\n\n\nThe sample mean X-bar converges in probability to the population mean mu as the sample size n approaches infinity.\n標本平均 X-bar が、標本サイズ n が無限に近づくにつれて、確率収束において母集団平均 mu に収束する。\nFor any positive value of epsilon, the probability that the sample mean (X-bar) will be within epsilon of the population mean (mu) approaches 1 as the sample size approaches infinity.\n任意の正の値 エプシロン に対して、標本平均 (X-bar) が母集団平均 (ミュー) から エプシロン の範囲内にある確率が、標本サイズが無限に近づくにつれて1に収束する」という意味です。"
+  },
+  {
+    "objectID": "nhst-slide.html#コインの裏表デモ",
+    "href": "nhst-slide.html#コインの裏表デモ",
+    "title": "大数の法則と中心極限定理",
+    "section": "コインの裏表デモ",
+    "text": "コインの裏表デモ"
+  },
+  {
+    "objectID": "nhst-slide.html#大数の強法則",
+    "href": "nhst-slide.html#大数の強法則",
+    "title": "大数の法則と中心極限定理",
+    "section": "大数の強法則",
+    "text": "大数の強法則\nStrong law of large numbers (大数の強法則)\n\\[\n\\overline{X}_n \\xrightarrow{a.s.} \\mu \\; \\text{when}\\; n\\rightarrow \\infty\n\\]\nor\n\\[\nP(\\lim_{n\\rightarrow\\infty}\\overline{X}=\\mu)=1\n\\]\n\n\nThe sample mean X-bar converges almost surely to the population mean mu as the sample size n approaches infinity.\n標本平均 X-bar が、標本サイズ n が無限に近づくにつれて、ほとんど確実に母集団平均 mu に収束する。\nThe probability that the sample mean X-bar will approach the population mean mu as the sample size approaches infinity is equal to 1.\n標本サイズが無限に近づくにつれて、標本平均 X-bar が母集団平均 mu に近づく確率は1に等しい。"
+  },
+  {
+    "objectID": "nhst-slide.html#平均値のデモ",
+    "href": "nhst-slide.html#平均値のデモ",
+    "title": "大数の法則と中心極限定理",
+    "section": "平均値のデモ",
+    "text": "平均値のデモ\n\n\n\n\n\n\n\n\n\nTrue mean \\(\\mu=10\\)\nTrue variance \\(\\sigma^2 = 10^2\\)\nNumber of data ranged from \\(1\\) to \\(1000\\)\n\nR Code for the pseudo-random values from the normal distribution\n\nmu = 10              # 真の平均値\nsd = 10              # 真の標準偏差\nn = 5                # データ回数\nm = rnorm(n, mu, sd) # 正規分布の疑似乱数"
+  },
+  {
+    "objectID": "nhst-slide.html#中心極限定理",
+    "href": "nhst-slide.html#中心極限定理",
+    "title": "大数の法則と中心極限定理",
+    "section": "中心極限定理",
+    "text": "中心極限定理\n中心極限定理とは、多数の独立かつ同一分布に従う確率変数の平均値の分布が、 一定の条件下では、正規分布に近似することを示す。\nデータの分布に関わらず、データの平均値を大量に求めると、その平均値自体が正規分布に近似することが期待できる。 平均値は、正規分布に従うことで、母集団の平均値や分散についての推論ができるようになる。\n統計学において非常に重要な定理です。"
+  },
+  {
+    "objectID": "nhst-slide.html#サイコロのデモ",
+    "href": "nhst-slide.html#サイコロのデモ",
+    "title": "大数の法則と中心極限定理",
+    "section": "サイコロのデモ",
+    "text": "サイコロのデモ\n\n\n\n各試行は6つのサイコロの出目の平均です。\n\\(N\\) が増えるにつれて、標本平均は正規分布に収束します（中心極限定理）。\n大数の法則により、標本平均は真の平均値（\\(\\mu = 3.5\\)）に収束することが保証されます。"
+  },
+  {
+    "objectID": "nhst-slide.html#有意性検定および仮説検定",
+    "href": "nhst-slide.html#有意性検定および仮説検定",
+    "title": "大数の法則と中心極限定理",
+    "section": "有意性検定および仮説検定",
+    "text": "有意性検定および仮説検定\n\n\nSignificance testing (有意性検定論)\n\n1920年代に、R.A. Fisher が提案した。\n帰無仮説 \\(H_0\\)　に対して集めたデータを得られるエビデンス（証拠）。\nP値が小さいとき、エビデンスは弱い\n\n\\(\\text{P-value} = P(T(X) \\ge T_0(X)|H_0)\\)\n\n仮説の棄却や採択はしない\n\n\nHypothesis testing (仮説検定論)\n\n1930年代に、 J. Neyman と E.S. Pearson が提案した。\n最も使われている手法\n帰無仮説 \\(H_0\\) と対立仮説 \\(H_A\\)を定義します\n有意水準 (significance level \\(\\alpha\\)) を基準にして、 \\(H_A\\) の採択または棄却をする手法。\n\n\n\n\nSir Ronald Aylmer Fisher was a British statistician and geneticist. His work win agricultural experiments led to the development of the Analysis of Variance. In 1925 he published the book Statistical Methods for Research Workers, that introduced the concept of the P-value.\nJerzy Neyman was a Polish mathematician and statician, and Egon Sharpe Pearson was a British statician. They co-invented and popularized the hypothesis testing techniques and the rejection and acceptance of the null hypothesis or the alternative hypothesis."
+  },
+  {
+    "objectID": "nhst-slide.html#model-モデル",
+    "href": "nhst-slide.html#model-モデル",
+    "title": "大数の法則と中心極限定理",
+    "section": "Model (モデル)",
+    "text": "Model (モデル)\n\nモデルはデータを見てから考えるもの。\nモデルも検証する必要があります。\nモデルは予測に使用できます。"
+  },
+  {
+    "objectID": "nhst-slide.html#仮説検定",
+    "href": "nhst-slide.html#仮説検定",
+    "title": "大数の法則と中心極限定理",
+    "section": "仮説検定",
+    "text": "仮説検定\n仮説検定は客観的に意思決定をするために使います。\n\nP値は帰無仮説と対立仮説を比較するために使います。\n帰無仮説を棄却するルールは有意水準を用いて行います。\n\\(\\text{P-value} \\leq \\alpha\\)　のとき帰無仮説を棄却します。\n帰無仮説を棄却・採択することで、誤りを起こすことになる\n\n第１種の誤り, α過誤 (Type-I error)\n第２種の誤り, β過誤 (Type-II error)"
+  },
+  {
+    "objectID": "nhst-slide.html#帰無仮説にきをつけろ",
+    "href": "nhst-slide.html#帰無仮説にきをつけろ",
+    "title": "大数の法則と中心極限定理",
+    "section": "帰無仮説にきをつけろ！",
+    "text": "帰無仮説にきをつけろ！\nNeyman-Pearson の仮説検定法は Null Hypothesis Significance Test (NHST) (帰無仮説の有意性検定) といいます。 意思決定をするための手法なので、誤りを起こすこともある\n\nType-I Error (第１種の誤り): 帰無仮説が正しいのに、帰無仮説を棄却する誤り。誤る確率は \\(\\alpha\\)　（有意水準と同じ値）\nType-II Error (第２種の誤り): 帰無仮説が正しくないのに、帰無仮説を棄却しない誤り。誤る確率は \\(\\beta\\)（単純に求められない）"
+  },
+  {
+    "objectID": "nhst-slide.html#帰無仮説にきをつけろ-1",
+    "href": "nhst-slide.html#帰無仮説にきをつけろ-1",
+    "title": "大数の法則と中心極限定理",
+    "section": "帰無仮説にきをつけろ！",
+    "text": "帰無仮説にきをつけろ！\n\n\\(\\alpha\\) 有意水準および第1種の誤り\n\\(\\beta\\) 第2種の誤り\n\\(1-\\beta\\) 検定の検出力、正しくない帰無仮説を棄却する確率\n第1種の誤りを厳しくすると、第2種の誤りはあまくなる (お互いに反比例する)\n\n\\[\n\\alpha \\propto 1/\\beta\n\\]"
+  },
+  {
+    "objectID": "nhst-slide.html#有意性検定と仮説検定の違い",
+    "href": "nhst-slide.html#有意性検定と仮説検定の違い",
+    "title": "大数の法則と中心極限定理",
+    "section": "有意性検定と仮説検定の違い",
+    "text": "有意性検定と仮説検定の違い\n\n\nSignificance testing (有意性検定)\n\nFisher の手法\nP値の値は重要\n帰無仮説を棄却するために使う\nデータを見てから計算する\n解析したデータのみに有効\nSubjective decision (主観的な判断)\nエビデンスによる意思決定\n\n\nNHST (仮説検定)\n\nNeyman and Pearson の手法\n第1種の誤りが重要\n第1種と第2種の誤りを最低限にする\nデータを見てから、α と β を選ぶ\n実験は十分に反復されており、今後も似たようなデータを期待できる\nObjective decision (客観的)\nルールに基づいた意思決定\n\n\n\nMost scientists mix the two methods, which is wrong!\n\n\nBiau et al. 2010. Clin. Orthop. Relat. Res. 468: 885-892.\n\nSee Fig. 1A-B in this paper. Since Fisher’s P-value is valid for each experiment individually, some experiments will provide evidence for rejecting the null and some won’t.\n\nThe p value is not the probability of the null hypothesis being true; it is the probability of observing these data, or more extreme data, if the null is true.\nHowever, for Neyman-Pearson method, there is only a chance of making an error of rejecting or accepting a hypothesis based on an α and β value."
   }
 ]
