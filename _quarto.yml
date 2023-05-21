@@ -46,7 +46,7 @@ website:
         contents:
         - descriptive_statistics-slide.qmd
         - sakuma-drops.qmd
-        - ttest-slide.qmd
+        - ttest-slides.qmd
         - nhst-slide.qmd
 
 format:

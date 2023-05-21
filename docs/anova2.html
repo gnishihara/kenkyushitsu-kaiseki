@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.2.475">
+<meta name="generator" content="quarto-1.3.353">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -17,9 +17,10 @@ div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
 ul.task-list{list-style: none;}
 ul.task-list li input[type="checkbox"] {
   width: 0.8em;
-  margin: 0 0.8em 0.2em -1.6em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
+/* CSS for syntax highlighting */
 pre > code.sourceCode { white-space: pre; position: relative; }
 pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
 pre > code.sourceCode > span:empty { height: 1.2em; }
@@ -46,48 +47,19 @@ pre.numberSource code > span > a:first-child::before
     -khtml-user-select: none; -moz-user-select: none;
     -ms-user-select: none; user-select: none;
     padding: 0 4px; width: 4em;
-    color: #aaaaaa;
   }
-pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
 div.sourceCode
   {   }
 @media screen {
 pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
 }
-code span.al { color: #ff0000; font-weight: bold; } /* Alert */
-code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
-code span.at { color: #7d9029; } /* Attribute */
-code span.bn { color: #40a070; } /* BaseN */
-code span.bu { color: #008000; } /* BuiltIn */
-code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
-code span.ch { color: #4070a0; } /* Char */
-code span.cn { color: #880000; } /* Constant */
-code span.co { color: #60a0b0; font-style: italic; } /* Comment */
-code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
-code span.do { color: #ba2121; font-style: italic; } /* Documentation */
-code span.dt { color: #902000; } /* DataType */
-code span.dv { color: #40a070; } /* DecVal */
-code span.er { color: #ff0000; font-weight: bold; } /* Error */
-code span.ex { } /* Extension */
-code span.fl { color: #40a070; } /* Float */
-code span.fu { color: #06287e; } /* Function */
-code span.im { color: #008000; font-weight: bold; } /* Import */
-code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
-code span.kw { color: #007020; font-weight: bold; } /* Keyword */
-code span.op { color: #666666; } /* Operator */
-code span.ot { color: #007020; } /* Other */
-code span.pp { color: #bc7a00; } /* Preprocessor */
-code span.sc { color: #4070a0; } /* SpecialChar */
-code span.ss { color: #bb6688; } /* SpecialString */
-code span.st { color: #4070a0; } /* String */
-code span.va { color: #19177c; } /* Variable */
-code span.vs { color: #4070a0; } /* VerbatimString */
-code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+/* CSS for citations */
 div.csl-bib-body { }
 div.csl-entry {
   clear: both;
 }
-.hanging div.csl-entry {
+.hanging-indent div.csl-entry {
   margin-left:2em;
   text-indent:-2em;
 }
@@ -101,8 +73,7 @@ div.csl-right-inline {
 }
 div.csl-indent {
   margin-left: 2em;
-}
-</style>
+}</style>
 
 
 <script src="site_libs/quarto-nav/quarto-nav.js"></script>
@@ -165,11 +136,16 @@ div.csl-indent {
 
 <div id="quarto-search-results"></div>
   <header id="quarto-header" class="headroom fixed-top">
-  <nav class="quarto-secondary-nav" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
-    <div class="container-fluid d-flex justify-content-between">
-      <h1 class="quarto-secondary-nav-title">多数群の比較：二元配置分散分析</h1>
-      <button type="button" class="quarto-btn-toggle btn" aria-label="Show secondary navigation">
-        <i class="bi bi-chevron-right"></i>
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+      <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./linearmodels.html">Linear models</a></li><li class="breadcrumb-item"><a href="./anova2.html">多数群の比較：二元配置分散分析</a></li></ol></nav>
+      <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+      </a>
+      <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
       </button>
     </div>
   </nav>
@@ -177,140 +153,160 @@ div.csl-indent {
 <!-- content -->
 <div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
 <!-- sidebar -->
-  <nav id="quarto-sidebar" class="sidebar collapse sidebar-navigation docked overflow-auto">
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal sidebar-navigation docked overflow-auto">
     <div class="pt-lg-2 mt-2 text-left sidebar-header">
     <div class="sidebar-title mb-0 py-0">
       <a href="./">データ解析（研究室用）</a> 
     </div>
       </div>
-      <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="mt-2 flex-shrink-0 align-items-center">
         <div class="sidebar-search">
         <div id="quarto-search" class="" title="Search"></div>
         </div>
-      </div>
+        </div>
     <div class="sidebar-menu-container"> 
     <ul class="list-unstyled mt-1">
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-expanded="true">Introduction</a>
-          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-expanded="true">
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-expanded="true">
+ <span class="menu-text">Introduction</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-expanded="true" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
       <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./index.html" class="sidebar-item-text sidebar-link">研究室と講義の R コード</a>
+  <a href="./index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">研究室と講義の R コード</span></a>
   </div>
 </li>
       </ul>
   </li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-expanded="true">Rの基礎</a>
-          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-expanded="true">
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-expanded="true">
+ <span class="menu-text">Rの基礎</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-expanded="true" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
       <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 show">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./part01.html" class="sidebar-item-text sidebar-link">R の基本操作</a>
+  <a href="./part01.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">R の基本操作</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./part02.html" class="sidebar-item-text sidebar-link">R 関数の基本</a>
+  <a href="./part02.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">R 関数の基本</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./part03.html" class="sidebar-item-text sidebar-link">Tidyverse</a>
+  <a href="./part03.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Tidyverse</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./part04.html" class="sidebar-item-text sidebar-link">データの操作</a>
+  <a href="./part04.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">データの操作</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./part05.html" class="sidebar-item-text sidebar-link">ggplot の図</a>
+  <a href="./part05.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">ggplot の図</span></a>
   </div>
 </li>
       </ul>
   </li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" aria-expanded="true">Linear models</a>
-          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" aria-expanded="true">
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" aria-expanded="true">
+ <span class="menu-text">Linear models</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" aria-expanded="true" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
       <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 show">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./linearmodels.html" class="sidebar-item-text sidebar-link">ノンパラメトリック法</a>
+  <a href="./linearmodels.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">ノンパラメトリック法</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./ttest.html" class="sidebar-item-text sidebar-link">2群の比較：t 検定</a>
+  <a href="./ttest.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">2群の比較：t 検定</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./anova.html" class="sidebar-item-text sidebar-link">一元配置分散分析</a>
+  <a href="./anova.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">一元配置分散分析</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./anova2.html" class="sidebar-item-text sidebar-link active">多数群の比較：二元配置分散分析</a>
+  <a href="./anova2.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text">多数群の比較：二元配置分散分析</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./glm.html" class="sidebar-item-text sidebar-link">線形モデル</a>
+  <a href="./glm.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">線形モデル</span></a>
   </div>
 </li>
       </ul>
   </li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" aria-expanded="true">Multivariate</a>
-          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" aria-expanded="true">
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" aria-expanded="true">
+ <span class="menu-text">Multivariate</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" aria-expanded="true" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
       <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth1 show">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./pca.html" class="sidebar-item-text sidebar-link">Principal Component Analysis</a>
+  <a href="./pca.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Principal Component Analysis</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./rda.html" class="sidebar-item-text sidebar-link">Redundancy Analysis</a>
+  <a href="./rda.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Redundancy Analysis</span></a>
   </div>
 </li>
       </ul>
   </li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" aria-expanded="true">基礎統計学用スライド</a>
-          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" aria-expanded="true">
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" aria-expanded="true">
+ <span class="menu-text">基礎統計学用スライド</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" aria-expanded="true" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
       <ul id="quarto-sidebar-section-5" class="collapse list-unstyled sidebar-section depth1 show">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./sakuma-drops.html" class="sidebar-item-text sidebar-link">データの可視化と記述統計量</a>
+  <a href="./sakuma-drops.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">データの可視化と記述統計量</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./nhst-slide.html" class="sidebar-item-text sidebar-link">Law of large numbers, the central limit theorem, and null hypothesis significance testing</a>
+  <a href="./nhst-slide.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">大数の法則と中心極限定理</span></a>
   </div>
 </li>
       </ul>
@@ -318,6 +314,7 @@ div.csl-indent {
     </ul>
     </div>
 </nav>
+<div id="quarto-sidebar-glass" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass"></div>
 <!-- margin-sidebar -->
     <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
         <nav id="TOC" role="doc-toc" class="toc-active">
@@ -330,9 +327,14 @@ div.csl-indent {
   <ul class="collapse">
   <li><a href="#二元配置分散分析" id="toc-二元配置分散分析" class="nav-link" data-scroll-target="#二元配置分散分析">二元配置分散分析</a></li>
   <li><a href="#釣り合い型データと直交性について" id="toc-釣り合い型データと直交性について" class="nav-link" data-scroll-target="#釣り合い型データと直交性について">釣り合い型データと直交性について</a></li>
+  <li><a href="#釣り合い型データ-balanced-data" id="toc-釣り合い型データ-balanced-data" class="nav-link" data-scroll-target="#釣り合い型データ-balanced-data">釣り合い型データ (balanced data)</a></li>
+  <li><a href="#直行性-orthogonality" id="toc-直行性-orthogonality" class="nav-link" data-scroll-target="#直行性-orthogonality">直行性 (orthogonality)</a></li>
   <li><a href="#type-iiii-平方和の分散分析" id="toc-type-iiii-平方和の分散分析" class="nav-link" data-scroll-target="#type-iiii-平方和の分散分析">Type-IIII 平方和の分散分析</a></li>
   </ul></li>
-  <li><a href="#解析のまとめ" id="toc-解析のまとめ" class="nav-link" data-scroll-target="#解析のまとめ">解析のまとめ</a></li>
+  <li><a href="#解析のまとめ" id="toc-解析のまとめ" class="nav-link" data-scroll-target="#解析のまとめ">解析のまとめ</a>
+  <ul class="collapse">
+  <li><a href="#結果の書き方" id="toc-結果の書き方" class="nav-link" data-scroll-target="#結果の書き方">結果の書き方</a></li>
+  </ul></li>
   </ul>
 </nav>
     </div>
@@ -341,7 +343,7 @@ div.csl-indent {
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title d-none d-lg-block">多数群の比較：二元配置分散分析</h1>
+<h1 class="title">多数群の比較：二元配置分散分析</h1>
 <p class="subtitle lead">Comparing multiple groups with Two-Way ANOVA</p>
 </div>
 
@@ -357,9 +359,6 @@ div.csl-indent {
 
 </header>
 
-<div class="cell" data-warnings="false">
-
-</div>
 <p><strong>二元配置分散分析 (Two-Way ANOVA)</strong> 2 種類の因子（要因）を同時に比較するときに使用する。</p>
 <p><strong>二元配置分散分析の帰無仮説</strong></p>
 <ul>
@@ -376,7 +375,7 @@ div.csl-indent {
 <div class="smalltable">
 <div class="cell">
 <div class="cell-output-display">
-<table class="table table-sm table-striped">
+<table class="table table-sm table-striped small">
 <colgroup>
 <col style="width: 5%">
 <col style="width: 18%">
@@ -442,12 +441,12 @@ div.csl-indent {
 </div>
 </div>
 <p><span class="math inline">A</span> と <span class="math inline">B</span> は主効果、 <span class="math inline">e</span> は残渣、 <span class="math inline">I</span> と <span class="math inline">J</span> は各因子の水準、 <span class="math inline">K</span> はサンプル数です。 <span class="math inline">SS_A</span> と <span class="math inline">SS_B</span> は水準間平方和、 <span class="math inline">SS_{AB}</span> は相互作用平方和、 <span class="math inline">SS_R</span> は残渣平方和、 <span class="math inline">SS_T</span> は総平方和です。 <span class="math inline">MS_A</span> と <span class="math inline">MS_B</span> は水準間平均平方、 <span class="math inline">MS_{AB}</span> は相互作用平均平方、 <span class="math inline">MS_R</span> は残渣平均平方です。 平均平方の比率はF値です。</p>
-<div class="callout-important callout callout-style-default callout-captioned">
+<div class="callout callout-style-default callout-important callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
-<div class="callout-caption-container flex-fill">
+<div class="callout-title-container flex-fill">
 平方和は他にもある
 </div>
 </div>
@@ -458,9 +457,9 @@ div.csl-indent {
 </div>
 </div>
 <p>平方和の非釣り合い型データの問題については、<span class="citation" data-cites="Hector2010">Hector, Felten, and Schmid (<a href="#ref-Hector2010" role="doc-biblioref">2010</a>)</span>, <span class="citation" data-cites="Langsrud2003">Langsrud (<a href="#ref-Langsrud2003" role="doc-biblioref">2003</a>)</span> を参考にしてください。</p>
-<div class="no-row-height column-margin column-container"><div id="ref-Hector2010" class="csl-entry" role="doc-biblioentry">
+<div class="no-row-height column-margin column-container"><div id="ref-Hector2010" class="csl-entry" role="listitem">
 Hector, Andy, Stefanie von Felten, and Bernhard Schmid. 2010. <span>“<span class="nocase">Analysis of variance with unbalanced data: An update for ecology <span>&amp;</span> evolution</span>.”</span> <em>Journal of Animal Ecology</em> 79: 308–16. <a href="https://doi.org/10.1111/j.1365-2656.2009.01634.x">https://doi.org/10.1111/j.1365-2656.2009.01634.x</a>.
-</div><div id="ref-Langsrud2003" class="csl-entry" role="doc-biblioentry">
+</div><div id="ref-Langsrud2003" class="csl-entry" role="listitem">
 Langsrud, Øyvind. 2003. <span>“<span class="nocase">ANOVA for unbalanced data: Use Type II instead</span>.”</span> <em>Statistics and Computing</em> 13: 163–67. <a href="https://doi.org/10.1023/A:1023260610025">https://doi.org/10.1023/A:1023260610025</a>.
 </div></div></section>
 <section id="type-i-平方和の方程式" class="level2">
@@ -482,9 +481,6 @@ Langsrud, Øyvind. 2003. <span>“<span class="nocase">ANOVA for unbalanced data
 <div class="cell">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>URL <span class="ot">=</span> <span class="st">"https://raw.githubusercontent.com/dzchilds/stats-for-bio/master/data_csv/FESTUCA.CSV"</span></span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>festuca <span class="ot">=</span> <span class="fu">read_csv</span>(URL)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
-<div class="cell">
-
 </div>
 <ul>
 <li>観測値: <em>Festuca ovina</em> (ウシノケグサ) の康重量　dry weight (g) [K = 5]</li>
@@ -637,29 +633,13 @@ P value adjustment: tukey method for comparing a family of 4 estimates </code></
 </section>
 <section id="釣り合い型データと直交性について" class="level2">
 <h2 class="anchored" data-anchor-id="釣り合い型データと直交性について">釣り合い型データと直交性について</h2>
-<div class="callout-notes callout callout-style-default no-icon callout-captioned">
-<div class="callout-header d-flex align-content-center">
-<div class="callout-icon-container">
-<i class="callout-icon no-icon"></i>
-</div>
-<div class="callout-caption-container flex-fill">
-釣り合い型データ (balanced data)
-</div>
-</div>
-<div class="callout-body-container callout-body">
+</section>
+<section id="釣り合い型データ-balanced-data" class="level2 callout-notes">
+<h2 class="anchored" data-anchor-id="釣り合い型データ-balanced-data">釣り合い型データ (balanced data)</h2>
 <p>各因子水準のデータ数は同じであること</p>
-</div>
-</div>
-<div class="callout-notes callout callout-style-default no-icon callout-captioned">
-<div class="callout-header d-flex align-content-center">
-<div class="callout-icon-container">
-<i class="callout-icon no-icon"></i>
-</div>
-<div class="callout-caption-container flex-fill">
-直行性 (orthogonality)
-</div>
-</div>
-<div class="callout-body-container callout-body">
+</section>
+<section id="直行性-orthogonality" class="level2 callout-notes">
+<h2 class="anchored" data-anchor-id="直行性-orthogonality">直行性 (orthogonality)</h2>
 <p>説明変数同士の内積 (inner product) はゼロと意味します。 ベクトルとした場合、ベクトル間の角度が 90°であること。 つまり、説明変数がお互いに相関していないこと。</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Example of calculating the inner product of two 3d vectors.</span></span>
@@ -686,7 +666,7 @@ P value adjustment: tukey method for comparing a family of 4 estimates </code></
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
 <p><img src="anova2_files/figure-html/unnamed-chunk-14-1.png" class="img-fluid figure-img" width="288"></p>
-<p></p><figcaption class="figure-caption">著効性のあるベクトルのペア</figcaption><p></p>
+<figcaption class="figure-caption">著効性のあるベクトルのペア</figcaption>
 </figure>
 </div>
 </div>
@@ -710,8 +690,7 @@ x_1^T \cdot x_2 = \begin{bmatrix}
 1 \\ 1
 \end{bmatrix} = (-1 \times 1) + (1 \times 1) = 0
 </span></p>
-</div>
-</div>
+</section>
 <div class="cell" data-hash="anova2_cache/html/unnamed-chunk-15_4eeca26e5691bcafdd0d22586b48e1f3">
 <div class="cell-output cell-output-stderr">
 <pre><code>`summarise()` has grouped output by 'pH'. You can override using the `.groups`
@@ -725,7 +704,7 @@ argument.
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
 <p><img src="anova2_files/figure-html/unnamed-chunk-16-1.png" class="img-fluid figure-img" width="672"></p>
-<p></p><figcaption class="figure-caption">釣り合い型データではないとき、Type-I 平方和を用いたとき,　第2種の誤りを起こすことが高くなります。つまり、誤って帰無仮説を採択することが増えます。</figcaption><p></p>
+<figcaption class="figure-caption">釣り合い型データではないとき、Type-I 平方和を用いたとき,　第2種の誤りを起こすことが高くなります。つまり、誤って帰無仮説を採択することが増えます。</figcaption>
 </figure>
 </div>
 </div>
@@ -793,7 +772,6 @@ Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
 </div>
 </div>
 <p>データ数が異なるとき、因子は直交ではないときは、Type-III 平方を使いましょう。</p>
-</section>
 <section id="type-iiii-平方和の分散分析" class="level2">
 <h2 class="anchored" data-anchor-id="type-iiii-平方和の分散分析">Type-IIII 平方和の分散分析</h2>
 <p>Type-I 以外の平方を使うとき、car パッケージが必要です。</p>
@@ -981,19 +959,10 @@ $contrasts
 P value adjustment: tukey method for comparing a family of 4 estimates </code></pre>
 </div>
 </div>
-<div class="callout-tips callout callout-style-default no-icon callout-captioned">
-<div class="callout-header d-flex align-content-center">
-<div class="callout-icon-container">
-<i class="callout-icon no-icon"></i>
-</div>
-<div class="callout-caption-container flex-fill">
-結果の書き方
-</div>
-</div>
-<div class="callout-body-container callout-body">
+<section id="結果の書き方" class="level2 callout-tips">
+<h2 class="anchored" data-anchor-id="結果の書き方">結果の書き方</h2>
 <p>二元配置分散分析を行った結果、pH (F<sub>(1,16)</sub> = 32.54, P = 0.00003) と pH と Calluna の相互作用 (F<sub>(1,16)</sub> = 7.61, P = 0.0140) に対しては有意の効果があった。 Calluna (F<sub>(1,16)</sub> = 0.54, P = 0.4746) に対しては有意な効果がなかった。</p>
-</div>
-</div>
+</section>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb48"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb48-1"><a href="#cb48-1" aria-hidden="true" tabindex="-1"></a>festuca_summary <span class="ot">=</span> festuca <span class="sc">|&gt;</span> </span>
 <span id="cb48-2"><a href="#cb48-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(pH, Calluna) <span class="sc">|&gt;</span> </span>
@@ -1068,9 +1037,23 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     icon: icon
   };
   anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
   const clipboard = new window.ClipboardJS('.code-copy-button', {
-    target: function(trigger) {
-      return trigger.previousElementSibling;
+    text: function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
     }
   });
   clipboard.on('success', function(e) {
@@ -1135,6 +1118,92 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       return note.innerHTML;
     });
   }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
   const findCites = (el) => {
     const parentEl = el.parentElement;
     if (parentEl) {

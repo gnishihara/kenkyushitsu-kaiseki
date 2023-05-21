@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.2.475">
+<meta name="generator" content="quarto-1.3.353">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -17,9 +17,10 @@ div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
 ul.task-list{list-style: none;}
 ul.task-list li input[type="checkbox"] {
   width: 0.8em;
-  margin: 0 0.8em 0.2em -1.6em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
+/* CSS for syntax highlighting */
 pre > code.sourceCode { white-space: pre; position: relative; }
 pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
 pre > code.sourceCode > span:empty { height: 1.2em; }
@@ -46,43 +47,13 @@ pre.numberSource code > span > a:first-child::before
     -khtml-user-select: none; -moz-user-select: none;
     -ms-user-select: none; user-select: none;
     padding: 0 4px; width: 4em;
-    color: #aaaaaa;
   }
-pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
 div.sourceCode
   {   }
 @media screen {
 pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
 }
-code span.al { color: #ff0000; font-weight: bold; } /* Alert */
-code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
-code span.at { color: #7d9029; } /* Attribute */
-code span.bn { color: #40a070; } /* BaseN */
-code span.bu { color: #008000; } /* BuiltIn */
-code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
-code span.ch { color: #4070a0; } /* Char */
-code span.cn { color: #880000; } /* Constant */
-code span.co { color: #60a0b0; font-style: italic; } /* Comment */
-code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
-code span.do { color: #ba2121; font-style: italic; } /* Documentation */
-code span.dt { color: #902000; } /* DataType */
-code span.dv { color: #40a070; } /* DecVal */
-code span.er { color: #ff0000; font-weight: bold; } /* Error */
-code span.ex { } /* Extension */
-code span.fl { color: #40a070; } /* Float */
-code span.fu { color: #06287e; } /* Function */
-code span.im { color: #008000; font-weight: bold; } /* Import */
-code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
-code span.kw { color: #007020; font-weight: bold; } /* Keyword */
-code span.op { color: #666666; } /* Operator */
-code span.ot { color: #007020; } /* Other */
-code span.pp { color: #bc7a00; } /* Preprocessor */
-code span.sc { color: #4070a0; } /* SpecialChar */
-code span.ss { color: #bb6688; } /* SpecialString */
-code span.st { color: #4070a0; } /* String */
-code span.va { color: #19177c; } /* Variable */
-code span.vs { color: #4070a0; } /* VerbatimString */
-code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
 </style>
 
 
@@ -147,11 +118,16 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 
 <div id="quarto-search-results"></div>
   <header id="quarto-header" class="headroom fixed-top">
-  <nav class="quarto-secondary-nav" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
-    <div class="container-fluid d-flex justify-content-between">
-      <h1 class="quarto-secondary-nav-title">2群の比較：t 検定</h1>
-      <button type="button" class="quarto-btn-toggle btn" aria-label="Show secondary navigation">
-        <i class="bi bi-chevron-right"></i>
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+      <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./linearmodels.html">Linear models</a></li><li class="breadcrumb-item"><a href="./ttest.html">2群の比較：t 検定</a></li></ol></nav>
+      <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+      </a>
+      <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
       </button>
     </div>
   </nav>
@@ -159,140 +135,160 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <!-- content -->
 <div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
 <!-- sidebar -->
-  <nav id="quarto-sidebar" class="sidebar collapse sidebar-navigation docked overflow-auto">
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal sidebar-navigation docked overflow-auto">
     <div class="pt-lg-2 mt-2 text-left sidebar-header">
     <div class="sidebar-title mb-0 py-0">
       <a href="./">データ解析（研究室用）</a> 
     </div>
       </div>
-      <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="mt-2 flex-shrink-0 align-items-center">
         <div class="sidebar-search">
         <div id="quarto-search" class="" title="Search"></div>
         </div>
-      </div>
+        </div>
     <div class="sidebar-menu-container"> 
     <ul class="list-unstyled mt-1">
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-expanded="true">Introduction</a>
-          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-expanded="true">
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-expanded="true">
+ <span class="menu-text">Introduction</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-expanded="true" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
       <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./index.html" class="sidebar-item-text sidebar-link">研究室と講義の R コード</a>
+  <a href="./index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">研究室と講義の R コード</span></a>
   </div>
 </li>
       </ul>
   </li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-expanded="true">Rの基礎</a>
-          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-expanded="true">
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-expanded="true">
+ <span class="menu-text">Rの基礎</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-expanded="true" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
       <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 show">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./part01.html" class="sidebar-item-text sidebar-link">R の基本操作</a>
+  <a href="./part01.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">R の基本操作</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./part02.html" class="sidebar-item-text sidebar-link">R 関数の基本</a>
+  <a href="./part02.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">R 関数の基本</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./part03.html" class="sidebar-item-text sidebar-link">Tidyverse</a>
+  <a href="./part03.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Tidyverse</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./part04.html" class="sidebar-item-text sidebar-link">データの操作</a>
+  <a href="./part04.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">データの操作</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./part05.html" class="sidebar-item-text sidebar-link">ggplot の図</a>
+  <a href="./part05.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">ggplot の図</span></a>
   </div>
 </li>
       </ul>
   </li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" aria-expanded="true">Linear models</a>
-          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" aria-expanded="true">
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" aria-expanded="true">
+ <span class="menu-text">Linear models</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" aria-expanded="true" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
       <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 show">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./linearmodels.html" class="sidebar-item-text sidebar-link">ノンパラメトリック法</a>
+  <a href="./linearmodels.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">ノンパラメトリック法</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./ttest.html" class="sidebar-item-text sidebar-link active">2群の比較：t 検定</a>
+  <a href="./ttest.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text">2群の比較：t 検定</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./anova.html" class="sidebar-item-text sidebar-link">一元配置分散分析</a>
+  <a href="./anova.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">一元配置分散分析</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./anova2.html" class="sidebar-item-text sidebar-link">多数群の比較：二元配置分散分析</a>
+  <a href="./anova2.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">多数群の比較：二元配置分散分析</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./glm.html" class="sidebar-item-text sidebar-link">線形モデル</a>
+  <a href="./glm.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">線形モデル</span></a>
   </div>
 </li>
       </ul>
   </li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" aria-expanded="true">Multivariate</a>
-          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" aria-expanded="true">
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" aria-expanded="true">
+ <span class="menu-text">Multivariate</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" aria-expanded="true" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
       <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth1 show">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./pca.html" class="sidebar-item-text sidebar-link">Principal Component Analysis</a>
+  <a href="./pca.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Principal Component Analysis</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./rda.html" class="sidebar-item-text sidebar-link">Redundancy Analysis</a>
+  <a href="./rda.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Redundancy Analysis</span></a>
   </div>
 </li>
       </ul>
   </li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" aria-expanded="true">基礎統計学用スライド</a>
-          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" aria-expanded="true">
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" aria-expanded="true">
+ <span class="menu-text">基礎統計学用スライド</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" aria-expanded="true" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
       <ul id="quarto-sidebar-section-5" class="collapse list-unstyled sidebar-section depth1 show">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./sakuma-drops.html" class="sidebar-item-text sidebar-link">データの可視化と記述統計量</a>
+  <a href="./sakuma-drops.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">データの可視化と記述統計量</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./nhst-slide.html" class="sidebar-item-text sidebar-link">Law of large numbers, the central limit theorem, and null hypothesis significance testing</a>
+  <a href="./nhst-slide.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">大数の法則と中心極限定理</span></a>
   </div>
 </li>
       </ul>
@@ -300,6 +296,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
     </ul>
     </div>
 </nav>
+<div id="quarto-sidebar-glass" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass"></div>
 <!-- margin-sidebar -->
     <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
         <nav id="TOC" role="doc-toc" class="toc-active">
@@ -342,7 +339,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title d-none d-lg-block">2群の比較：t 検定</h1>
+<h1 class="title">2群の比較：t 検定</h1>
 <p class="subtitle lead">Comparing two groups with the t-test</p>
 </div>
 
@@ -358,26 +355,18 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 
 </header>
 
-<div class="cell" data-warnings="false">
-
-</div>
-<div class="cell">
-
-</div>
 <p>ノコギリモク (<em>Sargassum macrocarpum</em>) は褐藻類ホンダワラ属の海藻です。 通年藻場を形成する海藻であり、海洋動物の住処、餌場、炭素固定の場として機能しています。 かつて、九州に広く分布していましたが、温暖化に伴う環境変動と食害によって、局地的に絶滅しています。 ここでは、ノコギリモクの幼体を資料として、2軍における解析手法を紹介します。</p>
 <p>では、地点 A と B のノコギリモク幼体の幅は <a href="#tbl-nokotable1">Table&nbsp;1</a> の通りです。 各地点から合計６個体採取しました。</p>
 <div class="grid">
 <div class="g-col-6">
-<div class="cell">
 
-</div>
 </div>
 <div class="g-col-6">
 <div class="cell">
 <div class="cell-output-display">
 <div id="tbl-nokotable1" class="anchored">
 
-<div class="tabwid"><style>.cl-e5d72eea{table-layout:auto;width:90%;}.cl-e5c15aa2{font-family:'DejaVu Sans';font-size:11pt;font-weight:normal;font-style:normal;text-decoration:none;color:rgba(0, 0, 0, 1.00);background-color:transparent;}.cl-e5d3061c{margin:0;text-align:right;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);padding-bottom:5pt;padding-top:5pt;padding-left:5pt;padding-right:5pt;line-height: 1;background-color:transparent;}.cl-e5d31d0a{background-color:transparent;vertical-align: middle;border-bottom: 2pt solid rgba(102, 102, 102, 1.00);border-top: 2pt solid rgba(102, 102, 102, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-e5d31d1e{background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-e5d31d1f{background-color:transparent;vertical-align: middle;border-bottom: 2pt solid rgba(102, 102, 102, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}</style><table data-quarto-disable-processing="true" class="cl-e5d72eea"><caption>Table&nbsp;1:  ノコギリモク (Sargassum macrocarpum) 幼体の幅 (mm). </caption><thead><tr style="overflow-wrap:break-word;"><th class="cl-e5d31d0a"><p class="cl-e5d3061c"><span class="cl-e5c15aa2">Sample</span></p></th><th class="cl-e5d31d0a"><p class="cl-e5d3061c"><span class="cl-e5c15aa2">Site A</span></p></th><th class="cl-e5d31d0a"><p class="cl-e5d3061c"><span class="cl-e5c15aa2">Site B</span></p></th></tr></thead><tbody><tr style="overflow-wrap:break-word;"><td class="cl-e5d31d1e"><p class="cl-e5d3061c"><span class="cl-e5c15aa2">1</span></p></td><td class="cl-e5d31d1e"><p class="cl-e5d3061c"><span class="cl-e5c15aa2">19.9</span></p></td><td class="cl-e5d31d1e"><p class="cl-e5d3061c"><span class="cl-e5c15aa2">22.3</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-e5d31d1e"><p class="cl-e5d3061c"><span class="cl-e5c15aa2">2</span></p></td><td class="cl-e5d31d1e"><p class="cl-e5d3061c"><span class="cl-e5c15aa2">20.6</span></p></td><td class="cl-e5d31d1e"><p class="cl-e5d3061c"><span class="cl-e5c15aa2">22.9</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-e5d31d1e"><p class="cl-e5d3061c"><span class="cl-e5c15aa2">3</span></p></td><td class="cl-e5d31d1e"><p class="cl-e5d3061c"><span class="cl-e5c15aa2">20.3</span></p></td><td class="cl-e5d31d1e"><p class="cl-e5d3061c"><span class="cl-e5c15aa2">22.0</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-e5d31d1e"><p class="cl-e5d3061c"><span class="cl-e5c15aa2">4</span></p></td><td class="cl-e5d31d1e"><p class="cl-e5d3061c"><span class="cl-e5c15aa2">20.4</span></p></td><td class="cl-e5d31d1e"><p class="cl-e5d3061c"><span class="cl-e5c15aa2">23.7</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-e5d31d1e"><p class="cl-e5d3061c"><span class="cl-e5c15aa2">5</span></p></td><td class="cl-e5d31d1e"><p class="cl-e5d3061c"><span class="cl-e5c15aa2">20.9</span></p></td><td class="cl-e5d31d1e"><p class="cl-e5d3061c"><span class="cl-e5c15aa2">20.9</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-e5d31d1f"><p class="cl-e5d3061c"><span class="cl-e5c15aa2">6</span></p></td><td class="cl-e5d31d1f"><p class="cl-e5d3061c"><span class="cl-e5c15aa2">18.1</span></p></td><td class="cl-e5d31d1f"><p class="cl-e5d3061c"><span class="cl-e5c15aa2">21.7</span></p></td></tr></tbody></table></div>
+<div class="tabwid"><style>.cl-e5d72eea{table-layout:auto;width:90%;}.cl-e5c15aa2{font-family:'DejaVu Sans';font-size:11pt;font-weight:normal;font-style:normal;text-decoration:none;color:rgba(0, 0, 0, 1.00);background-color:transparent;}.cl-e5d3061c{margin:0;text-align:right;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);padding-bottom:5pt;padding-top:5pt;padding-left:5pt;padding-right:5pt;line-height: 1;background-color:transparent;}.cl-e5d31d0a{background-color:transparent;vertical-align: middle;border-bottom: 2pt solid rgba(102, 102, 102, 1.00);border-top: 2pt solid rgba(102, 102, 102, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-e5d31d1e{background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-e5d31d1f{background-color:transparent;vertical-align: middle;border-bottom: 2pt solid rgba(102, 102, 102, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}</style><table data-quarto-disable-processing="true" class="cl-e5d72eea"><caption>Table&nbsp;1:  <p>ノコギリモク (<em>Sargassum macrocarpum</em>) 幼体の幅 (mm).</p> </caption><thead><tr style="overflow-wrap:break-word;"><th class="cl-e5d31d0a"><p class="cl-e5d3061c"><span class="cl-e5c15aa2">Sample</span></p></th><th class="cl-e5d31d0a"><p class="cl-e5d3061c"><span class="cl-e5c15aa2">Site A</span></p></th><th class="cl-e5d31d0a"><p class="cl-e5d3061c"><span class="cl-e5c15aa2">Site B</span></p></th></tr></thead><tbody><tr style="overflow-wrap:break-word;"><td class="cl-e5d31d1e"><p class="cl-e5d3061c"><span class="cl-e5c15aa2">1</span></p></td><td class="cl-e5d31d1e"><p class="cl-e5d3061c"><span class="cl-e5c15aa2">19.9</span></p></td><td class="cl-e5d31d1e"><p class="cl-e5d3061c"><span class="cl-e5c15aa2">22.3</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-e5d31d1e"><p class="cl-e5d3061c"><span class="cl-e5c15aa2">2</span></p></td><td class="cl-e5d31d1e"><p class="cl-e5d3061c"><span class="cl-e5c15aa2">20.6</span></p></td><td class="cl-e5d31d1e"><p class="cl-e5d3061c"><span class="cl-e5c15aa2">22.9</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-e5d31d1e"><p class="cl-e5d3061c"><span class="cl-e5c15aa2">3</span></p></td><td class="cl-e5d31d1e"><p class="cl-e5d3061c"><span class="cl-e5c15aa2">20.3</span></p></td><td class="cl-e5d31d1e"><p class="cl-e5d3061c"><span class="cl-e5c15aa2">22.0</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-e5d31d1e"><p class="cl-e5d3061c"><span class="cl-e5c15aa2">4</span></p></td><td class="cl-e5d31d1e"><p class="cl-e5d3061c"><span class="cl-e5c15aa2">20.4</span></p></td><td class="cl-e5d31d1e"><p class="cl-e5d3061c"><span class="cl-e5c15aa2">23.7</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-e5d31d1e"><p class="cl-e5d3061c"><span class="cl-e5c15aa2">5</span></p></td><td class="cl-e5d31d1e"><p class="cl-e5d3061c"><span class="cl-e5c15aa2">20.9</span></p></td><td class="cl-e5d31d1e"><p class="cl-e5d3061c"><span class="cl-e5c15aa2">20.9</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-e5d31d1f"><p class="cl-e5d3061c"><span class="cl-e5c15aa2">6</span></p></td><td class="cl-e5d31d1f"><p class="cl-e5d3061c"><span class="cl-e5c15aa2">18.1</span></p></td><td class="cl-e5d31d1f"><p class="cl-e5d3061c"><span class="cl-e5c15aa2">21.7</span></p></td></tr></tbody></table></div>
 </div>
 </div>
 </div>
@@ -390,7 +379,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <div id="fig-nokoplot2" class="quarto-figure quarto-figure-center anchored">
 <figure class="figure">
 <p><img src="ttest_files/figure-html/fig-nokoplot2-1.png" class="img-fluid figure-img" width="384"></p>
-<p></p><figcaption class="figure-caption">Figure&nbsp;1: 地点毎のノコギリモク幼体の幅</figcaption><p></p>
+<figcaption class="figure-caption">Figure&nbsp;1: 地点毎のノコギリモク幼体の幅</figcaption>
 </figure>
 </div>
 </div>
@@ -401,7 +390,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <div class="cell-output-display">
 <div id="tbl-noko-summary1" class="anchored">
 
-<div class="tabwid"><style>.cl-e6278d04{table-layout:auto;width:90%;}.cl-e61e860a{font-family:'DejaVu Sans';font-size:11pt;font-weight:normal;font-style:normal;text-decoration:none;color:rgba(0, 0, 0, 1.00);background-color:transparent;}.cl-e623e9d8{margin:0;text-align:left;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);padding-bottom:5pt;padding-top:5pt;padding-left:5pt;padding-right:5pt;line-height: 1;background-color:transparent;}.cl-e623e9ec{margin:0;text-align:right;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);padding-bottom:5pt;padding-top:5pt;padding-left:5pt;padding-right:5pt;line-height: 1;background-color:transparent;}.cl-e623fd1a{background-color:transparent;vertical-align: middle;border-bottom: 2pt solid rgba(102, 102, 102, 1.00);border-top: 2pt solid rgba(102, 102, 102, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-e623fd24{background-color:transparent;vertical-align: middle;border-bottom: 2pt solid rgba(102, 102, 102, 1.00);border-top: 2pt solid rgba(102, 102, 102, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-e623fd25{background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-e623fd2e{background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-e623fd2f{background-color:transparent;vertical-align: middle;border-bottom: 2pt solid rgba(102, 102, 102, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-e623fd30{background-color:transparent;vertical-align: middle;border-bottom: 2pt solid rgba(102, 102, 102, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}</style><table data-quarto-disable-processing="true" class="cl-e6278d04"><caption>Table&nbsp;2:  ノコギリモク幼体幅の平均値，標準偏差、標準誤差. </caption><thead><tr style="overflow-wrap:break-word;"><th class="cl-e623fd1a"><p class="cl-e623e9d8"><span class="cl-e61e860a">Site</span></p></th><th class="cl-e623fd24"><p class="cl-e623e9ec"><link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/katex@0.15.2/dist/katex.min.css" data-external="1"><span class="cl-e61e860a"><link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/katex@0.16.3/dist/katex.min.css" data-external="1">
+<div class="tabwid"><style>.cl-e6278d04{table-layout:auto;width:90%;}.cl-e61e860a{font-family:'DejaVu Sans';font-size:11pt;font-weight:normal;font-style:normal;text-decoration:none;color:rgba(0, 0, 0, 1.00);background-color:transparent;}.cl-e623e9d8{margin:0;text-align:left;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);padding-bottom:5pt;padding-top:5pt;padding-left:5pt;padding-right:5pt;line-height: 1;background-color:transparent;}.cl-e623e9ec{margin:0;text-align:right;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);padding-bottom:5pt;padding-top:5pt;padding-left:5pt;padding-right:5pt;line-height: 1;background-color:transparent;}.cl-e623fd1a{background-color:transparent;vertical-align: middle;border-bottom: 2pt solid rgba(102, 102, 102, 1.00);border-top: 2pt solid rgba(102, 102, 102, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-e623fd24{background-color:transparent;vertical-align: middle;border-bottom: 2pt solid rgba(102, 102, 102, 1.00);border-top: 2pt solid rgba(102, 102, 102, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-e623fd25{background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-e623fd2e{background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-e623fd2f{background-color:transparent;vertical-align: middle;border-bottom: 2pt solid rgba(102, 102, 102, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-e623fd30{background-color:transparent;vertical-align: middle;border-bottom: 2pt solid rgba(102, 102, 102, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}</style><table data-quarto-disable-processing="true" class="cl-e6278d04"><caption>Table&nbsp;2:  <p>ノコギリモク幼体幅の平均値，標準偏差、標準誤差.</p> </caption><thead><tr style="overflow-wrap:break-word;"><th class="cl-e623fd1a"><p class="cl-e623e9d8"><span class="cl-e61e860a">Site</span></p></th><th class="cl-e623fd24"><p class="cl-e623e9ec"><link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/katex@0.15.2/dist/katex.min.css" data-external="1"><span class="cl-e61e860a"><link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/katex@0.16.3/dist/katex.min.css" data-external="1">
 <span class="katex-display"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><mover accent="true"><mi>x</mi><mo stretchy="true">‾</mo></mover></mrow><annotation encoding="application/x-tex">\overline{x}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6306em;"></span><span class="mord overline"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.6306em;"><span style="top:-3em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord mathnormal">x</span></span></span><span style="top:-3.5506em;"><span class="pstrut" style="height:3em;"></span><span class="overline-line" style="border-bottom-width:0.04em;"></span></span></span></span></span></span></span></span></span></span></span></p></th><th class="cl-e623fd24"><p class="cl-e623e9ec"><span class="cl-e61e860a"><link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/katex@0.16.3/dist/katex.min.css" data-external="1">
 <span class="katex-display"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><mi>s</mi></mrow><annotation encoding="application/x-tex">s</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.4306em;"></span><span class="mord mathnormal">s</span></span></span></span></span></span></p></th><th class="cl-e623fd24"><p class="cl-e623e9ec"><span class="cl-e61e860a">s.e.</span></p></th></tr></thead><tbody><tr style="overflow-wrap:break-word;"><td class="cl-e623fd25"><p class="cl-e623e9d8"><span class="cl-e61e860a">A</span></p></td><td class="cl-e623fd2e"><p class="cl-e623e9ec"><span class="cl-e61e860a">20.0</span></p></td><td class="cl-e623fd2e"><p class="cl-e623e9ec"><span class="cl-e61e860a">1.003</span></p></td><td class="cl-e623fd2e"><p class="cl-e623e9ec"><span class="cl-e61e860a">0.410</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-e623fd2f"><p class="cl-e623e9d8"><span class="cl-e61e860a">B</span></p></td><td class="cl-e623fd30"><p class="cl-e623e9ec"><span class="cl-e61e860a">22.2</span></p></td><td class="cl-e623fd30"><p class="cl-e623e9ec"><span class="cl-e61e860a">0.971</span></p></td><td class="cl-e623fd30"><p class="cl-e623e9ec"><span class="cl-e61e860a">0.396</span></p></td></tr></tbody></table></div>
 </div>
@@ -411,21 +400,21 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </div>
 <section id="作業仮説を考えましょう" class="level2 page-columns page-full">
 <h2 class="anchored" data-anchor-id="作業仮説を考えましょう">作業仮説を考えましょう</h2>
-<div class="callout-tip callout callout-style-default callout-captioned page-columns page-full">
-<div class="callout-header d-flex align-content-center page-columns page-full">
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
-<div class="callout-caption-container flex-fill page-columns page-full">
+<div class="callout-title-container flex-fill">
 作業仮設<a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a>
-<div class="no-row-height column-margin column-container"><li id="fn1"><p><sup>1</sup>&nbsp;working hypothesis</p></li></div></div>
+</div>
 </div>
 <div class="callout-body-container callout-body">
 <p>すべての研究は作業仮説 から始まります。</p>
 <p>今回の例について、作業仮説は 「地点毎に対するノコギリモク幼体の幅は異なる」にしました。</p>
 </div>
 </div>
-</section>
+<div class="no-row-height column-margin column-container"><li id="fn1"><p><sup>1</sup>&nbsp;working hypothesis</p></li></div></section>
 <section id="帰無仮説有意生検定が必要とする仮説を決めます" class="level2 page-columns page-full">
 <h2 class="anchored" data-anchor-id="帰無仮説有意生検定が必要とする仮説を決めます">帰無仮説有意生検定が必要とする仮説を決めます</h2>
 <div class="page-columns page-full"><p>作業仮説を定義したら、つぎは検定のための仮説を定義します。 帰無仮説有意性検定 <a href="#fn2" class="footnote-ref" id="fnref2" role="doc-noteref"><sup>2</sup></a></p><div class="no-row-height column-margin column-container"><li id="fn2"><p><sup>2</sup>&nbsp;null hypothesis signficance testing</p></li></div></div>
@@ -438,12 +427,12 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li><span class="math inline">H_P</span> <strong>(対立仮設):</strong> <span class="math inline">\mu_A &gt; \mu_B</span></li>
 <li><span class="math inline">H_N</span> <strong>(対立仮設):</strong> <span class="math inline">\mu_A &lt; \mu_B</span></li>
 </ul>
-<div class="callout-note callout callout-style-default callout-captioned">
+<div class="callout callout-style-default callout-note callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
-<div class="callout-caption-container flex-fill">
+<div class="callout-title-container flex-fill">
 無限に存在する
 </div>
 </div>
@@ -463,12 +452,9 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <div class="cell-output-display">
 <div id="tbl-noko-diff1" class="anchored">
 
-<div class="tabwid"><style>.cl-e63ea462{table-layout:auto;width:90%;}.cl-e636e5a6{font-family:'DejaVu Sans';font-size:11pt;font-weight:normal;font-style:normal;text-decoration:none;color:rgba(0, 0, 0, 1.00);background-color:transparent;}.cl-e63ae6b0{margin:0;text-align:right;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);padding-bottom:5pt;padding-top:5pt;padding-left:5pt;padding-right:5pt;line-height: 1;background-color:transparent;}.cl-e63ae6ba{margin:0;text-align:left;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);padding-bottom:5pt;padding-top:5pt;padding-left:5pt;padding-right:5pt;line-height: 1;background-color:transparent;}.cl-e63afa2e{background-color:transparent;vertical-align: middle;border-bottom: 2pt solid rgba(102, 102, 102, 1.00);border-top: 2pt solid rgba(102, 102, 102, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-e63afa38{background-color:transparent;vertical-align: middle;border-bottom: 2pt solid rgba(102, 102, 102, 1.00);border-top: 2pt solid rgba(102, 102, 102, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-e63afa42{background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-e63afa43{background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-e63afa44{background-color:transparent;vertical-align: middle;border-bottom: 2pt solid rgba(102, 102, 102, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-e63afa4c{background-color:transparent;vertical-align: middle;border-bottom: 2pt solid rgba(102, 102, 102, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}</style><table data-quarto-disable-processing="true" class="cl-e63ea462"><caption>Table&nbsp;3:  ノコギリモクの幅 (mm) とペア毎の差 </caption><thead><tr style="overflow-wrap:break-word;"><th class="cl-e63afa2e"><p class="cl-e63ae6b0"><span class="cl-e636e5a6">Sample</span></p></th><th class="cl-e63afa2e"><p class="cl-e63ae6b0"><span class="cl-e636e5a6">Site A</span></p></th><th class="cl-e63afa2e"><p class="cl-e63ae6b0"><span class="cl-e636e5a6">Site B</span></p></th><th class="cl-e63afa38"><p class="cl-e63ae6ba"><span class="cl-e636e5a6">Difference</span></p></th></tr></thead><tbody><tr style="overflow-wrap:break-word;"><td class="cl-e63afa42"><p class="cl-e63ae6b0"><span class="cl-e636e5a6">1</span></p></td><td class="cl-e63afa42"><p class="cl-e63ae6b0"><span class="cl-e636e5a6">19.9</span></p></td><td class="cl-e63afa42"><p class="cl-e63ae6b0"><span class="cl-e636e5a6">22.3</span></p></td><td class="cl-e63afa43"><p class="cl-e63ae6ba"><span class="cl-e636e5a6">19.90 - 22.30 = -2.40</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-e63afa42"><p class="cl-e63ae6b0"><span class="cl-e636e5a6">2</span></p></td><td class="cl-e63afa42"><p class="cl-e63ae6b0"><span class="cl-e636e5a6">20.6</span></p></td><td class="cl-e63afa42"><p class="cl-e63ae6b0"><span class="cl-e636e5a6">22.9</span></p></td><td class="cl-e63afa43"><p class="cl-e63ae6ba"><span class="cl-e636e5a6">20.60 - 22.90 = -2.30</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-e63afa42"><p class="cl-e63ae6b0"><span class="cl-e636e5a6">3</span></p></td><td class="cl-e63afa42"><p class="cl-e63ae6b0"><span class="cl-e636e5a6">20.3</span></p></td><td class="cl-e63afa42"><p class="cl-e63ae6b0"><span class="cl-e636e5a6">22.0</span></p></td><td class="cl-e63afa43"><p class="cl-e63ae6ba"><span class="cl-e636e5a6">20.30 - 22.00 = -1.70</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-e63afa42"><p class="cl-e63ae6b0"><span class="cl-e636e5a6">4</span></p></td><td class="cl-e63afa42"><p class="cl-e63ae6b0"><span class="cl-e636e5a6">20.4</span></p></td><td class="cl-e63afa42"><p class="cl-e63ae6b0"><span class="cl-e636e5a6">23.7</span></p></td><td class="cl-e63afa43"><p class="cl-e63ae6ba"><span class="cl-e636e5a6">20.40 - 23.70 = -3.30</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-e63afa42"><p class="cl-e63ae6b0"><span class="cl-e636e5a6">5</span></p></td><td class="cl-e63afa42"><p class="cl-e63ae6b0"><span class="cl-e636e5a6">20.9</span></p></td><td class="cl-e63afa42"><p class="cl-e63ae6b0"><span class="cl-e636e5a6">20.9</span></p></td><td class="cl-e63afa43"><p class="cl-e63ae6ba"><span class="cl-e636e5a6">20.90 - 20.90 = 0.00</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-e63afa44"><p class="cl-e63ae6b0"><span class="cl-e636e5a6">6</span></p></td><td class="cl-e63afa44"><p class="cl-e63ae6b0"><span class="cl-e636e5a6">18.1</span></p></td><td class="cl-e63afa44"><p class="cl-e63ae6b0"><span class="cl-e636e5a6">21.7</span></p></td><td class="cl-e63afa4c"><p class="cl-e63ae6ba"><span class="cl-e636e5a6">18.10 - 21.70 = -3.60</span></p></td></tr></tbody></table></div>
+<div class="tabwid"><style>.cl-e63ea462{table-layout:auto;width:90%;}.cl-e636e5a6{font-family:'DejaVu Sans';font-size:11pt;font-weight:normal;font-style:normal;text-decoration:none;color:rgba(0, 0, 0, 1.00);background-color:transparent;}.cl-e63ae6b0{margin:0;text-align:right;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);padding-bottom:5pt;padding-top:5pt;padding-left:5pt;padding-right:5pt;line-height: 1;background-color:transparent;}.cl-e63ae6ba{margin:0;text-align:left;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);padding-bottom:5pt;padding-top:5pt;padding-left:5pt;padding-right:5pt;line-height: 1;background-color:transparent;}.cl-e63afa2e{background-color:transparent;vertical-align: middle;border-bottom: 2pt solid rgba(102, 102, 102, 1.00);border-top: 2pt solid rgba(102, 102, 102, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-e63afa38{background-color:transparent;vertical-align: middle;border-bottom: 2pt solid rgba(102, 102, 102, 1.00);border-top: 2pt solid rgba(102, 102, 102, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-e63afa42{background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-e63afa43{background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-e63afa44{background-color:transparent;vertical-align: middle;border-bottom: 2pt solid rgba(102, 102, 102, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-e63afa4c{background-color:transparent;vertical-align: middle;border-bottom: 2pt solid rgba(102, 102, 102, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}</style><table data-quarto-disable-processing="true" class="cl-e63ea462"><caption>Table&nbsp;3:  <p>ノコギリモクの幅 (mm) とペア毎の差</p> </caption><thead><tr style="overflow-wrap:break-word;"><th class="cl-e63afa2e"><p class="cl-e63ae6b0"><span class="cl-e636e5a6">Sample</span></p></th><th class="cl-e63afa2e"><p class="cl-e63ae6b0"><span class="cl-e636e5a6">Site A</span></p></th><th class="cl-e63afa2e"><p class="cl-e63ae6b0"><span class="cl-e636e5a6">Site B</span></p></th><th class="cl-e63afa38"><p class="cl-e63ae6ba"><span class="cl-e636e5a6">Difference</span></p></th></tr></thead><tbody><tr style="overflow-wrap:break-word;"><td class="cl-e63afa42"><p class="cl-e63ae6b0"><span class="cl-e636e5a6">1</span></p></td><td class="cl-e63afa42"><p class="cl-e63ae6b0"><span class="cl-e636e5a6">19.9</span></p></td><td class="cl-e63afa42"><p class="cl-e63ae6b0"><span class="cl-e636e5a6">22.3</span></p></td><td class="cl-e63afa43"><p class="cl-e63ae6ba"><span class="cl-e636e5a6">19.90 - 22.30 = -2.40</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-e63afa42"><p class="cl-e63ae6b0"><span class="cl-e636e5a6">2</span></p></td><td class="cl-e63afa42"><p class="cl-e63ae6b0"><span class="cl-e636e5a6">20.6</span></p></td><td class="cl-e63afa42"><p class="cl-e63ae6b0"><span class="cl-e636e5a6">22.9</span></p></td><td class="cl-e63afa43"><p class="cl-e63ae6ba"><span class="cl-e636e5a6">20.60 - 22.90 = -2.30</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-e63afa42"><p class="cl-e63ae6b0"><span class="cl-e636e5a6">3</span></p></td><td class="cl-e63afa42"><p class="cl-e63ae6b0"><span class="cl-e636e5a6">20.3</span></p></td><td class="cl-e63afa42"><p class="cl-e63ae6b0"><span class="cl-e636e5a6">22.0</span></p></td><td class="cl-e63afa43"><p class="cl-e63ae6ba"><span class="cl-e636e5a6">20.30 - 22.00 = -1.70</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-e63afa42"><p class="cl-e63ae6b0"><span class="cl-e636e5a6">4</span></p></td><td class="cl-e63afa42"><p class="cl-e63ae6b0"><span class="cl-e636e5a6">20.4</span></p></td><td class="cl-e63afa42"><p class="cl-e63ae6b0"><span class="cl-e636e5a6">23.7</span></p></td><td class="cl-e63afa43"><p class="cl-e63ae6ba"><span class="cl-e636e5a6">20.40 - 23.70 = -3.30</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-e63afa42"><p class="cl-e63ae6b0"><span class="cl-e636e5a6">5</span></p></td><td class="cl-e63afa42"><p class="cl-e63ae6b0"><span class="cl-e636e5a6">20.9</span></p></td><td class="cl-e63afa42"><p class="cl-e63ae6b0"><span class="cl-e636e5a6">20.9</span></p></td><td class="cl-e63afa43"><p class="cl-e63ae6ba"><span class="cl-e636e5a6">20.90 - 20.90 = 0.00</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-e63afa44"><p class="cl-e63ae6b0"><span class="cl-e636e5a6">6</span></p></td><td class="cl-e63afa44"><p class="cl-e63ae6b0"><span class="cl-e636e5a6">18.1</span></p></td><td class="cl-e63afa44"><p class="cl-e63ae6b0"><span class="cl-e636e5a6">21.7</span></p></td><td class="cl-e63afa4c"><p class="cl-e63ae6ba"><span class="cl-e636e5a6">18.10 - 21.70 = -3.60</span></p></td></tr></tbody></table></div>
 </div>
 </div>
-</div>
-<div class="cell">
-
 </div>
 <ul>
 <li><span class="math inline">\overline{x} = -2.2</span></li>
@@ -490,7 +476,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <div id="fig-normal1" class="quarto-figure quarto-figure-center anchored">
 <figure class="figure">
 <p><img src="ttest_files/figure-html/fig-normal1-1.png" class="img-fluid figure-img" width="384"></p>
-<p></p><figcaption class="figure-caption">Figure&nbsp;2: 求めた平均値と標準誤差から推定した正規分布。</figcaption><p></p>
+<figcaption class="figure-caption">Figure&nbsp;2: 求めた平均値と標準誤差から推定した正規分布。</figcaption>
 </figure>
 </div>
 </div>
@@ -501,22 +487,22 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <div class="page-columns page-full"><p><a href="#fig-normal1">Figure&nbsp;2</a> に示した紫色の部分は 95% の確率密度です。 その幅は <strong>信頼区間</strong> <a href="#fn7" class="footnote-ref" id="fnref7" role="doc-noteref"><sup>7</sup></a>といいます。 <strong>有意水準</strong>を <span class="math inline">\alpha = 0.05</span> として定義したとき、 この信頼区間は 95% 信頼区間 <a href="#fn8" class="footnote-ref" id="fnref8" role="doc-noteref"><sup>8</sup></a>といいます。</p><div class="no-row-height column-margin column-container"><li id="fn7"><p><sup>7</sup>&nbsp;confidence interval</p></li><li id="fn8"><p><sup>8</sup>&nbsp;95% confidence interval</p></li></div></div>
 </div>
 </div>
-<div class="callout-note callout callout-style-default callout-captioned page-columns page-full">
+<div class="callout callout-style-default callout-note callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
-<div class="callout-caption-container flex-fill">
+<div class="callout-title-container flex-fill">
 信頼区間とは？
 </div>
 </div>
-<div class="callout-body-container callout-body page-columns page-full">
+<div class="callout-body-container callout-body">
 <p><span class="math inline">[l, u]</span> の区間を定義したとき、<span class="math inline">l</span> は区間の下限、<span class="math inline">u</span> は区間の上限です。 このように定義した区間は信頼区間といいます。</p>
 <p>では、<span class="math inline">x</span> に対する区間 <span class="math inline">[l,u]</span> は <span class="math inline">1-\alpha</span> の確率で次のように定義できます。</p>
 <p><span class="math display">
 P(l \le x \le u) = 1-\alpha
 </span></p>
-<div class="page-columns page-full"><p><span class="math inline">\overline{x}</span> が標本平均であれば、<strong>z値</strong> <a href="#fn9" class="footnote-ref" id="fnref9" role="doc-noteref"><sup>9</sup></a>と呼ぶ統計量を定義できます。</p><div class="no-row-height column-margin column-container"><li id="fn9"><p><sup>9</sup>&nbsp;z-score</p></li></div></div>
+<p><span class="math inline">\overline{x}</span> が標本平均であれば、<strong>z値</strong> <a href="#fn9" class="footnote-ref" id="fnref9" role="doc-noteref"><sup>9</sup></a>と呼ぶ統計量を定義できます。</p>
 <p><span class="math display">
 z = \frac{\overline{x}-\mu}{\sigma}
 </span></p>
@@ -541,7 +527,7 @@ P\left(l \le z \le u \right) = 1-0.05 = 0.95
 </ul>
 </div>
 </div>
-</section>
+<div class="no-row-height column-margin column-container"><li id="fn9"><p><sup>9</sup>&nbsp;z-score</p></li></div></section>
 <section id="z-値の分位数を求める" class="level2">
 <h2 class="anchored" data-anchor-id="z-値の分位数を求める">z 値の分位数を求める</h2>
 <div class="cell">
@@ -549,7 +535,7 @@ P\left(l \le z \le u \right) = 1-0.05 = 0.95
 <div id="fig-normaldist-2" class="quarto-figure quarto-figure-center anchored">
 <figure class="figure">
 <p><img src="ttest_files/figure-html/fig-normaldist-2-1.png" class="img-fluid figure-img" width="576"></p>
-<p></p><figcaption class="figure-caption">Figure&nbsp;3: 標準化正規分布</figcaption><p></p>
+<figcaption class="figure-caption">Figure&nbsp;3: 標準化正規分布</figcaption>
 </figure>
 </div>
 </div>
@@ -560,13 +546,10 @@ P\left(l \le z \le u \right) = 1-0.05 = 0.95
 <li><span class="math inline">[-3 s, 3 s]</span> は 99.7% 区間</li>
 </ul>
 <div class="cell">
-
-</div>
-<div class="cell">
 <div class="cell-output-display">
 <div id="tbl-quantile-normal" class="anchored">
 
-<div class="tabwid"><style>.cl-e6e1e0be{table-layout:auto;width:90%;}.cl-e6d9f016{font-family:'DejaVu Sans';font-size:11pt;font-weight:normal;font-style:normal;text-decoration:none;color:rgba(0, 0, 0, 1.00);background-color:transparent;}.cl-e6dce5dc{margin:0;text-align:right;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);padding-bottom:5pt;padding-top:5pt;padding-left:5pt;padding-right:5pt;line-height: 1;background-color:transparent;}.cl-e6dcf9d2{background-color:transparent;vertical-align: middle;border-bottom: 2pt solid rgba(102, 102, 102, 1.00);border-top: 2pt solid rgba(102, 102, 102, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-e6dcf9dc{background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-e6dcf9dd{background-color:transparent;vertical-align: middle;border-bottom: 2pt solid rgba(102, 102, 102, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}</style><table data-quarto-disable-processing="true" class="cl-e6e1e0be"><caption>Table&nbsp;4:  標準化正規分布の分位数 </caption><thead><tr style="overflow-wrap:break-word;"><th class="cl-e6dcf9d2"><p class="cl-e6dce5dc"><span class="cl-e6d9f016">Signififance level</span></p></th><th class="cl-e6dcf9d2"><p class="cl-e6dce5dc"><span class="cl-e6d9f016">percent</span></p></th><th class="cl-e6dcf9d2"><p class="cl-e6dce5dc"><span class="cl-e6d9f016">± quantile</span></p></th></tr></thead><tbody><tr style="overflow-wrap:break-word;"><td class="cl-e6dcf9dc"><p class="cl-e6dce5dc"><span class="cl-e6d9f016">0.50000000000</span></p></td><td class="cl-e6dcf9dc"><p class="cl-e6dce5dc"><span class="cl-e6d9f016">50.00000</span></p></td><td class="cl-e6dcf9dc"><p class="cl-e6dce5dc"><span class="cl-e6d9f016">0.6744898</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-e6dcf9dc"><p class="cl-e6dce5dc"><span class="cl-e6d9f016">0.31731050786</span></p></td><td class="cl-e6dcf9dc"><p class="cl-e6dce5dc"><span class="cl-e6d9f016">68.26895</span></p></td><td class="cl-e6dcf9dc"><p class="cl-e6dce5dc"><span class="cl-e6d9f016">1.0000000</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-e6dcf9dc"><p class="cl-e6dce5dc"><span class="cl-e6d9f016">0.20000000000</span></p></td><td class="cl-e6dcf9dc"><p class="cl-e6dce5dc"><span class="cl-e6d9f016">80.00000</span></p></td><td class="cl-e6dcf9dc"><p class="cl-e6dce5dc"><span class="cl-e6d9f016">1.2815516</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-e6dcf9dc"><p class="cl-e6dce5dc"><span class="cl-e6d9f016">0.10000000000</span></p></td><td class="cl-e6dcf9dc"><p class="cl-e6dce5dc"><span class="cl-e6d9f016">90.00000</span></p></td><td class="cl-e6dcf9dc"><p class="cl-e6dce5dc"><span class="cl-e6d9f016">1.6448536</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-e6dcf9dc"><p class="cl-e6dce5dc"><span class="cl-e6d9f016">0.05000000000</span></p></td><td class="cl-e6dcf9dc"><p class="cl-e6dce5dc"><span class="cl-e6d9f016">95.00000</span></p></td><td class="cl-e6dcf9dc"><p class="cl-e6dce5dc"><span class="cl-e6d9f016">1.9599640</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-e6dcf9dc"><p class="cl-e6dce5dc"><span class="cl-e6d9f016">0.04550026390</span></p></td><td class="cl-e6dcf9dc"><p class="cl-e6dce5dc"><span class="cl-e6d9f016">95.44997</span></p></td><td class="cl-e6dcf9dc"><p class="cl-e6dce5dc"><span class="cl-e6d9f016">2.0000000</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-e6dcf9dc"><p class="cl-e6dce5dc"><span class="cl-e6d9f016">0.02500000000</span></p></td><td class="cl-e6dcf9dc"><p class="cl-e6dce5dc"><span class="cl-e6d9f016">97.50000</span></p></td><td class="cl-e6dcf9dc"><p class="cl-e6dce5dc"><span class="cl-e6d9f016">2.2414027</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-e6dcf9dc"><p class="cl-e6dce5dc"><span class="cl-e6d9f016">0.00269979606</span></p></td><td class="cl-e6dcf9dc"><p class="cl-e6dce5dc"><span class="cl-e6d9f016">99.73002</span></p></td><td class="cl-e6dcf9dc"><p class="cl-e6dce5dc"><span class="cl-e6d9f016">3.0000000</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-e6dcf9dd"><p class="cl-e6dce5dc"><span class="cl-e6d9f016">0.00006334248</span></p></td><td class="cl-e6dcf9dd"><p class="cl-e6dce5dc"><span class="cl-e6d9f016">99.99367</span></p></td><td class="cl-e6dcf9dd"><p class="cl-e6dce5dc"><span class="cl-e6d9f016">4.0000000</span></p></td></tr></tbody></table></div>
+<div class="tabwid"><style>.cl-e6e1e0be{table-layout:auto;width:90%;}.cl-e6d9f016{font-family:'DejaVu Sans';font-size:11pt;font-weight:normal;font-style:normal;text-decoration:none;color:rgba(0, 0, 0, 1.00);background-color:transparent;}.cl-e6dce5dc{margin:0;text-align:right;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);padding-bottom:5pt;padding-top:5pt;padding-left:5pt;padding-right:5pt;line-height: 1;background-color:transparent;}.cl-e6dcf9d2{background-color:transparent;vertical-align: middle;border-bottom: 2pt solid rgba(102, 102, 102, 1.00);border-top: 2pt solid rgba(102, 102, 102, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-e6dcf9dc{background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-e6dcf9dd{background-color:transparent;vertical-align: middle;border-bottom: 2pt solid rgba(102, 102, 102, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}</style><table data-quarto-disable-processing="true" class="cl-e6e1e0be"><caption>Table&nbsp;4:  <p>標準化正規分布の分位数</p> </caption><thead><tr style="overflow-wrap:break-word;"><th class="cl-e6dcf9d2"><p class="cl-e6dce5dc"><span class="cl-e6d9f016">Signififance level</span></p></th><th class="cl-e6dcf9d2"><p class="cl-e6dce5dc"><span class="cl-e6d9f016">percent</span></p></th><th class="cl-e6dcf9d2"><p class="cl-e6dce5dc"><span class="cl-e6d9f016">± quantile</span></p></th></tr></thead><tbody><tr style="overflow-wrap:break-word;"><td class="cl-e6dcf9dc"><p class="cl-e6dce5dc"><span class="cl-e6d9f016">0.50000000000</span></p></td><td class="cl-e6dcf9dc"><p class="cl-e6dce5dc"><span class="cl-e6d9f016">50.00000</span></p></td><td class="cl-e6dcf9dc"><p class="cl-e6dce5dc"><span class="cl-e6d9f016">0.6744898</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-e6dcf9dc"><p class="cl-e6dce5dc"><span class="cl-e6d9f016">0.31731050786</span></p></td><td class="cl-e6dcf9dc"><p class="cl-e6dce5dc"><span class="cl-e6d9f016">68.26895</span></p></td><td class="cl-e6dcf9dc"><p class="cl-e6dce5dc"><span class="cl-e6d9f016">1.0000000</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-e6dcf9dc"><p class="cl-e6dce5dc"><span class="cl-e6d9f016">0.20000000000</span></p></td><td class="cl-e6dcf9dc"><p class="cl-e6dce5dc"><span class="cl-e6d9f016">80.00000</span></p></td><td class="cl-e6dcf9dc"><p class="cl-e6dce5dc"><span class="cl-e6d9f016">1.2815516</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-e6dcf9dc"><p class="cl-e6dce5dc"><span class="cl-e6d9f016">0.10000000000</span></p></td><td class="cl-e6dcf9dc"><p class="cl-e6dce5dc"><span class="cl-e6d9f016">90.00000</span></p></td><td class="cl-e6dcf9dc"><p class="cl-e6dce5dc"><span class="cl-e6d9f016">1.6448536</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-e6dcf9dc"><p class="cl-e6dce5dc"><span class="cl-e6d9f016">0.05000000000</span></p></td><td class="cl-e6dcf9dc"><p class="cl-e6dce5dc"><span class="cl-e6d9f016">95.00000</span></p></td><td class="cl-e6dcf9dc"><p class="cl-e6dce5dc"><span class="cl-e6d9f016">1.9599640</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-e6dcf9dc"><p class="cl-e6dce5dc"><span class="cl-e6d9f016">0.04550026390</span></p></td><td class="cl-e6dcf9dc"><p class="cl-e6dce5dc"><span class="cl-e6d9f016">95.44997</span></p></td><td class="cl-e6dcf9dc"><p class="cl-e6dce5dc"><span class="cl-e6d9f016">2.0000000</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-e6dcf9dc"><p class="cl-e6dce5dc"><span class="cl-e6d9f016">0.02500000000</span></p></td><td class="cl-e6dcf9dc"><p class="cl-e6dce5dc"><span class="cl-e6d9f016">97.50000</span></p></td><td class="cl-e6dcf9dc"><p class="cl-e6dce5dc"><span class="cl-e6d9f016">2.2414027</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-e6dcf9dc"><p class="cl-e6dce5dc"><span class="cl-e6d9f016">0.00269979606</span></p></td><td class="cl-e6dcf9dc"><p class="cl-e6dce5dc"><span class="cl-e6d9f016">99.73002</span></p></td><td class="cl-e6dcf9dc"><p class="cl-e6dce5dc"><span class="cl-e6d9f016">3.0000000</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-e6dcf9dd"><p class="cl-e6dce5dc"><span class="cl-e6d9f016">0.00006334248</span></p></td><td class="cl-e6dcf9dd"><p class="cl-e6dce5dc"><span class="cl-e6d9f016">99.99367</span></p></td><td class="cl-e6dcf9dd"><p class="cl-e6dce5dc"><span class="cl-e6d9f016">4.0000000</span></p></td></tr></tbody></table></div>
 </div>
 </div>
 </div>
@@ -604,7 +587,7 @@ P(
 <div id="fig-ci-known" class="quarto-figure quarto-figure-center anchored">
 <figure class="figure">
 <p><img src="ttest_files/figure-html/fig-ci-known-1.png" class="img-fluid figure-img" width="576"></p>
-<p></p><figcaption class="figure-caption">Figure&nbsp;4: 調査を 20 回行ったときの平均値と信頼区間。真の平均値は -2 です。このとき、全ての実験で求めた信頼区間内に真の平均値が存在します。</figcaption><p></p>
+<figcaption class="figure-caption">Figure&nbsp;4: 調査を 20 回行ったときの平均値と信頼区間。真の平均値は -2 です。このとき、全ての実験で求めた信頼区間内に真の平均値が存在します。</figcaption>
 </figure>
 </div>
 </div>
@@ -615,7 +598,7 @@ P(
 <div id="fig-ci-zero" class="quarto-figure quarto-figure-center anchored">
 <figure class="figure">
 <p><img src="ttest_files/figure-html/fig-ci-zero-1.png" class="img-fluid figure-img" width="576"></p>
-<p></p><figcaption class="figure-caption">Figure&nbsp;5: ゼロを含む信頼区間。</figcaption><p></p>
+<figcaption class="figure-caption">Figure&nbsp;5: ゼロを含む信頼区間。</figcaption>
 </figure>
 </div>
 </div>
@@ -643,7 +626,7 @@ t_{\overline{x}} = \frac{\overline{x} - x_0}{s.e.} = \frac{\overline{x} - x_0}{s
 <div id="fig-tdist-2" class="quarto-figure quarto-figure-center anchored">
 <figure class="figure">
 <p><img src="ttest_files/figure-html/fig-tdist-2-1.png" class="img-fluid figure-img" width="576"></p>
-<p></p><figcaption class="figure-caption">Figure&nbsp;6: ｔ分布</figcaption><p></p>
+<figcaption class="figure-caption">Figure&nbsp;6: ｔ分布</figcaption>
 </figure>
 </div>
 </div>
@@ -653,7 +636,7 @@ t_{\overline{x}} = \frac{\overline{x} - x_0}{s.e.} = \frac{\overline{x} - x_0}{s
 <div class="cell-output-display">
 <div id="tbl-tdist-quantiles" class="anchored">
 
-<div class="tabwid"><style>.cl-e7c58328{table-layout:auto;width:90%;}.cl-e7beea72{font-family:'DejaVu Sans';font-size:11pt;font-weight:normal;font-style:normal;text-decoration:none;color:rgba(0, 0, 0, 1.00);background-color:transparent;}.cl-e7c1be50{margin:0;text-align:right;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);padding-bottom:5pt;padding-top:5pt;padding-left:5pt;padding-right:5pt;line-height: 1;background-color:transparent;}.cl-e7c1d1a6{background-color:transparent;vertical-align: middle;border-bottom: 2pt solid rgba(102, 102, 102, 1.00);border-top: 2pt solid rgba(102, 102, 102, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-e7c1d1b0{background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-e7c1d1b1{background-color:transparent;vertical-align: middle;border-bottom: 2pt solid rgba(102, 102, 102, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}</style><table data-quarto-disable-processing="true" class="cl-e7c58328"><caption>Table&nbsp;5:  自由度 5 のときに t 分布の分位数 </caption><thead><tr style="overflow-wrap:break-word;"><th class="cl-e7c1d1a6"><p class="cl-e7c1be50"><span class="cl-e7beea72">Signififance level</span></p></th><th class="cl-e7c1d1a6"><p class="cl-e7c1be50"><span class="cl-e7beea72">percent</span></p></th><th class="cl-e7c1d1a6"><p class="cl-e7c1be50"><span class="cl-e7beea72">± quantile</span></p></th></tr></thead><tbody><tr style="overflow-wrap:break-word;"><td class="cl-e7c1d1b0"><p class="cl-e7c1be50"><span class="cl-e7beea72">0.50000000</span></p></td><td class="cl-e7c1d1b0"><p class="cl-e7c1be50"><span class="cl-e7beea72">50.00000</span></p></td><td class="cl-e7c1d1b0"><p class="cl-e7c1be50"><span class="cl-e7beea72">0.7266868</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-e7c1d1b0"><p class="cl-e7c1be50"><span class="cl-e7beea72">0.36321747</span></p></td><td class="cl-e7c1d1b0"><p class="cl-e7c1be50"><span class="cl-e7beea72">63.67825</span></p></td><td class="cl-e7c1d1b0"><p class="cl-e7c1be50"><span class="cl-e7beea72">1.0000000</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-e7c1d1b0"><p class="cl-e7c1be50"><span class="cl-e7beea72">0.20000000</span></p></td><td class="cl-e7c1d1b0"><p class="cl-e7c1be50"><span class="cl-e7beea72">80.00000</span></p></td><td class="cl-e7c1d1b0"><p class="cl-e7c1be50"><span class="cl-e7beea72">1.4758840</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-e7c1d1b0"><p class="cl-e7c1be50"><span class="cl-e7beea72">0.10193948</span></p></td><td class="cl-e7c1d1b0"><p class="cl-e7c1be50"><span class="cl-e7beea72">89.80605</span></p></td><td class="cl-e7c1d1b0"><p class="cl-e7c1be50"><span class="cl-e7beea72">2.0000000</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-e7c1d1b0"><p class="cl-e7c1be50"><span class="cl-e7beea72">0.10000000</span></p></td><td class="cl-e7c1d1b0"><p class="cl-e7c1be50"><span class="cl-e7beea72">90.00000</span></p></td><td class="cl-e7c1d1b0"><p class="cl-e7c1be50"><span class="cl-e7beea72">2.0150484</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-e7c1d1b0"><p class="cl-e7c1be50"><span class="cl-e7beea72">0.05000000</span></p></td><td class="cl-e7c1d1b0"><p class="cl-e7c1be50"><span class="cl-e7beea72">95.00000</span></p></td><td class="cl-e7c1d1b0"><p class="cl-e7c1be50"><span class="cl-e7beea72">2.5705818</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-e7c1d1b0"><p class="cl-e7c1be50"><span class="cl-e7beea72">0.03009925</span></p></td><td class="cl-e7c1d1b0"><p class="cl-e7c1be50"><span class="cl-e7beea72">96.99008</span></p></td><td class="cl-e7c1d1b0"><p class="cl-e7c1be50"><span class="cl-e7beea72">3.0000000</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-e7c1d1b0"><p class="cl-e7c1be50"><span class="cl-e7beea72">0.02500000</span></p></td><td class="cl-e7c1d1b0"><p class="cl-e7c1be50"><span class="cl-e7beea72">97.50000</span></p></td><td class="cl-e7c1d1b0"><p class="cl-e7c1be50"><span class="cl-e7beea72">3.1633814</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-e7c1d1b1"><p class="cl-e7c1be50"><span class="cl-e7beea72">0.01032342</span></p></td><td class="cl-e7c1d1b1"><p class="cl-e7c1be50"><span class="cl-e7beea72">98.96766</span></p></td><td class="cl-e7c1d1b1"><p class="cl-e7c1be50"><span class="cl-e7beea72">4.0000000</span></p></td></tr></tbody></table></div>
+<div class="tabwid"><style>.cl-e7c58328{table-layout:auto;width:90%;}.cl-e7beea72{font-family:'DejaVu Sans';font-size:11pt;font-weight:normal;font-style:normal;text-decoration:none;color:rgba(0, 0, 0, 1.00);background-color:transparent;}.cl-e7c1be50{margin:0;text-align:right;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);padding-bottom:5pt;padding-top:5pt;padding-left:5pt;padding-right:5pt;line-height: 1;background-color:transparent;}.cl-e7c1d1a6{background-color:transparent;vertical-align: middle;border-bottom: 2pt solid rgba(102, 102, 102, 1.00);border-top: 2pt solid rgba(102, 102, 102, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-e7c1d1b0{background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-e7c1d1b1{background-color:transparent;vertical-align: middle;border-bottom: 2pt solid rgba(102, 102, 102, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}</style><table data-quarto-disable-processing="true" class="cl-e7c58328"><caption>Table&nbsp;5:  <p>自由度 5 のときに t 分布の分位数</p> </caption><thead><tr style="overflow-wrap:break-word;"><th class="cl-e7c1d1a6"><p class="cl-e7c1be50"><span class="cl-e7beea72">Signififance level</span></p></th><th class="cl-e7c1d1a6"><p class="cl-e7c1be50"><span class="cl-e7beea72">percent</span></p></th><th class="cl-e7c1d1a6"><p class="cl-e7c1be50"><span class="cl-e7beea72">± quantile</span></p></th></tr></thead><tbody><tr style="overflow-wrap:break-word;"><td class="cl-e7c1d1b0"><p class="cl-e7c1be50"><span class="cl-e7beea72">0.50000000</span></p></td><td class="cl-e7c1d1b0"><p class="cl-e7c1be50"><span class="cl-e7beea72">50.00000</span></p></td><td class="cl-e7c1d1b0"><p class="cl-e7c1be50"><span class="cl-e7beea72">0.7266868</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-e7c1d1b0"><p class="cl-e7c1be50"><span class="cl-e7beea72">0.36321747</span></p></td><td class="cl-e7c1d1b0"><p class="cl-e7c1be50"><span class="cl-e7beea72">63.67825</span></p></td><td class="cl-e7c1d1b0"><p class="cl-e7c1be50"><span class="cl-e7beea72">1.0000000</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-e7c1d1b0"><p class="cl-e7c1be50"><span class="cl-e7beea72">0.20000000</span></p></td><td class="cl-e7c1d1b0"><p class="cl-e7c1be50"><span class="cl-e7beea72">80.00000</span></p></td><td class="cl-e7c1d1b0"><p class="cl-e7c1be50"><span class="cl-e7beea72">1.4758840</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-e7c1d1b0"><p class="cl-e7c1be50"><span class="cl-e7beea72">0.10193948</span></p></td><td class="cl-e7c1d1b0"><p class="cl-e7c1be50"><span class="cl-e7beea72">89.80605</span></p></td><td class="cl-e7c1d1b0"><p class="cl-e7c1be50"><span class="cl-e7beea72">2.0000000</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-e7c1d1b0"><p class="cl-e7c1be50"><span class="cl-e7beea72">0.10000000</span></p></td><td class="cl-e7c1d1b0"><p class="cl-e7c1be50"><span class="cl-e7beea72">90.00000</span></p></td><td class="cl-e7c1d1b0"><p class="cl-e7c1be50"><span class="cl-e7beea72">2.0150484</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-e7c1d1b0"><p class="cl-e7c1be50"><span class="cl-e7beea72">0.05000000</span></p></td><td class="cl-e7c1d1b0"><p class="cl-e7c1be50"><span class="cl-e7beea72">95.00000</span></p></td><td class="cl-e7c1d1b0"><p class="cl-e7c1be50"><span class="cl-e7beea72">2.5705818</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-e7c1d1b0"><p class="cl-e7c1be50"><span class="cl-e7beea72">0.03009925</span></p></td><td class="cl-e7c1d1b0"><p class="cl-e7c1be50"><span class="cl-e7beea72">96.99008</span></p></td><td class="cl-e7c1d1b0"><p class="cl-e7c1be50"><span class="cl-e7beea72">3.0000000</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-e7c1d1b0"><p class="cl-e7c1be50"><span class="cl-e7beea72">0.02500000</span></p></td><td class="cl-e7c1d1b0"><p class="cl-e7c1be50"><span class="cl-e7beea72">97.50000</span></p></td><td class="cl-e7c1d1b0"><p class="cl-e7c1be50"><span class="cl-e7beea72">3.1633814</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-e7c1d1b1"><p class="cl-e7c1be50"><span class="cl-e7beea72">0.01032342</span></p></td><td class="cl-e7c1d1b1"><p class="cl-e7c1be50"><span class="cl-e7beea72">98.96766</span></p></td><td class="cl-e7c1d1b1"><p class="cl-e7c1be50"><span class="cl-e7beea72">4.0000000</span></p></td></tr></tbody></table></div>
 </div>
 </div>
 </div>
@@ -662,17 +645,17 @@ t_{\overline{x}} = \frac{\overline{x} - x_0}{s.e.} = \frac{\overline{x} - x_0}{s
 <div id="fig-tdist-experiments" class="quarto-figure quarto-figure-center anchored">
 <figure class="figure">
 <p><img src="ttest_files/figure-html/fig-tdist-experiments-1.png" class="img-fluid figure-img" width="576"></p>
-<p></p><figcaption class="figure-caption">Figure&nbsp;7: 母分散が未知のときの結果</figcaption><p></p>
+<figcaption class="figure-caption">Figure&nbsp;7: 母分散が未知のときの結果</figcaption>
 </figure>
 </div>
 </div>
 </div>
-<div class="callout-note callout callout-style-default callout-captioned">
+<div class="callout callout-style-default callout-note callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
-<div class="callout-caption-container flex-fill">
+<div class="callout-title-container flex-fill">
 Note
 </div>
 </div>
@@ -693,7 +676,7 @@ Note
 <div id="fig-tdist-zeros2" class="quarto-figure quarto-figure-center anchored">
 <figure class="figure">
 <p><img src="ttest_files/figure-html/fig-tdist-zeros2-1.png" class="img-fluid figure-img" width="576"></p>
-<p></p><figcaption class="figure-caption">Figure&nbsp;8: 信頼区間にゼロが含まれる回数</figcaption><p></p>
+<figcaption class="figure-caption">Figure&nbsp;8: 信頼区間にゼロが含まれる回数</figcaption>
 </figure>
 </div>
 </div>
@@ -712,7 +695,7 @@ Note
 <div id="fig-paired-ttest" class="quarto-figure quarto-figure-center anchored">
 <figure class="figure">
 <p><img src="ttest_files/figure-html/fig-paired-ttest-1.png" class="img-fluid figure-img" width="576"></p>
-<p></p><figcaption class="figure-caption">Figure&nbsp;9: 対応ありの t 検定</figcaption><p></p>
+<figcaption class="figure-caption">Figure&nbsp;9: 対応ありの t 検定</figcaption>
 </figure>
 </div>
 </div>
@@ -726,7 +709,7 @@ Note
 <div id="fig-welch-ttest" class="quarto-figure quarto-figure-center anchored">
 <figure class="figure">
 <p><img src="ttest_files/figure-html/fig-welch-ttest-1.png" class="img-fluid figure-img" width="576"></p>
-<p></p><figcaption class="figure-caption">Figure&nbsp;10: 分散が異なる t 検定（ウェルチの t 検定ともよびます）</figcaption><p></p>
+<figcaption class="figure-caption">Figure&nbsp;10: 分散が異なる t 検定（ウェルチの t 検定ともよびます）</figcaption>
 </figure>
 </div>
 </div>
@@ -779,9 +762,6 @@ s_p = \sqrt{
 <div class="grid">
 <div class="g-col-6">
 <p><strong>対応ありの t 検定</strong></p>
-<div class="cell">
-
-</div>
 <p><span class="math display">
 \begin{aligned}
 t^* &amp;= \frac{\overline{x}_{A-B} - \mu}{s_{A-B} / \sqrt{n}} \\
@@ -834,17 +814,17 @@ t^* &amp;= -2.16 \\
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
 <p><img src="ttest_files/figure-html/behavior01-1.png" class="img-fluid figure-img" width="672"></p>
-<p></p><figcaption class="figure-caption">分散等しい t 検定の場合、サンプル数が増えると第 2 種の誤りは減少し、検出力は増加します。第 1 種の誤りは変わりません。</figcaption><p></p>
+<figcaption class="figure-caption">分散等しい t 検定の場合、サンプル数が増えると第 2 種の誤りは減少し、検出力は増加します。第 1 種の誤りは変わりません。</figcaption>
 </figure>
 </div>
 </div>
 </div>
-<div class="callout-note callout callout-style-default callout-captioned">
+<div class="callout callout-style-default callout-note callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
-<div class="callout-caption-container flex-fill">
+<div class="callout-title-container flex-fill">
 Note
 </div>
 </div>
@@ -860,17 +840,17 @@ Note
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
 <p><img src="ttest_files/figure-html/behavior02-1.png" class="img-fluid figure-img" width="672"></p>
-<p></p><figcaption class="figure-caption">分散が異なる t 検定の場合、第 2 種の誤りと検出力の動きは分散が等しい t 検定と似ていますが、標本数も強く影響します。</figcaption><p></p>
+<figcaption class="figure-caption">分散が異なる t 検定の場合、第 2 種の誤りと検出力の動きは分散が等しい t 検定と似ていますが、標本数も強く影響します。</figcaption>
 </figure>
 </div>
 </div>
 </div>
-<div class="callout-note callout callout-style-default callout-captioned">
+<div class="callout callout-style-default callout-note callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
-<div class="callout-caption-container flex-fill">
+<div class="callout-title-container flex-fill">
 Note
 </div>
 </div>
@@ -947,9 +927,6 @@ Attaching package: 'lubridate'</code></pre>
 <section id="データの準備" class="level2">
 <h2 class="anchored" data-anchor-id="データの準備">データの準備</h2>
 <p>データは CSV (Comma Separated Value; コンマ区切り) ファイルに保存しています。 ファイルの内容は次の通りです。 最初の 3 行にはファイルの説明があります。</p>
-<div class="cell">
-
-</div>
 <div class="cell">
 <div class="cell-output cell-output-stdout">
 <pre><code># 6 Sargassum macrocarpum individuals from 2 sites were measured.
@@ -1106,9 +1083,6 @@ mean in group A mean in group B
 <pre><code>[1] 0.003022351</code></pre>
 </div>
 </div>
-<div class="cell">
-
-</div>
 </section>
 <section id="結果" class="level2">
 <h2 class="anchored" data-anchor-id="結果">結果</h2>
@@ -1181,9 +1155,6 @@ factor.</code></pre>
 data:  dset$size
 W = 0.97575, p-value = 0.9608</code></pre>
 </div>
-</div>
-<div class="cell">
-
 </div>
 <p>シャピロウィルク検定の統計量は W値です。 W =0.98、 P = ので、 帰無仮説を棄却しません。 正規性に従わないといえません。</p>
 <p><strong>一般的な手順のコード</strong></p>
@@ -1265,9 +1236,23 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     icon: icon
   };
   anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
   const clipboard = new window.ClipboardJS('.code-copy-button', {
-    target: function(trigger) {
-      return trigger.previousElementSibling;
+    text: function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
     }
   });
   clipboard.on('success', function(e) {
@@ -1332,6 +1317,92 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       return note.innerHTML;
     });
   }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
   const findCites = (el) => {
     const parentEl = el.parentElement;
     if (parentEl) {

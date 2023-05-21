@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.2.475">
+<meta name="generator" content="quarto-1.3.353">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -17,9 +17,10 @@ div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
 ul.task-list{list-style: none;}
 ul.task-list li input[type="checkbox"] {
   width: 0.8em;
-  margin: 0 0.8em 0.2em -1.6em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
+/* CSS for syntax highlighting */
 pre > code.sourceCode { white-space: pre; position: relative; }
 pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
 pre > code.sourceCode > span:empty { height: 1.2em; }
@@ -46,43 +47,13 @@ pre.numberSource code > span > a:first-child::before
     -khtml-user-select: none; -moz-user-select: none;
     -ms-user-select: none; user-select: none;
     padding: 0 4px; width: 4em;
-    color: #aaaaaa;
   }
-pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
 div.sourceCode
   {   }
 @media screen {
 pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
 }
-code span.al { color: #ff0000; font-weight: bold; } /* Alert */
-code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
-code span.at { color: #7d9029; } /* Attribute */
-code span.bn { color: #40a070; } /* BaseN */
-code span.bu { color: #008000; } /* BuiltIn */
-code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
-code span.ch { color: #4070a0; } /* Char */
-code span.cn { color: #880000; } /* Constant */
-code span.co { color: #60a0b0; font-style: italic; } /* Comment */
-code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
-code span.do { color: #ba2121; font-style: italic; } /* Documentation */
-code span.dt { color: #902000; } /* DataType */
-code span.dv { color: #40a070; } /* DecVal */
-code span.er { color: #ff0000; font-weight: bold; } /* Error */
-code span.ex { } /* Extension */
-code span.fl { color: #40a070; } /* Float */
-code span.fu { color: #06287e; } /* Function */
-code span.im { color: #008000; font-weight: bold; } /* Import */
-code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
-code span.kw { color: #007020; font-weight: bold; } /* Keyword */
-code span.op { color: #666666; } /* Operator */
-code span.ot { color: #007020; } /* Other */
-code span.pp { color: #bc7a00; } /* Preprocessor */
-code span.sc { color: #4070a0; } /* SpecialChar */
-code span.ss { color: #bb6688; } /* SpecialString */
-code span.st { color: #4070a0; } /* String */
-code span.va { color: #19177c; } /* Variable */
-code span.vs { color: #4070a0; } /* VerbatimString */
-code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
 </style>
 
 
@@ -149,11 +120,16 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 
 <div id="quarto-search-results"></div>
   <header id="quarto-header" class="headroom fixed-top">
-  <nav class="quarto-secondary-nav" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
-    <div class="container-fluid d-flex justify-content-between">
-      <h1 class="quarto-secondary-nav-title">一元配置分散分析</h1>
-      <button type="button" class="quarto-btn-toggle btn" aria-label="Show secondary navigation">
-        <i class="bi bi-chevron-right"></i>
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+      <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./linearmodels.html">Linear models</a></li><li class="breadcrumb-item"><a href="./anova.html">一元配置分散分析</a></li></ol></nav>
+      <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+      </a>
+      <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
       </button>
     </div>
   </nav>
@@ -161,140 +137,160 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <!-- content -->
 <div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
 <!-- sidebar -->
-  <nav id="quarto-sidebar" class="sidebar collapse sidebar-navigation docked overflow-auto">
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal sidebar-navigation docked overflow-auto">
     <div class="pt-lg-2 mt-2 text-left sidebar-header">
     <div class="sidebar-title mb-0 py-0">
       <a href="./">データ解析（研究室用）</a> 
     </div>
       </div>
-      <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="mt-2 flex-shrink-0 align-items-center">
         <div class="sidebar-search">
         <div id="quarto-search" class="" title="Search"></div>
         </div>
-      </div>
+        </div>
     <div class="sidebar-menu-container"> 
     <ul class="list-unstyled mt-1">
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-expanded="true">Introduction</a>
-          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-expanded="true">
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-expanded="true">
+ <span class="menu-text">Introduction</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-expanded="true" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
       <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./index.html" class="sidebar-item-text sidebar-link">研究室と講義の R コード</a>
+  <a href="./index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">研究室と講義の R コード</span></a>
   </div>
 </li>
       </ul>
   </li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-expanded="true">Rの基礎</a>
-          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-expanded="true">
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-expanded="true">
+ <span class="menu-text">Rの基礎</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-expanded="true" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
       <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 show">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./part01.html" class="sidebar-item-text sidebar-link">R の基本操作</a>
+  <a href="./part01.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">R の基本操作</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./part02.html" class="sidebar-item-text sidebar-link">R 関数の基本</a>
+  <a href="./part02.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">R 関数の基本</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./part03.html" class="sidebar-item-text sidebar-link">Tidyverse</a>
+  <a href="./part03.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Tidyverse</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./part04.html" class="sidebar-item-text sidebar-link">データの操作</a>
+  <a href="./part04.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">データの操作</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./part05.html" class="sidebar-item-text sidebar-link">ggplot の図</a>
+  <a href="./part05.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">ggplot の図</span></a>
   </div>
 </li>
       </ul>
   </li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" aria-expanded="true">Linear models</a>
-          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" aria-expanded="true">
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" aria-expanded="true">
+ <span class="menu-text">Linear models</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" aria-expanded="true" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
       <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 show">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./linearmodels.html" class="sidebar-item-text sidebar-link">ノンパラメトリック法</a>
+  <a href="./linearmodels.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">ノンパラメトリック法</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./ttest.html" class="sidebar-item-text sidebar-link">2群の比較：t 検定</a>
+  <a href="./ttest.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">2群の比較：t 検定</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./anova.html" class="sidebar-item-text sidebar-link active">一元配置分散分析</a>
+  <a href="./anova.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text">一元配置分散分析</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./anova2.html" class="sidebar-item-text sidebar-link">多数群の比較：二元配置分散分析</a>
+  <a href="./anova2.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">多数群の比較：二元配置分散分析</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./glm.html" class="sidebar-item-text sidebar-link">線形モデル</a>
+  <a href="./glm.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">線形モデル</span></a>
   </div>
 </li>
       </ul>
   </li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" aria-expanded="true">Multivariate</a>
-          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" aria-expanded="true">
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" aria-expanded="true">
+ <span class="menu-text">Multivariate</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" aria-expanded="true" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
       <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth1 show">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./pca.html" class="sidebar-item-text sidebar-link">Principal Component Analysis</a>
+  <a href="./pca.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Principal Component Analysis</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./rda.html" class="sidebar-item-text sidebar-link">Redundancy Analysis</a>
+  <a href="./rda.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Redundancy Analysis</span></a>
   </div>
 </li>
       </ul>
   </li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" aria-expanded="true">基礎統計学用スライド</a>
-          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" aria-expanded="true">
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" aria-expanded="true">
+ <span class="menu-text">基礎統計学用スライド</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" aria-expanded="true" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
       <ul id="quarto-sidebar-section-5" class="collapse list-unstyled sidebar-section depth1 show">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./sakuma-drops.html" class="sidebar-item-text sidebar-link">データの可視化と記述統計量</a>
+  <a href="./sakuma-drops.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">データの可視化と記述統計量</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./nhst-slide.html" class="sidebar-item-text sidebar-link">Law of large numbers, the central limit theorem, and null hypothesis significance testing</a>
+  <a href="./nhst-slide.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">大数の法則と中心極限定理</span></a>
   </div>
 </li>
       </ul>
@@ -302,6 +298,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
     </ul>
     </div>
 </nav>
+<div id="quarto-sidebar-glass" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass"></div>
 <!-- margin-sidebar -->
     <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
         <nav id="TOC" role="doc-toc" class="toc-active">
@@ -357,7 +354,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title d-none d-lg-block">一元配置分散分析</h1>
+<h1 class="title">一元配置分散分析</h1>
 <p class="subtitle lead">Comparing multiple groups with ANOVA</p>
 </div>
 
@@ -373,15 +370,12 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 
 </header>
 
-<div class="cell" data-warnings="false">
-
-</div>
-<div class="callout-note callout callout-style-default callout-captioned">
+<div class="callout callout-style-default callout-note callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
-<div class="callout-caption-container flex-fill">
+<div class="callout-title-container flex-fill">
 Note
 </div>
 </div>
@@ -413,75 +407,76 @@ Note
 <h2 class="anchored" data-anchor-id="ノコギリモク-sargassum-macrocarpum-の疑似データ">ノコギリモク (<em>Sargassum macrocarpum</em>) の疑似データ</h2>
 <div class="grid">
 <div class="g-col-4">
-<div class="cell" data-hash="anova_cache/html/juvenile-sargassum-figure_3a78b6ea7286e06c5539cdc163a125fb">
 
-</div>
 </div>
 <div class="g-col-8">
 <div class="cell">
 <div class="cell-output-display">
 <div id="tbl-juvenile-dataset" class="anchored">
-
-<table class="table table-striped table-hover table-condensed table-responsive" style="margin-left: auto; margin-right: auto;"><caption>Table&nbsp;1:  Size (mm) of juvenile Sargassum macrocarpum（ノコギリモク）. </caption>
- <thead>
-  <tr>
-   <th style="text-align:right;"> Sample </th>
-   <th style="text-align:right;"> Site A </th>
-   <th style="text-align:right;"> Site B </th>
-   <th style="text-align:right;"> Site C </th>
-  </tr>
- </thead>
+<div class="table-responsive">
+<table class="table table-striped table-hover table-condensed table-sm small" data-quarto-postprocess="true">
+<caption>Table&nbsp;1: Size (mm) of juvenile Sargassum macrocarpum（ノコギリモク）.</caption>
+<thead>
+<tr class="header">
+<th style="text-align: right;" data-quarto-table-cell-role="th">Sample</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Site A</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Site B</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Site C</th>
+</tr>
+</thead>
 <tbody>
-  <tr>
-   <td style="text-align:right;"> 1 </td>
-   <td style="text-align:right;"> 19.9 </td>
-   <td style="text-align:right;"> 22.3 </td>
-   <td style="text-align:right;"> 18.2 </td>
-  </tr>
-  <tr>
-   <td style="text-align:right;"> 2 </td>
-   <td style="text-align:right;"> 20.6 </td>
-   <td style="text-align:right;"> 22.9 </td>
-   <td style="text-align:right;"> 19.5 </td>
-  </tr>
-  <tr>
-   <td style="text-align:right;"> 3 </td>
-   <td style="text-align:right;"> 20.3 </td>
-   <td style="text-align:right;"> 22.0 </td>
-   <td style="text-align:right;"> 19.6 </td>
-  </tr>
-  <tr>
-   <td style="text-align:right;"> 4 </td>
-   <td style="text-align:right;"> 20.4 </td>
-   <td style="text-align:right;"> 23.7 </td>
-   <td style="text-align:right;"> 16.2 </td>
-  </tr>
-  <tr>
-   <td style="text-align:right;"> 5 </td>
-   <td style="text-align:right;"> 20.9 </td>
-   <td style="text-align:right;"> 20.9 </td>
-   <td style="text-align:right;"> 19.6 </td>
-  </tr>
-  <tr>
-   <td style="text-align:right;"> 6 </td>
-   <td style="text-align:right;"> 18.1 </td>
-   <td style="text-align:right;"> 21.7 </td>
-   <td style="text-align:right;"> 18.1 </td>
-  </tr>
+<tr class="odd">
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">19.9</td>
+<td style="text-align: right;">22.3</td>
+<td style="text-align: right;">18.2</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">20.6</td>
+<td style="text-align: right;">22.9</td>
+<td style="text-align: right;">19.5</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">3</td>
+<td style="text-align: right;">20.3</td>
+<td style="text-align: right;">22.0</td>
+<td style="text-align: right;">19.6</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">4</td>
+<td style="text-align: right;">20.4</td>
+<td style="text-align: right;">23.7</td>
+<td style="text-align: right;">16.2</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">5</td>
+<td style="text-align: right;">20.9</td>
+<td style="text-align: right;">20.9</td>
+<td style="text-align: right;">19.6</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">6</td>
+<td style="text-align: right;">18.1</td>
+<td style="text-align: right;">21.7</td>
+<td style="text-align: right;">18.1</td>
+</tr>
 </tbody>
 </table>
+</div>
+</div>
+
 
 </div>
 </div>
 </div>
 </div>
-</div>
-<div class="callout-note callout callout-style-default callout-captioned">
+<div class="callout callout-style-default callout-note callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
-<div class="callout-caption-container flex-fill">
+<div class="callout-title-container flex-fill">
 Note
 </div>
 </div>
@@ -514,12 +509,12 @@ Note
 </section>
 <section id="hypothesis" class="level2">
 <h2 class="anchored" data-anchor-id="hypothesis">仮説を決める</h2>
-<div class="callout-important callout callout-style-default callout-captioned">
+<div class="callout callout-style-default callout-important callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
-<div class="callout-caption-container flex-fill">
+<div class="callout-title-container flex-fill">
 Important
 </div>
 </div>
@@ -527,12 +522,12 @@ Important
 <p>解析する前に作業仮説、帰無仮説、対立仮説を設定する必要があります。</p>
 </div>
 </div>
-<div class="callout-note callout callout-style-simple callout-captioned">
+<div class="callout callout-style-simple callout-note callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
-<div class="callout-caption-container flex-fill">
+<div class="callout-title-container flex-fill">
 Working hypothesis
 </div>
 </div>
@@ -633,51 +628,54 @@ mean in group B mean in group C
 <div class="cell">
 <div class="cell-output-display">
 <div id="tbl-three-t-tests" class="anchored">
-
-<table class="table table-striped table-hover table-condensed table-responsive" style="margin-left: auto; margin-right: auto;"><caption>Table&nbsp;2:  Summary of three t-tests. </caption>
- <thead>
-  <tr>
-   <th style="text-align:left;"> Pair </th>
-   <th style="text-align:right;"> Difference </th>
-   <th style="text-align:right;"> t-value </th>
-   <th style="text-align:right;"> P-value </th>
-   <th style="text-align:right;"> d.f. </th>
-   <th style="text-align:left;"> 95% CI </th>
-   <th style="text-align:left;"> Is P ≤ 0.05? </th>
-  </tr>
- </thead>
+<div class="table-responsive">
+<table class="table table-striped table-hover table-condensed table-sm small" data-quarto-postprocess="true">
+<caption>Table&nbsp;2: Summary of three t-tests.</caption>
+<thead>
+<tr class="header">
+<th style="text-align: left;" data-quarto-table-cell-role="th">Pair</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Difference</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">t-value</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">P-value</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">d.f.</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">95% CI</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">Is P ≤ 0.05?</th>
+</tr>
+</thead>
 <tbody>
-  <tr>
-   <td style="text-align:left;"> B-A </td>
-   <td style="text-align:right;"> -2.216667 </td>
-   <td style="text-align:right;"> -3.888623 </td>
-   <td style="text-align:right;"> 0.0030224 </td>
-   <td style="text-align:right;"> 9.989348 </td>
-   <td style="text-align:left;"> -3.487 to -0.95 </td>
-   <td style="text-align:left;"> Yes </td>
-  </tr>
-  <tr>
-   <td style="text-align:left;"> C-A </td>
-   <td style="text-align:right;"> 1.500000 </td>
-   <td style="text-align:right;"> 2.196821 </td>
-   <td style="text-align:right;"> 0.0547748 </td>
-   <td style="text-align:right;"> 9.271711 </td>
-   <td style="text-align:left;"> -0.038 to  3.04 </td>
-   <td style="text-align:left;"> No </td>
-  </tr>
-  <tr>
-   <td style="text-align:left;"> C-B </td>
-   <td style="text-align:right;"> 3.716667 </td>
-   <td style="text-align:right;"> 5.506257 </td>
-   <td style="text-align:right;"> 0.0003595 </td>
-   <td style="text-align:right;"> 9.122821 </td>
-   <td style="text-align:left;"> 2.193 to  5.24 </td>
-   <td style="text-align:left;"> Yes </td>
-  </tr>
+<tr class="odd">
+<td style="text-align: left;">B-A</td>
+<td style="text-align: right;">-2.216667</td>
+<td style="text-align: right;">-3.888623</td>
+<td style="text-align: right;">0.0030224</td>
+<td style="text-align: right;">9.989348</td>
+<td style="text-align: left;">-3.487 to -0.95</td>
+<td style="text-align: left;">Yes</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">C-A</td>
+<td style="text-align: right;">1.500000</td>
+<td style="text-align: right;">2.196821</td>
+<td style="text-align: right;">0.0547748</td>
+<td style="text-align: right;">9.271711</td>
+<td style="text-align: left;">-0.038 to 3.04</td>
+<td style="text-align: left;">No</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">C-B</td>
+<td style="text-align: right;">3.716667</td>
+<td style="text-align: right;">5.506257</td>
+<td style="text-align: right;">0.0003595</td>
+<td style="text-align: right;">9.122821</td>
+<td style="text-align: left;">2.193 to 5.24</td>
+<td style="text-align: left;">Yes</td>
+</tr>
 </tbody>
 </table>
-
 </div>
+</div>
+
+
 </div>
 </div>
 <div class="page-columns page-full"><p>d.f. は Welch-Satterthwaite 式で求めた自由度<a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a>、95% CI は 95% 信頼区間です。</p><div class="no-row-height column-margin column-container"><li id="fn1"><p><sup>1</sup>&nbsp;degrees-of-freedom</p></li></div></div>
@@ -685,12 +683,12 @@ mean in group B mean in group C
 </section>
 <section id="第１種の誤り-accepting-a-false-h0" class="level2">
 <h2 class="anchored" data-anchor-id="第１種の誤り-accepting-a-false-h0">第１種の誤り (accepting a false H<sub>0</sub>)</h2>
-<div class="callout-note callout callout-style-default callout-captioned">
+<div class="callout callout-style-default callout-note callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
-<div class="callout-caption-container flex-fill">
+<div class="callout-title-container flex-fill">
 第１種の誤り
 </div>
 </div>
@@ -725,12 +723,12 @@ h = \binom{n}{2}=\frac{n!}{2!(n-2!)} = \frac{n(n-1)}{2}
 <p><span class="math display">
 1 - (1-0.05)^{10}=0.4012631
 </span></p>
-<div class="callout-note callout callout-style-default callout-captioned">
+<div class="callout callout-style-default callout-note callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
-<div class="callout-caption-container flex-fill">
+<div class="callout-title-container flex-fill">
 R での求め方
 </div>
 </div>
@@ -756,7 +754,7 @@ R での求め方
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
 <p><img src="anova_files/figure-html/unnamed-chunk-11-1.png" class="img-fluid figure-img" width="672"></p>
-<p></p><figcaption class="figure-caption">比較する群が増えると、t 検定を繰り返して実施すると、第１種の誤りを起こしやすい。</figcaption><p></p>
+<figcaption class="figure-caption">比較する群が増えると、t 検定を繰り返して実施すると、第１種の誤りを起こしやすい。</figcaption>
 </figure>
 </div>
 </div>
@@ -787,45 +785,47 @@ x_{ij} = \mu_i + \epsilon_{ij}
 <h2 class="anchored" data-anchor-id="一元配置分散分析表">一元配置分散分析表</h2>
 <div class="cell">
 <div class="cell-output-display">
-
-<table class="table table-striped table-hover table-condensed table-responsive" style="margin-left: auto; margin-right: auto;">
- <thead>
-  <tr>
-   <th style="text-align:left;"> Factor </th>
-   <th style="text-align:left;"> Degrees-of-freedom (df) </th>
-   <th style="text-align:left;"> Sum-of-Squares (SS) </th>
-   <th style="text-align:left;"> Mean-square (MS) </th>
-   <th style="text-align:left;"> F-value </th>
-   <th style="text-align:left;"> P-value </th>
-  </tr>
- </thead>
+<div class="table-responsive">
+<table class="table table-striped table-hover table-condensed table-sm small" data-quarto-postprocess="true">
+<thead>
+<tr class="header">
+<th style="text-align: left;" data-quarto-table-cell-role="th">Factor</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">Degrees-of-freedom (df)</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">Sum-of-Squares (SS)</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">Mean-square (MS)</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">F-value</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">P-value</th>
+</tr>
+</thead>
 <tbody>
-  <tr>
-   <td style="text-align:left;"> A </td>
-   <td style="text-align:left;"> $df_A = I-1$ </td>
-   <td style="text-align:left;"> $SS_A$ </td>
-   <td style="text-align:left;"> $MS_A = SS_A / df_A$ </td>
-   <td style="text-align:left;"> $MS_A / MS_R$ </td>
-   <td style="text-align:left;"> $qf(1-α, df_A, df_R)$ </td>
-  </tr>
-  <tr>
-   <td style="text-align:left;"> e </td>
-   <td style="text-align:left;"> $df_R = I(J-1)$ </td>
-   <td style="text-align:left;"> $SS_R$ </td>
-   <td style="text-align:left;"> $MS_R = SS_R / df_R$ </td>
-   <td style="text-align:left;">  </td>
-   <td style="text-align:left;">  </td>
-  </tr>
-  <tr>
-   <td style="text-align:left;">  </td>
-   <td style="text-align:left;"> $df_T =IJ-1$ </td>
-   <td style="text-align:left;"> $SS_T$ </td>
-   <td style="text-align:left;">  </td>
-   <td style="text-align:left;">  </td>
-   <td style="text-align:left;">  </td>
-  </tr>
+<tr class="odd">
+<td style="text-align: left;">A</td>
+<td style="text-align: left;">$df_A = I-1$</td>
+<td style="text-align: left;">$SS_A$</td>
+<td style="text-align: left;">$MS_A = SS_A / df_A$</td>
+<td style="text-align: left;">$MS_A / MS_R$</td>
+<td style="text-align: left;">$qf(1-α, df_A, df_R)$</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">e</td>
+<td style="text-align: left;">$df_R = I(J-1)$</td>
+<td style="text-align: left;">$SS_R$</td>
+<td style="text-align: left;">$MS_R = SS_R / df_R$</td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;"></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"></td>
+<td style="text-align: left;">$df_T =IJ-1$</td>
+<td style="text-align: left;">$SS_T$</td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;"></td>
+</tr>
 </tbody>
 </table>
+</div>
+
 
 </div>
 </div>
@@ -853,16 +853,13 @@ x_{ij} = \mu_i + \epsilon_{ij}
 </section>
 <section id="decomposing-the-sum-of-squares" class="level2">
 <h2 class="anchored" data-anchor-id="decomposing-the-sum-of-squares">Decomposing the sum-of-squares</h2>
-<div class="cell">
-
-</div>
 <div class="cell quarto-layout-panel">
 <div class="quarto-layout-row quarto-layout-valign-top">
 <div class="cell-output-display quarto-layout-cell" style="flex-basis: 50.0%;justify-content: center;">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
 <p><img src="anova_files/figure-html/unnamed-chunk-14-1.png" class="img-fluid figure-img" width="672"></p>
-<p></p><figcaption class="figure-caption">残渣平方和：各サンプルの値は点、グループ毎の平均値は黒線で示しています。黒線から点の縦線は残渣を表しています。</figcaption><p></p>
+<figcaption class="figure-caption">残渣平方和：各サンプルの値は点、グループ毎の平均値は黒線で示しています。黒線から点の縦線は残渣を表しています。</figcaption>
 </figure>
 </div>
 </div>
@@ -870,7 +867,7 @@ x_{ij} = \mu_i + \epsilon_{ij}
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
 <p><img src="anova_files/figure-html/unnamed-chunk-14-2.png" class="img-fluid figure-img" width="672"></p>
-<p></p><figcaption class="figure-caption">水準間平方和：各グループの平均値は点、総平均は黒線で示しています。黒線から点の縦線はグループ毎の平均値と総平均の違いを表しています。</figcaption><p></p>
+<figcaption class="figure-caption">水準間平方和：各グループの平均値は点、総平均は黒線で示しています。黒線から点の縦線はグループ毎の平均値と総平均の違いを表しています。</figcaption>
 </figure>
 </div>
 </div>
@@ -883,12 +880,12 @@ x_{ij} = \mu_i + \epsilon_{ij}
 F = \left . \frac{SS_A}{I-1} \right / \frac{SS_R}{I(J-1)}  = \frac{SS_A}{SS_R} \frac{I(J-1)}{I-1} = \frac{MS_A}{MS_R}
 </span></p>
 <p>F値は 自由度 <span class="math inline">\text{df}_1 = I-1, \text{df}_2 = I(J-1)</span> のF分布に従います。 水準の数は <span class="math inline">I</span>、水準ごとのサンプルの数は <span class="math inline">J</span> です。</p>
-<div class="callout-note callout callout-style-default callout-captioned page-columns page-full">
+<div class="callout callout-style-default callout-note callout-titled page-columns page-full">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
-<div class="callout-caption-container flex-fill">
+<div class="callout-title-container flex-fill">
 Note
 </div>
 </div>
@@ -910,7 +907,7 @@ P(x|\text{df}_1, \text{df}_2) = \frac{1}{\mathrm{B}\left(\frac{\text{df}_1}{2}, 
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
 <p><img src="anova_files/figure-html/unnamed-chunk-15-1.png" class="img-fluid figure-img" width="672"></p>
-<p></p><figcaption class="figure-caption">自由度が変わるとF分布の形が変わります。</figcaption><p></p>
+<figcaption class="figure-caption">自由度が変わるとF分布の形が変わります。</figcaption>
 </figure>
 </div>
 </div>
@@ -930,9 +927,6 @@ P(x|\text{df}_1, \text{df}_2) = \frac{1}{\mathrm{B}\left(\frac{\text{df}_1}{2}, 
 <section id="rにおける解析" class="level2">
 <h2 class="anchored" data-anchor-id="rにおける解析">Rにおける解析</h2>
 <p>解析例に使うデータは <code>thedata.csv</code> に保存したので、まずは読み込みます。</p>
-<div class="cell">
-
-</div>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Read data from a csv file</span></span>
 <span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>dset <span class="ot">=</span> <span class="fu">read_csv</span>(<span class="st">"thedata.csv"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -979,9 +973,6 @@ Model 2: obs ~ site
 Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
 </div>
 </div>
-<div class="cell">
-
-</div>
 <p>F値は 16.825、自由度は df<sub>1</sub> = 2 と df<sub>2</sub> = 15 です。 よって、P値は 0.000147 です。 有意水準が <span class="math inline">\alpha = 0.05</span> 、自由度が　(2, 15) のときのF値は 3.682.</p>
 <p><strong>フルモデルの結果でけ用いた解析</strong></p>
 <div class="cell">
@@ -1010,12 +1001,12 @@ Residuals   15  18.70   1.247
 Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
 </div>
 </div>
-<div class="callout-important callout callout-style-default callout-captioned">
+<div class="callout callout-style-default callout-important callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
-<div class="callout-caption-container flex-fill">
+<div class="callout-title-container flex-fill">
 Important
 </div>
 </div>
@@ -1136,12 +1127,12 @@ P value adjustment: holm method for 3 tests </code></pre>
 </div>
 </div>
 <p>P値は低い値から高い値へ並べ替えてから、<span class="math inline">p_{adj} = (m+1-k)\times p</span> によって求めます。 <span class="math inline">m</span> は比較の数、 <span class="math inline">k</span> は比較の指数です。</p>
-<div class="callout-note callout callout-style-default callout-captioned">
+<div class="callout callout-style-default callout-note callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
-<div class="callout-caption-container flex-fill">
+<div class="callout-title-container flex-fill">
 Note
 </div>
 </div>
@@ -1260,9 +1251,23 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     icon: icon
   };
   anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
   const clipboard = new window.ClipboardJS('.code-copy-button', {
-    target: function(trigger) {
-      return trigger.previousElementSibling;
+    text: function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
     }
   });
   clipboard.on('success', function(e) {
@@ -1327,6 +1332,92 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       return note.innerHTML;
     });
   }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
   const findCites = (el) => {
     const parentEl = el.parentElement;
     if (parentEl) {
