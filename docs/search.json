@@ -1708,6 +1708,223 @@
     "text": "Amerhein et al. 2019. Nature 567: 305-307\n\n\n\nLet’s be clear about what must stop: we should never conclude there is ‘no difference’ or ‘no association’ just because a P-value is larger than a threshold such as 0.05 or, equivalently, because a confidense interval includes zero. –Amerhein et al. 2019"
   },
   {
+    "objectID": "ttest-slides.html#a-juvenile-sargassum-macrocarpum",
+    "href": "ttest-slides.html#a-juvenile-sargassum-macrocarpum",
+    "title": "Comparing two groups",
+    "section": "A juvenile Sargassum macrocarpum",
+    "text": "A juvenile Sargassum macrocarpum"
+  },
+  {
+    "objectID": "ttest-slides.html#a-random-sample",
+    "href": "ttest-slides.html#a-random-sample",
+    "title": "Comparing two groups",
+    "section": "A random sample",
+    "text": "A random sample\n\n\n\n\n Table 1:  Size (mm) of juvenile Sargassum\nmacrocarpum（ノコギリモク）. \n  \n\n\n\n\n\nThe table shows two groups of 6 juvenile Sargassum macrocarpum (ノコギリモク) that were sampled randomly. The two groups of juveniles are from two sites, A and B.\nEach sample is given an sample I.D. of 1 to 6.\nThese data were generated with the R function with a true mean (\\(\\mu\\)) of 20 and 22 for site A and B, respectively. The true standard deviation (\\(\\sigma\\)) is 1 and 1 for site A and B, respectively."
+  },
+  {
+    "objectID": "ttest-slides.html#lets-compare-the-two-groups",
+    "href": "ttest-slides.html#lets-compare-the-two-groups",
+    "title": "Comparing two groups",
+    "section": "Let’s compare the two groups",
+    "text": "Let’s compare the two groups\n\n\n\n\n\n\n\n\nThe mean (\\(\\overline{x}\\)), standard deviation (\\(s\\)), and the standard error (s.e.) for juvenile S. macrocarpum from site A and B are:\n\n\\(\\overline{x}_A=\\) 20.033, \\(s_A=\\) 1.003, and s.e. = 0.41\n\\(\\overline{x}_B=\\) 22.25 and \\(s_B=\\) 0.971, and s.e. = 0.396"
+  },
+  {
+    "objectID": "ttest-slides.html#what-is-our-question",
+    "href": "ttest-slides.html#what-is-our-question",
+    "title": "Comparing two groups",
+    "section": "What is our question?",
+    "text": "What is our question?\n\nIf we want to statistically compare the size from the two sites, we need a question (i.e., a working hypothesis).\n\n\nWorking hypothesis (作業仮設): The size (width) of juvenile S. macrocarpum collected from site A and B are different.\n\n\nWe know that the means for site A and B are different, but the standard deviations and standard errors are similar.\n\n\\(\\overline{x}_A=\\) 20.033; \\(s=\\) 1.003; s.e. = 0.41\n\\(\\overline{x}_B=\\) 22.25; \\(s=\\) 0.971; s.e. = 0.396"
+  },
+  {
+    "objectID": "ttest-slides.html#define-our-hypotheses",
+    "href": "ttest-slides.html#define-our-hypotheses",
+    "title": "Comparing two groups",
+    "section": "Define our hypotheses",
+    "text": "Define our hypotheses\nLet’s formally define our statistical hypotheses.\n\n\\(H_0\\) (null hypothesis 帰無仮説): There is no difference in the paired values.\n\\(H_A\\) (alternative hypothesis 対立仮設): There is a difference in the paired values.\n\nOther alternative hypotheses\n\n\\(H_P\\) (alternative hypothesis): The difference in paired values is positive.\n\\(H_N\\) (alternative hypothesis): The difference in paired values is negative.\n\n\nImportant: We can define an infinite number of hypotheses.\nThe most common alternative hypothesis is a test for an effect. For example, \\(H_0\\): there is no effect. \\(H_A\\): There is an effect.\nNote: hypotheses is the plural form (複数形) of hypothesis."
+  },
+  {
+    "objectID": "ttest-slides.html#calculate-the-size-differences-among-pairs",
+    "href": "ttest-slides.html#calculate-the-size-differences-among-pairs",
+    "title": "Comparing two groups",
+    "section": "Calculate the size differences among pairs",
+    "text": "Calculate the size differences among pairs\nAssume that we can compare the paired differences (e.g., \\(x_{A,1} - x_{B,1}\\), \\(x_{A,2} - x_{B,2}\\), \\(x_{A,3} - x_{B,3}\\), \\(\\cdots\\), \\(x_{A,6} - x_{B,6}\\))."
+  },
+  {
+    "objectID": "ttest-slides.html#recall-the-hypotheses",
+    "href": "ttest-slides.html#recall-the-hypotheses",
+    "title": "Comparing two groups",
+    "section": "Recall the hypotheses",
+    "text": "Recall the hypotheses\nThe two statistical hypotheses that we defined were:\n\n\\(H_0\\): There is no difference in the paired values.\n\\(H_A\\): There is a difference in the paired values.\n\nThe mean difference (\\(\\overline{x}_{A-B}\\)) is -2.217, the standard deviation (\\(s_{A-B}\\)) is 1.289, and the standard error (\\(\\text{s.e.}_{A-B}\\)) is 0.526\nNote: The true difference \\(\\mu_{A-B}\\) is -2, the true standard deviation \\(\\sigma_A = \\sigma_B\\) is 1.\n\nIf the samples can be paired, then the differences between site A and B are easy to determine.\nTherefore, it is easy to calculate the mean, standard deviation, and standard error.\n\\[\n\\begin{aligned}\n\\overline{x} &= \\frac{1}{n}\\sum x \\qquad \\text{mean} \\\\\ns &= \\sqrt{\\frac{1}{n-1} \\sum \\left(x-\\overline{x}\\right)^2} \\qquad \\text{standard deviation} \\\\\n\\text{s.e.} &= \\frac{s}{\\sqrt{n}} \\qquad \\text{standard error of the}\n\\end{aligned}\n\\]\nHow do we statistically test if the differences are significant?"
+  },
+  {
+    "objectID": "ttest-slides.html#distribution-of-the-mean",
+    "href": "ttest-slides.html#distribution-of-the-mean",
+    "title": "Comparing two groups",
+    "section": "Distribution of the mean",
+    "text": "Distribution of the mean\nRecall that the central limit theorem (中心極限定理) states that the distribution of the mean has a Gaussian (normal) distribution (正規分布).\n\n\n\n\n\n\n\n\n\n\\(\\overline{x}_{A-B} =\\) -2.217 (mean)\n\\(s_{A-B}=\\) 1.289 (standard deviation)\ns.e.A-B = 0.526 (standard error)\n\nThe shaded area is the 95% probability region. The width of the shaded area is called a confidence interval (信頼区間). If the significance level (有意水準) is \\(\\alpha = 0.05\\), then the confidence interval is called a 95% confidence interval (95% 信頼区間).\n\n\n\nThe green vertical line is the sample mean (\\(\\overline{x}\\)).\nThe thick line and the shaded region indicates the 95% confidence interval of the sample mean.\nThe thin line indicates a Gaussian distribution with a sample mean of -2.217.\nThe standard deviation is 0.526, which is the standard error of the mean.\nWe use the standard error because we are interested in the distribution of the mean values. If we were interested in the distribution of the observations, then we would use the standard deviation.\nSince the value of zero is not included in the 95% confidence interval, we can reject the null hypothesis that \\(\\overline{x}_A = \\overline{x}_B\\) or \\(x_{A-B}=0\\).\nSo what is a confidence interval (信頼区間)?"
+  },
+  {
+    "objectID": "ttest-slides.html#developing-the-confidence-interval",
+    "href": "ttest-slides.html#developing-the-confidence-interval",
+    "title": "Comparing two groups",
+    "section": "Developing the confidence interval",
+    "text": "Developing the confidence interval\nThe confidence interval is an interval \\([l, u]\\) with a lower bound of \\(l\\) and an upper bound of \\(u\\).\nFor a probability \\(1-\\alpha\\), the interval \\([l, u]\\) for \\(x\\) is\n\\[\nP(l \\le x \\le u) = 1-\\alpha\n\\] If \\(\\overline{x}\\) is a sample mean, then the z-score (z値) is\n\\[\nz = \\frac{\\overline{x}-\\mu}{\\sigma}\n\\]\nwhere \\(\\mu\\) is the population mean and \\(\\sigma\\) is the population standard deviation. Then, to find \\(l\\) and \\(u\\), we need to solve\n\\[\nP(l \\le z \\le u) = 1-\\alpha\n\\]\nfor the interval \\([l, u]\\) of \\(z\\) given a probability of \\(1-\\alpha\\)."
+  },
+  {
+    "objectID": "ttest-slides.html#central-limit-theorem-中心極限定理",
+    "href": "ttest-slides.html#central-limit-theorem-中心極限定理",
+    "title": "Comparing two groups",
+    "section": "Central limit theorem (中心極限定理)",
+    "text": "Central limit theorem (中心極限定理)\nRecall that the central limit theorem states that:\n\\[\n\\lim_{n\\rightarrow\\infty} \\sqrt{n}\\overbrace{\\left(\\frac{\\overline{x}_n-\\mu}{\\sigma}\\right)}^{z}  \\xrightarrow{d} N(0, 1)\n\\]\nTherefore, for \\(\\alpha = 0.05\\), we can define an \\([l, u]\\)\n\\[\nP\\left(l \\le z \\le u \\right) = 1-0.05 = 0.95\n\\]\nFor the standard normal distribution (\\(N(0,1)\\))\n\n\\(l\\) is the \\(\\alpha/2=0.05/2=0.025\\) quantile.\n\\(u\\) is the \\(1-\\alpha/2=1-0.05/2=0.975\\) quantile.\n\n\nThe z-score appears in the definition of the central limit theorem.\n\\[\nz = \\frac{\\overline{x}-\\mu}{\\sigma}\n\\]\nAs the number of samples increase, the distribution of \\(\\sqrt{n}\\left(\\frac{\\overline{x}_n-\\mu}{\\sigma}\\right)\\) converges to a standard normal distribution.\nThe symbol \\(\\xrightarrow{d}\\) in the model means, “converges in distribution.”\nThere are many different types of intervals.\n\nrange (レンジ・範囲)\nprediction interval (予測区間)\ncredible interval (信用区間)\n\nThe confidence interval provides information about the precision of our estimate of the mean.\nThe confidence interval is also a range of observations defined by the quantile of a distribution. For the mean values, a normal distribution is usually assumed because mean values follow the central limit theorem.\nHow do we find the \\(l\\) and \\(u\\) quantiles?"
+  },
+  {
+    "objectID": "ttest-slides.html#determining-the-lower-and-upper-quantiles-of-n0-1",
+    "href": "ttest-slides.html#determining-the-lower-and-upper-quantiles-of-n0-1",
+    "title": "Comparing two groups",
+    "section": "Determining the lower and upper quantiles of \\(N(0, 1)\\)",
+    "text": "Determining the lower and upper quantiles of \\(N(0, 1)\\)\n\nNote that \\([-1 s, 1 s]\\) is the 68.3% interval, \\([-2 s, 2 s]\\) is the 95.4% interval, and \\([-3 s, 3 s]\\) is the 99.7% interval.\n\nThe 50%, 68.3%, 95%, and 99% confidence intervals are indicated by the shaded region.\nThe shaded area indicates the probability.\nAlong the x-axis are the z-scores or a multiple of the standard deviation."
+  },
+  {
+    "objectID": "ttest-slides.html#table-of-quantiles-for-n0-1",
+    "href": "ttest-slides.html#table-of-quantiles-for-n0-1",
+    "title": "Comparing two groups",
+    "section": "Table of quantiles for \\(N(0, 1)\\)",
+    "text": "Table of quantiles for \\(N(0, 1)\\)\n\n\n\n\n\nSignificance level, α\nConfidence interval (%)\n± quantile\n\n\n\n\n0.500\n50.000\n0.674\n\n\n0.317\n68.269\n1.000\n\n\n0.200\n80.000\n1.282\n\n\n0.100\n90.000\n1.645\n\n\n0.050\n95.000\n1.960\n\n\n0.046\n95.450\n2.000\n\n\n0.025\n97.500\n2.241\n\n\n0.003\n99.730\n3.000\n\n\n0.000\n99.994\n4.000"
+  },
+  {
+    "objectID": "ttest-slides.html#calculating-the-confidence-interval",
+    "href": "ttest-slides.html#calculating-the-confidence-interval",
+    "title": "Comparing two groups",
+    "section": "Calculating the confidence interval",
+    "text": "Calculating the confidence interval\nLet \\(x = \\overline{x}_{A-B} =\\) -2.217, \\(s = \\text{s.e.} =\\) 0.526, \\(\\sigma_A = \\sigma_B =\\) 1, and and \\(\\alpha = 0.05\\).\n\\[\nP\\left(l \\le \\frac{\\overline{x}-\\mu}{\\sigma}\\le u\\right) = 1-\\alpha = 0.95\n\\]\n\\[\nP\\left(\\overline{x} +l \\sigma \\le \\mu \\le \\overline{x} + u\\sigma\\right) = 1-\\alpha = 0.95\n\\]\nWhen \\(\\alpha= 0.05\\), the \\(l\\) and \\(u\\) quantiles are \\(l=\\) -1.96 and \\(u=\\) 1.96, and \\(\\sigma = 1\\).\n\\[\nP(\n-2.217 +  -1.96 \\times 1\n\\le x \\le\n-2.217 +  1.96 \\times 1\n)\n\\]\n\\[\nP(\n-4.177\n\\le x \\le\n-0.257\n) = 0.95\n\\]\nThe 95% confidence interval of \\(\\overline{x}=\\) -2.217 is \\([-4.177, -0.257 ]\\)."
+  },
+  {
+    "objectID": "ttest-slides.html#confidence-intervals-for-each-experiment-when-sigma-is-known",
+    "href": "ttest-slides.html#confidence-intervals-for-each-experiment-when-sigma-is-known",
+    "title": "Comparing two groups",
+    "section": "Confidence intervals for each experiment when \\(\\sigma\\) is known",
+    "text": "Confidence intervals for each experiment when \\(\\sigma\\) is known\n\n\\(\\sigma_A = \\sigma_B=\\) 1, \\(H_0:\\) \\(\\overline{x}_A = \\overline{x}_B\\) or \\(\\overline{x}_{A-B}=0\\)"
+  },
+  {
+    "objectID": "ttest-slides.html#how-often-does-the-confidence-interval-contain-0",
+    "href": "ttest-slides.html#how-often-does-the-confidence-interval-contain-0",
+    "title": "Comparing two groups",
+    "section": "How often does the confidence interval contain 0?",
+    "text": "How often does the confidence interval contain 0?\n\n\n\n\n\n\n\n\n\nThe true difference is -2, therefore \\(H_0\\) is false.\nIf we do not reject \\(H_0\\), we are making a Type-II Error (第2種の誤り).\nThe 95% confidence intervals of 8 experiments include 0.\nThe error rate is \\(\\beta=\\) 8 / 20 = 0.4 or 40%.\nThe power of this analysis (\\(1 - \\beta\\)) is 0.6"
+  },
+  {
+    "objectID": "ttest-slides.html#we-made-some-wrong-assumptions",
+    "href": "ttest-slides.html#we-made-some-wrong-assumptions",
+    "title": "Comparing two groups",
+    "section": "We made some wrong assumptions",
+    "text": "We made some wrong assumptions\nThe z-score when population mean \\(\\mu\\) and population standard deviation \\(\\sigma\\) is known follows a standard normal distribution.\n\\[\nz = \\frac{\\overline{x} - \\mu}{\\sigma}\\sim N(0,1)\n\\] However, if you do not know the population standard deviation, we must calculate the t-value.\n\\[\nt_{\\overline{x}} = \\frac{\\overline{x} - x_0}{s.e.} = \\frac{\\overline{x} - x_0}{s / \\sqrt{n}}\n\\]\nWhich follows a t-distribution. \\(x_0\\) is a constant, and is often set to zero."
+  },
+  {
+    "objectID": "ttest-slides.html#determining-the-lower-and-upper-quantiles-of-td.f.",
+    "href": "ttest-slides.html#determining-the-lower-and-upper-quantiles-of-td.f.",
+    "title": "Comparing two groups",
+    "section": "Determining the lower and upper quantiles of \\(t(d.f.)\\)?",
+    "text": "Determining the lower and upper quantiles of \\(t(d.f.)\\)?\n\nNote that the degrees-of-freedom (d.f., 自由度) for the t-distribution is \\(N -1\\) = 5."
+  },
+  {
+    "objectID": "ttest-slides.html#table-of-quantiles-for-td.f.-5",
+    "href": "ttest-slides.html#table-of-quantiles-for-td.f.-5",
+    "title": "Comparing two groups",
+    "section": "Table of quantiles for \\(t(d.f. = 5)\\)",
+    "text": "Table of quantiles for \\(t(d.f. = 5)\\)\n\n\n\nQuantiles of the t distribution for d.f. = 5.\n\n\nSignificance level, $\\alpha$\nConfidence interval (\\%)\n$\\pm$ quantile\n\n\n\n\n0.500\n50.000\n0.727\n\n\n0.363\n63.678\n1.000\n\n\n0.200\n80.000\n1.476\n\n\n0.102\n89.806\n2.000\n\n\n0.100\n90.000\n2.015\n\n\n0.050\n95.000\n2.571\n\n\n0.030\n96.990\n3.000\n\n\n0.025\n97.500\n3.163\n\n\n0.010\n98.968\n4.000"
+  },
+  {
+    "objectID": "ttest-slides.html#confidence-intervals-for-each-experiment-when-sigma-is-unknown",
+    "href": "ttest-slides.html#confidence-intervals-for-each-experiment-when-sigma-is-unknown",
+    "title": "Comparing two groups",
+    "section": "Confidence intervals for each experiment when \\(\\sigma\\) is unknown",
+    "text": "Confidence intervals for each experiment when \\(\\sigma\\) is unknown\n\n\\(H_0:\\) \\(\\overline{x}_A = \\overline{x}_B\\) or \\(\\overline{x}_{A-B}=0\\)\n\nThis figure shows 20 sample means and their confidence intervals. The dashed horizontal line indicates zero and the solid horizontal line indicates the true difference 0.\nThe dots indicate the sample mean and the vertical lines indicate the range of the 95% confidence interval.\nThe green symbols indicates that the interval includes the true mean.\nOut of 20 trials, the 95% confidence included the true difference 19 times.\nWhat does the confidence interval mean?\nA 95% confidence interval implies that after 100 experiments, about 95 of the confidence intervals will include the true mean.\n\nIt does not mean that the true mean is in the interval.\nIt does not mean that there is a 95% chance that the true mean in in the interval, since the size of the confidence interval varies with the sample.\nIt also does not mean that there is a 95% chance that the mean of the next experiment will be in the confidence interval."
+  },
+  {
+    "objectID": "ttest-slides.html#how-often-does-the-confidence-interval-contain-0-1",
+    "href": "ttest-slides.html#how-often-does-the-confidence-interval-contain-0-1",
+    "title": "Comparing two groups",
+    "section": "How often does the confidence interval contain 0?",
+    "text": "How often does the confidence interval contain 0?\n\n\n\n\n\n\n\n\n\nThe true difference is -2, therefore \\(H_0\\) is false.\nIf we do not reject \\(H_0\\), we are making a Type-II Error (第2種の誤り).\nThe 95% confidence intervals of 5 experiments include 0. So for 5 experiments, we do not reject \\(H_0\\).\nThe error rate is \\(\\beta=\\) 5 / 20 = 0.25 or 25%.\nThe power of this analysis (\\(1 - \\beta\\)) is 0.75\n\n\n\n\nThese are informal ways of testing differences, howerver in practice we use more sophisticated formalized methods."
+  },
+  {
+    "objectID": "ttest-slides.html#the-paired-t-test",
+    "href": "ttest-slides.html#the-paired-t-test",
+    "title": "Comparing two groups",
+    "section": "The paired t-test",
+    "text": "The paired t-test\n\nType-II error rate \\(\\beta\\) = 5 / 20 = 25% and power (\\(1-\\beta\\)) is 0.75."
+  },
+  {
+    "objectID": "ttest-slides.html#t-test-unpaired-assuming-unequal-variance",
+    "href": "ttest-slides.html#t-test-unpaired-assuming-unequal-variance",
+    "title": "Comparing two groups",
+    "section": "t-test (unpaired assuming unequal variance)",
+    "text": "t-test (unpaired assuming unequal variance)\n\nType-II error rate \\(\\beta\\) = 1 / 20 = 5% and power (\\(1-\\beta\\)) is 0.95."
+  },
+  {
+    "objectID": "ttest-slides.html#the-null-hypothesis-of-the-t-test",
+    "href": "ttest-slides.html#the-null-hypothesis-of-the-t-test",
+    "title": "Comparing two groups",
+    "section": "The null hypothesis of the t-test",
+    "text": "The null hypothesis of the t-test\n\\(H_0\\) null hypothesis (帰無仮説): \\(\\overline{x}_A - \\overline{x}_B = \\overline{x}_{A-B}=0\\)"
+  },
+  {
+    "objectID": "ttest-slides.html#paired-t-test",
+    "href": "ttest-slides.html#paired-t-test",
+    "title": "Comparing two groups",
+    "section": "Paired t-test",
+    "text": "Paired t-test\nPaired t-test (対応ありのt検定)\nWe need to calculate the t-value, which is the statistic for the t-test.\n\\[\nt^* = \\frac{\\overline{x}_{A-B} - \\mu}{s_{A-B} / \\sqrt{n}}\n\\]\nAnd determine the degrees-of-freedom (自由度) which is \\(n-1\\).\nUsed when observations can be paired. For example the length of the left and right fin of a fish."
+  },
+  {
+    "objectID": "ttest-slides.html#independent-two-sample-t-test",
+    "href": "ttest-slides.html#independent-two-sample-t-test",
+    "title": "Comparing two groups",
+    "section": "Independent two sample t-test",
+    "text": "Independent two sample t-test\nThere are two versions.\n\n\nEqual variance (等分散)\n\\[\nt^* = \\frac{\\overline{x}_A - \\overline{x}_B}{s_p \\sqrt{1 / n_A + 1/n_B}}\n\\] \\[\ns_p = \\sqrt{\n\\frac{(n_A-1)s_A^2 + (n_B-1)s_B^2}\n{n_A + n_B -2}}\n\\] Degrees-of-freedom is \\(n_A + n_B - 2\\).\n\nUnequal variance, Welch’s t-test (ウェルチのt検定)\n\\[\nt^* = \\frac{\\overline{x}_A - \\overline{x}_B}{s_p}\n\\]\n\\[\ns_p = \\sqrt{\n\\frac{s_A^2}{n_A} +\n\\frac{s_B^2}{n_B}}\n\\] Degrees-of-freedom is calculated with the Welch-Satterthwaite Equation.\n\n\n\\(s\\) is the sample standard deviation. \\(n\\) is the number of samples. \\(\\overline{x}\\) is the mean. \\(t^*\\) is the t-value."
+  },
+  {
+    "objectID": "ttest-slides.html#welch-satterthwaite-equation",
+    "href": "ttest-slides.html#welch-satterthwaite-equation",
+    "title": "Comparing two groups",
+    "section": "Welch-Satterthwaite Equation",
+    "text": "Welch-Satterthwaite Equation\n\\[\n\\text{degrees-of-freedom} =\n\\frac{\n\\left(\\frac{s_A^2}{n_A} + \\frac{s_B^2}{n_B}\\right)^2\n}\n{\\frac{\\left(s_A^2 / n_A\\right)^2}{n_A-1} + \\frac{\\left(s_B^2 / n_B\\right)^2}{n_B-1}}\n\\]"
+  },
+  {
+    "objectID": "ttest-slides.html#the-unpaired-t-test",
+    "href": "ttest-slides.html#the-unpaired-t-test",
+    "title": "Comparing two groups",
+    "section": "The unpaired t-test",
+    "text": "The unpaired t-test\n\n\n\\[\n\\begin{aligned}\nt^* &= \\frac{\\overline{x}_{A-B} - \\mu}{s_{A-B} / \\sqrt{n}} \\\\\nt^* &= \\frac{-2.467}{2.642 / \\sqrt{6}} \\\\\nt^* &= -2.287\n\\end{aligned}\n\\]\n\n\n\n\n\n\n\n\n\n\n\n\\(\\overline{x}_{A-B}=\\) -2.467\n\\(\\mu=0\\)\n\\(n\\) = 6\n\\(s_{A-B}=\\) 2.642\n\n\n\n\\(\\alpha\\) = 0.05\nt-value: -2.287\nOne-sided P-value: 0.035\nTwo-sided P-value: 0.071\n\n\n\nThe juvenile S. macrocarpum size observations cannot be paired, so this is the wrong test."
+  },
+  {
+    "objectID": "ttest-slides.html#the-correct-test-is-welchs-t-test",
+    "href": "ttest-slides.html#the-correct-test-is-welchs-t-test",
+    "title": "Comparing two groups",
+    "section": "The correct test is Welch’s t-test",
+    "text": "The correct test is Welch’s t-test\n\n\n\\[\n\\begin{aligned}\nt^* &= \\frac{\\overline{x}_A -\\overline{x}_B}{s_p} \\\\\ns_p &= \\sqrt{\\frac{s_A^2}{n_A} + \\frac{s_B^2}{n_B}} \\\\\ns_p &= \\sqrt{\\frac{1.995^2}{6} + \\frac{1.961^2}{6}} \\\\\nt^* &= \\frac{10.05 - 12.517}{1.142} \\\\\nt^* &= -2.16 \\\\\n\\text{d.f.} &= 9.997\n\\end{aligned}\n\\]\n\n\n\n\n\n\n\n\\(\\alpha\\) = 0.05\nt-value: -2.16\nOne-sided P-value: 0.028\nTwo-sided P-value: 0.056\n\n\n\nThe P-value decreases, but \\(0.056 \\ge \\alpha= 0.05\\). We can’t reject \\(H_0\\)."
+  },
+  {
+    "objectID": "ttest-slides.html#behavior-of-the-t-test-equal-variance",
+    "href": "ttest-slides.html#behavior-of-the-t-test-equal-variance",
+    "title": "Comparing two groups",
+    "section": "Behavior of the t-test (equal variance)",
+    "text": "Behavior of the t-test (equal variance)\n\nIncreasing the number of observations decrease the Type-II error rate and increases the power of the test. The Type-I error rate is fixed at \\(\\alpha=0.05\\).\n\nThe true mean (\\(\\mu\\)) is for site A and B is 20 and 22, respectively. The true standard deviation (\\(\\sigma\\)) for site A and B is 1 and 1, respectively.\nFor each sample size of {2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 142, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, and 16} a total of 2000 simulated samples were created.\nWhen the sample size (\\(N\\)) is small, the Type-II error rate is high and the power of the t-test is low.\nIncreasing the sample size increases the power of the t-test and decreases the Type-II error rate.\nWhen the \\(N\\) = 6, the Type-II error rate is 0.138 and the power of the t-test is 0.862.\nWhen the \\(N\\) = 10, the Type-II error rate is 0.011 and the power of the t-test is 0.99.\nThe Type-I error rate is predefined and does not change with the number of observations."
+  },
+  {
+    "objectID": "ttest-slides.html#behavior-of-the-t-test-unequal-variance",
+    "href": "ttest-slides.html#behavior-of-the-t-test-unequal-variance",
+    "title": "Comparing two groups",
+    "section": "Behavior of the t-test (unequal variance)",
+    "text": "Behavior of the t-test (unequal variance)\n\nUnbalanced variances (\\(s^2\\)) increase the risk of a Type-II error rate (\\(\\beta\\)) and decrease the power (\\(1-\\beta\\)) of the t-test. The Type-I error rate is fixed at \\(\\alpha=0.05\\).\n\nThe true mean (\\(\\mu\\)) is for site A and B is 20 and 22, respectively. The true standard deviation (\\(\\sigma\\)) for site A is 1 and for site B is \\(k\\times\\sigma_B\\), respectively. \\(k\\) is a multiplier.\nWhen the standard deviations (variances) are not equal, the Type-II error rate and power of the t-test varies.\nWhen \\(s_A / s_B \\rightarrow\\infty\\), the Type-II error rate increases and the power decreases.\nWhen the sample size is high, the t-test is less sensitive to unequal variances.\nThe Type-I error rate is predefined and does not change with the number of observations."
+  },
+  {
+    "objectID": "ttest-slides.html#welchs-t-test-r-code",
+    "href": "ttest-slides.html#welchs-t-test-r-code",
+    "title": "Comparing two groups",
+    "section": "Welch’s t-test R code",
+    "text": "Welch’s t-test R code\n\nCodeOutput\n\n\n\nlibrary(tidyverse)\nA = c(9.8,11.1,10.7,10.7,11.8,6.2)\nB = c(12.5,13.8,12.0,15.5,9.8,11.5)\ndata = tibble(A, B)\ndata = data %&gt;% pivot_longer(cols = c(A,B))\nt.test(value ~ name, data = data) # ウェルチ t 検定\n# t.test(A, B) # Alternative method\n\n# two-sample, equal variance t-test (等分散 t 検定)\n# t.test(value ~ name, data = data, var.equal = TRUE) \n\nWelch’s t-test does not require equal variances or equal sample size.\nThe two-sample t-test requires equal variances.\n\n\n\n\n\n    Welch Two Sample t-test\n\ndata:  value by name\nt = -2.16, df = 9.9971, p-value = 0.05612\nalternative hypothesis: true difference in means between group A and group B is not equal to 0\n95 percent confidence interval:\n -5.01124979  0.07791646\nsample estimates:\nmean in group A mean in group B \n       10.05000        12.51667"
+  },
+  {
     "objectID": "sakuma-drops.html#サクマドロップスのサンプル表",
     "href": "sakuma-drops.html#サクマドロップスのサンプル表",
     "title": "データの可視化と記述統計量",

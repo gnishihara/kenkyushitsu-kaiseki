@@ -4,8 +4,9 @@ subtitle: t 検定の紹介
 author: Greg Nishihara
 date: today
 format: 
-  revealjs:
-    theme: [default, custom.css]
+ revealjs:
+   df-print: paged
+fig-align: center
 fig-width: 4
 fig-asp: 0.3
 execute: 
@@ -54,31 +55,26 @@ se = function(x) {sd(x) / sqrt(length(x))}
 
 
 ```{r}
-#| fig-cap: The width of the rope is 6 mm, so the juvenile is about 20 mm in width.
-#| label: fig-noko-image
-#| out-width: 40%
-folder = rprojroot::find_rstudio_root_file("images")
-file = dir(folder, full = TRUE) %>% str_subset("juvenile.jpg")
-img = image_read(file) 
-img %>% image_crop("1500x1500+1700+750") %>% 
-  image_annotate(text = "Juvenile", gravity = "southwest",
-                 location = "+50+100",
-                 weight = 700,
-                 color = "white", font = "Noto Sans", size = 80) %>% 
-  image_annotate(text = "Sargassum macrocarpum", gravity = "southwest",
-                 location = "+390+100",
+#| fig-align: center
+img = dir(".", full = TRUE, recursive = TRUE, "nokogiri*.*jpg") |> image_read()
+blk = image_blank(width = 1080, height = 120, color = "#00000040")
+img %>% 
+  image_composite(image_annotate(blk,
+                                 text = "Sargassum macrocarpum", gravity = "center",
                  weight = 700,
                  color = "white", font = "Noto Sans",
                  style = "italic",
-                 size = 80) %>% 
-  image_annotate(text = "ノコギリモク", gravity = "northwest",
+                 size = 80), 
+                  gravity = "south") |> 
+    image_composite(image_annotate(blk,
+                                 text = "ノコギリモク", gravity = "center",
                  weight = 700,
-                 boxcolor = "white",
-                 color = "black", font = "Noto Sans CJK JP",
-                 size = 80)
+                 color = "white", font = "Noto Sans CJK JP",
+                 size = 80), 
+                  gravity = "north")
 ```
 
-## A random sample
+## A random sample {.smaller}
 
 ```{r}
 #| label: tbl-noko-dimensions
@@ -89,13 +85,12 @@ dset %>%
               values_fn = list) %>% 
   unnest(everything()) %>% 
   mutate(sample = 1:n(), .before = A) %>% 
-  kable(format = "pipe", col.names = c("Sample", "Site A", "Site B")) 
-  
+  rename_all(~c("Sample", "Site A", "Site B"))
 
 ```
 
 ::: {.notes}
-The table shows two groups  of 6 juvenile \textit{Sargassum macrocarpum} (ノコギリモク) that were sampled randomly.
+The table shows two groups  of 6 juvenile *Sargassum macrocarpum* (ノコギリモク) that were sampled randomly.
 The two groups of juveniles are from two sites, A and B.
 
 Each sample is given an sample I.D. of 1 to 6.
@@ -106,7 +101,7 @@ The true standard deviation ($\sigma$) is `r sigmaA` and `r sigmaB` for site A a
 :::
 
 
-## Let's compare the two groups
+## Let's compare the two groups {.smaller}
 
 ::: {.columns}
 ::: {.column width="50%"}
@@ -133,7 +128,7 @@ standard error (s.e.) for juvenile *S. macrocarpum* from site A and B are:
 :::
 :::
 
-## What is our question?
+## What is our question? {.smaller}
 
 
 * If we want to statistically compare the size from the two sites, we need a question (i.e., a working hypothesis).
@@ -146,7 +141,7 @@ standard error (s.e.) for juvenile *S. macrocarpum* from site A and B are:
   - $\overline{x}_A=$ `r mean(groupA) %>% round(., 3)`; $s=$ `r sd(groupA) %>% round(., 3)`; s.e. = `r se(groupA) %>% round(., 3)`
   - $\overline{x}_B=$ `r mean(groupB) %>% round(., 3)`; $s=$ `r sd(groupB) %>% round(., 3)`; s.e. = `r se(groupB) %>% round(., 3)`
 
-## Define our hypotheses
+## Define our hypotheses{.smaller}
 
 
 Let's formally define our statistical hypotheses.
@@ -171,7 +166,7 @@ Note: *hypotheses* is the plural form (複数形) of *hypothesis*.
 
 :::
 
-## Calculate the size differences among pairs
+## Calculate the size differences among pairs{.smaller}
 
 Assume that we can compare the paired differences (e.g., $x_{A,1} - x_{B,1}$, $x_{A,2} - x_{B,2}$, $x_{A,3} - x_{B,3}$, $\cdots$, $x_{A,6} - x_{B,6}$).
 
@@ -183,18 +178,17 @@ dset %>%
   unnest(everything()) %>% 
   mutate(sample = 1:6, .before = A) %>% 
   mutate(d = sprintf("%0.2f - %0.2f = %0.2f",
-                     A, B, A-B)) %>% 
-  kable(format = "latex", booktabs = TRUE,
-        linesep = "",
-        col.names = c("Sample (pairs)",
-                      "Group A",
-                      "Group B",
-                      "Difference"),
-        caption = "Size (cm) of juvenile \\textit{Sargassum macrocarpum}（ノコギリモク）and the difference between group A and B.")
+                     A, B, A-B))
+# %>% 
+#   kable(col.names = c("Sample (pairs)",
+#                       "Group A",
+#                       "Group B",
+#                       "Difference"),
+#         caption = "Size (cm) of juvenile *Sargassum macrocarpum*（ノコギリモク）and the difference between group A and B.")
 ```
 
 
-## Recall the hypotheses
+## Recall the hypotheses {.smaller}
 
 The two statistical hypotheses that we defined were:
 
@@ -220,7 +214,7 @@ and the standard error ($\text{s.e.}_{A-B}$) is `r se(d) %>% round(., 3)`
 *Note: The true difference $\mu_{A-B}$ is `r meanA-meanB`, the 
 true standard deviation $\sigma_A = \sigma_B$ is `r sigmaA`.*
 
-::: {.note}
+::: {.notes}
 If the samples can be paired, then the differences between site A and B are easy to determine.
 
 Therefore, it is easy to calculate the mean, standard deviation, and standard error.
@@ -236,7 +230,7 @@ $$
 How do we statistically test if the differences are *significant*?
 :::
 
-## Distribution of the mean
+## Distribution of the mean {.smaller}
 
 Recall that the **central limit theorem (中心極限定理)** states that the distribution of the mean has a Gaussian (normal) distribution (正規分布).
 
@@ -278,7 +272,7 @@ tibble(x = d) %>%
 * $s_{A-B}=$ `r sd(d) %>% round(., 3)` (standard deviation)
 * s.e.~A-B~ = `r se(d) %>% round(., 3)` (standard error)
 
-The shaded area is the 95\% probability region.
+The shaded area is the 95% probability region.
 The width of the shaded area is called a **confidence interval (信頼区間)**.
 If the **significance level (有意水準)** is $\alpha = 0.05$, 
 then the confidence interval is called a **95% confidence interval (95% 信頼区間)**.
@@ -299,7 +293,7 @@ The standard deviation is `r se(d) %>% round(., 3)`, which is the standard error
 We use the standard error because we are interested in the distribution of the mean values.
 If we were interested in the distribution of the observations, then we would use the standard deviation.
 
-Since the value of zero is not included in the 95\% confidence interval,
+Since the value of zero is not included in the 95% confidence interval,
 we can reject the null hypothesis that $\overline{x}_A = \overline{x}_B$ or 
 $x_{A-B}=0$.
 
@@ -307,7 +301,7 @@ So what is a confidence interval (信頼区間)?
 :::
 
 
-## Developing the confidence interval
+## Developing the confidence interval {.smaller}
 
 The confidence interval is an interval $[l, u]$ with a 
 lower bound of $l$ and an upper bound of $u$.
@@ -332,7 +326,7 @@ $$
 
 for the interval $[l, u]$ of $z$ given a probability of $1-\alpha$.
 
-## Central limit theorem (中心極限定理)
+## Central limit theorem (中心極限定理) {.smaller}
 
 Recall that the central limit theorem states that:
 
@@ -381,9 +375,12 @@ How do we find the $l$ and $u$ quantiles?
 :::
 
 
-## Determining the lower and upper quantiles of $N(0, 1)$
+## Determining the lower and upper quantiles of $N(0, 1)$ {.smaller}
 
-```{r, fig.height = 3, fig.width=6}
+```{r}
+#| fig-width: 6
+#| fig-height: 3
+#| fig-align: center
 xval500 = (qnorm(0.50/2) * c(1,-1))
 xval683 = c(-1,1) # pnorm(1)-pnorm(-1)
 xval950 = (qnorm(0.05/2) * c(1,-1))
@@ -436,7 +433,7 @@ Along the x-axis are the z-scores or a multiple of the standard deviation.
 
 :::
 
-## Table of quantiles for $N(0, 1)$
+## Table of quantiles for $N(0, 1)$ {.smaller}
 
 ```{r}
 x = c(0.5, 0.8, 0.9, 0.95, 0.975, pnorm(1:4) - (1-pnorm(1:4)))
@@ -448,19 +445,17 @@ tibble(alpha = 1-x,
        quantile = y) %>% 
   mutate(percent = prob * 100, .after = prob) %>% 
   select(-prob) %>% 
-  kable(booktabs = TRUE,
-        linesep = "",
+  kable(linesep = "",
         escape = F,
         digits = c(3,3,3),
-        col.names = c("Significance level, $\\alpha$",
-                      "Confidence interval (\\%)",
-                      "$\\pm$ quantile"),
-        caption = "Quantiles of the standard normal distribution $N(0,1)$.")
+        col.names = c("Significance level, α",
+                      "Confidence interval (%)",
+                      "± quantile"))
 
 ```
 
 
-## Calculating the confidence interval
+## Calculating the confidence interval {.smaller}
 
 Let $x = \overline{x}_{A-B} =$ `r mean(d) %>% round(.,3)`,
 $s = \text{s.e.} =$ `r se(d) %>% round(.,3)`,
@@ -481,28 +476,30 @@ and $\sigma = 1$.
 
 
 $$
-\begin{split}
 P(
 `r round(mean(d),3)` +  `r round(qnorm(0.025),4)` \times `r sigmaA`
 \le x \le 
 `r round(mean(d),3)` +  `r round(qnorm(1-0.025),4)` \times `r sigmaA`
-) &= 
+)
+$$
+
+$$
 P(
 `r round(mean(d) + sigmaA * qnorm(0.025),3)`
 \le x \le 
 `r round(mean(d) + sigmaA * qnorm(1-0.025),3)`
-) \\
-&= 0.95
-\end{split}
+) = 0.95
 $$
 
 The 95% confidence interval of 
 $\overline{x}=$ `r round(mean(d),3)` is 
 $[`r round(mean(d) + sigmaA * qnorm(0.025),3)`, `r round(mean(d) + sigmaA * qnorm(1-0.025),3)` ]$.
 
-## Confidence intervals for each experiment when $\sigma$ is known
+## Confidence intervals for each experiment when $\sigma$ is known {.smaller}
 
-```{r, fig.height=3, fig.width=6}
+```{r}
+#| fig-width: 6
+#| fig-height: 3
 set.seed(2021)
 mult = qnorm(1-(0.05/2))
 X0 = tibble(n = 1:20) %>% 
@@ -546,12 +543,14 @@ p1
 $\sigma_A = \sigma_B=$ `r sigmaA`, $H_0:$ $\overline{x}_A = \overline{x}_B$ or $\overline{x}_{A-B}=0$
 
 
-## How often does the confidence interval contain 0?
+## How often does the confidence interval contain 0? {.smaller}
 
 ::: {.columns}
 ::: {.column width="50%"}
 
-```{r, fig.height=4, fig.width=4}
+```{r}
+#| fig-width: 4
+#| fig-height: 4
 ggplot(X) +
   geom_hline(yintercept = meanA-meanB) +
   geom_hline(yintercept = 0, linetype = "dashed") +
@@ -576,7 +575,7 @@ ggplot(X) +
 :::
 :::
 
-## We made some wrong assumptions
+## We made some wrong assumptions {.smaller}
 
 The z-score when population mean $\mu$ and population standard deviation $\sigma$ is known follows a standard normal distribution.
 
@@ -592,9 +591,11 @@ $$
 Which follows a t-distribution. $x_0$ is a constant, and is often set to zero.
 
 
-## Determining the lower and upper quantiles of $t(d.f.)$?
+## Determining the lower and upper quantiles of $t(d.f.)$? {.smaller}
 
-```{r, fig.height = 3, fig.width=6}
+```{r}
+#| fig-width: 6
+#| fig-height: 3
 DF = nA-1
 
 xval500 = (qt(0.50/2, df=DF) * c(1,-1))
@@ -636,7 +637,7 @@ tibble(x = d) %>%
 
 Note that the **degrees-of-freedom (d.f., 自由度)** for the t-distribution is $N -1$ = `r nA-1`.
 
-## Table of quantiles for $t(d.f. = `r DF`)$
+## Table of quantiles for $t(d.f. = `r DF`)$ {.smaller}
 
 ```{r}
 x = c(0.5, 0.8, 0.9, 0.95, 0.975, pt(1:4, DF) - (1-pt(1:4, DF)))
@@ -649,8 +650,7 @@ tibble(alpha = 1-x,
        quantile = y) %>% 
   mutate(percent = prob * 100, .after = prob) %>% 
   select(-prob) %>% 
-  kable(booktabs = TRUE,
-        linesep = "",
+  kable(linesep = "",
         escape = F,
         digits = c(3,3,3),
         col.names = c("Significance level, $\\alpha$",
@@ -662,9 +662,11 @@ tibble(alpha = 1-x,
 
 
 
-## Confidence intervals for each experiment when $\sigma$ is unknown
+## Confidence intervals for each experiment when $\sigma$ is unknown {.smaller}
 
-```{r, fig.height=3, fig.width=6}
+```{r}
+#| fig-width: 6
+#| fig-height: 3
 set.seed(2021)
 mult = qt(1-(0.05/2), df = DF)
 X0 = tibble(n = 1:20) %>% 
@@ -728,11 +730,13 @@ about 95 of the confidence intervals will include the true mean.
 :::
 
 
-## How often does the confidence interval contain 0?
+## How often does the confidence interval contain 0? {.smaller}
 
 ::: {.columns}
 ::: {.column width="50%"}
-```{r, fig.height=4, fig.width=4}
+```{r}
+#| fig-width: 4
+#| fig-height: 4
 ggplot(X) +
   geom_hline(yintercept = meanA-meanB) +
   geom_hline(yintercept = 0, linetype = "dashed") +
@@ -767,9 +771,11 @@ formalized methods.
 
 # Formal tests of group means
 
-## The paired t-test
+## The paired t-test {.smaller}
 
-```{r, fig.width=6, fig.height=3}
+```{r}
+#| fig-width: 6
+#| fig-height: 3
 XT = X0 %>% 
   unnest(data) %>% 
   select(-d) %>% 
@@ -802,9 +808,11 @@ Type-II error rate $\beta$ =
 `r round(xtsum$beta,2)*100`% and 
 power ($1-\beta$) is `r round(xtsum$power,2)`.
 
-## t-test (unpaired assuming unequal variance)
+## t-test (unpaired assuming unequal variance) {.smaller}
 
-```{r, fig.width=6, fig.height=3}
+```{r}
+#| fig-width: 6
+#| fig-height: 3
 XT = X0 %>% 
   unnest(data) %>% 
   select(-d) %>% 
@@ -843,7 +851,7 @@ power ($1-\beta$) is `r round(xtsum$power,2)`.
 **$H_0$ null hypothesis (帰無仮説):** $\overline{x}_A - \overline{x}_B = \overline{x}_{A-B}=0$
 
 
-## Paired t-test
+## Paired t-test {.smaller}
 
 **Paired  t-test (対応ありのt検定)**
 
@@ -858,7 +866,7 @@ And determine the **degrees-of-freedom (自由度)** which is $n-1$.
 Used when observations can be paired. 
 For example the length of the left and right fin of a fish.
 
-## Independent two sample t-test
+## Independent two sample t-test {.smaller}
 
 There are two versions.
 
@@ -901,7 +909,7 @@ $n$ is the number of samples.
 $\overline{x}$ is the mean.
 $t^*$ is the t-value.
 
-## Welch-Satterthwaite Equation
+## Welch-Satterthwaite Equation {.smaller}
 
 
 $$
@@ -912,7 +920,7 @@ $$
 {\frac{\left(s_A^2 / n_A\right)^2}{n_A-1} + \frac{\left(s_B^2 / n_B\right)^2}{n_B-1}}
 $$
 
-## The unpaired t-test
+## The unpaired t-test {.smaller}
 
 
 ```{r}
@@ -929,7 +937,7 @@ pval2 = pt(tout$statistic, df = tout$parameter)
 
 ```
 
-::: {.columns}
+:::: {.columns}
 ::: {.column width="50%"}
 
 $$
@@ -943,7 +951,9 @@ $$
 :::
 ::: {.column width="50%"}
 
-```{r, fig.height=2, fig.width=3}
+```{r}
+#| fig-width: 4
+#| fig-height: 3
 cl = viridis::viridis(4)
 ggplot() + 
   geom_function(fun = dt,
@@ -973,20 +983,18 @@ ggplot() +
         legend.direction = "horizontal",
         legend.background = element_blank())
 ```
-
-
 :::
-:::
+::::
 
 
-::: {.columns}
+:::: {.columns}
 ::: {.column width="50%"}
 
 * $\overline{x}_{A-B}=$ `r round(xbar, 3)`
 * $\mu=0$
 * $n$ = `r n`
 * $s_{A-B}=$ `r round(s, 3)`
-
+:::
 ::: {.column width="50%"}
 * $\alpha$ =  0.05
 * t-value: `r round(tval, 3)`
@@ -994,15 +1002,16 @@ ggplot() +
 * Two-sided P-value: `r round(2*pval, 3)`
 
 :::
-:::
+::::
+
 
 The juvenile *S. macrocarpum* size observations cannot be paired, so this is the wrong test.
 
 
-## The correct test is Welch's t-test
+## The correct test is Welch's t-test {.smaller}
 
 
-::: {.columns}
+:::: {.columns}
 ::: {.column width="50%"}
 
 $$
@@ -1019,7 +1028,9 @@ $$
 :::
 ::: {.column width="50%"}
 
-```{r, fig.height=2, fig.width=3}
+```{r}
+#| fig-width: 4
+#| fig-height: 3
 cl = viridis::viridis(4)
 tval = tout$statistic
 ggplot() + 
@@ -1057,16 +1068,20 @@ ggplot() +
 * Two-sided P-value: `r round(2*pval2, 3)`
 
 :::
-:::
+::::
 
 The P-value decreases, but $`r round(tout$p.value, 3)` \ge \alpha= 0.05$.
 We can't reject $H_0$.
 
 
-## Behavior of the t-test (equal variance)
+## Behavior of the t-test (equal variance) {.smaller}
 
 
-```{r behavior, fig.width=6, fig.height=3, cache=TRUE}
+```{r}
+#| label: behavior
+#| fig-width: 6
+#| fig-height: 3
+#| cache: true
 makedata = function(N) {
   A = rnorm(N, meanA, sigmaA)
   B = rnorm(N, meanB, sigmaB)
@@ -1132,9 +1147,13 @@ When the $N$ = 10, the Type-II error rate is `r filter(XT, near(N, 10)) %>% pull
 The Type-I error rate is predefined and does not change with the number of observations.
 :::
 
-## Behavior of the t-test (unequal variance)
+## Behavior of the t-test (unequal variance) {.smaller}
 
-```{r behavior2, fig.width=6, fig.height=3, cache = TRUE}
+```{r}
+#| label: behavior2
+#| fig-width: 6
+#| fig-height: 3
+#| cache: true
 makedata2 = function(N, mult) {
   A = rnorm(N, meanA, sigmaA  * mult)
   B = rnorm(N, meanB, sigmaA)
@@ -1204,14 +1223,21 @@ The Type-I error rate is predefined and does not change with the number of obser
 
 ## Welch's t-test R code
 
-```{r, include=FALSE}
+::: {.panel-tabset}
+
+### Code
+
+```{r}
+#| include: false
 A = c(9.8,11.1,10.7,10.7,11.8,6.2)
 B = c(12.5,13.8,12.0,15.5,9.8,11.5)
 data = tibble(A, B)
 data = data %>% pivot_longer(cols = c(A,B))
 t.test(value ~ name, data = data)
 ```
-```{r, eval = FALSE, echo=TRUE}
+```{r}
+#| eval: false
+#| echo: true
 library(tidyverse)
 A = c(9.8,11.1,10.7,10.7,11.8,6.2)
 B = c(12.5,13.8,12.0,15.5,9.8,11.5)
@@ -1228,39 +1254,16 @@ Welch's t-test does not require equal variances or equal sample size.
 
 The two-sample t-test requires equal variances.
 
-## Unequal variance t-test R output
+### Output
 
 
-```{r, echo = FALSE}
+```{r}
+#| echo: false
 t.test(value ~ name, data = data)
 ```
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+:::
 
 
 

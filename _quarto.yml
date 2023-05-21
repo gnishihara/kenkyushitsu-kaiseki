@@ -11,6 +11,7 @@ project:
     - glm.qmd
     - linearmodels.qmd
     - nhst-slide.qmd
+    - ttest-slides.qmd
     - sakuma-drops.qmd
 
 website:
