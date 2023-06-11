@@ -2,66 +2,70 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
     <loc>https://gnishihara.github.io/kenkyushitsu-kaiseki/index.html</loc>
-    <lastmod>2023-05-21T08:39:10.699Z</lastmod>
+    <lastmod>2023-06-11T09:08:36.924Z</lastmod>
   </url>
   <url>
     <loc>https://gnishihara.github.io/kenkyushitsu-kaiseki/pca.html</loc>
-    <lastmod>2023-05-21T08:39:11.995Z</lastmod>
+    <lastmod>2023-06-11T09:08:38.212Z</lastmod>
   </url>
   <url>
     <loc>https://gnishihara.github.io/kenkyushitsu-kaiseki/rda.html</loc>
-    <lastmod>2023-05-21T08:39:13.047Z</lastmod>
+    <lastmod>2023-06-11T09:08:39.212Z</lastmod>
   </url>
   <url>
     <loc>https://gnishihara.github.io/kenkyushitsu-kaiseki/part01.html</loc>
-    <lastmod>2023-05-21T08:39:13.763Z</lastmod>
+    <lastmod>2023-06-11T09:08:40.040Z</lastmod>
   </url>
   <url>
     <loc>https://gnishihara.github.io/kenkyushitsu-kaiseki/part02.html</loc>
-    <lastmod>2023-05-21T08:39:14.347Z</lastmod>
+    <lastmod>2023-06-11T09:08:40.720Z</lastmod>
   </url>
   <url>
     <loc>https://gnishihara.github.io/kenkyushitsu-kaiseki/part03.html</loc>
-    <lastmod>2023-05-21T08:39:15.123Z</lastmod>
+    <lastmod>2023-06-11T09:08:41.476Z</lastmod>
   </url>
   <url>
     <loc>https://gnishihara.github.io/kenkyushitsu-kaiseki/part04.html</loc>
-    <lastmod>2023-05-21T08:39:16.315Z</lastmod>
+    <lastmod>2023-06-11T09:08:42.684Z</lastmod>
   </url>
   <url>
     <loc>https://gnishihara.github.io/kenkyushitsu-kaiseki/part05.html</loc>
-    <lastmod>2023-05-21T08:39:17.475Z</lastmod>
+    <lastmod>2023-06-11T09:08:43.844Z</lastmod>
+  </url>
+  <url>
+    <loc>https://gnishihara.github.io/kenkyushitsu-kaiseki/anova-slides.html</loc>
+    <lastmod>2023-06-11T09:08:45.484Z</lastmod>
   </url>
   <url>
     <loc>https://gnishihara.github.io/kenkyushitsu-kaiseki/anova.html</loc>
-    <lastmod>2023-05-21T08:39:18.711Z</lastmod>
+    <lastmod>2023-06-11T09:08:46.876Z</lastmod>
   </url>
   <url>
     <loc>https://gnishihara.github.io/kenkyushitsu-kaiseki/anova2.html</loc>
-    <lastmod>2023-05-21T08:39:19.743Z</lastmod>
+    <lastmod>2023-06-11T09:08:47.884Z</lastmod>
   </url>
   <url>
     <loc>https://gnishihara.github.io/kenkyushitsu-kaiseki/ttest.html</loc>
-    <lastmod>2023-05-21T08:39:21.243Z</lastmod>
+    <lastmod>2023-06-11T09:08:49.404Z</lastmod>
   </url>
   <url>
     <loc>https://gnishihara.github.io/kenkyushitsu-kaiseki/glm.html</loc>
-    <lastmod>2023-05-21T08:39:22.883Z</lastmod>
+    <lastmod>2023-06-11T09:08:51.108Z</lastmod>
   </url>
   <url>
     <loc>https://gnishihara.github.io/kenkyushitsu-kaiseki/linearmodels.html</loc>
-    <lastmod>2023-05-21T08:39:23.835Z</lastmod>
+    <lastmod>2023-06-11T09:08:52.020Z</lastmod>
   </url>
   <url>
     <loc>https://gnishihara.github.io/kenkyushitsu-kaiseki/nhst-slide.html</loc>
-    <lastmod>2023-05-21T08:39:24.899Z</lastmod>
+    <lastmod>2023-06-11T09:08:53.032Z</lastmod>
   </url>
   <url>
     <loc>https://gnishihara.github.io/kenkyushitsu-kaiseki/ttest-slides.html</loc>
-    <lastmod>2023-05-21T08:39:26.363Z</lastmod>
+    <lastmod>2023-06-11T09:08:54.475Z</lastmod>
   </url>
   <url>
     <loc>https://gnishihara.github.io/kenkyushitsu-kaiseki/sakuma-drops.html</loc>
-    <lastmod>2023-05-21T08:39:27.367Z</lastmod>
+    <lastmod>2023-06-11T09:08:55.439Z</lastmod>
   </url>
 </urlset>

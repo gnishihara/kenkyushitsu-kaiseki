@@ -12,6 +12,7 @@ project:
     - linearmodels.qmd
     - nhst-slide.qmd
     - ttest-slides.qmd
+    - anova-slides.qmd
     - sakuma-drops.qmd
 
 website:
@@ -49,6 +50,7 @@ website:
         - sakuma-drops.qmd
         - ttest-slides.qmd
         - nhst-slide.qmd
+        - anova-slides.qmd
 
 format:
   html:
