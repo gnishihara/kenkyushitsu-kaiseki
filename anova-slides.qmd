@@ -6,14 +6,10 @@ date: today
 format: 
  revealjs:
    df-print: paged
-   smaller: true
 fig-align: center
-fig-width: 4
-fig-asp: 0.3
-
+fig-width: 8
 execute: 
   cache: true
-  freeze: true
 ---
 
 
@@ -25,7 +21,8 @@ library(kableExtra)
 library(knitr)
 library(tikzDevice)
 library(patchwork)
-
+library(knitr)
+library(kableExtra)
 library(furrr)
 plan("multisession")
 
@@ -41,8 +38,8 @@ options(knitr.kable.NA = "")
 作業仮説は「アマモの全長は沿岸域によって，長さがことなる」です。
 
 ```{r}
-#| fig-width: 16
-#| fig-height: 8
+#| fig-width: 8
+#| fig-height: 4
 set.seed(2019)
 mu = c(35, 40, 38)
 N = c(10,10,10)
@@ -64,20 +61,16 @@ ggplot(X) +
 
 
 
-## t検定で比較する
+## t検定で比較する {.scrollable}
 
-::::{.columns}
-:::{.column width="0.5"}
 3 カ所の全長を比較するのであれば，次のような組み合わせを考えられます。
 
 * A -- B
 * A -- C
 * B -- C
 
-:::
-:::{.column width="0.5"}
 t 検定を 3 回実行して，比較してみたら，結果は次の通りです。
-\vfill
+
 ```{r}
 dataA = X %>% filter(site == "A")
 dataB = X %>% filter(site == "B")
@@ -88,19 +81,20 @@ tBC = t.test(dataB$data, dataC$data)
 ```
 
 ```{r}
+#| echo: false
+#| eval: true
 tibble(
   Test = c("A-B", "A-C", "B-C"),
   `t-value` = c(tAB$statistic, tAC$statistic, tBC$statistic),
   `d.f.` = c(tAB$parameter, tAC$parameter, tBC$parameter),
   `p-value` = c(tAB$p.value, tAC$p.value, tBC$p.value)) %>% 
-  knitr::kable(format = "latex", booktabs = TRUE, digits = c(NA, 3,3,4))
+  knitr::kable(digits = c(NA, 3,3,4))
 ```
-\vfill
-NHST （帰無仮説の有意性検定）によると，A--B と A--C の帰無仮説は棄却できますが，B--C の帰無仮説の棄却はできません。
-:::
-::::
 
-## 多重仮説検定の問題
+
+NHST （帰無仮説の有意性検定）によると，A--B と A--C の帰無仮説は棄却できますが，B--C の帰無仮説の棄却はできません。
+
+## 多重仮説検定の問題 {.smaller}
 
 $\alpha$ は有意水準ですが，第 1 種の誤りを起こす確率でもあります。つまり，$\alpha$ は帰無仮説が正しくても誤って棄却する確率です。
 
@@ -110,7 +104,7 @@ $$
 α_{all}=1-(1-α)_{\text{A-B}}(1-α)_{\text{A-C}}(1-α)_{\text{B-C}} = 1-0.95^3 = 0.1426
 $$
 
-## 多重仮説検定したときのα過誤
+## 多重仮説検定したときの α 過誤
 
 
 ::::{.columns}
@@ -128,6 +122,8 @@ $$
 :::{.column width="0.5"}
 
 ```{r}
+#| fig-width: 4
+#| fig-height: 4
 alphafun = function(x, alpha) {1 - (1-alpha)^x}
 tibble(alpha = c(0.01, 0.05, 0.1), n = 1:3) %>% 
   complete(alpha, n = seq(1, 10, by = 0.1)) %>% 
@@ -155,9 +151,17 @@ tibble(alpha = c(0.01, 0.05, 0.1), n = 1:3) %>%
 
 **一元配置分散分析 (One-way ANOVA)** は， 1つの要因（因子, factor）A の複数の水準（群, group, level） A~1~, A~2~, ..., A~p~ にたいして，各水準の母平均の差を検証するための検定です。
 
+:::{.absolute top=400}
+
 **帰無仮説: $\mu_1 = \mu_2 = \cdots = \mu_p$**
 
-データの構造は次の方程式で定義します。
+全水準の平均値は等しい
+:::
+
+## 一元配置分散分析
+
+解析に使うモデルの次の方程式で定義します。
+
 
 $$
 x_{ij} = \mu + \alpha_i + \epsilon_{ij}
@@ -165,13 +169,18 @@ $$
 
 $\mu$ は総平均値，$x_{ij}$ は水準 $i$ の指数 $j$ の観測値です。$\alpha_i$ は$\mu$ に対する水準 $i$ の効果です。$\epsilon_{ij}$ はお互いに独立に正規分布 $(N(0, \sigma^2))$ に従う誤差項です。ただし，$\sum_{i=1}^n \alpha_i = 0$ とします。**このとき，帰無仮説は $\alpha_1 = \alpha_2 = \cdots = \alpha_n$ です。**
 
+::: aside
+このときの α は有意水準ではない。
+:::
 
-## 一元配置分散分析表
+## 一元配置分散分析表 {.smaller}
 
 
 ```{r}
-CAP = "一元配置分散分析表"
-tibble(要因 = c("A", "e", " "),
+#| echo: false
+#| results: asis
+
+tble = tibble(要因 = c("A", "e", " "),
       `自由度 (df)` = c("$df_A = I-1$", "$df_R = I(J-1)$", "$df_T =IJ-1$"),
       `平方和 (SS)` = c("$SS_A$", "$SS_R$", "$SS_T$"),
       `平均平方 (MS)` = c("$MS_A = SS_A / df_A$",
@@ -179,7 +188,9 @@ tibble(要因 = c("A", "e", " "),
                             " "),
       `F値` = c("$MS_A / MS_R$", " ", " "),
       `P値` = c("$qf(1-α, df_A, df_R)$", "", "")) %>% 
-  knitr::kable(format = "latex", booktabs = TRUE, escape=FALSE, caption=CAP)
+  kable(escape=FALSE) |> 
+  kable_styling(font_size = 20)
+cat(tble)
 ```
 
 $A$ は要因, $e$ は残渣（誤差項）,$I$ は水準の数,  $J$ は標本の数です。$SS_A$ は水準間平方和，$SS_R$ は残渣平方和, $SS_T$は総平方和です。$MS_A$ は水準間平均平方，$MS_R$ は残渣平均平方です。F値は平均平方の比です。水準間の平均値に対して，誤差（ばらつき，残渣）が大きいと，残渣平均平方も大きくなります。F値の分母が分子より大きくなったら，帰無仮説を棄却しにくくなります。
@@ -195,7 +206,7 @@ $$
 
 $\bar{x}_i$ は標本平均，$\bar{\bar{x}}$ は総平均です。
 
-## 平均方和を分解すると
+## 平均方和を分解すると {.smaller}
 
 ```{r}
 #| fig-width: 8
@@ -242,11 +253,11 @@ p1 + p2
 残渣平均平方は Field site (`site` 変数) ごとの残渣に影響されます。残渣のばらつきが小さいほど，残渣平均平方が小さくなります。
 総平均に対する Field site の効果が大きければ，水準間平均平方が大きくなります。
 
-:::{note}
+:::{notes}
 The simulated data case, where the MS of the site is larger than the MS of the residuals.
 :::
 
-## 平均方和: 水準ごとのばらつきが小さいとき
+## 平均方和: 水準ごとのばらつきが小さいとき {.smaller}
 
 
 ```{r}
@@ -311,7 +322,7 @@ anova(out)
 * In this case, the MS of the residuals decrease.
 :::
 
-## 平均方和: 水準ごとのばらつきが大きいとき
+## 平均方和: 水準ごとのばらつきが大きいとき {.smaller}
 
 水準間平均平方 (`site: Mean Sq`) はかわらないが，残渣平均平方 (`Residuals: Mean Sq`) は大きくなった。
 
@@ -384,7 +395,7 @@ $$
 
 F値は自由度 $I-1, I(J-1)$ のF分布に従います。
 
-## F値の確率密度関数
+## F値の確率密度関数 {.smaller}
 
 $$
 P(x|d_1, d_2) = \frac{1}{\mathrm{B}\left(\frac{d_1}{2}, \frac{d_2}{2}\right)}\left(\frac{d_1}{d_2}\right)^{\left(\frac{d_1}{2}\right)}x^{\left(\frac{d_1}{2}-1\right)}\left(1+\frac{d_1}{d_2}x\right)^{\left(-\frac{d_1+d_2}{2}\right)}
@@ -434,10 +445,9 @@ ggplot(Z) +
 * 任意の水準の応答（応答変数，説明したいデータ，y軸の値）はお互いに独立で同一の分布に従う正規確率変数であること
 
 
-## アマモの全長の解析
+## アマモの全長の解析 {.scrollable}
 
 Rでは，いろんな方法で分散分析ができます。
-
 
 
 ```{r}
@@ -459,7 +469,7 @@ lm(data ~ site, X) %>% summary.aov()
 
 # Type-I error, Type-II error, violation of assumptions
 
-## α過誤，β過誤，検出力
+## α過誤，β過誤，検出力 {.scrollable}
 
 ::::{.columns}
 :::{.column width="0.5"}
@@ -477,6 +487,9 @@ pwr.anova.test(k = J,
                f = lambda, 
                power = power) # pwr パッケージの関数
 ```
+:::
+:::{.column width="0.5"}
+
 ```{r}
 #| echo: false
 library(pwr)
@@ -490,9 +503,8 @@ x = pwr.anova.test(k = J, f = lambda, power = power) # pwr パッケージの関
 N = x$n
 x
 ```
-
 :::
-:::{.column width="0.5"}
+::::
 
 一元配置分散分析の検出力は 0.80，$\alpha$ は 0.05，
 水準の数は 3，標本平均の最小と最大の差（効果）は 1，
@@ -506,8 +518,6 @@ $\beta_j$ は $j$ 水準の効果，$n$ は $j$ 群の標本数，$\sigma_e^2$ �
 $n$, $\beta_j$, $\sigma_e^2$ は未知なので，客観的に選ぶ必要があります。
 
 必要な標本数は n = $`r round(N, 2)` \rightarrow `r as.integer(ceiling(N))`$ でした。
-:::
-::::
 
 ::: {.notes}
 When the null hypothesis is TRUE, then the F-value follows a central F-distribution.
@@ -583,8 +593,11 @@ out %>% unnest(result) %>%
 
 ```
 
-## 不等分散のときα過誤は少々あがる(N=10)
+## 不等分散のときα過誤は少々あがる(N=10)  {.smaller}
 
+::: {.panel-tabset}
+
+### 説明
 
 帰無仮説が正しいとき，そして等分散性が守られていないとき，P値は一様分布しません。
 それにして，帰無仮説を棄却しやすくなりません。
@@ -592,6 +605,8 @@ out %>% unnest(result) %>%
 つまり，第１種の過誤を起こす確率はあまりあがりません。
 `20・30・30` や `10・10・30` は水準間の平均値に対する分散の％割合を示しています。
 等分散の群は `Control` です。このときの標本数は10, 水準数は 3 です。
+
+### 図
 
 ```{r}
 #| cache: true
@@ -630,6 +645,7 @@ out = tibble(N = 1:1000) %>% mutate(result = future_map(N, runtest))
 ```{r}
 #| fig-width: 8
 #| fig-height: 4
+
 out %>% unnest(result) %>% 
   select(cv1,cv2,cv3,pvalue) %>% 
   group_by(cv1, cv2, cv3) %>% 
@@ -657,13 +673,19 @@ out %>% unnest(result) %>%
   theme(legend.position = "top", legend.title = element_blank())
 ```
 
+:::
 
-## 標本数をあげればα過誤は若干さがる(N=100)
+## 標本数をあげればα過誤は若干さがる(N=100) {.smaller}
 
+::: {.panel-tabset}
+
+### 説明
 
 帰無仮説が正しいとき，標本数を100 にしたら第１種の過誤を起こす確率は若干さがります。
 `20・30・30` や `10・10・30` は水準間の平均値に対する分散の％割合を示しています。
 等分散の群は `Control` です。
+
+### 図
 
 ```{r}
 #| cache: true
@@ -736,8 +758,13 @@ out %>% unnest(result) %>%
 
 ```
 
+:::
 
-## 不等分散のときβ過誤はあがる(N=10)
+## 不等分散のときβ過誤はあがる(N=10) {.smaller}
+
+::: {.panel-tabset}
+
+### 説明
 
 
 帰無仮説が正しくないとき，さらに
@@ -745,6 +772,8 @@ out %>% unnest(result) %>%
 第2種の過誤が起きやすくなります。
 `20・30・30` や `10・10・30` は水準間の平均値に対する分散の％割合を示しています。
 等分散の群は `Control` です。
+
+### 図
 
 ```{r}
 #| cache: true
@@ -814,14 +843,11 @@ out %>% unnest(result) %>%
 
 ```
 
-
-
+:::
 
 # ANOVA procedure
 
-## 分散分析の手順
-
-
+## 分散分析の手順 {.scrollable}
 
 0. 作業仮説，帰無仮説，対立仮説をたてる。
 1. 実験をデザインして，実行する。
@@ -845,20 +871,18 @@ out %>% unnest(result) %>%
 
 最初の紹介した海域ごとのアマモの全長を解析します。
 
-作業仮説：アマモの全長は沿岸域によって，長さがことなる
+**作業仮説：** アマモの全長は沿岸域によって，長さがことなる
 
-帰無仮説：アマモの海域ごとの全長は等しい $(\mu_A = \mu_B = \mu_C)$
+**帰無仮説：** アマモの海域ごとの全長は等しい $(\mu_A = \mu_B = \mu_C)$
 
-対立仮説：一つ以上のアマモの海域ごとの全長は異なる $(\mu_A \neq \mu_B |\mu_A \neq \mu_C|\mu_B \neq \mu_C)$
+**対立仮説：** 一つ以上のアマモの海域ごとの全長は異なる $(\mu_A \neq \mu_B |\mu_A \neq \mu_C|\mu_B \neq \mu_C)$
 
 ## 1. 実験をデザインして実行する
 
-::: {.r-fit-text}
 
 2019年3月1日に沿岸A，沿岸B，沿岸Cにおいて，各沿岸域から無作為に 10 個体のアマモを採取して，定規で全長を測定した。
 
 帰無仮説を検証するために，一元配置分差分析を実施する。
-:::
 
 ## 2. 集めたデータの箱ヒゲ図
 
@@ -888,15 +912,12 @@ ggplot(X) + geom_boxplot(aes(x = site, y = data, fill = site)) +
   theme(legend.position=c(0,1), legend.justification=c(0,1), legend.title=element_blank())
 ```
 
-## 3. 等分散性の検定
-
-::::{.columns}
-:::{.column width="0.3"}
-
+## 3. 等分散性の検定 {.scrollable}
 
 箱ひげ図を確認すると，不等分散性の問題はないように見えないが，検定をかけて確認できます。`site` ごとの不偏分散は次の通りです。
 
 ```{r}
+#| echo: true
 X %>% 
   group_by(site) %>% 
   summarise(sigma = var(data))
@@ -904,25 +925,19 @@ X %>%
 
 Site A の分散は Site B と Site C と比べると約半分ぐらいです。
 
-:::
-:::{.column width="0.7"}
-
-
 
 **バートレット検定** は正規分布に従わないデータに強く影響されますので，誤った結果になる可能性があります。，
 ```{r}
+#| echo: true
 bartlett.test(data ~ site, X)
 ```
 
 **ルービン検定** は正規分布に従わないデータに対してロバスト (robust, 頑健) です。；
 
 ```{r}
+#| echo: true
 car::leveneTest(data ~ site, X)
 ```
-
-:::
-::::
-
 
 どちらも，帰無仮説を棄却する結果を示していないので，水準ごとの分散は等しいと解釈できます。
 
@@ -943,7 +958,7 @@ from the median. There are two packages with a function, onewaytests and lawstat
 onewaytests is wrong, because it appears to be using the mean and not the median. 
 :::
 
-## 4. 分散分析を実施する
+## 4. 分散分析を実施する {.scrollable}
 
 等分散性に問題なかったので，分散分析をします。
 
@@ -953,12 +968,12 @@ m1 = lm(data ~ site, data = X)
 anova(m1)
 ```
 
-
 分散分析表には，自由度 (`Df`)，平方和 (`Sum Sq`)，平均平方 (`Mean Sq`)，F値 (`F value`)，P値 (`Pr(>F)`) がでます。
 P値は有意水準 (α = 0.05) より低いので，帰無仮説 ($\mu_A = \mu_B = \mu_C$) を棄却します。帰無仮説が正しかったら，このデータはとても珍しいです。
 
 ```{r}
 #| eval: false
+#| echo: true
 # 手順はいくつかあります。
 summary.aov(m1)
 lm(data ~ site, data = X) %>% anova()
@@ -966,7 +981,7 @@ lm(data ~ site, data = X) %>% summary.aov()
 aov(data ~ site, data = X) %>% summary()
 ```
 
-## 5. 図を用いて残渣の正規性と等分散性を確認する
+## 5. 図を用いて残渣の正規性と等分散性を確認する {.smaller}
 
 
 ```{r}
@@ -985,7 +1000,6 @@ lindia::plot_all(plots[c(2,3,4)], ncol = 3)
 
 ## 6. 結果を報告する
 
-::: {.r-fit-text}
 
 結果の報告について，まずは分散分析表の記述が必要です。
 
@@ -1009,7 +1023,6 @@ xout[[1]] %>% as_tibble(rownames="Treatment") %>%
 > 沿岸域によってアマモの全長が異なるかを，一元配置分散分析によって検討したところ，沿岸域 $(`r fout`)$ の効果は有意だった。
 
 F値，自由度，P値を記述することがポイントです。
-:::
 
 
 # Multiple comparisons
@@ -1237,7 +1250,7 @@ $$
 * ダネット補正のとき，$j-1$回 の比較しかありません。
 :::
 
-# More examples on multiple comparisons
+# More examples on multiple comparisons {.scrollable}
 
 ## 花びらの長さの事前比較（直交ではない比較）
 
@@ -1265,7 +1278,7 @@ Just because the ANOVA can't reject the global null (omnibus test) doesn't mean 
 However, an ANOVA still needs to be calculated because the mean-square-errors from the ANOVA are used in the multiple comparisons test. 
 :::
 
-## 花びらの長さの事前比較（直交比較）
+## 花びらの長さの事前比較（直交比較） {.scrollable}
 
 $\mu_\text{setosa} = \mu_\text{versicolor} = \mu_\text{virginica}$ の帰無仮説でなくて，$\mu_\text{setosa} = \mu_\text{versicolor}$ と $\frac{1}{2}(\mu_\text{setosa} +\mu_\text{versicolor})= \mu_\text{virginica}$ が帰無仮説です。
 
@@ -1284,24 +1297,26 @@ $$
 このときも 2 回比較しているので，各帰無仮説のαは ボンフェローニ補正で補正したものを使用します ($\alpha_{twer} = \alpha / 2 = 0.025$)。直交比較なので，帰無仮説は独立しています。
 
 
-## R における解析
+## R における解析 {.scrollable}
 
 アヤメのデータをつかって事前比較を初回します。まず，データの準備です。
 
 
 ```{r}
+#| echo: true
+
 iris_new = iris %>% as_tibble()
 iris_new # 内容の確認
 ```
 
-:::{note}
+:::{notes}
 In R contrasts() does not return the coefficient for the first level,
 because it is implicitly 1.
 But when assigning a contrast matrix, the matrix can be of size JxJ and the
 first level can be set.
 :::
 
-## デフォルト比較は treatment contrasts 
+## デフォルト比較は treatment contrasts  {.scrollable}
 
 Rでは，すでに設定されている比較があります。数種類の対比行列は関数で設定できます。
 
@@ -1332,29 +1347,16 @@ $$
 * $\mu_\text{setosa} = \mu_\text{virginica}$
 
 
-## R 処理対比 
-
-
-::::{.columns}
-:::{.column width="0.5"}
+## R 処理対比  {.scrollable}
 
 `contrasts()` 関数をつかって，アヤメのコーディング行列を確認します。
-:::
-
-:::{.column width="0.5"}
 
 ```{r}
 #| echo: true
 contrasts(iris_new$Species)
 ```
-:::
-::::
-
 
 対比行列に変換するには，列に 1 を代入した列行列を先に足して，その行列の逆行列をもとめる必要があります。
-
-::::{.columns}
-:::{.column width="0.5"}
 
 コーディング行列から対比行列への変換
 
@@ -1362,21 +1364,11 @@ contrasts(iris_new$Species)
 cbind(c(1,1,1), contr.treatment(3)) %>% solve()
 ```
 
-:::
-:::{.column width="0.5"}
-
-
 * 1 行目は `setosa` の平均値
 * 2 行目は `setosa` と `versicolor` の平均値の差
 * 3 行目は `setosa` と `virginica` の平均値の差
 
-:::
-::::
-
-
-## 処理比較の結果
-
-
+## 処理比較の結果 {.scrollable}
 
 ```{r}
 #| echo: true
@@ -1392,11 +1384,12 @@ m1 %>%
  このとき，`(Interecept)` は `setosa` の平均値です。
  
 ```{r}
+#| echo: true
 summary(m1)$coefficients
 ```
  
 
-## ペア毎の比較
+## ペア毎の比較 {.scrollable}
 
 
 $$
@@ -1406,15 +1399,11 @@ $$
 \end{aligned}
 $$
 
-::::{.columns}
-:::{.column width="0.5"}
 次の帰無仮説は下記のとおりです。
 
 * $\mu_\text{setosa} = \mu_\text{versicolor}$ 
 * $\mu_\text{versicolor} = \mu_\text{virginica}$
 
-:::
-:::{.column width="0.5"}
 
 対比行列はつぎのとおりです。
 
@@ -1427,8 +1416,6 @@ X =
 
 X
 ```
-:::
-::::
 
 
 
@@ -1448,7 +1435,7 @@ m2 %>% summary.aov(split = list(Species = list("setosa - versicolor" = 1,
 summary(m2)$coefficients
 ```
 
-:::{note}
+:::{notes}
 We can also get the F-values with this code.
 
 ```
@@ -1458,7 +1445,7 @@ aov(m1) %>%
 :::
 
 
-## 直交対比
+## 直交対比 {.scrollable}
 
 $$
 \begin{aligned}
@@ -1466,15 +1453,12 @@ $$
 \Lambda_2 &= 1 \times \text{setosa} + 1 \times \text{versicolor} - 2 \times\text{virginica}
 \end{aligned}
 $$
-::::{.columns}
-:::{.column width="0.5"}
+
 次の帰無仮説は下記のとおりです。
 
 * $\mu_\text{setosa} = \mu_\text{versicolor}$ 
 * $\frac{1}{2}(\mu_\text{setosa} + \mu_\text{versicolor}) = \mu_\text{virginica}$
 
-:::
-:::{.column width="0.5"}
 
 対比行列はつぎのとおりです。
 
@@ -1487,8 +1471,6 @@ X =
 
 X
 ```
-:::
-::::
 
 ## 直交対比の結果
 
@@ -1507,7 +1489,7 @@ m3 %>% summary.aov(split = list(Species = list("setosa - versicolor" = 1,
 summary(m3)$coefficients
 ```
 
-:::{note}
+:::{notes}
 
 There is only one way to partition the sum-of-squares, so all of the sum-of-squares,
 regardless of the comparison are the same!
@@ -1538,7 +1520,7 @@ lm(Petal.Length ~ Species, iris_new,
 
 # post hoc comparisons
 
-## 事後比較
+## 事後比較 {.scrollable}
 
 
 
@@ -1573,7 +1555,7 @@ pairwise.t.test(iris_new$Petal.Length, iris_new$Species, p.adjust.method = "bonf
 ボンフェロニ法でファミリワイズエラー率を調整するとき，$\alpha_{\text{fwer}} = \alpha / m$ です。
 ここで表示されている P 値は t 検定で求めたP値と $m$ の積です。
 
-## ホルム=ボンフェロニ法
+## ホルム=ボンフェロニ法 {.scrollable}
 
 
 ```{r}
@@ -1598,7 +1580,7 @@ TukeyHSD(mout)
 テューキーのHSD法は各2水準間の平均値の差の検定を行っています。
 t 検定とちがって，求めた統計量はステューデント化範囲の分布にしたます。
 
-## シェッフェの方法
+## シェッフェの方法 {.scrollable}
 
 
 ```{r}
@@ -1634,7 +1616,7 @@ DescTools::DunnettTest(Petal.Length ~ Species, data  = iris_new,
 
 * ANOVA procedure で有意な結果がでて，さらに残渣・正規性に問題がなかったので，多重仮説検定をおこないます。
 
-## 多重比較検定：誤った検定
+## 多重比較検定：誤った検定 {.scrollable}
 
 ```{r}
 set.seed(2019)
@@ -1681,7 +1663,7 @@ pairwise.t.test(X$data, X$site, p.adjust.method = "bonferroni" )
 
 ファミリワイズエラー率をボンフェロニ法で調整しましたが，ペアごと平均値の差に有意性のある結果は得られなかったが，A--B のP値は 0.052 でした。
 
-## 多重比較検定：ボンフェロニ法
+## 多重比較検定：ボンフェロニ法 
 
 分散分析の結果は：$`r fout`$ でした。$\mu_A=\mu_B=\mu_C$ を棄却しました。
 
@@ -1695,7 +1677,7 @@ pairwise.t.test(X$data, X$site, p.adjust.method = "holm" )
 ホルム=ボンフェロニ法はボンフェロニ法と同様な結果でした。
 
 
-## 多重比較検定：テューキーのHSD法
+## 多重比較検定：テューキーのHSD法 {.scrollable}
 
 
 分散分析の結果は：$`r fout`$ でした。$\mu_A=\mu_B=\mu_C$ を棄却しました。

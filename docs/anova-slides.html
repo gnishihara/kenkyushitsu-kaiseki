@@ -11,7 +11,7 @@
   <meta name="generator" content="quarto-1.3.353">
 
   <meta name="author" content="Greg Nishihara">
-  <meta name="dcterms.date" content="2023-06-11">
+  <meta name="dcterms.date" content="2023-06-12">
   <title>データ解析（研究室用） - Comparing multiple groups</title>
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -405,7 +405,7 @@ Greg Nishihara
 </div>
 </div>
 
-  <p class="date">2023-06-11</p>
+  <p class="date">2023-06-12</p>
 </section>
 <section>
 <section id="problems-with-multiple-comparisons" class="title-slide slide level1 center">
@@ -416,29 +416,55 @@ Greg Nishihara
 <h2>アマモの全長の比較</h2>
 <p>3つの沿岸域（A, B, and C）のアマモ (<em>Zostera marina</em>) を採取しました。 作業仮説は「アマモの全長は沿岸域によって，長さがことなる」です。</p>
 
-<img data-src="anova-slides_files/figure-revealjs/unnamed-chunk-2-1.png" width="1536" class="r-stretch"></section>
-<section id="t検定で比較する" class="slide level2">
+<img data-src="anova-slides_files/figure-revealjs/unnamed-chunk-2-1.png" width="768" class="r-stretch"></section>
+<section id="t検定で比較する" class="slide level2 scrollable">
 <h2>t検定で比較する</h2>
-<div class="columns">
-<div class="column" style="width:0.5;">
 <p>3 カ所の全長を比較するのであれば，次のような組み合わせを考えられます。</p>
 <ul>
 <li>A – B</li>
 <li>A – C</li>
 <li>B – C</li>
 </ul>
-</div><div class="column" style="width:0.5;">
-<p>t 検定を 3 回実行して，比較してみたら，結果は次の通りです。 </p>
-<div class="cell" data-hash="anova-slides_cache/revealjs/unnamed-chunk-4_02af7fef155206294ff4e03fcf6c5bfa">
+<p>t 検定を 3 回実行して，比較してみたら，結果は次の通りです。</p>
+<div class="cell" data-hash="anova-slides_cache/revealjs/unnamed-chunk-4_49782ab28f8e3baacc9f423617bef8ff">
 <div class="cell-output-display">
+<table data-quarto-postprocess="true">
+<thead>
+<tr class="header">
+<th style="text-align: left;" data-quarto-table-cell-role="th">Test</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">t-value</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">d.f.</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">p-value</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">A-B</td>
+<td style="text-align: right;">-2.778</td>
+<td style="text-align: right;">16.373</td>
+<td style="text-align: right;">0.0132</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">A-C</td>
+<td style="text-align: right;">-2.333</td>
+<td style="text-align: right;">15.532</td>
+<td style="text-align: right;">0.0334</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">B-C</td>
+<td style="text-align: right;">0.239</td>
+<td style="text-align: right;">17.838</td>
+<td style="text-align: right;">0.8141</td>
+</tr>
+</tbody>
+</table>
+
 
 </div>
 </div>
 <p>NHST （帰無仮説の有意性検定）によると，A–B と A–C の帰無仮説は棄却できますが，B–C の帰無仮説の棄却はできません。</p>
-</div>
-</div>
 </section>
-<section id="多重仮説検定の問題" class="slide level2">
+<section id="多重仮説検定の問題" class="slide level2 smaller">
 <h2>多重仮説検定の問題</h2>
 <p><span class="math inline">\(\alpha\)</span> は有意水準ですが，第 1 種の誤りを起こす確率でもあります。つまり，<span class="math inline">\(\alpha\)</span> は帰無仮説が正しくても誤って棄却する確率です。</p>
 <p>アマモの全長の解析には，t 検定を 3 回しました。1 回の検定にかかる第 1 種の誤りは 0.05 でしたが，3 回も検定したので（多重仮説検定），全体の第 1 種の誤りを起こす確率は次の通りです。</p>
@@ -446,8 +472,8 @@ Greg Nishihara
 α_{all}=1-(1-α)_{\text{A-B}}(1-α)_{\text{A-C}}(1-α)_{\text{B-C}} = 1-0.95^3 = 0.1426
 \]</span></p>
 </section>
-<section id="多重仮説検定したときのα過誤" class="slide level2">
-<h2>多重仮説検定したときのα過誤</h2>
+<section id="多重仮説検定したときの-α-過誤" class="slide level2">
+<h2>多重仮説検定したときの α 過誤</h2>
 <div class="columns">
 <div class="column" style="width:0.5;">
 <p>多重仮説検定をするときに，全ての仮説の中から少なくとも 1 つの正しい帰無仮説が誤って棄却されてしまう確率が <span class="math inline">\(\alpha_{\text{fwer}}\)</span> です。</p>
@@ -456,7 +482,7 @@ Greg Nishihara
 \]</span></p>
 <p>全体の <span class="math inline">\(\alpha\)</span> 過誤をおさえたければ，各実験の <span class="math inline">\(\alpha\)</span> を抑えれことが必要です。</p>
 </div><div class="column" style="width:0.5;">
-<div class="cell" data-hash="anova-slides_cache/revealjs/unnamed-chunk-5_42e1cc951fa4a3c1c054655219da048b">
+<div class="cell" data-hash="anova-slides_cache/revealjs/unnamed-chunk-5_2cd39a6ec2506beb404df2c932d90633">
 <div class="cell-output-display">
 <p><img data-src="anova-slides_files/figure-revealjs/unnamed-chunk-5-1.png" width="384"></p>
 </div>
@@ -473,19 +499,107 @@ Greg Nishihara
 <section id="一元配置分散分析" class="slide level2">
 <h2>一元配置分散分析</h2>
 <p><strong>一元配置分散分析 (One-way ANOVA)</strong> は， 1つの要因（因子, factor）A の複数の水準（群, group, level） A<sub>1</sub>, A<sub>2</sub>, …, A<sub>p</sub> にたいして，各水準の母平均の差を検証するための検定です。</p>
+<div class="absolute" style="top: 400px; ">
 <p><strong>帰無仮説: <span class="math inline">\(\mu_1 = \mu_2 = \cdots = \mu_p\)</span></strong></p>
-<p>データの構造は次の方程式で定義します。</p>
+<p>全水準の平均値は等しい</p>
+</div>
+</section>
+<section id="一元配置分散分析-1" class="slide level2">
+<h2>一元配置分散分析</h2>
+<p>解析に使うモデルの次の方程式で定義します。</p>
 <p><span class="math display">\[
 x_{ij} = \mu + \alpha_i + \epsilon_{ij}
 \]</span></p>
 <p><span class="math inline">\(\mu\)</span> は総平均値，<span class="math inline">\(x_{ij}\)</span> は水準 <span class="math inline">\(i\)</span> の指数 <span class="math inline">\(j\)</span> の観測値です。<span class="math inline">\(\alpha_i\)</span> は<span class="math inline">\(\mu\)</span> に対する水準 <span class="math inline">\(i\)</span> の効果です。<span class="math inline">\(\epsilon_{ij}\)</span> はお互いに独立に正規分布 <span class="math inline">\((N(0, \sigma^2))\)</span> に従う誤差項です。ただし，<span class="math inline">\(\sum_{i=1}^n \alpha_i = 0\)</span> とします。<strong>このとき，帰無仮説は <span class="math inline">\(\alpha_1 = \alpha_2 = \cdots = \alpha_n\)</span> です。</strong></p>
-</section>
-<section id="一元配置分散分析表" class="slide level2">
-<h2>一元配置分散分析表</h2>
-<div class="cell" data-hash="anova-slides_cache/revealjs/unnamed-chunk-6_de83f4cd969c8713371c2cc2729826c2">
-<div class="cell-output-display">
 
-</div>
+<aside><div>
+<p>このときの α は有意水準ではない。</p>
+</div></aside></section>
+<section id="一元配置分散分析表" class="slide level2 smaller">
+<h2>一元配置分散分析表</h2>
+<div class="cell" data-hash="anova-slides_cache/revealjs/unnamed-chunk-6_ad0d9118e58b417e000bc12da947cd9c">
+
+<table class="table" style="font-size: 20px; margin-left: auto; margin-right: auto;">
+<thead>
+<tr>
+<th style="text-align:left;">
+要因
+</th>
+<th style="text-align:left;">
+自由度 (df)
+</th>
+<th style="text-align:left;">
+平方和 (SS)
+</th>
+<th style="text-align:left;">
+平均平方 (MS)
+</th>
+<th style="text-align:left;">
+F値
+</th>
+<th style="text-align:left;">
+P値
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+A
+</td>
+<td style="text-align:left;">
+<span class="math inline">\(df_A = I-1\)</span>
+</td>
+<td style="text-align:left;">
+<span class="math inline">\(SS_A\)</span>
+</td>
+<td style="text-align:left;">
+<span class="math inline">\(MS_A = SS_A / df_A\)</span>
+</td>
+<td style="text-align:left;">
+<span class="math inline">\(MS_A / MS_R\)</span>
+</td>
+<td style="text-align:left;">
+<span class="math inline">\(qf(1-α, df_A, df_R)\)</span>
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+e
+</td>
+<td style="text-align:left;">
+<span class="math inline">\(df_R = I(J-1)\)</span>
+</td>
+<td style="text-align:left;">
+<span class="math inline">\(SS_R\)</span>
+</td>
+<td style="text-align:left;">
+<span class="math inline">\(MS_R = SS_R / df_R\)</span>
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+<span class="math inline">\(df_T =IJ-1\)</span>
+</td>
+<td style="text-align:left;">
+<span class="math inline">\(SS_T\)</span>
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+</td>
+</tr>
+</tbody>
+
+</table>
 </div>
 <p><span class="math inline">\(A\)</span> は要因, <span class="math inline">\(e\)</span> は残渣（誤差項）,<span class="math inline">\(I\)</span> は水準の数, <span class="math inline">\(J\)</span> は標本の数です。<span class="math inline">\(SS_A\)</span> は水準間平方和，<span class="math inline">\(SS_R\)</span> は残渣平方和, <span class="math inline">\(SS_T\)</span>は総平方和です。<span class="math inline">\(MS_A\)</span> は水準間平均平方，<span class="math inline">\(MS_R\)</span> は残渣平均平方です。F値は平均平方の比です。水準間の平均値に対して，誤差（ばらつき，残渣）が大きいと，残渣平均平方も大きくなります。F値の分母が分子より大きくなったら，帰無仮説を棄却しにくくなります。</p>
 </section>
@@ -498,19 +612,19 @@ x_{ij} = \mu + \alpha_i + \epsilon_{ij}
 \]</span></p>
 <p><span class="math inline">\(\bar{x}_i\)</span> は標本平均，<span class="math inline">\(\bar{\bar{x}}\)</span> は総平均です。</p>
 </section>
-<section id="平均方和を分解すると" class="slide level2">
+<section id="平均方和を分解すると" class="slide level2 smaller">
 <h2>平均方和を分解すると</h2>
 
 <img data-src="anova-slides_files/figure-revealjs/unnamed-chunk-7-1.png" width="768" class="r-stretch"><p>残渣平均平方は Field site (<code>site</code> 変数) ごとの残渣に影響されます。残渣のばらつきが小さいほど，残渣平均平方が小さくなります。 総平均に対する Field site の効果が大きければ，水準間平均平方が大きくなります。</p>
-<div class="{note}">
+<div class="{notes}">
 <p>The simulated data case, where the MS of the site is larger than the MS of the residuals.</p>
 </div>
 </section>
-<section id="平均方和-水準ごとのばらつきが小さいとき" class="slide level2">
+<section id="平均方和-水準ごとのばらつきが小さいとき" class="slide level2 smaller">
 <h2>平均方和: 水準ごとのばらつきが小さいとき</h2>
 
 <img data-src="anova-slides_files/figure-revealjs/unnamed-chunk-8-1.png" width="768" class="r-stretch"><p>水準間平均平方 (<code>site: Mean Sq</code>) はかわらないが，残渣平均平方 (<code>Residuals: Mean Sq</code>) は小さくなった。</p>
-<div class="cell" data-hash="anova-slides_cache/revealjs/unnamed-chunk-9_9cef414580965790dbdab5f837f750bc">
+<div class="cell" data-hash="anova-slides_cache/revealjs/unnamed-chunk-9_08370e0000b8ef7adea5a95ba178044a">
 <div class="cell-output-display">
 
 <div data-pagedtable="false">
@@ -538,10 +652,10 @@ x_{ij} = \mu + \alpha_i + \epsilon_{ij}
           display:block!important;
       }</style></aside>
 </section>
-<section id="平均方和-水準ごとのばらつきが大きいとき" class="slide level2">
+<section id="平均方和-水準ごとのばらつきが大きいとき" class="slide level2 smaller">
 <h2>平均方和: 水準ごとのばらつきが大きいとき</h2>
 <p>水準間平均平方 (<code>site: Mean Sq</code>) はかわらないが，残渣平均平方 (<code>Residuals: Mean Sq</code>) は大きくなった。</p>
-<div class="cell" data-hash="anova-slides_cache/revealjs/unnamed-chunk-10_b710c64039ae932fa5f20594181a0f96">
+<div class="cell" data-hash="anova-slides_cache/revealjs/unnamed-chunk-10_08049e26b1ee8557ad5b9378941e306b">
 <div class="cell-output-display">
 
 <div data-pagedtable="false">
@@ -578,7 +692,7 @@ F = \left . \frac{SS_A}{I-1} \right / \frac{SS_R}{I(J-1)}  = \frac{MS_A}{MS_R}
 \]</span></p>
 <p>F値は自由度 <span class="math inline">\(I-1, I(J-1)\)</span> のF分布に従います。</p>
 </section>
-<section id="f値の確率密度関数" class="slide level2">
+<section id="f値の確率密度関数" class="slide level2 smaller">
 <h2>F値の確率密度関数</h2>
 <p><span class="math display">\[
 P(x|d_1, d_2) = \frac{1}{\mathrm{B}\left(\frac{d_1}{2}, \frac{d_2}{2}\right)}\left(\frac{d_1}{d_2}\right)^{\left(\frac{d_1}{2}\right)}x^{\left(\frac{d_1}{2}-1\right)}\left(1+\frac{d_1}{d_2}x\right)^{\left(-\frac{d_1+d_2}{2}\right)}
@@ -595,10 +709,10 @@ P(x|d_1, d_2) = \frac{1}{\mathrm{B}\left(\frac{d_1}{2}, \frac{d_2}{2}\right)}\le
 <li>任意の水準の応答（応答変数，説明したいデータ，y軸の値）はお互いに独立で同一の分布に従う正規確率変数であること</li>
 </ul>
 </section>
-<section id="アマモの全長の解析" class="slide level2">
+<section id="アマモの全長の解析" class="slide level2 scrollable">
 <h2>アマモの全長の解析</h2>
 <p>Rでは，いろんな方法で分散分析ができます。</p>
-<div class="cell" data-hash="anova-slides_cache/revealjs/unnamed-chunk-13_82627787fb720572c4fcfc838d048e17">
+<div class="cell" data-hash="anova-slides_cache/revealjs/unnamed-chunk-13_45d96ec4a5ce517d710534b2e2797bef">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1"></a><span class="fu">aov</span>(data <span class="sc">~</span> site, <span class="at">data =</span> X) <span class="sc">%&gt;%</span> <span class="fu">summary</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>            Df Sum Sq Mean Sq F value Pr(&gt;F)  
@@ -608,7 +722,7 @@ Residuals   27  560.2   20.75
 Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
 </div>
 </div>
-<div class="cell" data-hash="anova-slides_cache/revealjs/unnamed-chunk-14_580056bbf610dd58acb3d6c4086e6872">
+<div class="cell" data-hash="anova-slides_cache/revealjs/unnamed-chunk-14_3e00f1e80d9b28c2c8b514b09875aa4c">
 <div class="sourceCode cell-code" id="cb3"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1"></a><span class="fu">lm</span>(data <span class="sc">~</span> site, X) <span class="sc">%&gt;%</span> <span class="fu">summary.aov</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>            Df Sum Sq Mean Sq F value Pr(&gt;F)  
@@ -625,11 +739,11 @@ Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
 <h1>Type-I error, Type-II error, violation of assumptions</h1>
 
 </section>
-<section id="α過誤β過誤検出力" class="slide level2">
+<section id="α過誤β過誤検出力" class="slide level2 scrollable">
 <h2>α過誤，β過誤，検出力</h2>
 <div class="columns">
 <div class="column" style="width:0.5;">
-<div class="cell" data-hash="anova-slides_cache/revealjs/unnamed-chunk-15_7fd45f164d86adb02d3cb3934a09e758">
+<div class="cell" data-hash="anova-slides_cache/revealjs/unnamed-chunk-15_c9f69e52668881d30168fbdc0f1c0750">
 <div class="sourceCode cell-code" id="cb5"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1"></a><span class="fu">library</span>(pwr)</span>
 <span id="cb5-2"><a href="#cb5-2"></a>J <span class="ot">=</span> <span class="dv">3</span> <span class="co"># 群の数</span></span>
 <span id="cb5-3"><a href="#cb5-3"></a>effect_size <span class="ot">=</span> <span class="dv">1</span> <span class="co"># 効果</span></span>
@@ -641,7 +755,8 @@ Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
 <span id="cb5-9"><a href="#cb5-9"></a>               <span class="at">f =</span> lambda, </span>
 <span id="cb5-10"><a href="#cb5-10"></a>               <span class="at">power =</span> power) <span class="co"># pwr パッケージの関数</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div class="cell" data-hash="anova-slides_cache/revealjs/unnamed-chunk-16_08eebd3da18f86ef0fcae6f92828efc1">
+</div><div class="column" style="width:0.5;">
+<div class="cell" data-hash="anova-slides_cache/revealjs/unnamed-chunk-16_ad3b6d0f14f3ea908160f790f4d98550">
 <div class="cell-output cell-output-stdout">
 <pre><code>
      Balanced one-way analysis of variance power calculation 
@@ -655,14 +770,13 @@ Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
 NOTE: n is number in each group</code></pre>
 </div>
 </div>
-</div><div class="column" style="width:0.5;">
+</div>
+</div>
 <p>一元配置分散分析の検出力は 0.80，<span class="math inline">\(\alpha\)</span> は 0.05， 水準の数は 3，標本平均の最小と最大の差（効果）は 1， 残渣平均平方と効果の比を 1 にしたとき，各群の標本数を求めました。 このときの効果は 1 としましたが，<code>lambda</code> (<span class="math inline">\(\lambda\)</span>) の方程式は次のとおりです。</p>
 <p><span class="math display">\[
 \lambda = \frac{\sum_{j-1}^Jn\beta_j}{\sigma_e^2}
 \]</span> <span class="math inline">\(\beta_j\)</span> は <span class="math inline">\(j\)</span> 水準の効果，<span class="math inline">\(n\)</span> は <span class="math inline">\(j\)</span> 群の標本数，<span class="math inline">\(\sigma_e^2\)</span> は母分散です。 <span class="math inline">\(n\)</span>, <span class="math inline">\(\beta_j\)</span>, <span class="math inline">\(\sigma_e^2\)</span> は未知なので，客観的に選ぶ必要があります。</p>
 <p>必要な標本数は n = <span class="math inline">\(4.38 \rightarrow 5\)</span> でした。</p>
-</div>
-</div>
 <aside class="notes">
 <p>When the null hypothesis is TRUE, then the F-value follows a central F-distribution. When the null hypothesis is FALSE, then the F-value follows a non-central F-distribution. This requires determining the non-centrality parameter (ncp).</p>
 <p><span class="math display">\[
@@ -691,27 +805,66 @@ NOTE: n is number in each group</code></pre>
 <p>帰無仮説が正しいとき，分散分析のP値は一様分布します。 シミュレーションの水準数は 3，各水準の標本数は 10，等分散には従っています。</p>
 
 <img data-src="anova-slides_files/figure-revealjs/unnamed-chunk-18-1.png" width="768" class="r-stretch"></section>
-<section id="不等分散のときα過誤は少々あがるn10" class="slide level2">
+<section id="不等分散のときα過誤は少々あがるn10" class="slide level2 smaller">
 <h2>不等分散のときα過誤は少々あがる(N=10)</h2>
+<div class="panel-tabset">
+<ul id="tabset-1" class="panel-tabset-tabby"><li><a data-tabby-default="" href="#tabset-1-1">説明</a></li><li><a href="#tabset-1-2">図</a></li></ul>
+<div class="tab-content">
+<div id="tabset-1-1">
 <p>帰無仮説が正しいとき，そして等分散性が守られていないとき，P値は一様分布しません。 それにして，帰無仮説を棄却しやすくなりません。 実施される F 検定は保守的なので，どちらかというと，有意な結果はでません。 つまり，第１種の過誤を起こす確率はあまりあがりません。 <code>20・30・30</code> や <code>10・10・30</code> は水準間の平均値に対する分散の％割合を示しています。 等分散の群は <code>Control</code> です。このときの標本数は10, 水準数は 3 です。</p>
-
-<img data-src="anova-slides_files/figure-revealjs/unnamed-chunk-20-1.png" width="768" class="r-stretch"></section>
-<section id="標本数をあげればα過誤は若干さがるn100" class="slide level2">
+</div>
+<div id="tabset-1-2">
+<div class="cell" data-hash="anova-slides_cache/revealjs/unnamed-chunk-20_29f6a7d4198ddf4cd6ecf72ac5c1ce3b">
+<div class="cell-output-display">
+<p><img data-src="anova-slides_files/figure-revealjs/unnamed-chunk-20-1.png" width="768"></p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section id="標本数をあげればα過誤は若干さがるn100" class="slide level2 smaller">
 <h2>標本数をあげればα過誤は若干さがる(N=100)</h2>
+<div class="panel-tabset">
+<ul id="tabset-2" class="panel-tabset-tabby"><li><a data-tabby-default="" href="#tabset-2-1">説明</a></li><li><a href="#tabset-2-2">図</a></li></ul>
+<div class="tab-content">
+<div id="tabset-2-1">
 <p>帰無仮説が正しいとき，標本数を100 にしたら第１種の過誤を起こす確率は若干さがります。 <code>20・30・30</code> や <code>10・10・30</code> は水準間の平均値に対する分散の％割合を示しています。 等分散の群は <code>Control</code> です。</p>
-
-<img data-src="anova-slides_files/figure-revealjs/unnamed-chunk-22-1.png" width="768" class="r-stretch"></section>
-<section id="不等分散のときβ過誤はあがるn10" class="slide level2">
+</div>
+<div id="tabset-2-2">
+<div class="cell" data-hash="anova-slides_cache/revealjs/unnamed-chunk-22_d74bef8618c5f37c2700b0886206f3b1">
+<div class="cell-output-display">
+<p><img data-src="anova-slides_files/figure-revealjs/unnamed-chunk-22-1.png" width="768"></p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section id="不等分散のときβ過誤はあがるn10" class="slide level2 smaller">
 <h2>不等分散のときβ過誤はあがる(N=10)</h2>
+<div class="panel-tabset">
+<ul id="tabset-3" class="panel-tabset-tabby"><li><a data-tabby-default="" href="#tabset-3-1">説明</a></li><li><a href="#tabset-3-2">図</a></li></ul>
+<div class="tab-content">
+<div id="tabset-3-1">
 <p>帰無仮説が正しくないとき，さらに 等分散性が守られていないとき，正しく帰無仮説を棄却しにくくなります。 第2種の過誤が起きやすくなります。 <code>20・30・30</code> や <code>10・10・30</code> は水準間の平均値に対する分散の％割合を示しています。 等分散の群は <code>Control</code> です。</p>
-
-<img data-src="anova-slides_files/figure-revealjs/unnamed-chunk-24-1.png" width="768" class="r-stretch"></section></section>
+</div>
+<div id="tabset-3-2">
+<div class="cell" data-hash="anova-slides_cache/revealjs/unnamed-chunk-24_228e57539aa484be951521c88d9fe6f7">
+<div class="cell-output-display">
+<p><img data-src="anova-slides_files/figure-revealjs/unnamed-chunk-24-1.png" width="768"></p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section></section>
 <section>
 <section id="anova-procedure" class="title-slide slide level1 center">
 <h1>ANOVA procedure</h1>
 
 </section>
-<section id="分散分析の手順" class="slide level2">
+<section id="分散分析の手順" class="slide level2 scrollable">
 <h2>分散分析の手順</h2>
 <ol start="0" type="1">
 <li>作業仮説，帰無仮説，対立仮説をたてる。</li>
@@ -747,34 +900,33 @@ NOTE: n is number in each group</code></pre>
 <section id="作業仮説帰無仮説対立仮説の設定" class="slide level2">
 <h2>0. 作業仮説・帰無仮説・対立仮説の設定</h2>
 <p>最初の紹介した海域ごとのアマモの全長を解析します。</p>
-<p>作業仮説：アマモの全長は沿岸域によって，長さがことなる</p>
-<p>帰無仮説：アマモの海域ごとの全長は等しい <span class="math inline">\((\mu_A = \mu_B = \mu_C)\)</span></p>
-<p>対立仮説：一つ以上のアマモの海域ごとの全長は異なる <span class="math inline">\((\mu_A \neq \mu_B |\mu_A \neq \mu_C|\mu_B \neq \mu_C)\)</span></p>
+<p><strong>作業仮説：</strong> アマモの全長は沿岸域によって，長さがことなる</p>
+<p><strong>帰無仮説：</strong> アマモの海域ごとの全長は等しい <span class="math inline">\((\mu_A = \mu_B = \mu_C)\)</span></p>
+<p><strong>対立仮説：</strong> 一つ以上のアマモの海域ごとの全長は異なる <span class="math inline">\((\mu_A \neq \mu_B |\mu_A \neq \mu_C|\mu_B \neq \mu_C)\)</span></p>
 </section>
 <section id="実験をデザインして実行する" class="slide level2">
 <h2>1. 実験をデザインして実行する</h2>
-<div class="r-fit-text">
 <p>2019年3月1日に沿岸A，沿岸B，沿岸Cにおいて，各沿岸域から無作為に 10 個体のアマモを採取して，定規で全長を測定した。</p>
 <p>帰無仮説を検証するために，一元配置分差分析を実施する。</p>
-</div>
 </section>
 <section id="集めたデータの箱ヒゲ図" class="slide level2">
 <h2>2. 集めたデータの箱ヒゲ図</h2>
 <p>データ数が少ないのとき，散布図でも問題ないです。</p>
 
-<img data-src="anova-slides_files/figure-revealjs/unnamed-chunk-25-1.png" width="768" class="r-stretch"><div class="cell" data-hash="anova-slides_cache/revealjs/unnamed-chunk-26_b9ea8dc4dcb319362a353bf7f3eb6aac">
+<img data-src="anova-slides_files/figure-revealjs/unnamed-chunk-25-1.png" width="768" class="r-stretch"><div class="cell" data-hash="anova-slides_cache/revealjs/unnamed-chunk-26_ec3b0aaf716f9384cb9566aabc8bcb74">
 <div class="sourceCode cell-code" id="cb7"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1"></a><span class="fu">ggplot</span>(X) <span class="sc">+</span> <span class="fu">geom_boxplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> site, <span class="at">y =</span> data, <span class="at">fill =</span> site)) <span class="sc">+</span></span>
 <span id="cb7-2"><a href="#cb7-2"></a>  <span class="fu">geom_point</span>(<span class="fu">aes</span>(<span class="at">x =</span> site, <span class="at">y =</span> data), <span class="at">position =</span> <span class="fu">position_jitter</span>(<span class="fl">0.05</span>)) <span class="sc">+</span></span>
 <span id="cb7-3"><a href="#cb7-3"></a>  <span class="fu">scale_x_discrete</span>(<span class="st">"Field site"</span>) <span class="sc">+</span> <span class="fu">scale_y_continuous</span>(<span class="st">"Length (mm)"</span>) <span class="sc">+</span></span>
 <span id="cb7-4"><a href="#cb7-4"></a>  <span class="fu">theme</span>(<span class="at">legend.position=</span><span class="fu">c</span>(<span class="dv">0</span>,<span class="dv">1</span>), <span class="at">legend.justification=</span><span class="fu">c</span>(<span class="dv">0</span>,<span class="dv">1</span>), <span class="at">legend.title=</span><span class="fu">element_blank</span>())</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
-<section id="等分散性の検定" class="slide level2">
+<section id="等分散性の検定" class="slide level2 scrollable">
 <h2>3. 等分散性の検定</h2>
-<div class="columns">
-<div class="column" style="width:0.3;">
 <p>箱ひげ図を確認すると，不等分散性の問題はないように見えないが，検定をかけて確認できます。<code>site</code> ごとの不偏分散は次の通りです。</p>
-<div class="cell" data-hash="anova-slides_cache/revealjs/unnamed-chunk-27_bb208350fa0d92b480284925d84845ac">
+<div class="cell" data-hash="anova-slides_cache/revealjs/unnamed-chunk-27_a47d5fdefd5a90e005bedd67fb5417fc">
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1"></a>X <span class="sc">%&gt;%</span> </span>
+<span id="cb8-2"><a href="#cb8-2"></a>  <span class="fu">group_by</span>(site) <span class="sc">%&gt;%</span> </span>
+<span id="cb8-3"><a href="#cb8-3"></a>  <span class="fu">summarise</span>(<span class="at">sigma =</span> <span class="fu">var</span>(data))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 
 <div data-pagedtable="false">
@@ -785,9 +937,9 @@ NOTE: n is number in each group</code></pre>
 </div>
 </div>
 <p>Site A の分散は Site B と Site C と比べると約半分ぐらいです。</p>
-</div><div class="column" style="width:0.7;">
 <p><strong>バートレット検定</strong> は正規分布に従わないデータに強く影響されますので，誤った結果になる可能性があります。，</p>
-<div class="cell" data-hash="anova-slides_cache/revealjs/unnamed-chunk-28_935792ae7b2d6667159d1644a0f4626e">
+<div class="cell" data-hash="anova-slides_cache/revealjs/unnamed-chunk-28_c0eabf8cf4b32e49798b718563ff8d04">
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1"></a><span class="fu">bartlett.test</span>(data <span class="sc">~</span> site, X)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
     Bartlett test of homogeneity of variances
@@ -797,15 +949,14 @@ Bartlett's K-squared = 1.5442, df = 2, p-value = 0.462</code></pre>
 </div>
 </div>
 <p><strong>ルービン検定</strong> は正規分布に従わないデータに対してロバスト (robust, 頑健) です。；</p>
-<div class="cell" data-hash="anova-slides_cache/revealjs/unnamed-chunk-29_9f7fa44fe7e9e2836439b00c04ed8abe">
+<div class="cell" data-hash="anova-slides_cache/revealjs/unnamed-chunk-29_c4cc7e73da5baabfef7dbfd1572ebd9e">
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1"></a>car<span class="sc">::</span><span class="fu">leveneTest</span>(data <span class="sc">~</span> site, X)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 
 <div data-pagedtable="false">
   <script data-pagedtable-source="" type="application/json">
 {"columns":[{"label":[""],"name":["_rn_"],"type":[""],"align":["left"]},{"label":["Df"],"name":[1],"type":["int"],"align":["right"]},{"label":["F value"],"name":[2],"type":["dbl"],"align":["right"]},{"label":["Pr(>F)"],"name":[3],"type":["dbl"],"align":["right"]}],"data":[{"1":"2","2":"0.5594679","3":"0.5779975","_rn_":"group"},{"1":"27","2":"NA","3":"NA","_rn_":""}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
   </script>
-</div>
-</div>
 </div>
 </div>
 </div>
@@ -830,12 +981,12 @@ Bartlett's K-squared = 1.5442, df = 2, p-value = 0.462</code></pre>
           display:block!important;
       }</style></aside>
 </section>
-<section id="分散分析を実施する" class="slide level2">
+<section id="分散分析を実施する" class="slide level2 scrollable">
 <h2>4. 分散分析を実施する</h2>
 <p>等分散性に問題なかったので，分散分析をします。</p>
-<div class="cell" data-hash="anova-slides_cache/revealjs/unnamed-chunk-30_3c19ac3aec3b3507b3867c2305ccfcd6">
-<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1"></a>m1 <span class="ot">=</span> <span class="fu">lm</span>(data <span class="sc">~</span> site, <span class="at">data =</span> X)</span>
-<span id="cb9-2"><a href="#cb9-2"></a><span class="fu">anova</span>(m1)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell" data-hash="anova-slides_cache/revealjs/unnamed-chunk-30_70d4859ec2bd5c3fc5f6c37a99dc6603">
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1"></a>m1 <span class="ot">=</span> <span class="fu">lm</span>(data <span class="sc">~</span> site, <span class="at">data =</span> X)</span>
+<span id="cb12-2"><a href="#cb12-2"></a><span class="fu">anova</span>(m1)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 
 <div data-pagedtable="false">
@@ -846,8 +997,15 @@ Bartlett's K-squared = 1.5442, df = 2, p-value = 0.462</code></pre>
 </div>
 </div>
 <p>分散分析表には，自由度 (<code>Df</code>)，平方和 (<code>Sum Sq</code>)，平均平方 (<code>Mean Sq</code>)，F値 (<code>F value</code>)，P値 (<code>Pr(&gt;F)</code>) がでます。 P値は有意水準 (α = 0.05) より低いので，帰無仮説 (<span class="math inline">\(\mu_A = \mu_B = \mu_C\)</span>) を棄却します。帰無仮説が正しかったら，このデータはとても珍しいです。</p>
+<div class="cell" data-hash="anova-slides_cache/revealjs/unnamed-chunk-31_2b38edb647503361547a7e7fc69ea860">
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1"></a><span class="co"># 手順はいくつかあります。</span></span>
+<span id="cb13-2"><a href="#cb13-2"></a><span class="fu">summary.aov</span>(m1)</span>
+<span id="cb13-3"><a href="#cb13-3"></a><span class="fu">lm</span>(data <span class="sc">~</span> site, <span class="at">data =</span> X) <span class="sc">%&gt;%</span> <span class="fu">anova</span>()</span>
+<span id="cb13-4"><a href="#cb13-4"></a><span class="fu">lm</span>(data <span class="sc">~</span> site, <span class="at">data =</span> X) <span class="sc">%&gt;%</span> <span class="fu">summary.aov</span>()</span>
+<span id="cb13-5"><a href="#cb13-5"></a><span class="fu">aov</span>(data <span class="sc">~</span> site, <span class="at">data =</span> X) <span class="sc">%&gt;%</span> <span class="fu">summary</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
 </section>
-<section id="図を用いて残渣の正規性と等分散性を確認する" class="slide level2">
+<section id="図を用いて残渣の正規性と等分散性を確認する" class="slide level2 smaller">
 <h2>5. 図を用いて残渣の正規性と等分散性を確認する</h2>
 
 <img data-src="anova-slides_files/figure-revealjs/unnamed-chunk-32-1.png" width="768" class="r-stretch"><p><strong>Residual vs.&nbsp;site</strong> と <strong>Residual vs.&nbsp;Fitted Value</strong> の図は残渣の性質を確認するための図です。 この二つの図で確認するのは，残渣のばらつきとばらつきの性質です。ばらつきが説明変数となんかしらの関係があれば，解析に問題があると示します。<strong>Normal-QQ Plot</strong> は残渣の正規性を確認するための図です。残渣は正規分布に従えば，赤線とかさなります。<strong>この結果をみると，正規性に問題はないが，期待値が高いときの残渣のばらつきは期待値の低いときのばらつきより大きいです。</strong></p>
@@ -867,9 +1025,8 @@ Bartlett's K-squared = 1.5442, df = 2, p-value = 0.462</code></pre>
 </section>
 <section id="結果を報告する" class="slide level2">
 <h2>6. 結果を報告する</h2>
-<div class="r-fit-text">
 <p>結果の報告について，まずは分散分析表の記述が必要です。</p>
-<div class="cell" data-hash="anova-slides_cache/revealjs/unnamed-chunk-33_4e9f2a068e5bc2f5bd6bb53a00f9aa40">
+<div class="cell" data-hash="anova-slides_cache/revealjs/unnamed-chunk-33_31edea6a2cafb7262ee77c63a7bea553">
 <div class="cell-output-display">
 
 </div>
@@ -879,7 +1036,6 @@ Bartlett's K-squared = 1.5442, df = 2, p-value = 0.462</code></pre>
 <p>沿岸域によってアマモの全長が異なるかを，一元配置分散分析によって検討したところ，沿岸域 <span class="math inline">\((F_{(2, 27)} = 3.90, P = 0.0326)\)</span> の効果は有意だった。</p>
 </blockquote>
 <p>F値，自由度，P値を記述することがポイントです。</p>
-</div>
 </section></section>
 <section>
 <section id="multiple-comparisons" class="title-slide slide level1 center">
@@ -1107,7 +1263,7 @@ B &amp;= 1 \mu_1 +   1  \mu_2 + (-2) \mu_3
 </div>
 </section></section>
 <section>
-<section id="more-examples-on-multiple-comparisons" class="title-slide slide level1 center">
+<section id="more-examples-on-multiple-comparisons" class="title-slide slide level1 scrollable center">
 <h1>More examples on multiple comparisons</h1>
 
 </section>
@@ -1140,7 +1296,7 @@ B &amp;= 1 \mu_\text{setosa} + 0 \mu_\text{versicolor} -    1 \mu_\text{virginic
           display:block!important;
       }</style></aside>
 </section>
-<section id="花びらの長さの事前比較直交比較" class="slide level2">
+<section id="花びらの長さの事前比較直交比較" class="slide level2 scrollable">
 <h2>花びらの長さの事前比較（直交比較）</h2>
 <p><span class="math inline">\(\mu_\text{setosa} = \mu_\text{versicolor} = \mu_\text{virginica}\)</span> の帰無仮説でなくて，<span class="math inline">\(\mu_\text{setosa} = \mu_\text{versicolor}\)</span> と <span class="math inline">\(\frac{1}{2}(\mu_\text{setosa} +\mu_\text{versicolor})= \mu_\text{virginica}\)</span> が帰無仮説です。</p>
 <p>線型結合は次のとおりです。 <span class="math display">\[
@@ -1155,10 +1311,12 @@ B &amp;= 1 \mu_\text{setosa} + 1 \mu_\text{versicolor} -    2 \mu_\text{virginic
 </ul>
 <p>このときも 2 回比較しているので，各帰無仮説のαは ボンフェローニ補正で補正したものを使用します (<span class="math inline">\(\alpha_{twer} = \alpha / 2 = 0.025\)</span>)。直交比較なので，帰無仮説は独立しています。</p>
 </section>
-<section id="r-における解析" class="slide level2">
+<section id="r-における解析" class="slide level2 scrollable">
 <h2>R における解析</h2>
 <p>アヤメのデータをつかって事前比較を初回します。まず，データの準備です。</p>
-<div class="cell" data-hash="anova-slides_cache/revealjs/unnamed-chunk-34_61df21c9acee7fe34ba344282358ae9c">
+<div class="cell" data-hash="anova-slides_cache/revealjs/unnamed-chunk-34_ccaa075ed1866051124b8a8c56c9bbca">
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1"></a>iris_new <span class="ot">=</span> iris <span class="sc">%&gt;%</span> <span class="fu">as_tibble</span>()</span>
+<span id="cb14-2"><a href="#cb14-2"></a>iris_new <span class="co"># 内容の確認</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 
 <div data-pagedtable="false">
@@ -1168,11 +1326,11 @@ B &amp;= 1 \mu_\text{setosa} + 1 \mu_\text{versicolor} -    2 \mu_\text{virginic
 </div>
 </div>
 </div>
-<div class="{note}">
+<div class="{notes}">
 <p>In R contrasts() does not return the coefficient for the first level, because it is implicitly 1. But when assigning a contrast matrix, the matrix can be of size JxJ and the first level can be set.</p>
 </div>
 </section>
-<section id="デフォルト比較は-treatment-contrasts" class="slide level2">
+<section id="デフォルト比較は-treatment-contrasts" class="slide level2 scrollable">
 <h2>デフォルト比較は treatment contrasts</h2>
 <p>Rでは，すでに設定されている比較があります。数種類の対比行列は関数で設定できます。</p>
 <ul>
@@ -1199,14 +1357,11 @@ B &amp;= 1 \mu_\text{setosa} + 1 \mu_\text{versicolor} -    2 \mu_\text{virginic
 <li><span class="math inline">\(\mu_\text{setosa} = \mu_\text{virginica}\)</span></li>
 </ul>
 </section>
-<section id="r-処理対比" class="slide level2">
+<section id="r-処理対比" class="slide level2 scrollable">
 <h2>R 処理対比</h2>
-<div class="columns">
-<div class="column" style="width:0.5;">
 <p><code>contrasts()</code> 関数をつかって，アヤメのコーディング行列を確認します。</p>
-</div><div class="column" style="width:0.5;">
-<div class="cell" data-hash="anova-slides_cache/revealjs/unnamed-chunk-35_410f37aad0c74e0d41c56a8a97b1ebb6">
-<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1"></a><span class="fu">contrasts</span>(iris_new<span class="sc">$</span>Species)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell" data-hash="anova-slides_cache/revealjs/unnamed-chunk-35_ce8e9a315c055c4b19c5ff42b3cfe78f">
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1"></a><span class="fu">contrasts</span>(iris_new<span class="sc">$</span>Species)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>           versicolor virginica
 setosa              0         0
@@ -1214,13 +1369,9 @@ versicolor          1         0
 virginica           0         1</code></pre>
 </div>
 </div>
-</div>
-</div>
 <p>対比行列に変換するには，列に 1 を代入した列行列を先に足して，その行列の逆行列をもとめる必要があります。</p>
-<div class="columns">
-<div class="column" style="width:0.5;">
 <p>コーディング行列から対比行列への変換</p>
-<div class="cell" data-hash="anova-slides_cache/revealjs/unnamed-chunk-36_56e287c25c41e05060f751ad7f6ccb9d">
+<div class="cell" data-hash="anova-slides_cache/revealjs/unnamed-chunk-36_e1de6d723ef6ef8ffd887375517baacc">
 <div class="cell-output cell-output-stdout">
 <pre><code>   1 2 3
    1 0 0
@@ -1228,22 +1379,19 @@ virginica           0         1</code></pre>
 3 -1 0 1</code></pre>
 </div>
 </div>
-</div><div class="column" style="width:0.5;">
 <ul>
 <li>1 行目は <code>setosa</code> の平均値</li>
 <li>2 行目は <code>setosa</code> と <code>versicolor</code> の平均値の差</li>
 <li>3 行目は <code>setosa</code> と <code>virginica</code> の平均値の差</li>
 </ul>
-</div>
-</div>
 </section>
-<section id="処理比較の結果" class="slide level2">
+<section id="処理比較の結果" class="slide level2 scrollable">
 <h2>処理比較の結果</h2>
-<div class="cell" data-hash="anova-slides_cache/revealjs/unnamed-chunk-37_a31d14d5eb28fe4d3049aefe144ccc2b">
-<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1"></a>m1 <span class="ot">=</span> <span class="fu">lm</span>(Petal.Length <span class="sc">~</span> Species, iris_new)</span>
-<span id="cb13-2"><a href="#cb13-2"></a>m1 <span class="sc">%&gt;%</span> </span>
-<span id="cb13-3"><a href="#cb13-3"></a>  <span class="fu">summary.aov</span>(<span class="at">split =</span> <span class="fu">list</span>(<span class="at">Species =</span><span class="fu">list</span>(<span class="st">"setosa:versicolor"</span> <span class="ot">=</span> <span class="dv">1</span>,</span>
-<span id="cb13-4"><a href="#cb13-4"></a>                                         <span class="st">"setosa:virginica"</span> <span class="ot">=</span> <span class="dv">2</span>)))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell" data-hash="anova-slides_cache/revealjs/unnamed-chunk-37_a3db0a08e4e926d4e692833c244ac0fe">
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1"></a>m1 <span class="ot">=</span> <span class="fu">lm</span>(Petal.Length <span class="sc">~</span> Species, iris_new)</span>
+<span id="cb18-2"><a href="#cb18-2"></a>m1 <span class="sc">%&gt;%</span> </span>
+<span id="cb18-3"><a href="#cb18-3"></a>  <span class="fu">summary.aov</span>(<span class="at">split =</span> <span class="fu">list</span>(<span class="at">Species =</span><span class="fu">list</span>(<span class="st">"setosa:versicolor"</span> <span class="ot">=</span> <span class="dv">1</span>,</span>
+<span id="cb18-4"><a href="#cb18-4"></a>                                         <span class="st">"setosa:virginica"</span> <span class="ot">=</span> <span class="dv">2</span>)))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>                              Df Sum Sq Mean Sq F value Pr(&gt;F)    
 Species                        2  437.1   218.6  1180.2 &lt;2e-16 ***
@@ -1255,7 +1403,8 @@ Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
 </div>
 </div>
 <p>事前比較を指定したときに分散分析表です。<code>setosa</code> 対 <code>versicolor</code> の対比の有意性はとてもたかいです。<span class="math inline">\(P \leq 2\times 10^{-16}\)</span> でした。 <code>setosa</code> 対 <code>virginica</code> の結果も同じです。平均値の差は次のように計算します。 このとき，<code>(Interecept)</code> は <code>setosa</code> の平均値です。</p>
-<div class="cell" data-hash="anova-slides_cache/revealjs/unnamed-chunk-38_48397b64369859281f612e4cb0026ec4">
+<div class="cell" data-hash="anova-slides_cache/revealjs/unnamed-chunk-38_31a5eac5ae39c2ba8ba30cae0ea30aa7">
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1"></a><span class="fu">summary</span>(m1)<span class="sc">$</span>coefficients</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>                  Estimate Std. Error  t value     Pr(&gt;|t|)
 (Intercept)          1.462 0.06085848 24.02294 9.303052e-53
@@ -1264,7 +1413,7 @@ Speciesvirginica     4.090 0.08606689 47.52118 4.106139e-91</code></pre>
 </div>
 </div>
 </section>
-<section id="ペア毎の比較" class="slide level2">
+<section id="ペア毎の比較" class="slide level2 scrollable">
 <h2>ペア毎の比較</h2>
 <p><span class="math display">\[
 \begin{aligned}
@@ -1272,22 +1421,19 @@ Speciesvirginica     4.090 0.08606689 47.52118 4.106139e-91</code></pre>
 \Lambda_2 &amp;= 0 \times \text{setosa} + 1 \times \text{versicolor} - 1 \times\text{virginica}
 \end{aligned}
 \]</span></p>
-<div class="columns">
-<div class="column" style="width:0.5;">
 <p>次の帰無仮説は下記のとおりです。</p>
 <ul>
 <li><span class="math inline">\(\mu_\text{setosa} = \mu_\text{versicolor}\)</span></li>
 <li><span class="math inline">\(\mu_\text{versicolor} = \mu_\text{virginica}\)</span></li>
 </ul>
-</div><div class="column" style="width:0.5;">
 <p>対比行列はつぎのとおりです。</p>
-<div class="cell" data-hash="anova-slides_cache/revealjs/unnamed-chunk-39_7148168e78dc106b7450e243f903ab29">
-<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1"></a>X <span class="ot">=</span> </span>
-<span id="cb16-2"><a href="#cb16-2"></a>  <span class="fu">rbind</span>(<span class="fu">c</span>( <span class="dv">1</span>,  <span class="dv">0</span>, <span class="dv">0</span>), <span class="co"># 切片</span></span>
-<span id="cb16-3"><a href="#cb16-3"></a>        <span class="fu">c</span>(<span class="sc">-</span><span class="dv">1</span>,  <span class="dv">1</span>, <span class="dv">0</span>), <span class="co"># 帰無仮説１</span></span>
-<span id="cb16-4"><a href="#cb16-4"></a>        <span class="fu">c</span>( <span class="dv">0</span>, <span class="sc">-</span><span class="dv">1</span>, <span class="dv">1</span>)) <span class="co"># 帰無仮説２</span></span>
-<span id="cb16-5"><a href="#cb16-5"></a></span>
-<span id="cb16-6"><a href="#cb16-6"></a>X</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell" data-hash="anova-slides_cache/revealjs/unnamed-chunk-39_e5bcc6a128ab47d589dbcf06b8d49ee8">
+<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1"></a>X <span class="ot">=</span> </span>
+<span id="cb22-2"><a href="#cb22-2"></a>  <span class="fu">rbind</span>(<span class="fu">c</span>( <span class="dv">1</span>,  <span class="dv">0</span>, <span class="dv">0</span>), <span class="co"># 切片</span></span>
+<span id="cb22-3"><a href="#cb22-3"></a>        <span class="fu">c</span>(<span class="sc">-</span><span class="dv">1</span>,  <span class="dv">1</span>, <span class="dv">0</span>), <span class="co"># 帰無仮説１</span></span>
+<span id="cb22-4"><a href="#cb22-4"></a>        <span class="fu">c</span>( <span class="dv">0</span>, <span class="sc">-</span><span class="dv">1</span>, <span class="dv">1</span>)) <span class="co"># 帰無仮説２</span></span>
+<span id="cb22-5"><a href="#cb22-5"></a></span>
+<span id="cb22-6"><a href="#cb22-6"></a>X</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>     [,1] [,2] [,3]
 [1,]    1    0    0
@@ -1295,17 +1441,15 @@ Speciesvirginica     4.090 0.08606689 47.52118 4.106139e-91</code></pre>
 [3,]    0   -1    1</code></pre>
 </div>
 </div>
-</div>
-</div>
 </section>
 <section id="ペア毎の比較の結果" class="slide level2">
 <h2>ペア毎の比較の結果</h2>
-<div class="cell" data-hash="anova-slides_cache/revealjs/unnamed-chunk-40_08225edfbdf6fa5d6209ee3b24458062">
-<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1"></a>Z <span class="ot">=</span> X <span class="sc">%&gt;%</span> <span class="fu">solve</span>()</span>
-<span id="cb18-2"><a href="#cb18-2"></a>m2 <span class="ot">=</span> <span class="fu">lm</span>(Petal.Length <span class="sc">~</span> Species, iris_new, </span>
-<span id="cb18-3"><a href="#cb18-3"></a>        <span class="at">contrasts=</span><span class="fu">list</span>(<span class="at">Species =</span> Z[, <span class="sc">-</span><span class="dv">1</span>]))</span>
-<span id="cb18-4"><a href="#cb18-4"></a>m2 <span class="sc">%&gt;%</span> <span class="fu">summary.aov</span>(<span class="at">split =</span> <span class="fu">list</span>(<span class="at">Species =</span> <span class="fu">list</span>(<span class="st">"setosa - versicolor"</span> <span class="ot">=</span> <span class="dv">1</span>,</span>
-<span id="cb18-5"><a href="#cb18-5"></a>                                                <span class="st">"versicolor - virginica"</span> <span class="ot">=</span> <span class="dv">2</span>)))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell" data-hash="anova-slides_cache/revealjs/unnamed-chunk-40_60ee6f2beba3d64f98d0f8c855a9b346">
+<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1"></a>Z <span class="ot">=</span> X <span class="sc">%&gt;%</span> <span class="fu">solve</span>()</span>
+<span id="cb24-2"><a href="#cb24-2"></a>m2 <span class="ot">=</span> <span class="fu">lm</span>(Petal.Length <span class="sc">~</span> Species, iris_new, </span>
+<span id="cb24-3"><a href="#cb24-3"></a>        <span class="at">contrasts=</span><span class="fu">list</span>(<span class="at">Species =</span> Z[, <span class="sc">-</span><span class="dv">1</span>]))</span>
+<span id="cb24-4"><a href="#cb24-4"></a>m2 <span class="sc">%&gt;%</span> <span class="fu">summary.aov</span>(<span class="at">split =</span> <span class="fu">list</span>(<span class="at">Species =</span> <span class="fu">list</span>(<span class="st">"setosa - versicolor"</span> <span class="ot">=</span> <span class="dv">1</span>,</span>
+<span id="cb24-5"><a href="#cb24-5"></a>                                                <span class="st">"versicolor - virginica"</span> <span class="ot">=</span> <span class="dv">2</span>)))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>                                   Df Sum Sq Mean Sq F value Pr(&gt;F)    
 Species                             2  437.1   218.6  1180.2 &lt;2e-16 ***
@@ -1316,7 +1460,7 @@ Residuals                         147   27.2     0.2
 Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
 </div>
 </div>
-<div class="cell" data-hash="anova-slides_cache/revealjs/unnamed-chunk-41_9027fcf20f9b44ab014b3386d6f75c67">
+<div class="cell" data-hash="anova-slides_cache/revealjs/unnamed-chunk-41_e76f98b4708d31d18462d9b1adf2b49f">
 <div class="cell-output cell-output-stdout">
 <pre><code>            Estimate Std. Error  t value     Pr(&gt;|t|)
 (Intercept)    1.462 0.06085848 24.02294 9.303052e-53
@@ -1324,33 +1468,33 @@ Species1       2.798 0.08606689 32.50960 5.254587e-69
 Species2       1.292 0.08606689 15.01158 1.810597e-31</code></pre>
 </div>
 </div>
-<div class="{note}">
+<div class="{notes}">
 <p>We can also get the F-values with this code.</p>
 <pre><code>aov(m1) %&gt;% 
   summary(split = list(Species = list(versicolor = 1, virginica = 2)))</code></pre>
 </div>
 </section>
-<section id="直交対比" class="slide level2">
+<section id="直交対比" class="slide level2 scrollable">
 <h2>直交対比</h2>
 <p><span class="math display">\[
 \begin{aligned}
 \Lambda_1 &amp;= 1 \times \text{setosa} - 1 \times \text{versicolor} + 0 \times\text{virginica} \\
 \Lambda_2 &amp;= 1 \times \text{setosa} + 1 \times \text{versicolor} - 2 \times\text{virginica}
 \end{aligned}
-\]</span> ::::{.columns} :::{.column width=“0.5”} 次の帰無仮説は下記のとおりです。</p>
+\]</span></p>
+<p>次の帰無仮説は下記のとおりです。</p>
 <ul>
 <li><span class="math inline">\(\mu_\text{setosa} = \mu_\text{versicolor}\)</span></li>
 <li><span class="math inline">\(\frac{1}{2}(\mu_\text{setosa} + \mu_\text{versicolor}) = \mu_\text{virginica}\)</span></li>
 </ul>
-<p>::: :::{.column width=“0.5”}</p>
 <p>対比行列はつぎのとおりです。</p>
-<div class="cell" data-hash="anova-slides_cache/revealjs/unnamed-chunk-42_f97d3442d95a018a39b18947a2190ce5">
-<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1"></a>X <span class="ot">=</span> </span>
-<span id="cb22-2"><a href="#cb22-2"></a>  <span class="fu">rbind</span>(<span class="fu">c</span>( <span class="dv">1</span>,  <span class="dv">0</span>,  <span class="dv">0</span>), <span class="co"># 切片</span></span>
-<span id="cb22-3"><a href="#cb22-3"></a>        <span class="fu">c</span>(<span class="sc">-</span><span class="dv">1</span>,  <span class="dv">1</span>,  <span class="dv">0</span>), <span class="co"># 帰無仮説１</span></span>
-<span id="cb22-4"><a href="#cb22-4"></a>        <span class="fu">c</span>( <span class="dv">1</span>,  <span class="dv">1</span>, <span class="sc">-</span><span class="dv">2</span>)) <span class="co"># 帰無仮説２</span></span>
-<span id="cb22-5"><a href="#cb22-5"></a></span>
-<span id="cb22-6"><a href="#cb22-6"></a>X</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell" data-hash="anova-slides_cache/revealjs/unnamed-chunk-42_cf7ed23c376c4f9c69cf448f1b1eb703">
+<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1"></a>X <span class="ot">=</span> </span>
+<span id="cb28-2"><a href="#cb28-2"></a>  <span class="fu">rbind</span>(<span class="fu">c</span>( <span class="dv">1</span>,  <span class="dv">0</span>,  <span class="dv">0</span>), <span class="co"># 切片</span></span>
+<span id="cb28-3"><a href="#cb28-3"></a>        <span class="fu">c</span>(<span class="sc">-</span><span class="dv">1</span>,  <span class="dv">1</span>,  <span class="dv">0</span>), <span class="co"># 帰無仮説１</span></span>
+<span id="cb28-4"><a href="#cb28-4"></a>        <span class="fu">c</span>( <span class="dv">1</span>,  <span class="dv">1</span>, <span class="sc">-</span><span class="dv">2</span>)) <span class="co"># 帰無仮説２</span></span>
+<span id="cb28-5"><a href="#cb28-5"></a></span>
+<span id="cb28-6"><a href="#cb28-6"></a>X</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>     [,1] [,2] [,3]
 [1,]    1    0    0
@@ -1358,16 +1502,15 @@ Species2       1.292 0.08606689 15.01158 1.810597e-31</code></pre>
 [3,]    1    1   -2</code></pre>
 </div>
 </div>
-<p>::: ::::</p>
 </section>
 <section id="直交対比の結果" class="slide level2">
 <h2>直交対比の結果</h2>
-<div class="cell" data-hash="anova-slides_cache/revealjs/unnamed-chunk-43_beb5621ac3db3e00b58606c1fe038c16">
-<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1"></a>Z <span class="ot">=</span> X <span class="sc">%&gt;%</span> <span class="fu">solve</span>()</span>
-<span id="cb24-2"><a href="#cb24-2"></a>m3 <span class="ot">=</span> <span class="fu">lm</span>(Petal.Length <span class="sc">~</span> Species, iris_new, </span>
-<span id="cb24-3"><a href="#cb24-3"></a>        <span class="at">contrasts=</span><span class="fu">list</span>(<span class="at">Species =</span> Z[, <span class="sc">-</span><span class="dv">1</span>]))</span>
-<span id="cb24-4"><a href="#cb24-4"></a>m3 <span class="sc">%&gt;%</span> <span class="fu">summary.aov</span>(<span class="at">split =</span> <span class="fu">list</span>(<span class="at">Species =</span> <span class="fu">list</span>(<span class="st">"setosa - versicolor"</span> <span class="ot">=</span> <span class="dv">1</span>,</span>
-<span id="cb24-5"><a href="#cb24-5"></a>                                                <span class="st">"mean - virginica"</span> <span class="ot">=</span> <span class="dv">2</span>)))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell" data-hash="anova-slides_cache/revealjs/unnamed-chunk-43_eb00e6dc640ce4c7e8fae0ec39781061">
+<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1"></a>Z <span class="ot">=</span> X <span class="sc">%&gt;%</span> <span class="fu">solve</span>()</span>
+<span id="cb30-2"><a href="#cb30-2"></a>m3 <span class="ot">=</span> <span class="fu">lm</span>(Petal.Length <span class="sc">~</span> Species, iris_new, </span>
+<span id="cb30-3"><a href="#cb30-3"></a>        <span class="at">contrasts=</span><span class="fu">list</span>(<span class="at">Species =</span> Z[, <span class="sc">-</span><span class="dv">1</span>]))</span>
+<span id="cb30-4"><a href="#cb30-4"></a>m3 <span class="sc">%&gt;%</span> <span class="fu">summary.aov</span>(<span class="at">split =</span> <span class="fu">list</span>(<span class="at">Species =</span> <span class="fu">list</span>(<span class="st">"setosa - versicolor"</span> <span class="ot">=</span> <span class="dv">1</span>,</span>
+<span id="cb30-5"><a href="#cb30-5"></a>                                                <span class="st">"mean - virginica"</span> <span class="ot">=</span> <span class="dv">2</span>)))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>                                Df Sum Sq Mean Sq F value Pr(&gt;F)    
 Species                          2  437.1  218.55    1180 &lt;2e-16 ***
@@ -1378,8 +1521,8 @@ Residuals                      147   27.2    0.19
 Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
 </div>
 </div>
-<div class="cell" data-hash="anova-slides_cache/revealjs/unnamed-chunk-44_590c28d8973cd0cbae197544b358c059">
-<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1"></a><span class="fu">summary</span>(m3)<span class="sc">$</span>coefficients</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell" data-hash="anova-slides_cache/revealjs/unnamed-chunk-44_930cbbde3512a122d36534dbba3ed87d">
+<div class="sourceCode cell-code" id="cb32"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1"></a><span class="fu">summary</span>(m3)<span class="sc">$</span>coefficients</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>            Estimate Std. Error   t value     Pr(&gt;|t|)
 (Intercept)    1.462 0.06085848  24.02294 9.303052e-53
@@ -1387,28 +1530,28 @@ Species1       2.798 0.08606689  32.50960 5.254587e-69
 Species2      -5.382 0.14907223 -36.10330 5.858996e-75</code></pre>
 </div>
 </div>
-<div class="{note}">
+<div class="{notes}">
 <p>There is only one way to partition the sum-of-squares, so all of the sum-of-squares, regardless of the comparison are the same!</p>
 </div>
-<div class="cell" data-hash="anova-slides_cache/revealjs/unnamed-chunk-45_09f3e466afe926eddda40c467cae9057">
-<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1"></a><span class="fu">lm</span>(Petal.Length <span class="sc">~</span> Species, iris_new, </span>
-<span id="cb28-2"><a href="#cb28-2"></a>        <span class="at">contrasts=</span><span class="fu">list</span>(<span class="at">Species =</span> <span class="fu">contr.helmert</span>(<span class="dv">3</span>))) <span class="sc">%&gt;%</span> </span>
-<span id="cb28-3"><a href="#cb28-3"></a>  <span class="fu">summary.aov</span>(<span class="at">split =</span> <span class="fu">list</span>(<span class="at">Species =</span> <span class="fu">list</span>(<span class="at">a =</span> <span class="dv">1</span>, <span class="at">b =</span> <span class="dv">2</span>)))</span>
-<span id="cb28-4"><a href="#cb28-4"></a></span>
-<span id="cb28-5"><a href="#cb28-5"></a></span>
-<span id="cb28-6"><a href="#cb28-6"></a><span class="fu">lm</span>(Petal.Length <span class="sc">~</span> Species, iris_new, </span>
-<span id="cb28-7"><a href="#cb28-7"></a>        <span class="at">contrasts=</span><span class="fu">list</span>(<span class="at">Species =</span> <span class="fu">contr.diff</span>(<span class="dv">3</span>))) <span class="sc">%&gt;%</span> </span>
-<span id="cb28-8"><a href="#cb28-8"></a>  <span class="fu">summary.aov</span>(<span class="at">split =</span> <span class="fu">list</span>(<span class="at">Species =</span> <span class="fu">list</span>(<span class="at">a =</span> <span class="dv">1</span>, <span class="at">b =</span> <span class="dv">2</span>)))</span>
-<span id="cb28-9"><a href="#cb28-9"></a></span>
-<span id="cb28-10"><a href="#cb28-10"></a></span>
-<span id="cb28-11"><a href="#cb28-11"></a><span class="fu">lm</span>(Petal.Length <span class="sc">~</span> Species, iris_new, </span>
-<span id="cb28-12"><a href="#cb28-12"></a>        <span class="at">contrasts=</span><span class="fu">list</span>(<span class="at">Species =</span> <span class="fu">contr.treatment</span>(<span class="dv">3</span>))) <span class="sc">%&gt;%</span> </span>
-<span id="cb28-13"><a href="#cb28-13"></a>  <span class="fu">summary.aov</span>(<span class="at">split =</span> <span class="fu">list</span>(<span class="at">Species =</span> <span class="fu">list</span>(<span class="at">a =</span> <span class="dv">1</span>, <span class="at">b =</span> <span class="dv">2</span>)))</span>
-<span id="cb28-14"><a href="#cb28-14"></a></span>
-<span id="cb28-15"><a href="#cb28-15"></a></span>
-<span id="cb28-16"><a href="#cb28-16"></a><span class="fu">lm</span>(Petal.Length <span class="sc">~</span> Species, iris_new, </span>
-<span id="cb28-17"><a href="#cb28-17"></a>        <span class="at">contrasts=</span><span class="fu">list</span>(<span class="at">Species =</span> <span class="fu">contr.sum</span>(<span class="dv">3</span>))) <span class="sc">%&gt;%</span> </span>
-<span id="cb28-18"><a href="#cb28-18"></a>  <span class="fu">summary.aov</span>(<span class="at">split =</span> <span class="fu">list</span>(<span class="at">Species =</span> <span class="fu">list</span>(<span class="at">a =</span> <span class="dv">1</span>, <span class="at">b =</span> <span class="dv">2</span>)))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell" data-hash="anova-slides_cache/revealjs/unnamed-chunk-45_2cc7a4f3f44214cb0155f10e27ccbb5d">
+<div class="sourceCode cell-code" id="cb34"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1"></a><span class="fu">lm</span>(Petal.Length <span class="sc">~</span> Species, iris_new, </span>
+<span id="cb34-2"><a href="#cb34-2"></a>        <span class="at">contrasts=</span><span class="fu">list</span>(<span class="at">Species =</span> <span class="fu">contr.helmert</span>(<span class="dv">3</span>))) <span class="sc">%&gt;%</span> </span>
+<span id="cb34-3"><a href="#cb34-3"></a>  <span class="fu">summary.aov</span>(<span class="at">split =</span> <span class="fu">list</span>(<span class="at">Species =</span> <span class="fu">list</span>(<span class="at">a =</span> <span class="dv">1</span>, <span class="at">b =</span> <span class="dv">2</span>)))</span>
+<span id="cb34-4"><a href="#cb34-4"></a></span>
+<span id="cb34-5"><a href="#cb34-5"></a></span>
+<span id="cb34-6"><a href="#cb34-6"></a><span class="fu">lm</span>(Petal.Length <span class="sc">~</span> Species, iris_new, </span>
+<span id="cb34-7"><a href="#cb34-7"></a>        <span class="at">contrasts=</span><span class="fu">list</span>(<span class="at">Species =</span> <span class="fu">contr.diff</span>(<span class="dv">3</span>))) <span class="sc">%&gt;%</span> </span>
+<span id="cb34-8"><a href="#cb34-8"></a>  <span class="fu">summary.aov</span>(<span class="at">split =</span> <span class="fu">list</span>(<span class="at">Species =</span> <span class="fu">list</span>(<span class="at">a =</span> <span class="dv">1</span>, <span class="at">b =</span> <span class="dv">2</span>)))</span>
+<span id="cb34-9"><a href="#cb34-9"></a></span>
+<span id="cb34-10"><a href="#cb34-10"></a></span>
+<span id="cb34-11"><a href="#cb34-11"></a><span class="fu">lm</span>(Petal.Length <span class="sc">~</span> Species, iris_new, </span>
+<span id="cb34-12"><a href="#cb34-12"></a>        <span class="at">contrasts=</span><span class="fu">list</span>(<span class="at">Species =</span> <span class="fu">contr.treatment</span>(<span class="dv">3</span>))) <span class="sc">%&gt;%</span> </span>
+<span id="cb34-13"><a href="#cb34-13"></a>  <span class="fu">summary.aov</span>(<span class="at">split =</span> <span class="fu">list</span>(<span class="at">Species =</span> <span class="fu">list</span>(<span class="at">a =</span> <span class="dv">1</span>, <span class="at">b =</span> <span class="dv">2</span>)))</span>
+<span id="cb34-14"><a href="#cb34-14"></a></span>
+<span id="cb34-15"><a href="#cb34-15"></a></span>
+<span id="cb34-16"><a href="#cb34-16"></a><span class="fu">lm</span>(Petal.Length <span class="sc">~</span> Species, iris_new, </span>
+<span id="cb34-17"><a href="#cb34-17"></a>        <span class="at">contrasts=</span><span class="fu">list</span>(<span class="at">Species =</span> <span class="fu">contr.sum</span>(<span class="dv">3</span>))) <span class="sc">%&gt;%</span> </span>
+<span id="cb34-18"><a href="#cb34-18"></a>  <span class="fu">summary.aov</span>(<span class="at">split =</span> <span class="fu">list</span>(<span class="at">Species =</span> <span class="fu">list</span>(<span class="at">a =</span> <span class="dv">1</span>, <span class="at">b =</span> <span class="dv">2</span>)))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section></section>
 <section>
@@ -1416,7 +1559,7 @@ Species2      -5.382 0.14907223 -36.10330 5.858996e-75</code></pre>
 <h1>post hoc comparisons</h1>
 
 </section>
-<section id="事後比較" class="slide level2">
+<section id="事後比較" class="slide level2 scrollable">
 <h2>事後比較</h2>
 <p>事前に比較を検討しなかった場合，事後の比較も可能です。事後比較も数種類あります。</p>
 <ul>
@@ -1448,8 +1591,8 @@ Species2      -5.382 0.14907223 -36.10330 5.858996e-75</code></pre>
 </section>
 <section id="ボンフェロニ法" class="slide level2">
 <h2>ボンフェロニ法</h2>
-<div class="cell" data-hash="anova-slides_cache/revealjs/unnamed-chunk-46_246551132c3f20d4c69459c5eaf5c4fe">
-<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1"></a><span class="fu">pairwise.t.test</span>(iris_new<span class="sc">$</span>Petal.Length, iris_new<span class="sc">$</span>Species, <span class="at">p.adjust.method =</span> <span class="st">"bonferroni"</span> )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell" data-hash="anova-slides_cache/revealjs/unnamed-chunk-46_03fe4d98932ca6009f47854c9dec57aa">
+<div class="sourceCode cell-code" id="cb35"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1"></a><span class="fu">pairwise.t.test</span>(iris_new<span class="sc">$</span>Petal.Length, iris_new<span class="sc">$</span>Species, <span class="at">p.adjust.method =</span> <span class="st">"bonferroni"</span> )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
     Pairwise comparisons using t tests with pooled SD 
@@ -1465,10 +1608,10 @@ P value adjustment method: bonferroni </code></pre>
 </div>
 <p>ボンフェロニ法でファミリワイズエラー率を調整するとき，<span class="math inline">\(\alpha_{\text{fwer}} = \alpha / m\)</span> です。 ここで表示されている P 値は t 検定で求めたP値と <span class="math inline">\(m\)</span> の積です。</p>
 </section>
-<section id="ホルムボンフェロニ法" class="slide level2">
+<section id="ホルムボンフェロニ法" class="slide level2 scrollable">
 <h2>ホルム=ボンフェロニ法</h2>
-<div class="cell" data-hash="anova-slides_cache/revealjs/unnamed-chunk-47_bd63f4ff2de1c2f14039c0295190fa8c">
-<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1"></a><span class="fu">pairwise.t.test</span>(iris_new<span class="sc">$</span>Petal.Length, iris_new<span class="sc">$</span>Species, <span class="at">p.adjust.method =</span> <span class="st">"holm"</span> )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell" data-hash="anova-slides_cache/revealjs/unnamed-chunk-47_3d0ca0105f57c6310725fa6b17f9a133">
+<div class="sourceCode cell-code" id="cb37"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb37-1"><a href="#cb37-1"></a><span class="fu">pairwise.t.test</span>(iris_new<span class="sc">$</span>Petal.Length, iris_new<span class="sc">$</span>Species, <span class="at">p.adjust.method =</span> <span class="st">"holm"</span> )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
     Pairwise comparisons using t tests with pooled SD 
@@ -1486,7 +1629,7 @@ P value adjustment method: holm </code></pre>
 </section>
 <section id="テューキーのhsd法" class="slide level2">
 <h2>テューキーのHSD法</h2>
-<div class="cell" data-hash="anova-slides_cache/revealjs/unnamed-chunk-48_9759f0804ccc18ef23eca6cc0920c775">
+<div class="cell" data-hash="anova-slides_cache/revealjs/unnamed-chunk-48_6dbd187ef25d5ba3aad6f2f76337938d">
 <div class="cell-output cell-output-stdout">
 <pre><code>  Tukey multiple comparisons of means
     95% family-wise confidence level
@@ -1502,13 +1645,13 @@ virginica-versicolor 1.292 1.08822 1.49578     0</code></pre>
 </div>
 <p>テューキーのHSD法は各2水準間の平均値の差の検定を行っています。 t 検定とちがって，求めた統計量はステューデント化範囲の分布にしたます。</p>
 </section>
-<section id="シェッフェの方法" class="slide level2">
+<section id="シェッフェの方法" class="slide level2 scrollable">
 <h2>シェッフェの方法</h2>
-<div class="cell" data-hash="anova-slides_cache/revealjs/unnamed-chunk-49_89978f275749106ce9965538ae1379c3">
-<div class="sourceCode cell-code" id="cb34"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1"></a>mout <span class="ot">=</span> <span class="fu">lm</span>(Petal.Length <span class="sc">~</span> Species, iris_new)</span>
-<span id="cb34-2"><a href="#cb34-2"></a>dferror <span class="ot">=</span> <span class="fu">df.residual</span>(mout); mserror <span class="ot">=</span> <span class="fu">deviance</span>(mout)<span class="sc">/</span>dferror; fc <span class="ot">=</span> <span class="fu">summary</span>(mout)<span class="sc">$</span>fstatistic</span>
-<span id="cb34-3"><a href="#cb34-3"></a>agricolae<span class="sc">::</span><span class="fu">scheffe.test</span>(<span class="fu">aov</span>(mout), <span class="at">trt =</span> <span class="st">"Species"</span>, <span class="co"># 因子</span></span>
-<span id="cb34-4"><a href="#cb34-4"></a>                        <span class="at">DFerror =</span> dferror, <span class="at">MSerror=</span>mserror, <span class="at">Fc =</span> fc, <span class="at">group =</span> T, <span class="at">console =</span> <span class="cn">TRUE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell" data-hash="anova-slides_cache/revealjs/unnamed-chunk-49_f75d7a2c2d6b040533c94058c895914b">
+<div class="sourceCode cell-code" id="cb40"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb40-1"><a href="#cb40-1"></a>mout <span class="ot">=</span> <span class="fu">lm</span>(Petal.Length <span class="sc">~</span> Species, iris_new)</span>
+<span id="cb40-2"><a href="#cb40-2"></a>dferror <span class="ot">=</span> <span class="fu">df.residual</span>(mout); mserror <span class="ot">=</span> <span class="fu">deviance</span>(mout)<span class="sc">/</span>dferror; fc <span class="ot">=</span> <span class="fu">summary</span>(mout)<span class="sc">$</span>fstatistic</span>
+<span id="cb40-3"><a href="#cb40-3"></a>agricolae<span class="sc">::</span><span class="fu">scheffe.test</span>(<span class="fu">aov</span>(mout), <span class="at">trt =</span> <span class="st">"Species"</span>, <span class="co"># 因子</span></span>
+<span id="cb40-4"><a href="#cb40-4"></a>                        <span class="at">DFerror =</span> dferror, <span class="at">MSerror=</span>mserror, <span class="at">Fc =</span> fc, <span class="at">group =</span> T, <span class="at">console =</span> <span class="cn">TRUE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
 Study: aov(mout) ~ "Species"
@@ -1541,9 +1684,9 @@ setosa            1.462      c</code></pre>
 </section>
 <section id="ダネットの検定" class="slide level2">
 <h2>ダネットの検定</h2>
-<div class="cell" data-hash="anova-slides_cache/revealjs/unnamed-chunk-50_9217181ad9edbc654e520fdf2cd25bdd">
-<div class="sourceCode cell-code" id="cb36"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1"></a>DescTools<span class="sc">::</span><span class="fu">DunnettTest</span>(Petal.Length <span class="sc">~</span> Species, <span class="at">data  =</span> iris_new,</span>
-<span id="cb36-2"><a href="#cb36-2"></a>                      <span class="at">control =</span> <span class="st">"versicolor"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell" data-hash="anova-slides_cache/revealjs/unnamed-chunk-50_4cff7d20ed5208d8dc3c99e6e2bcdcfc">
+<div class="sourceCode cell-code" id="cb42"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb42-1"><a href="#cb42-1"></a>DescTools<span class="sc">::</span><span class="fu">DunnettTest</span>(Petal.Length <span class="sc">~</span> Species, <span class="at">data  =</span> iris_new,</span>
+<span id="cb42-2"><a href="#cb42-2"></a>                      <span class="at">control =</span> <span class="st">"versicolor"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
   Dunnett's test for comparing several treatments with a control :  
@@ -1572,11 +1715,11 @@ Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
 <li><p>ANOVA procedure で有意な結果がでて，さらに残渣・正規性に問題がなかったので，多重仮説検定をおこないます。</p></li>
 </ul>
 </section>
-<section id="多重比較検定誤った検定" class="slide level2">
+<section id="多重比較検定誤った検定" class="slide level2 scrollable">
 <h2>多重比較検定：誤った検定</h2>
 <p>分散分析の結果は：<span class="math inline">\(F_{(2, 27)} = 3.90, P = 0.0326\)</span> でした。<span class="math inline">\(\mu_A=\mu_B=\mu_C\)</span> を棄却しました。</p>
-<div class="cell" data-hash="anova-slides_cache/revealjs/unnamed-chunk-52_8178a9cb70acc92971c00d47b7a76995">
-<div class="sourceCode cell-code" id="cb38"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb38-1"><a href="#cb38-1"></a><span class="fu">pairwise.t.test</span>(X<span class="sc">$</span>data, X<span class="sc">$</span>site, <span class="at">p.adjust.method =</span> <span class="st">"none"</span> )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell" data-hash="anova-slides_cache/revealjs/unnamed-chunk-52_3016d8f30ad9c8e8e44a69dd94854f7c">
+<div class="sourceCode cell-code" id="cb44"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb44-1"><a href="#cb44-1"></a><span class="fu">pairwise.t.test</span>(X<span class="sc">$</span>data, X<span class="sc">$</span>site, <span class="at">p.adjust.method =</span> <span class="st">"none"</span> )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
     Pairwise comparisons using t tests with pooled SD 
@@ -1595,8 +1738,8 @@ P value adjustment method: none </code></pre>
 <section id="多重比較検定ボンフェロニ法" class="slide level2">
 <h2>多重比較検定：ボンフェロニ法</h2>
 <p>分散分析の結果は：<span class="math inline">\(F_{(2, 27)} = 3.90, P = 0.0326\)</span> でした。<span class="math inline">\(\mu_A=\mu_B=\mu_C\)</span> を棄却しました。</p>
-<div class="cell" data-hash="anova-slides_cache/revealjs/unnamed-chunk-53_82cb1c3189a7a23a0c0c79a7791a8010">
-<div class="sourceCode cell-code" id="cb40"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb40-1"><a href="#cb40-1"></a><span class="fu">pairwise.t.test</span>(X<span class="sc">$</span>data, X<span class="sc">$</span>site, <span class="at">p.adjust.method =</span> <span class="st">"bonferroni"</span> )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell" data-hash="anova-slides_cache/revealjs/unnamed-chunk-53_ac479ce343f46e58a091708e76de66fc">
+<div class="sourceCode cell-code" id="cb46"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb46-1"><a href="#cb46-1"></a><span class="fu">pairwise.t.test</span>(X<span class="sc">$</span>data, X<span class="sc">$</span>site, <span class="at">p.adjust.method =</span> <span class="st">"bonferroni"</span> )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
     Pairwise comparisons using t tests with pooled SD 
@@ -1615,8 +1758,8 @@ P value adjustment method: bonferroni </code></pre>
 <section id="多重比較検定ボンフェロニ法-1" class="slide level2">
 <h2>多重比較検定：ボンフェロニ法</h2>
 <p>分散分析の結果は：<span class="math inline">\(F_{(2, 27)} = 3.90, P = 0.0326\)</span> でした。<span class="math inline">\(\mu_A=\mu_B=\mu_C\)</span> を棄却しました。</p>
-<div class="cell" data-hash="anova-slides_cache/revealjs/unnamed-chunk-54_a3c4ef0fc7051a4fb44f51f045944344">
-<div class="sourceCode cell-code" id="cb42"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb42-1"><a href="#cb42-1"></a><span class="fu">pairwise.t.test</span>(X<span class="sc">$</span>data, X<span class="sc">$</span>site, <span class="at">p.adjust.method =</span> <span class="st">"holm"</span> )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell" data-hash="anova-slides_cache/revealjs/unnamed-chunk-54_f3cd351ca7e83eb06e21721833525f19">
+<div class="sourceCode cell-code" id="cb48"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb48-1"><a href="#cb48-1"></a><span class="fu">pairwise.t.test</span>(X<span class="sc">$</span>data, X<span class="sc">$</span>site, <span class="at">p.adjust.method =</span> <span class="st">"holm"</span> )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
     Pairwise comparisons using t tests with pooled SD 
@@ -1632,12 +1775,12 @@ P value adjustment method: holm </code></pre>
 </div>
 <p>ホルム=ボンフェロニ法はボンフェロニ法と同様な結果でした。</p>
 </section>
-<section id="多重比較検定テューキーのhsd法" class="slide level2">
+<section id="多重比較検定テューキーのhsd法" class="slide level2 scrollable">
 <h2>多重比較検定：テューキーのHSD法</h2>
 <p>分散分析の結果は：<span class="math inline">\(F_{(2, 27)} = 3.90, P = 0.0326\)</span> でした。<span class="math inline">\(\mu_A=\mu_B=\mu_C\)</span> を棄却しました。</p>
-<div class="cell" data-hash="anova-slides_cache/revealjs/unnamed-chunk-55_7d56599fea3f575f839f22a2904dc227">
-<div class="sourceCode cell-code" id="cb44"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb44-1"><a href="#cb44-1"></a>mout <span class="ot">=</span> <span class="fu">lm</span>(data <span class="sc">~</span> site, X) <span class="sc">%&gt;%</span> <span class="fu">aov</span>()</span>
-<span id="cb44-2"><a href="#cb44-2"></a><span class="fu">TukeyHSD</span>(mout)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell" data-hash="anova-slides_cache/revealjs/unnamed-chunk-55_b5dfca352192608343072940dd1624da">
+<div class="sourceCode cell-code" id="cb50"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb50-1"><a href="#cb50-1"></a>mout <span class="ot">=</span> <span class="fu">lm</span>(data <span class="sc">~</span> site, X) <span class="sc">%&gt;%</span> <span class="fu">aov</span>()</span>
+<span id="cb50-2"><a href="#cb50-2"></a><span class="fu">TukeyHSD</span>(mout)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>  Tukey multiple comparisons of means
     95% family-wise confidence level
@@ -1683,13 +1826,13 @@ C-B -0.5356154 -5.5861414  4.514911 0.9626557</code></pre>
       Reveal.initialize({
 'controlsAuto': true,
 'previewLinksAuto': false,
-'smaller': true,
+'smaller': false,
 'pdfSeparateFragments': false,
 'autoAnimateEasing': "ease",
 'autoAnimateDuration': 1,
 'autoAnimateUnmatched': true,
 'menu': {"side":"left","useTextContentForMissingTitles":true,"markers":false,"loadIcons":false,"custom":[{"title":"Tools","icon":"<i class=\"fas fa-gear\"></i>","content":"<ul class=\"slide-menu-items\">\n<li class=\"slide-tool-item active\" data-item=\"0\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.fullscreen(event)\"><kbd>f</kbd> Fullscreen</a></li>\n<li class=\"slide-tool-item\" data-item=\"1\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.speakerMode(event)\"><kbd>s</kbd> Speaker View</a></li>\n<li class=\"slide-tool-item\" data-item=\"2\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.overview(event)\"><kbd>o</kbd> Slide Overview</a></li>\n<li class=\"slide-tool-item\" data-item=\"3\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.togglePdfExport(event)\"><kbd>e</kbd> PDF Export Mode</a></li>\n<li class=\"slide-tool-item\" data-item=\"4\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.keyboardHelp(event)\"><kbd>?</kbd> Keyboard Help</a></li>\n</ul>"}],"openButton":true},
-'smaller': true,
+'smaller': false,
  
         // Display controls in the bottom right corner
         controls: false,
