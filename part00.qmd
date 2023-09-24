@@ -40,6 +40,11 @@ img1 = image_draw(img1)
 rect(xleft = 0, ybottom = 20, xright = 40, ytop = 80, border = "red", lwd = 5)
 rect(1780, 90, 1920, 60, border = "red", lwd = 5)
 dev.off()
+```
+
+
+```{r}
+#| echo: false
 print(img1)
 ```
 
@@ -50,6 +55,11 @@ print(img1)
 imgs = dir(folder, pattern = "ject0[2-5]", full = T)
 imgs = image_read(imgs)
 image_write_gif(imgs, str_c(folder, "/newproject.gif"), delay = 1)
+```
+
+
+```{r}
+#| echo: false
 image_read(str_c(folder, "/newproject.gif"))
 ```
 
@@ -130,7 +140,8 @@ RStudio 画面の上部にある `Tools` をクリックし、プルダウンメ
 * 最近使用したプロジェクトとファイルをスタートアップ時に開くにチェックを入れる
 
 ```{r}
-#| include: false
+#| echo: false
+#| fig-align: center
 image_read(str_c(folder, "/globalops01.png"))
 ```
 
@@ -140,7 +151,8 @@ image_read(str_c(folder, "/globalops01.png"))
 * `Continue comment when inserting new line` にもチェック入れています。
 
 ```{r}
-#| include: false
+#| echo: false
+#| fig-align: center
 image_read(str_c(folder, "/globalops02.png"))
 ```
 
@@ -148,7 +160,8 @@ image_read(str_c(folder, "/globalops02.png"))
 ここでは、RStudio のテーマや使用するフォントの種類・サイズを変えられます。
 
 ```{r}
-#| include: false
+#| echo: false
+#| fig-align: center
 image_read(str_c(folder, "/globalops03.png"))
 ```
 
