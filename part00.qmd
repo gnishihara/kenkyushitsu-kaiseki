@@ -45,7 +45,7 @@ dev.off()
 
 ```{r}
 #| echo: false
-print(img1)
+img1
 ```
 
 3. `New Project` ウィンドウから `New Directory` を選んで、つぎに `New Project` を選ぶ。プロジェクト名を記入して、`Create Project` ボタンをクリックする。
