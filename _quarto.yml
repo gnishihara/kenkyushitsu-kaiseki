@@ -24,7 +24,7 @@ website:
     style: "docked"
     search: true
     contents:
-      - section: Introduction
+      - section: その前に
         contents:
         - index.qmd
         - part00.qmd
@@ -36,7 +36,7 @@ website:
         - part03.qmd
         - part04.qmd
         - part05.qmd
-      - section: Linear models
+      - section: 線形モデル
         contents:
         - linearmodels.qmd
         - ttest.qmd
