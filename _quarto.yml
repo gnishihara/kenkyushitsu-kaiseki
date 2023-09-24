@@ -14,6 +14,7 @@ project:
     - ttest-slides.qmd
     - anova-slides.qmd
     - sakuma-drops.qmd
+    - piping.qmd
 
 website:
   title: "データ解析（研究室用）"
@@ -26,6 +27,8 @@ website:
       - section: Introduction
         contents:
         - index.qmd
+        - part00.qmd
+        - piping.qmd
       - section: Rの基礎
         contents:
         - part01.qmd

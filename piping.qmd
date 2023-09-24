@@ -1,0 +1,110 @@
+---
+title: "パイプ演算子の詳細"
+---
+
+
+## 解析の処理
+
+```{r}
+library(tidyverse)
+```
+
+中間のオブジェクトをつくりながら、処理をする。
+中間のオブジェクトの結果は参照できるのが大きなメリット。
+Rコードの伝統的な組み方。
+
+```{r}
+y = rnorm(50)
+x = seq_along(y)
+z = cbind(x,y)
+plot(z)
+```
+
+処理内容を入れ子構造でも処理できます。
+とても読みづらいが、中間オブジェクトを作る必要はない。
+
+```{r}
+plot(
+  cbind(
+    x = seq(1, 50),
+    y = rnorm(50)
+  )
+)
+```
+
+パイプ演算子を用いて処理する方法は `magrittr` パッケージが誕生してからできるようになりました。
+このときも中間オブジェクトを作る必要はないです。
+パイプ演算子の左側にある結果を右側にある関数に流し込む仕組みです。
+
+```{r}
+tibble(y = rnorm(50)) |> 
+  mutate(x = seq_along(y)) |> 
+  plot()
+```
+
+## `magrittr` と `native pipe` の違い
+
+`tidyverse` は `magrittr` パッケージをデフォルトでつかていますが、
+R4.1.0 からは R native のパイプ演算子が導入されました。
+
+* `magrittr` / `tidyverse` デフォルトパイプ演算子： `x %>% f()`
+* R 4.1.0 native pipe : `x |> f()`
+
+それぞれのパイプは右辺の関数の扱いが違いので注意しましょう。
+
+```{r}
+x = rnorm(10)
+y = x * 5 + rnorm(10)
+z = data.frame(x, y)
+```
+
+`magrittr` パイプの場合は、 `.` を place holder として使えます。
+つまり、左辺の値を第1引数以外の引数に渡せます。
+
+```{r}
+z %>% lm(y ~ x, data = .)
+```
+
+`native` パイプは第1引数以外の引数に渡せない。
+
+```{r}
+#| error: true
+z |> lm(y ~ x, data = . )
+```
+
+ところが、次のように無名関数を用いて、`native` パイプでも `magrittr` パイプと同じ用なコードが作れます。
+
+```{r}
+# 括弧の組み方に注意
+z |> (\(dataset) lm(y ~ x, data = dataset))()
+```
+
+**UPDATE**
+
+R 4.2.0 からは `native` パイプにも place holder が使えるようになりました。
+`native` パイプ演算子の place holder は `_` です。
+ところが、必ず指定した引数名に `_` を渡しましょう。
+
+```{r}
+#| error: true
+z |> lm(y ~ x, data = _)
+```
+
+## Native パイプをデフォルトに設定する
+
+RStudio で R 4.1.0 の `native` パイプ演算子を使いたいなら、`Tools/Global Options/Code` の `Use native pipe operator` にチェックを入れましょう。
+
+```{r}
+magick::image_read("Images/part00/globalops02.png")
+```
+
+
+
+
+
+
+
+
+
+
+
