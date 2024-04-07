@@ -15,6 +15,8 @@ project:
     - anova-slides.qmd
     - sakuma-drops.qmd
     - piping.qmd
+    - descriptive_statistics-slide.qmd
+
 
 website:
   title: "データ解析（研究室用）"
