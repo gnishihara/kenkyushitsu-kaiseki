@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.3.450">
+<meta name="generator" content="quarto-1.4.549">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -22,7 +22,7 @@ ul.task-list li input[type="checkbox"] {
 }
 /* CSS for syntax highlighting */
 pre > code.sourceCode { white-space: pre; position: relative; }
-pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span { line-height: 1.25; }
 pre > code.sourceCode > span:empty { height: 1.2em; }
 .sourceCode { overflow: visible; }
 code.sourceCode > span { color: inherit; text-decoration: inherit; }
@@ -79,7 +79,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   "collapse-after": 3,
   "panel-placement": "start",
   "type": "textbox",
-  "limit": 20,
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
   "language": {
     "search-no-results-text": "No results",
     "search-matching-documents-text": "matching documents",
@@ -88,12 +94,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     "search-more-match-text": "more match in this document",
     "search-more-matches-text": "more matches in this document",
     "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
     "search-detached-cancel-button-title": "Cancel",
     "search-submit-button-title": "Submit",
     "search-label": "Search"
   }
 }</script>
-
 <script src="site_libs/kePrint-0.0.1/kePrint.js"></script>
 <link href="site_libs/lightable-0.0.1/lightable.css" rel="stylesheet">
 
@@ -114,6 +120,33 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   </script>
   <script>window.define = window.backupDefine; window.backupDefine = undefined;</script><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.15.1/dist/katex.min.css">
 
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN") {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
 <link rel="stylesheet" href="styles.css">
 </head>
 
@@ -123,12 +156,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <header id="quarto-header" class="headroom fixed-top">
   <nav class="quarto-secondary-nav">
     <div class="container-fluid d-flex">
-      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-      <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./linearmodels.html">線形モデル</a></li><li class="breadcrumb-item"><a href="./anova.html">一元配置分散分析</a></li></ol></nav>
-      <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
-      </a>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./linearmodels.html">線形モデル</a></li><li class="breadcrumb-item"><a href="./anova.html">一元配置分散分析</a></li></ol></nav>
+        <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
       <button type="button" class="btn quarto-search-button" aria-label="" onclick="window.quartoOpenSearch();">
         <i class="bi bi-search"></i>
       </button>
@@ -138,7 +171,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <!-- content -->
 <div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
 <!-- sidebar -->
-  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal sidebar-navigation docked overflow-auto">
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation docked overflow-auto">
     <div class="pt-lg-2 mt-2 text-left sidebar-header">
     <div class="sidebar-title mb-0 py-0">
       <a href="./">データ解析（研究室用）</a> 
@@ -323,7 +356,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     </ul>
     </div>
 </nav>
-<div id="quarto-sidebar-glass" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass"></div>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
 <!-- margin-sidebar -->
     <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
         <nav id="TOC" role="doc-toc" class="toc-active">
@@ -377,7 +410,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <!-- main -->
 <main class="content page-columns page-full" id="quarto-document-content">
 
-<header id="title-block-header" class="quarto-title-block default">
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./linearmodels.html">線形モデル</a></li><li class="breadcrumb-item"><a href="./anova.html">一元配置分散分析</a></li></ol></nav>
 <div class="quarto-title">
 <h1 class="title">一元配置分散分析</h1>
 <p class="subtitle lead">Comparing multiple groups with ANOVA</p>
@@ -393,7 +426,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   </div>
   
 
+
 </header>
+
 
 <div class="callout callout-style-default callout-note callout-titled">
 <div class="callout-header d-flex align-content-center">
@@ -436,11 +471,15 @@ Note
 </div>
 <div class="g-col-8">
 <div class="cell">
+<div id="tbl-juvenile-dataset" class="cell quarto-float anchored">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-juvenile-dataset-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;1: Size (mm) of juvenile Sargassum macrocarpum（ノコギリモク）.
+</figcaption>
+<div aria-describedby="tbl-juvenile-dataset-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <div class="cell-output-display">
-<div id="tbl-juvenile-dataset" class="anchored">
 <div class="table-responsive">
-<table class="table table-striped table-hover table-condensed table-sm small" data-quarto-postprocess="true">
-<caption>Table&nbsp;1: Size (mm) of juvenile Sargassum macrocarpum（ノコギリモク）.</caption>
+<table class="table table-striped table-hover table-condensed do-not-create-environment cell table-sm small" data-quarto-postprocess="true">
 <thead>
 <tr class="header">
 <th style="text-align: right;" data-quarto-table-cell-role="th">Sample</th>
@@ -489,9 +528,11 @@ Note
 </tbody>
 </table>
 </div>
+
+
 </div>
-
-
+</div>
+</figure>
 </div>
 </div>
 </div>
@@ -506,7 +547,7 @@ Note
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p>ノコギモクの大きさは <a href="#tbl-juvenile-dataset">Table&nbsp;1</a> に示しています。 サンプルは 3 箇所（3群）から採取しました。 各サンプルに個体数番号もふっています。</p>
+<p>ノコギモクの大きさは <a href="#tbl-juvenile-dataset" class="quarto-xref">Table&nbsp;1</a> に示しています。 サンプルは 3 箇所（3群）から採取しました。 各サンプルに個体数番号もふっています。</p>
 <p>データは 上のノートに紹介したコードで発生しました。</p>
 </div>
 </div>
@@ -522,7 +563,11 @@ Note
 <span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">y =</span> <span class="st">"Width (mm)"</span>, <span class="at">x =</span> <span class="st">"Site"</span>) <span class="sc">+</span></span>
 <span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">"top"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<p><img src="anova_files/figure-html/unnamed-chunk-5-1.png" class="img-fluid" width="672"></p>
+<div>
+<figure class="figure">
+<p><img src="anova_files/figure-html/unnamed-chunk-5-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
 </div>
 </div>
 <p>各サイトの平均値 (<span class="math inline">\overline{x}</span>), 標準偏差 (<span class="math inline">s</span>), と標準誤差 (s.e.) は、</p>
@@ -651,11 +696,15 @@ mean in group B mean in group C
 <p>t値は 5.506、P値は 0.0004 です。 0.0004 <span class="math inline">\le</span> 0.05 なので、帰無仮説は棄却できます。</p>
 <p><strong>t検定の結果をまとめました。</strong></p>
 <div class="cell">
+<div id="tbl-three-t-tests" class="cell quarto-float anchored">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-three-t-tests-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;2: Summary of three t-tests.
+</figcaption>
+<div aria-describedby="tbl-three-t-tests-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <div class="cell-output-display">
-<div id="tbl-three-t-tests" class="anchored">
 <div class="table-responsive">
-<table class="table table-striped table-hover table-condensed table-sm small" data-quarto-postprocess="true">
-<caption>Table&nbsp;2: Summary of three t-tests.</caption>
+<table class="table table-striped table-hover table-condensed do-not-create-environment cell table-sm small" data-quarto-postprocess="true">
 <thead>
 <tr class="header">
 <th style="text-align: left;" data-quarto-table-cell-role="th">Pair</th>
@@ -698,13 +747,15 @@ mean in group B mean in group C
 </tbody>
 </table>
 </div>
-</div>
 
 
 </div>
 </div>
-<div class="page-columns page-full"><p>d.f. は Welch-Satterthwaite 式で求めた自由度<a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a>、95% CI は 95% 信頼区間です。</p><div class="no-row-height column-margin column-container"><li id="fn1"><p><sup>1</sup>&nbsp;degrees-of-freedom</p></li></div></div>
-</section>
+</figure>
+</div>
+</div>
+<p>d.f. は Welch-Satterthwaite 式で求めた自由度<a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a>、95% CI は 95% 信頼区間です。</p>
+<div class="no-row-height column-margin column-container"><p><sup>1</sup>&nbsp;degrees-of-freedom</p></div></section>
 </section>
 <section id="第１種の誤り-accepting-a-false-h0" class="level2">
 <h2 class="anchored" data-anchor-id="第１種の誤り-accepting-a-false-h0">第１種の誤り (accepting a false H<sub>0</sub>)</h2>
@@ -779,7 +830,7 @@ R での求め方
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
 <p><img src="anova_files/figure-html/unnamed-chunk-11-1.png" class="img-fluid figure-img" width="672"></p>
-<figcaption class="figure-caption">比較する群が増えると、t 検定を繰り返して実施すると、第１種の誤りを起こしやすい。</figcaption>
+<figcaption>比較する群が増えると、t 検定を繰り返して実施すると、第１種の誤りを起こしやすい。</figcaption>
 </figure>
 </div>
 </div>
@@ -790,12 +841,12 @@ R での求め方
 <h1>一元配置分散分析</h1>
 <section id="one-way-anova-一元配置分散分析" class="level2 page-columns page-full">
 <h2 class="anchored" data-anchor-id="one-way-anova-一元配置分散分析">One-Way ANOVA (一元配置分散分析)</h2>
-<div class="page-columns page-full"><p>複数群（因子の水準）の解析は <strong>一元配置分散分析)</strong><a href="#fn2" class="footnote-ref" id="fnref2" role="doc-noteref"><sup>2</sup></a> 用います。</p><div class="no-row-height column-margin column-container"><li id="fn2"><p><sup>2</sup>&nbsp;One-Way ANOVA (One-Way Analysis of Variance</p></li></div></div>
-<ul>
+<p>複数群（因子の水準）の解析は <strong>一元配置分散分析)</strong><a href="#fn2" class="footnote-ref" id="fnref2" role="doc-noteref"><sup>2</sup></a> 用います。</p>
+<div class="no-row-height column-margin column-container"><p><sup>2</sup>&nbsp;One-Way ANOVA (One-Way Analysis of Variance</p></div><ul>
 <li>因子・要因<a href="#fn3" class="footnote-ref" id="fnref3" role="doc-noteref"><sup>3</sup></a>：説明変数、一般的には離散型な変数</li>
 <li>水準<a href="#fn4" class="footnote-ref" id="fnref4" role="doc-noteref"><sup>4</sup></a>：説明変数における値、レベル、要素</li>
 </ul>
-<div class="no-row-height column-margin column-container"><li id="fn3"><p><sup>3</sup>&nbsp;factor</p></li><li id="fn4"><p><sup>4</sup>&nbsp;level, factor level</p></li></div><p>分散分析の帰無仮説は、</p>
+<div class="no-row-height column-margin column-container"><p><sup>3</sup>&nbsp;factor</p><p><sup>4</sup>&nbsp;level, factor level</p></div><p>分散分析の帰無仮説は、</p>
 <p><span class="math display">
 \mu_1 = \mu_2 = \cdots = \mu_i
 </span></p>
@@ -866,7 +917,7 @@ x_{ij} = \mu_i + \epsilon_{ij}
 <li>残渣平均平方は <span class="math inline">MS_R</span><a href="#fn13" class="footnote-ref" id="fnref13" role="doc-noteref"><sup>13</sup></a></li>
 <li>F値<a href="#fn14" class="footnote-ref" id="fnref14" role="doc-noteref"><sup>14</sup></a>は MS の比です。</li>
 </ul>
-<div class="no-row-height column-margin column-container"><li id="fn5"><p><sup>5</sup>&nbsp;factor</p></li><li id="fn6"><p><sup>6</sup>&nbsp;residual</p></li><li id="fn7"><p><sup>7</sup>&nbsp;number of levels</p></li><li id="fn8"><p><sup>8</sup>&nbsp;number of samples</p></li><li id="fn9"><p><sup>9</sup>&nbsp;among levels sum-of-squares (SS)</p></li><li id="fn10"><p><sup>10</sup>&nbsp;residual SS</p></li><li id="fn11"><p><sup>11</sup>&nbsp;total SS</p></li><li id="fn12"><p><sup>12</sup>&nbsp;among levels mean square (MS)</p></li><li id="fn13"><p><sup>13</sup>&nbsp;residual mean square (MS)</p></li><li id="fn14"><p><sup>14</sup>&nbsp;F-value</p></li></div></section>
+<div class="no-row-height column-margin column-container"><p><sup>5</sup>&nbsp;factor</p><p><sup>6</sup>&nbsp;residual</p><p><sup>7</sup>&nbsp;number of levels</p><p><sup>8</sup>&nbsp;number of samples</p><p><sup>9</sup>&nbsp;among levels sum-of-squares (SS)</p><p><sup>10</sup>&nbsp;residual SS</p><p><sup>11</sup>&nbsp;total SS</p><p><sup>12</sup>&nbsp;among levels mean square (MS)</p><p><sup>13</sup>&nbsp;residual mean square (MS)</p><p><sup>14</sup>&nbsp;F-value</p></div></section>
 <section id="平方和の方程式" class="level2">
 <h2 class="anchored" data-anchor-id="平方和の方程式">平方和の方程式</h2>
 <p><span class="math display">
@@ -878,21 +929,24 @@ x_{ij} = \mu_i + \epsilon_{ij}
 </section>
 <section id="decomposing-the-sum-of-squares" class="level2">
 <h2 class="anchored" data-anchor-id="decomposing-the-sum-of-squares">Decomposing the sum-of-squares</h2>
-<div class="cell quarto-layout-panel">
-<div class="quarto-layout-row quarto-layout-valign-top">
-<div class="cell-output-display quarto-layout-cell" style="flex-basis: 50.0%;justify-content: center;">
+<div>
+
+</div>
+<div class="cell quarto-layout-panel" data-layout-ncol="2">
+<div class="quarto-layout-row">
+<div class="quarto-layout-cell" style="flex-basis: 50.0%;justify-content: flex-start;">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
 <p><img src="anova_files/figure-html/unnamed-chunk-14-1.png" class="img-fluid figure-img" width="672"></p>
-<figcaption class="figure-caption">残渣平方和：各サンプルの値は点、グループ毎の平均値は黒線で示しています。黒線から点の縦線は残渣を表しています。</figcaption>
+<figcaption>残渣平方和：各サンプルの値は点、グループ毎の平均値は黒線で示しています。黒線から点の縦線は残渣を表しています。</figcaption>
 </figure>
 </div>
 </div>
-<div class="cell-output-display quarto-layout-cell" style="flex-basis: 50.0%;justify-content: center;">
+<div class="quarto-layout-cell" style="flex-basis: 50.0%;justify-content: flex-start;">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
 <p><img src="anova_files/figure-html/unnamed-chunk-14-2.png" class="img-fluid figure-img" width="672"></p>
-<figcaption class="figure-caption">水準間平方和：各グループの平均値は点、総平均は黒線で示しています。黒線から点の縦線はグループ毎の平均値と総平均の違いを表しています。</figcaption>
+<figcaption>水準間平方和：各グループの平均値は点、総平均は黒線で示しています。黒線から点の縦線はグループ毎の平均値と総平均の違いを表しています。</figcaption>
 </figure>
 </div>
 </div>
@@ -905,7 +959,7 @@ x_{ij} = \mu_i + \epsilon_{ij}
 F = \left . \frac{SS_A}{I-1} \right / \frac{SS_R}{I(J-1)}  = \frac{SS_A}{SS_R} \frac{I(J-1)}{I-1} = \frac{MS_A}{MS_R}
 </span></p>
 <p>F値は 自由度 <span class="math inline">\text{df}_1 = I-1, \text{df}_2 = I(J-1)</span> のF分布に従います。 水準の数は <span class="math inline">I</span>、水準ごとのサンプルの数は <span class="math inline">J</span> です。</p>
-<div class="callout callout-style-default callout-note callout-titled page-columns page-full">
+<div class="callout callout-style-default callout-note callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
@@ -914,25 +968,25 @@ F = \left . \frac{SS_A}{I-1} \right / \frac{SS_R}{I(J-1)}  = \frac{SS_A}{SS_R} \
 Note
 </div>
 </div>
-<div class="callout-body-container callout-body page-columns page-full">
+<div class="callout-body-container callout-body">
 <ul>
 <li>F値の分子<a href="#fn15" class="footnote-ref" id="fnref15" role="doc-noteref"><sup>15</sup></a> が大きとき、または分母<a href="#fn16" class="footnote-ref" id="fnref16" role="doc-noteref"><sup>16</sup></a>が小さいとき、F値は大きいです。</li>
 <li>F値とP値は反比例します。</li>
 </ul>
-<div class="no-row-height column-margin column-container"><li id="fn15"><p><sup>15</sup>&nbsp;numerator</p></li><li id="fn16"><p><sup>16</sup>&nbsp;denominator</p></li></div></div>
 </div>
-</section>
+</div>
+<div class="no-row-height column-margin column-container"><p><sup>16</sup>&nbsp;denominator</p></div><div class="no-row-height column-margin column-container"><p><sup>15</sup>&nbsp;numerator</p></div></section>
 <section id="f値の確率密度関数" class="level2 page-columns page-full">
 <h2 class="anchored" data-anchor-id="f値の確率密度関数">F値の確率密度関数</h2>
-<div class="page-columns page-full"><p><span class="math display">
+<p><span class="math display">
 P(x|\text{df}_1, \text{df}_2) = \frac{1}{\mathrm{B}\left(\frac{\text{df}_1}{2}, \frac{\text{df}_2}{2}\right)}\left(\frac{\text{df}_1}{\text{df}_2}\right)^{\left(\frac{\text{df}_1}{2}\right)}x^{\left(\frac{\text{df}_1}{2}-1\right)}\left(1+\frac{\text{df}_1}{\text{df}_2}x\right)^{\left(-\frac{\text{df}_1+\text{df}_2}{2}\right)}
-</span> <span class="math inline">\mathrm{B}(\text{df}_1, \text{df}_2)=\int_0^1t^{x-1}(1-t)^{y-1}dt</span> は ベータ関数<a href="#fn17" class="footnote-ref" id="fnref17" role="doc-noteref"><sup>17</sup></a> といいます。 <span class="math inline">\text{df}_1</span> と <span class="math inline">\text{df}_2</span> は自由度、<span class="math inline">x</span> は確率変数です。</p><div class="no-row-height column-margin column-container"><li id="fn17"><p><sup>17</sup>&nbsp;Beta function</p></li></div></div>
-<div class="cell">
+</span> <span class="math inline">\mathrm{B}(\text{df}_1, \text{df}_2)=\int_0^1t^{x-1}(1-t)^{y-1}dt</span> は ベータ関数<a href="#fn17" class="footnote-ref" id="fnref17" role="doc-noteref"><sup>17</sup></a> といいます。 <span class="math inline">\text{df}_1</span> と <span class="math inline">\text{df}_2</span> は自由度、<span class="math inline">x</span> は確率変数です。</p>
+<div class="no-row-height column-margin column-container"><p><sup>17</sup>&nbsp;Beta function</p></div><div class="cell">
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
 <p><img src="anova_files/figure-html/unnamed-chunk-15-1.png" class="img-fluid figure-img" width="672"></p>
-<figcaption class="figure-caption">自由度が変わるとF分布の形が変わります。</figcaption>
+<figcaption>自由度が変わるとF分布の形が変わります。</figcaption>
 </figure>
 </div>
 </div>
@@ -948,7 +1002,7 @@ P(x|\text{df}_1, \text{df}_2) = \frac{1}{\mathrm{B}\left(\frac{\text{df}_1}{2}, 
 <li>観測変数は連続変数<a href="#fn18" class="footnote-ref" id="fnref18" role="doc-noteref"><sup>18</sup></a></li>
 <li>説明変数は離散変数<a href="#fn19" class="footnote-ref" id="fnref19" role="doc-noteref"><sup>19</sup></a></li>
 </ul>
-<div class="no-row-height column-margin column-container"><li id="fn18"><p><sup>18</sup>&nbsp;continuous</p></li><li id="fn19"><p><sup>19</sup>&nbsp;discrete</p></li></div></section>
+<div class="no-row-height column-margin column-container"><p><sup>18</sup>&nbsp;continuous</p><p><sup>19</sup>&nbsp;discrete</p></div></section>
 <section id="rにおける解析" class="level2">
 <h2 class="anchored" data-anchor-id="rにおける解析">Rにおける解析</h2>
 <p>解析例に使うデータは <code>thedata.csv</code> に保存したので、まずは読み込みます。</p>
@@ -1042,7 +1096,7 @@ Important
 </section>
 </section>
 <section id="多重比較" class="level1 page-columns page-full">
-<h1 class="page-columns page-full">多重比較<a href="#fn20" class="footnote-ref" id="fnref20" role="doc-noteref"><sup>20</sup></a><div class="no-row-height column-margin column-container"><li id="fn20"><p><sup>20</sup>&nbsp;multiple comparisons</p></li></div></h1>
+<h1>多重比較<a href="#fn20" class="footnote-ref" id="fnref20" role="doc-noteref"><sup>20</sup></a></h1>
 <section id="多重比較-1" class="level2">
 <h2 class="anchored" data-anchor-id="多重比較-1">多重比較</h2>
 <p>分散分析の帰無仮説を棄却したら、ペア毎の比較がしたくなります。 第１種の誤りを抑える多重比較の検定は豊富に存在します。</p>
@@ -1199,8 +1253,8 @@ Conf-level adjustment: tukey method for comparing a family of 3 estimates
 P value adjustment: tukey method for comparing a family of 3 estimates </code></pre>
 </div>
 </div>
-<div class="page-columns page-full"><p>P値はステュデント化範囲の分布<a href="#fn21" class="footnote-ref" id="fnref21" role="doc-noteref"><sup>21</sup></a>に従います。</p><div class="no-row-height column-margin column-container"><li id="fn21"><p><sup>21</sup>&nbsp;Studentized range distribution</p></li></div></div>
-</section>
+<p>P値はステュデント化範囲の分布<a href="#fn21" class="footnote-ref" id="fnref21" role="doc-noteref"><sup>21</sup></a>に従います。</p>
+<div class="no-row-height column-margin column-container"><p><sup>21</sup>&nbsp;Studentized range distribution</p></div></section>
 <section id="シェッフェの方法" class="level2">
 <h2 class="anchored" data-anchor-id="シェッフェの方法">シェッフェの方法</h2>
 <div class="cell">
@@ -1246,7 +1300,7 @@ P value adjustment: dunnettx method for 2 tests </code></pre>
 
 </section>
 </section>
-
+<div class="no-row-height column-margin column-container"><p><sup>20</sup>&nbsp;multiple comparisons</p></div>
 
 </main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
@@ -1328,10 +1382,9 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     // clear code selection
     e.clearSelection();
   });
-  function tippyHover(el, contentFn) {
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
     const config = {
       allowHTML: true,
-      content: contentFn,
       maxWidth: 500,
       delay: 100,
       arrow: false,
@@ -1341,8 +1394,17 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       interactive: true,
       interactiveBorder: 10,
       theme: 'quarto',
-      placement: 'bottom-start'
+      placement: 'bottom-start',
     };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
     window.tippy(el, config); 
   }
   const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
@@ -1355,6 +1417,125 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       const id = href.replace(/^#\/?/, "");
       const note = window.document.getElementById(id);
       return note.innerHTML;
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      // TODO in 1.5, we should make sure this works without a callout special case
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
     });
   }
       let selectedAnnoteEl;
@@ -1398,6 +1579,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
             }
             div.style.top = top - 2 + "px";
             div.style.height = height + 4 + "px";
+            div.style.left = 0;
             let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
             if (gutterDiv === null) {
               gutterDiv = window.document.createElement("div");
@@ -1423,6 +1605,32 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
         });
         selectedAnnoteEl = undefined;
       };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
       // Attach click handler to the DT
       const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
       for (const annoteDlNode of annoteDls) {
@@ -1483,6 +1691,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 });
 </script>
 </div> <!-- /content -->
+
 
 
 

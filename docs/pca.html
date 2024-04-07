@@ -8,7 +8,7 @@
 <link href="site_libs/quarto-html/light-border.css" rel="stylesheet">
 <link href="site_libs/quarto-html/quarto-html.min.css" rel="stylesheet" data-mode="light">
 <link href="site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles"><meta charset="utf-8">
-  <meta name="generator" content="quarto-1.3.450">
+  <meta name="generator" content="quarto-1.4.549">
 
   <meta name="author" content="Greg Nishihara">
   <title>データ解析（研究室用） - Principal Component Analysis</title>
@@ -31,7 +31,7 @@
     }
     /* CSS for syntax highlighting */
     pre > code.sourceCode { white-space: pre; position: relative; }
-    pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+    pre > code.sourceCode > span { line-height: 1.25; }
     pre > code.sourceCode > span:empty { height: 1.2em; }
     .sourceCode { overflow: visible; }
     code.sourceCode > span { color: inherit; text-decoration: inherit; }
@@ -98,6 +98,7 @@
     div.csl-bib-body { }
     div.csl-entry {
       clear: both;
+      margin-bottom: 0em;
     }
     .hanging-indent div.csl-entry {
       margin-left:2em;
@@ -240,7 +241,8 @@
   }
 
   .callout.callout-titled .callout-body > .callout-content > :last-child {
-    margin-bottom: 0.5rem;
+    padding-bottom: 0.5rem;
+    margin-bottom: 0;
   }
 
   .callout.callout-titled .callout-icon::before {
@@ -419,7 +421,7 @@ Greg Nishihara
 </div>
 </div>
 
-  <p class="date">2023 / 09 / 24</p>
+  <p class="date">2024 / 04 / 07</p>
 </section>
 <section>
 <section id="redundancy-analysis" class="title-slide slide level1 center">
@@ -541,7 +543,7 @@ Greg Nishihara
 <section id="visualize-what-we-want-to-do" class="slide level2 smaller">
 <h2>Visualize what we want to do</h2>
 
-<img data-src="pca_files/figure-revealjs/unnamed-chunk-5-1.png" width="960" class="r-stretch quarto-figure-center"><p>The rotation angle <span class="math inline">\(\theta\)</span> can also be determined from the rotation vector as follows: <span class="math inline">\(\mathbf{V}_\text{svd} = \begin{bmatrix} \cos\theta &amp; -\sin\theta\\ \sin\theta &amp; \cos\theta\\ \end{bmatrix}\)</span>.</p>
+<img data-src="pca_files/figure-revealjs/unnamed-chunk-5-1.png" class="quarto-figure quarto-figure-center r-stretch" width="960"><p>The rotation angle <span class="math inline">\(\theta\)</span> can also be determined from the rotation vector as follows: <span class="math inline">\(\mathbf{V}_\text{svd} = \begin{bmatrix} \cos\theta &amp; -\sin\theta\\ \sin\theta &amp; \cos\theta\\ \end{bmatrix}\)</span>.</p>
 </section>
 <section id="computation-mechanics" class="slide level2">
 <h2>Computation mechanics</h2>
@@ -555,22 +557,22 @@ Greg Nishihara
 \]</span></p>
 </div>
 
-<img data-src="pca_files/figure-revealjs/unnamed-chunk-7-1.png" width="500" class="r-stretch quarto-figure-center"></section>
+<img data-src="pca_files/figure-revealjs/unnamed-chunk-7-1.png" class="quarto-figure quarto-figure-center r-stretch" width="500"></section>
 <section id="example-1-determine-mathbfy_c" class="slide level2">
 <h2>Example 1: determine <span class="math inline">\(\mathbf{Y_c}\)</span></h2>
 <p>Calculate the centered data matrix.</p>
 <div class="cell columns column-output-location" data-hash="pca_cache/revealjs/unnamed-chunk-8_cd1bc92d990cc127e01382ea24e99564">
 <div class="column">
-<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1"></a>Y <span class="ot">=</span> iris[<span class="dv">1</span><span class="sc">:</span><span class="dv">50</span>, <span class="dv">1</span><span class="sc">:</span><span class="dv">2</span>]</span>
-<span id="cb1-2"><a href="#cb1-2"></a><span class="fu">colnames</span>(Y) <span class="ot">=</span> <span class="fu">colnames</span>(iris)[<span class="dv">1</span><span class="sc">:</span><span class="dv">2</span>] <span class="sc">|&gt;</span> </span>
-<span id="cb1-3"><a href="#cb1-3"></a>  <span class="fu">str_remove_all</span>(<span class="st">"[a-z|</span><span class="sc">\\</span><span class="st">.]+"</span>) </span>
-<span id="cb1-4"><a href="#cb1-4"></a>nm <span class="ot">=</span> <span class="fu">dim</span>(Y)</span>
-<span id="cb1-5"><a href="#cb1-5"></a>Ybar <span class="ot">=</span> <span class="fu">apply</span>(Y, <span class="dv">2</span>, mean)</span>
-<span id="cb1-6"><a href="#cb1-6"></a>Ybar <span class="ot">=</span> <span class="fu">matrix</span>(Ybar, <span class="at">ncol =</span> nm[<span class="dv">2</span>], </span>
-<span id="cb1-7"><a href="#cb1-7"></a>              <span class="at">nrow =</span> nm[<span class="dv">1</span>],</span>
-<span id="cb1-8"><a href="#cb1-8"></a>              <span class="at">byrow =</span> <span class="cn">TRUE</span>)</span>
-<span id="cb1-9"><a href="#cb1-9"></a>Yc <span class="ot">=</span> Y <span class="sc">-</span> Ybar</span>
-<span id="cb1-10"><a href="#cb1-10"></a>Yc <span class="sc">|&gt;</span> <span class="fu">head</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a></a>Y <span class="ot">=</span> iris[<span class="dv">1</span><span class="sc">:</span><span class="dv">50</span>, <span class="dv">1</span><span class="sc">:</span><span class="dv">2</span>]</span>
+<span id="cb1-2"><a></a><span class="fu">colnames</span>(Y) <span class="ot">=</span> <span class="fu">colnames</span>(iris)[<span class="dv">1</span><span class="sc">:</span><span class="dv">2</span>] <span class="sc">|&gt;</span> </span>
+<span id="cb1-3"><a></a>  <span class="fu">str_remove_all</span>(<span class="st">"[a-z|</span><span class="sc">\\</span><span class="st">.]+"</span>) </span>
+<span id="cb1-4"><a></a>nm <span class="ot">=</span> <span class="fu">dim</span>(Y)</span>
+<span id="cb1-5"><a></a>Ybar <span class="ot">=</span> <span class="fu">apply</span>(Y, <span class="dv">2</span>, mean)</span>
+<span id="cb1-6"><a></a>Ybar <span class="ot">=</span> <span class="fu">matrix</span>(Ybar, <span class="at">ncol =</span> nm[<span class="dv">2</span>], </span>
+<span id="cb1-7"><a></a>              <span class="at">nrow =</span> nm[<span class="dv">1</span>],</span>
+<span id="cb1-8"><a></a>              <span class="at">byrow =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb1-9"><a></a>Yc <span class="ot">=</span> Y <span class="sc">-</span> Ybar</span>
+<span id="cb1-10"><a></a>Yc <span class="sc">|&gt;</span> <span class="fu">head</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div><div class="column">
 <div class="cell-output cell-output-stdout">
 <pre><code>      SL     SW
@@ -588,12 +590,12 @@ Greg Nishihara
 <h2>Example 1: SVD</h2>
 <p>Calculate the eigenvectors, eigenvalues, and singular values using <code>svd()</code>.</p>
 <div class="cell" data-hash="pca_cache/revealjs/unnamed-chunk-9_97af5db8acef1ae25f9694b2ef5e9dba">
-<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1"></a>svdout <span class="ot">=</span> <span class="fu">svd</span>(Yc)</span>
-<span id="cb3-2"><a href="#cb3-2"></a>umat <span class="ot">=</span> svdout<span class="sc">$</span>u  <span class="co"># Left singular vectors</span></span>
-<span id="cb3-3"><a href="#cb3-3"></a>vmat <span class="ot">=</span> svdout<span class="sc">$</span>v  <span class="co"># Right singular vectors (i.e., eigenvectors)</span></span>
-<span id="cb3-4"><a href="#cb3-4"></a>d <span class="ot">=</span> svdout<span class="sc">$</span>d     <span class="co"># Singular values</span></span>
-<span id="cb3-5"><a href="#cb3-5"></a>n <span class="ot">=</span> nm[<span class="dv">1</span>]        <span class="co"># Data rows</span></span>
-<span id="cb3-6"><a href="#cb3-6"></a>p <span class="ot">=</span> nm[<span class="dv">2</span>]        <span class="co"># Data columns (i.e., variables)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a></a>svdout <span class="ot">=</span> <span class="fu">svd</span>(Yc)</span>
+<span id="cb3-2"><a></a>umat <span class="ot">=</span> svdout<span class="sc">$</span>u  <span class="co"># Left singular vectors</span></span>
+<span id="cb3-3"><a></a>vmat <span class="ot">=</span> svdout<span class="sc">$</span>v  <span class="co"># Right singular vectors (i.e., eigenvectors)</span></span>
+<span id="cb3-4"><a></a>d <span class="ot">=</span> svdout<span class="sc">$</span>d     <span class="co"># Singular values</span></span>
+<span id="cb3-5"><a></a>n <span class="ot">=</span> nm[<span class="dv">1</span>]        <span class="co"># Data rows</span></span>
+<span id="cb3-6"><a></a>p <span class="ot">=</span> nm[<span class="dv">2</span>]        <span class="co"># Data columns (i.e., variables)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
 <section id="example-1-eigenvalues" class="slide level2">
@@ -603,21 +605,21 @@ Greg Nishihara
 \lambda_i = \frac{d_i^2} {n-1}
 \]</span></p>
 <div class="cell" data-hash="pca_cache/revealjs/unnamed-chunk-10_726a38d75bc1dfb9125c8611034718f0">
-<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1"></a><span class="co"># lambda = ((diag(d) %*% t(diag(d))) / (n - 1)) |&gt; diag()</span></span>
-<span id="cb4-2"><a href="#cb4-2"></a>lambda <span class="ot">=</span> d<span class="sc">^</span><span class="dv">2</span> <span class="sc">/</span> (n <span class="sc">-</span> <span class="dv">1</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a></a><span class="co"># lambda = ((diag(d) %*% t(diag(d))) / (n - 1)) |&gt; diag()</span></span>
+<span id="cb4-2"><a></a>lambda <span class="ot">=</span> d<span class="sc">^</span><span class="dv">2</span> <span class="sc">/</span> (n <span class="sc">-</span> <span class="dv">1</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Therefore, the eigenvalues are 0.2337 and 0.0343.</p>
 </section>
 <section id="example-1-eigenvectors" class="slide level2">
 <h2>Example 1: eigenvectors</h2>
 <div class="cell" data-hash="pca_cache/revealjs/unnamed-chunk-11_e385ec5a76943ca14653e6596d54f660">
-<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1"></a><span class="fu">rownames</span>(vmat) <span class="ot">=</span> <span class="fu">colnames</span>(Yc)</span>
-<span id="cb5-2"><a href="#cb5-2"></a><span class="fu">colnames</span>(vmat) <span class="ot">=</span> <span class="fu">str_glue</span>(<span class="st">"PC{1:p}"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a></a><span class="fu">rownames</span>(vmat) <span class="ot">=</span> <span class="fu">colnames</span>(Yc)</span>
+<span id="cb5-2"><a></a><span class="fu">colnames</span>(vmat) <span class="ot">=</span> <span class="fu">str_glue</span>(<span class="st">"PC{1:p}"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>The eigenvectors are:</p>
 <div class="cell columns column-output-location" data-hash="pca_cache/revealjs/unnamed-chunk-12_3c3d42357f0295b0d35b3bd55dc77660">
 <div class="column">
-<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1"></a>vmat</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a></a>vmat</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div><div class="column">
 <div class="cell-output cell-output-stdout">
 <pre><code>          PC1        PC2
@@ -633,7 +635,7 @@ SW -0.7407783  0.6717496</code></pre>
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure>
-<p><img data-src="pca_files/figure-revealjs/unnamed-chunk-13-1.png" width="960"></p>
+<p><img data-src="pca_files/figure-revealjs/unnamed-chunk-13-1.png" class="quarto-figure quarto-figure-center" width="960"></p>
 </figure>
 </div>
 </div>
@@ -647,7 +649,7 @@ SW -0.7407783  0.6717496</code></pre>
 <p>The total variance before rotation is:</p>
 <div class="cell columns column-output-location" data-hash="pca_cache/revealjs/unnamed-chunk-14_df79ce9f1c4205f8847ce881376d6ded">
 <div class="column">
-<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1"></a><span class="fu">diag</span>(<span class="fu">var</span>(Yc)) <span class="sc">|&gt;</span> <span class="fu">sum</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a></a><span class="fu">diag</span>(<span class="fu">var</span>(Yc)) <span class="sc">|&gt;</span> <span class="fu">sum</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div><div class="column">
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 0.2679388</code></pre>
@@ -657,7 +659,7 @@ SW -0.7407783  0.6717496</code></pre>
 <p>and should be the same as the total inertia (i.e., variance) after rotation:</p>
 <div class="cell columns column-output-location" data-hash="pca_cache/revealjs/unnamed-chunk-15_5d58629a7a0998239fce31c92ac9310b">
 <div class="column">
-<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1"></a><span class="fu">sum</span>(lambda)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a></a><span class="fu">sum</span>(lambda)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div><div class="column">
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 0.2679388</code></pre>
@@ -667,7 +669,7 @@ SW -0.7407783  0.6717496</code></pre>
 <p>The variance of <code>SL</code> and <code>SW</code> is:</p>
 <div class="cell columns column-output-location" data-hash="pca_cache/revealjs/unnamed-chunk-16_6e40e465011d0f565cbf6d1b2a6c1d67">
 <div class="column">
-<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1"></a><span class="fu">diag</span>(<span class="fu">var</span>(Yc))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a></a><span class="fu">diag</span>(<span class="fu">var</span>(Yc))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div><div class="column">
 <div class="cell-output cell-output-stdout">
 <pre><code>       SL        SW 
@@ -681,7 +683,7 @@ SW -0.7407783  0.6717496</code></pre>
 <p>The relative importance of <code>SL</code> and <code>SW</code> is:</p>
 <div class="cell columns column-output-location" data-hash="pca_cache/revealjs/unnamed-chunk-17_83d88b4f088dc6a961d1cdf1b83b377f">
 <div class="column">
-<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1"></a><span class="fu">diag</span>(<span class="fu">var</span>(Yc)) <span class="sc">/</span> <span class="fu">sum</span>(<span class="fu">diag</span>(<span class="fu">var</span>(Yc)))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a></a><span class="fu">diag</span>(<span class="fu">var</span>(Yc)) <span class="sc">/</span> <span class="fu">sum</span>(<span class="fu">diag</span>(<span class="fu">var</span>(Yc)))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div><div class="column">
 <div class="cell-output cell-output-stdout">
 <pre><code>       SL        SW 
@@ -692,14 +694,14 @@ SW -0.7407783  0.6717496</code></pre>
 <p>However, the variance of the principal components and their relative importance is different:</p>
 <div class="cell columns column-output-location" data-hash="pca_cache/revealjs/unnamed-chunk-18_8932c31d9fb0b6e0d913e2aefdf1e1b7">
 <div class="column">
-<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1"></a>lambda <span class="co"># The variance</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a></a>lambda <span class="co"># The variance</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div><div class="column">
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 0.23366074 0.03427804</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1"></a>importance <span class="ot">=</span> lambda <span class="sc">/</span> <span class="fu">sum</span>(lambda)</span>
-<span id="cb18-2"><a href="#cb18-2"></a><span class="fu">names</span>(importance) <span class="ot">=</span> <span class="fu">colnames</span>(vmat)</span>
-<span id="cb18-3"><a href="#cb18-3"></a>importance <span class="co"># The relative importance</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a></a>importance <span class="ot">=</span> lambda <span class="sc">/</span> <span class="fu">sum</span>(lambda)</span>
+<span id="cb18-2"><a></a><span class="fu">names</span>(importance) <span class="ot">=</span> <span class="fu">colnames</span>(vmat)</span>
+<span id="cb18-3"><a></a>importance <span class="co"># The relative importance</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>      PC1       PC2 
 0.8720677 0.1279323 </code></pre>
@@ -714,10 +716,10 @@ SW -0.7407783  0.6717496</code></pre>
 <h2>Example 1: scores and loadings</h2>
 <p><strong>Scores</strong><sup>1</sup> are the data points projected onto the principal component axes.</p>
 <div class="cell" data-hash="pca_cache/revealjs/unnamed-chunk-19_2b645b0366e4a26a1df434fe12a15c6f">
-<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1"></a><span class="co"># There are a total of n = 50 scores.</span></span>
-<span id="cb20-2"><a href="#cb20-2"></a>scores <span class="ot">=</span> umat <span class="sc">%*%</span> <span class="fu">diag</span>(d)</span>
-<span id="cb20-3"><a href="#cb20-3"></a><span class="fu">colnames</span>(scores) <span class="ot">=</span> <span class="fu">str_c</span>(<span class="st">"PC"</span>, <span class="dv">1</span><span class="sc">:</span><span class="fu">ncol</span>(scores))</span>
-<span id="cb20-4"><a href="#cb20-4"></a>scores <span class="sc">|&gt;</span> <span class="fu">head</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a></a><span class="co"># There are a total of n = 50 scores.</span></span>
+<span id="cb20-2"><a></a>scores <span class="ot">=</span> umat <span class="sc">%*%</span> <span class="fu">diag</span>(d)</span>
+<span id="cb20-3"><a></a><span class="fu">colnames</span>(scores) <span class="ot">=</span> <span class="fu">str_c</span>(<span class="st">"PC"</span>, <span class="dv">1</span><span class="sc">:</span><span class="fu">ncol</span>(scores))</span>
+<span id="cb20-4"><a></a>scores <span class="sc">|&gt;</span> <span class="fu">head</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>            PC1         PC2
 [1,] -0.1164805 -0.02126719
@@ -734,9 +736,9 @@ SW -0.7407783  0.6717496</code></pre>
 <p><strong>Loadings</strong> (rescaled loadings)<sup>1</sup> indicates the relationship of the variable with the principal component axes.</p>
 <div class="cell columns column-output-location" data-hash="pca_cache/revealjs/unnamed-chunk-20_168f33c243aee6d524a0bf877e78548b">
 <div class="column">
-<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1"></a>loadings <span class="ot">=</span> (vmat <span class="sc">%*%</span> <span class="fu">diag</span>(d)) <span class="sc">/</span> <span class="fu">sqrt</span>(n<span class="dv">-1</span>)</span>
-<span id="cb22-2"><a href="#cb22-2"></a><span class="fu">colnames</span>(loadings) <span class="ot">=</span> <span class="fu">str_glue</span>(<span class="st">"PC{1:p}"</span>)</span>
-<span id="cb22-3"><a href="#cb22-3"></a>loadings</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a></a>loadings <span class="ot">=</span> (vmat <span class="sc">%*%</span> <span class="fu">diag</span>(d)) <span class="sc">/</span> <span class="fu">sqrt</span>(n<span class="dv">-1</span>)</span>
+<span id="cb22-2"><a></a><span class="fu">colnames</span>(loadings) <span class="ot">=</span> <span class="fu">str_glue</span>(<span class="st">"PC{1:p}"</span>)</span>
+<span id="cb22-3"><a></a>loadings</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div><div class="column">
 <div class="cell-output cell-output-stdout">
 <pre><code>          PC1        PC2
@@ -748,12 +750,12 @@ SW -0.3580809  0.1243699</code></pre>
 <p>Therefore, for variable <code>SL</code>, the loadings on <code>PC1</code> and <code>PC2</code> are -0.325 and -0.137, respectively. The cosine of the angle between loadings are their correlation.</p>
 <div class="cell columns column-output-location" data-hash="pca_cache/revealjs/unnamed-chunk-21_4dc3656dbb4e6da9ce4ebf7e94a57296">
 <div class="column">
-<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1"></a>SL <span class="ot">=</span> loadings[<span class="dv">1</span>, ]</span>
-<span id="cb24-2"><a href="#cb24-2"></a>SW <span class="ot">=</span> loadings[<span class="dv">2</span>, ]</span>
-<span id="cb24-3"><a href="#cb24-3"></a>L1 <span class="ot">=</span> <span class="fu">atan2</span>(<span class="at">y =</span> SL[<span class="dv">2</span>], <span class="at">x =</span> SL[<span class="dv">1</span>])</span>
-<span id="cb24-4"><a href="#cb24-4"></a>L2 <span class="ot">=</span> <span class="fu">atan2</span>(<span class="at">y =</span> SW[<span class="dv">2</span>], <span class="at">x =</span> SW[<span class="dv">1</span>])</span>
-<span id="cb24-5"><a href="#cb24-5"></a>theta <span class="ot">=</span> <span class="fu">abs</span>(L1 <span class="sc">-</span> L2)</span>
-<span id="cb24-6"><a href="#cb24-6"></a><span class="fu">cos</span>(theta)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a></a>SL <span class="ot">=</span> loadings[<span class="dv">1</span>, ]</span>
+<span id="cb24-2"><a></a>SW <span class="ot">=</span> loadings[<span class="dv">2</span>, ]</span>
+<span id="cb24-3"><a></a>L1 <span class="ot">=</span> <span class="fu">atan2</span>(<span class="at">y =</span> SL[<span class="dv">2</span>], <span class="at">x =</span> SL[<span class="dv">1</span>])</span>
+<span id="cb24-4"><a></a>L2 <span class="ot">=</span> <span class="fu">atan2</span>(<span class="at">y =</span> SW[<span class="dv">2</span>], <span class="at">x =</span> SW[<span class="dv">1</span>])</span>
+<span id="cb24-5"><a></a>theta <span class="ot">=</span> <span class="fu">abs</span>(L1 <span class="sc">-</span> L2)</span>
+<span id="cb24-6"><a></a><span class="fu">cos</span>(theta)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div><div class="column">
 <div class="cell-output cell-output-stdout">
 <pre><code>      PC2 
@@ -767,8 +769,8 @@ SW -0.3580809  0.1243699</code></pre>
 <p>First run the analysis with both <code>rda()</code> and `svd().</p>
 <div class="cell columns column-output-location" data-hash="pca_cache/revealjs/unnamed-chunk-22_8a1c55b4413008a84478485f08ffb5e5">
 <div class="column">
-<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1"></a>rdaout <span class="ot">=</span> <span class="fu">rda</span>(Yc)</span>
-<span id="cb26-2"><a href="#cb26-2"></a>svdout <span class="ot">=</span> <span class="fu">svd</span>(Yc)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a></a>rdaout <span class="ot">=</span> <span class="fu">rda</span>(Yc)</span>
+<span id="cb26-2"><a></a>svdout <span class="ot">=</span> <span class="fu">svd</span>(Yc)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div><div class="column">
 
 </div>
@@ -776,8 +778,8 @@ SW -0.3580809  0.1243699</code></pre>
 <p><strong>Left singular matrix</strong><sup>1</sup></p>
 <div class="cell columns column-output-location" data-hash="pca_cache/revealjs/unnamed-chunk-23_da580f8306eb9855aae416449adac84a">
 <div class="column">
-<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1"></a>svdout<span class="sc">$</span>u <span class="sc">|&gt;</span> <span class="fu">head</span>(<span class="at">n =</span> <span class="dv">2</span>)     <span class="co"># SDV result</span></span>
-<span id="cb27-2"><a href="#cb27-2"></a>rdaout<span class="sc">$</span>CA<span class="sc">$</span>u <span class="sc">|&gt;</span> <span class="fu">head</span>(<span class="at">n =</span> <span class="dv">2</span>)  <span class="co"># RDA result</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a></a>svdout<span class="sc">$</span>u <span class="sc">|&gt;</span> <span class="fu">head</span>(<span class="at">n =</span> <span class="dv">2</span>)     <span class="co"># SDV result</span></span>
+<span id="cb27-2"><a></a>rdaout<span class="sc">$</span>CA<span class="sc">$</span>u <span class="sc">|&gt;</span> <span class="fu">head</span>(<span class="at">n =</span> <span class="dv">2</span>)  <span class="co"># RDA result</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div><div class="column">
 <div class="cell-output cell-output-stdout">
 <pre><code>            [,1]        [,2]
@@ -792,8 +794,8 @@ SW -0.3580809  0.1243699</code></pre>
 <p><strong>Right singular matrix</strong><sup>2</sup></p>
 <div class="cell columns column-output-location" data-hash="pca_cache/revealjs/unnamed-chunk-24_b287fa1a070a5674762ea27c11d2e889">
 <div class="column">
-<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1"></a>svdout<span class="sc">$</span>v <span class="sc">|&gt;</span> <span class="fu">head</span>(<span class="at">n =</span> <span class="dv">2</span>)    <span class="co"># SDV result</span></span>
-<span id="cb29-2"><a href="#cb29-2"></a>rdaout<span class="sc">$</span>CA<span class="sc">$</span>v <span class="sc">|&gt;</span> <span class="fu">head</span>(<span class="at">n =</span> <span class="dv">2</span>) <span class="co"># RDA result</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a></a>svdout<span class="sc">$</span>v <span class="sc">|&gt;</span> <span class="fu">head</span>(<span class="at">n =</span> <span class="dv">2</span>)    <span class="co"># SDV result</span></span>
+<span id="cb29-2"><a></a>rdaout<span class="sc">$</span>CA<span class="sc">$</span>v <span class="sc">|&gt;</span> <span class="fu">head</span>(<span class="at">n =</span> <span class="dv">2</span>) <span class="co"># RDA result</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div><div class="column">
 <div class="cell-output cell-output-stdout">
 <pre><code>           [,1]       [,2]
@@ -811,8 +813,8 @@ SW -0.7407783  0.6717496</code></pre>
 <p><strong>Eigenvalues</strong></p>
 <div class="cell columns column-output-location" data-hash="pca_cache/revealjs/unnamed-chunk-25_bcba784b455c019cc31242ac3a1ea37c">
 <div class="column">
-<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1"></a>(svdout<span class="sc">$</span>d<span class="sc">^</span><span class="dv">2</span>)<span class="sc">/</span>(n<span class="dv">-1</span>) <span class="co"># SDV result</span></span>
-<span id="cb31-2"><a href="#cb31-2"></a>rdaout<span class="sc">$</span>CA<span class="sc">$</span>eig      <span class="co"># RDA result</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a></a>(svdout<span class="sc">$</span>d<span class="sc">^</span><span class="dv">2</span>)<span class="sc">/</span>(n<span class="dv">-1</span>) <span class="co"># SDV result</span></span>
+<span id="cb31-2"><a></a>rdaout<span class="sc">$</span>CA<span class="sc">$</span>eig      <span class="co"># RDA result</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div><div class="column">
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 0.23366074 0.03427804
@@ -825,7 +827,7 @@ SW -0.7407783  0.6717496</code></pre>
 <section id="example-2-similar-output" class="slide level2 smaller">
 <h2>Example 2: similar output</h2>
 <div class="cell" data-hash="pca_cache/revealjs/unnamed-chunk-26_7fa3352bef893fa20ccb40a8e86d4e18">
-<div class="sourceCode cell-code" id="cb33"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1"></a>rdaout <span class="sc">|&gt;</span> <span class="fu">summary</span>(<span class="at">display =</span> <span class="cn">NA</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb33"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a></a>rdaout <span class="sc">|&gt;</span> <span class="fu">summary</span>(<span class="at">display =</span> <span class="cn">NA</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
 Call:
@@ -870,13 +872,13 @@ Scaling 2 for species and site scores
 <p>The constant term is <span class="math inline">\(C = \sqrt[4]{(n -1)\sum{\lambda_i}}\)</span>.</p>
 <p>See the decision-vegan.pdf vignette for details.</p>
 <div class="cell" data-hash="pca_cache/revealjs/unnamed-chunk-27_d6ee87fc5cd9b5ccacfd644c46ab0353">
-<div class="sourceCode cell-code" id="cb35"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1"></a>const <span class="ot">=</span> ((n <span class="sc">-</span> <span class="dv">1</span>) <span class="sc">*</span> <span class="fu">sum</span>(lambda))<span class="sc">^</span>{<span class="dv">1</span><span class="sc">/</span><span class="dv">4</span>}</span>
-<span id="cb35-2"><a href="#cb35-2"></a>scale1 <span class="ot">=</span> <span class="fu">sqrt</span>(lambda <span class="sc">/</span> <span class="fu">sum</span>(lambda) ) <span class="sc">*</span> const</span>
-<span id="cb35-3"><a href="#cb35-3"></a>scale2 <span class="ot">=</span> const</span>
-<span id="cb35-4"><a href="#cb35-4"></a>umat1 <span class="ot">=</span> umat <span class="sc">%*%</span> <span class="fu">diag</span>(scale1)</span>
-<span id="cb35-5"><a href="#cb35-5"></a>umat2 <span class="ot">=</span> umat <span class="sc">*</span> scale2</span>
-<span id="cb35-6"><a href="#cb35-6"></a>vmat1 <span class="ot">=</span> vmat <span class="sc">%*%</span> <span class="fu">diag</span>(scale1)</span>
-<span id="cb35-7"><a href="#cb35-7"></a>vmat2 <span class="ot">=</span> vmat <span class="sc">*</span> scale2</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb35"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a></a>const <span class="ot">=</span> ((n <span class="sc">-</span> <span class="dv">1</span>) <span class="sc">*</span> <span class="fu">sum</span>(lambda))<span class="sc">^</span>{<span class="dv">1</span><span class="sc">/</span><span class="dv">4</span>}</span>
+<span id="cb35-2"><a></a>scale1 <span class="ot">=</span> <span class="fu">sqrt</span>(lambda <span class="sc">/</span> <span class="fu">sum</span>(lambda) ) <span class="sc">*</span> const</span>
+<span id="cb35-3"><a></a>scale2 <span class="ot">=</span> const</span>
+<span id="cb35-4"><a></a>umat1 <span class="ot">=</span> umat <span class="sc">%*%</span> <span class="fu">diag</span>(scale1)</span>
+<span id="cb35-5"><a></a>umat2 <span class="ot">=</span> umat <span class="sc">*</span> scale2</span>
+<span id="cb35-6"><a></a>vmat1 <span class="ot">=</span> vmat <span class="sc">%*%</span> <span class="fu">diag</span>(scale1)</span>
+<span id="cb35-7"><a></a>vmat2 <span class="ot">=</span> vmat <span class="sc">*</span> scale2</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <aside><ol class="aside-footnotes"><li id="fn17"><p>Interpret spatial patterns.</p></li><li id="fn18"><p>Interpret vector directions and angles.</p></li></ol></aside></section>
 <section id="example-2-scaling-1-and-2" class="slide level2 smaller">
@@ -906,7 +908,11 @@ Scaling 2 for species and site scores
 <div class="column" style="width:30%;">
 <div class="cell" data-hash="pca_cache/revealjs/unnamed-chunk-28_1334c13b3ec54d379c0b3a3e36f22d4d">
 <div class="cell-output-display">
+<div>
+<figure>
 <p><img data-src="pca_files/figure-revealjs/unnamed-chunk-28-1.png" width="576"></p>
+</figure>
+</div>
 </div>
 </div>
 </div><div class="column" style="width:70%;">
@@ -914,14 +920,14 @@ Scaling 2 for species and site scores
 </div>
 </div>
 <div class="cell" data-hash="pca_cache/revealjs/unnamed-chunk-29_b0d5c1b09a23483643727615ed93e75b">
-<div class="sourceCode cell-code" id="cb36"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1"></a>limits <span class="ot">=</span> <span class="fu">c</span>(<span class="sc">-</span><span class="fl">0.5</span>, <span class="fl">0.5</span>)</span>
-<span id="cb36-2"><a href="#cb36-2"></a>tmp <span class="ot">=</span> <span class="fu">scores</span>(rdaout, <span class="at">scaling =</span> <span class="st">"none"</span>, <span class="at">display =</span> <span class="st">"species"</span>)</span>
-<span id="cb36-3"><a href="#cb36-3"></a>tmp <span class="ot">=</span> tmp <span class="sc">%*%</span> <span class="fu">diag</span>(<span class="dv">1</span><span class="sc">/</span><span class="fu">diag</span>(<span class="fu">sqrt</span>(tmp <span class="sc">%*%</span> <span class="fu">t</span>(tmp)))) <span class="sc">/</span> <span class="dv">2</span></span>
-<span id="cb36-4"><a href="#cb36-4"></a><span class="fu">scores</span>(rdaout, <span class="at">scaling =</span> <span class="st">"none"</span>, <span class="at">display =</span> <span class="st">"sites"</span>) <span class="sc">|&gt;</span> </span>
-<span id="cb36-5"><a href="#cb36-5"></a>  <span class="fu">plot</span>(<span class="at">cex =</span> <span class="fl">1.5</span>, <span class="at">xlim =</span> limits, <span class="at">ylim =</span> limits)</span>
-<span id="cb36-6"><a href="#cb36-6"></a><span class="fu">points</span>(umat[,<span class="dv">1</span>], umat[,<span class="dv">2</span>], <span class="at">pch =</span> <span class="dv">19</span>, <span class="at">col =</span> <span class="st">"blue"</span>, <span class="at">cex =</span> <span class="fl">0.5</span>)</span>
-<span id="cb36-7"><a href="#cb36-7"></a><span class="fu">segments</span>(<span class="fu">c</span>(<span class="dv">0</span>,<span class="dv">0</span>), <span class="fu">c</span>(<span class="dv">0</span>,<span class="dv">0</span>), tmp[,<span class="dv">1</span>], tmp[,<span class="dv">2</span>])</span>
-<span id="cb36-8"><a href="#cb36-8"></a><span class="fu">text</span>(tmp[,<span class="dv">1</span>], tmp[,<span class="dv">2</span>], <span class="at">labels =</span> <span class="fu">rownames</span>(tmp))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb36"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb36-1"><a></a>limits <span class="ot">=</span> <span class="fu">c</span>(<span class="sc">-</span><span class="fl">0.5</span>, <span class="fl">0.5</span>)</span>
+<span id="cb36-2"><a></a>tmp <span class="ot">=</span> <span class="fu">scores</span>(rdaout, <span class="at">scaling =</span> <span class="st">"none"</span>, <span class="at">display =</span> <span class="st">"species"</span>)</span>
+<span id="cb36-3"><a></a>tmp <span class="ot">=</span> tmp <span class="sc">%*%</span> <span class="fu">diag</span>(<span class="dv">1</span><span class="sc">/</span><span class="fu">diag</span>(<span class="fu">sqrt</span>(tmp <span class="sc">%*%</span> <span class="fu">t</span>(tmp)))) <span class="sc">/</span> <span class="dv">2</span></span>
+<span id="cb36-4"><a></a><span class="fu">scores</span>(rdaout, <span class="at">scaling =</span> <span class="st">"none"</span>, <span class="at">display =</span> <span class="st">"sites"</span>) <span class="sc">|&gt;</span> </span>
+<span id="cb36-5"><a></a>  <span class="fu">plot</span>(<span class="at">cex =</span> <span class="fl">1.5</span>, <span class="at">xlim =</span> limits, <span class="at">ylim =</span> limits)</span>
+<span id="cb36-6"><a></a><span class="fu">points</span>(umat[,<span class="dv">1</span>], umat[,<span class="dv">2</span>], <span class="at">pch =</span> <span class="dv">19</span>, <span class="at">col =</span> <span class="st">"blue"</span>, <span class="at">cex =</span> <span class="fl">0.5</span>)</span>
+<span id="cb36-7"><a></a><span class="fu">segments</span>(<span class="fu">c</span>(<span class="dv">0</span>,<span class="dv">0</span>), <span class="fu">c</span>(<span class="dv">0</span>,<span class="dv">0</span>), tmp[,<span class="dv">1</span>], tmp[,<span class="dv">2</span>])</span>
+<span id="cb36-8"><a></a><span class="fu">text</span>(tmp[,<span class="dv">1</span>], tmp[,<span class="dv">2</span>], <span class="at">labels =</span> <span class="fu">rownames</span>(tmp))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
 <section id="example-2-scaling-1" class="slide level2 smaller">
@@ -930,7 +936,11 @@ Scaling 2 for species and site scores
 <div class="column" style="width:30%;">
 <div class="cell" data-hash="pca_cache/revealjs/unnamed-chunk-30_dfbc59c6250d9000d4dae15a47905d88">
 <div class="cell-output-display">
+<div>
+<figure>
 <p><img data-src="pca_files/figure-revealjs/unnamed-chunk-30-1.png" width="576"></p>
+</figure>
+</div>
 </div>
 </div>
 </div><div class="column" style="width:70%;">
@@ -938,14 +948,14 @@ Scaling 2 for species and site scores
 </div>
 </div>
 <div class="cell" data-hash="pca_cache/revealjs/unnamed-chunk-31_a0e6bf0cd8bf8ee3a5c91fc6f9c65d68">
-<div class="sourceCode cell-code" id="cb37"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb37-1"><a href="#cb37-1"></a>limits <span class="ot">=</span> <span class="fu">c</span>(<span class="sc">-</span><span class="dv">1</span>, <span class="dv">1</span>)</span>
-<span id="cb37-2"><a href="#cb37-2"></a>tmp <span class="ot">=</span> <span class="fu">scores</span>(rdaout, <span class="at">scaling =</span> <span class="dv">1</span>, <span class="at">display =</span> <span class="st">"species"</span>)</span>
-<span id="cb37-3"><a href="#cb37-3"></a>tmp <span class="ot">=</span> tmp <span class="sc">%*%</span> <span class="fu">diag</span>(<span class="dv">1</span><span class="sc">/</span><span class="fu">diag</span>(<span class="fu">sqrt</span>(tmp <span class="sc">%*%</span> <span class="fu">t</span>(tmp))))</span>
-<span id="cb37-4"><a href="#cb37-4"></a><span class="fu">scores</span>(rdaout, <span class="at">scaling =</span> <span class="dv">1</span>, <span class="at">display =</span> <span class="st">"sites"</span>) <span class="sc">|&gt;</span> </span>
-<span id="cb37-5"><a href="#cb37-5"></a>  <span class="fu">plot</span>(<span class="at">cex =</span> <span class="fl">1.5</span>, <span class="at">xlim =</span> limits, <span class="at">ylim =</span> limits)</span>
-<span id="cb37-6"><a href="#cb37-6"></a><span class="fu">points</span>(umat1[,<span class="dv">1</span>], umat1[,<span class="dv">2</span>], <span class="at">pch =</span> <span class="dv">19</span>, <span class="at">col =</span> <span class="st">"blue"</span>, <span class="at">cex =</span> <span class="fl">0.5</span>)</span>
-<span id="cb37-7"><a href="#cb37-7"></a><span class="fu">segments</span>(<span class="fu">c</span>(<span class="dv">0</span>,<span class="dv">0</span>), <span class="fu">c</span>(<span class="dv">0</span>,<span class="dv">0</span>), tmp[,<span class="dv">1</span>], tmp[,<span class="dv">2</span>])</span>
-<span id="cb37-8"><a href="#cb37-8"></a><span class="fu">text</span>(tmp[,<span class="dv">1</span>], tmp[,<span class="dv">2</span>], <span class="at">labels =</span> <span class="fu">rownames</span>(tmp))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb37"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb37-1"><a></a>limits <span class="ot">=</span> <span class="fu">c</span>(<span class="sc">-</span><span class="dv">1</span>, <span class="dv">1</span>)</span>
+<span id="cb37-2"><a></a>tmp <span class="ot">=</span> <span class="fu">scores</span>(rdaout, <span class="at">scaling =</span> <span class="dv">1</span>, <span class="at">display =</span> <span class="st">"species"</span>)</span>
+<span id="cb37-3"><a></a>tmp <span class="ot">=</span> tmp <span class="sc">%*%</span> <span class="fu">diag</span>(<span class="dv">1</span><span class="sc">/</span><span class="fu">diag</span>(<span class="fu">sqrt</span>(tmp <span class="sc">%*%</span> <span class="fu">t</span>(tmp))))</span>
+<span id="cb37-4"><a></a><span class="fu">scores</span>(rdaout, <span class="at">scaling =</span> <span class="dv">1</span>, <span class="at">display =</span> <span class="st">"sites"</span>) <span class="sc">|&gt;</span> </span>
+<span id="cb37-5"><a></a>  <span class="fu">plot</span>(<span class="at">cex =</span> <span class="fl">1.5</span>, <span class="at">xlim =</span> limits, <span class="at">ylim =</span> limits)</span>
+<span id="cb37-6"><a></a><span class="fu">points</span>(umat1[,<span class="dv">1</span>], umat1[,<span class="dv">2</span>], <span class="at">pch =</span> <span class="dv">19</span>, <span class="at">col =</span> <span class="st">"blue"</span>, <span class="at">cex =</span> <span class="fl">0.5</span>)</span>
+<span id="cb37-7"><a></a><span class="fu">segments</span>(<span class="fu">c</span>(<span class="dv">0</span>,<span class="dv">0</span>), <span class="fu">c</span>(<span class="dv">0</span>,<span class="dv">0</span>), tmp[,<span class="dv">1</span>], tmp[,<span class="dv">2</span>])</span>
+<span id="cb37-8"><a></a><span class="fu">text</span>(tmp[,<span class="dv">1</span>], tmp[,<span class="dv">2</span>], <span class="at">labels =</span> <span class="fu">rownames</span>(tmp))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <aside><ol class="aside-footnotes"><li id="fn19"><p>ユークリッド距離</p></li></ol></aside></section>
 <section id="example-2-scaling-2" class="slide level2 smaller">
@@ -954,7 +964,11 @@ Scaling 2 for species and site scores
 <div class="column" style="width:30%;">
 <div class="cell" data-hash="pca_cache/revealjs/unnamed-chunk-32_f1a173d23a422dce2986f164090e504b">
 <div class="cell-output-display">
+<div>
+<figure>
 <p><img data-src="pca_files/figure-revealjs/unnamed-chunk-32-1.png" width="576"></p>
+</figure>
+</div>
 </div>
 </div>
 </div><div class="column" style="width:70%;">
@@ -962,36 +976,36 @@ Scaling 2 for species and site scores
 </div>
 </div>
 <div class="cell" data-hash="pca_cache/revealjs/unnamed-chunk-33_10855b1769e5d1a0147b1877b5e68e79">
-<div class="sourceCode cell-code" id="cb38"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb38-1"><a href="#cb38-1"></a>limits <span class="ot">=</span> <span class="fu">c</span>(<span class="sc">-</span><span class="fl">1.5</span>, <span class="fl">1.5</span>)</span>
-<span id="cb38-2"><a href="#cb38-2"></a>tmp <span class="ot">=</span> <span class="fu">scores</span>(rdaout, <span class="at">choices =</span> <span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">2</span>), <span class="at">scaling =</span> <span class="dv">2</span>, <span class="at">display =</span> <span class="st">"species"</span>)</span>
-<span id="cb38-3"><a href="#cb38-3"></a>tmp <span class="ot">=</span> tmp <span class="sc">%*%</span> <span class="fu">diag</span>(<span class="dv">1</span><span class="sc">/</span><span class="fu">diag</span>(<span class="fu">sqrt</span>(tmp <span class="sc">%*%</span> <span class="fu">t</span>(tmp)))) </span>
-<span id="cb38-4"><a href="#cb38-4"></a><span class="fu">scores</span>(rdaout, <span class="at">scaling =</span> <span class="dv">2</span>, <span class="at">display =</span> <span class="st">"sites"</span>) <span class="sc">|&gt;</span> </span>
-<span id="cb38-5"><a href="#cb38-5"></a>  <span class="fu">plot</span>(<span class="at">cex =</span> <span class="fl">1.5</span>, <span class="at">xlim =</span> limits, <span class="at">ylim =</span> limits)</span>
-<span id="cb38-6"><a href="#cb38-6"></a><span class="fu">points</span>(umat2[,<span class="dv">1</span>], umat2[,<span class="dv">2</span>], <span class="at">pch =</span> <span class="dv">19</span>, <span class="at">col =</span> <span class="st">"blue"</span>, <span class="at">cex =</span> <span class="fl">0.5</span>)</span>
-<span id="cb38-7"><a href="#cb38-7"></a><span class="fu">segments</span>(<span class="fu">c</span>(<span class="dv">0</span>,<span class="dv">0</span>), <span class="fu">c</span>(<span class="dv">0</span>,<span class="dv">0</span>), tmp[,<span class="dv">1</span>], tmp[,<span class="dv">2</span>])</span>
-<span id="cb38-8"><a href="#cb38-8"></a><span class="fu">text</span>(tmp[,<span class="dv">1</span>], tmp[,<span class="dv">2</span>], <span class="at">labels =</span> <span class="fu">rownames</span>(tmp))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb38"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb38-1"><a></a>limits <span class="ot">=</span> <span class="fu">c</span>(<span class="sc">-</span><span class="fl">1.5</span>, <span class="fl">1.5</span>)</span>
+<span id="cb38-2"><a></a>tmp <span class="ot">=</span> <span class="fu">scores</span>(rdaout, <span class="at">choices =</span> <span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">2</span>), <span class="at">scaling =</span> <span class="dv">2</span>, <span class="at">display =</span> <span class="st">"species"</span>)</span>
+<span id="cb38-3"><a></a>tmp <span class="ot">=</span> tmp <span class="sc">%*%</span> <span class="fu">diag</span>(<span class="dv">1</span><span class="sc">/</span><span class="fu">diag</span>(<span class="fu">sqrt</span>(tmp <span class="sc">%*%</span> <span class="fu">t</span>(tmp)))) </span>
+<span id="cb38-4"><a></a><span class="fu">scores</span>(rdaout, <span class="at">scaling =</span> <span class="dv">2</span>, <span class="at">display =</span> <span class="st">"sites"</span>) <span class="sc">|&gt;</span> </span>
+<span id="cb38-5"><a></a>  <span class="fu">plot</span>(<span class="at">cex =</span> <span class="fl">1.5</span>, <span class="at">xlim =</span> limits, <span class="at">ylim =</span> limits)</span>
+<span id="cb38-6"><a></a><span class="fu">points</span>(umat2[,<span class="dv">1</span>], umat2[,<span class="dv">2</span>], <span class="at">pch =</span> <span class="dv">19</span>, <span class="at">col =</span> <span class="st">"blue"</span>, <span class="at">cex =</span> <span class="fl">0.5</span>)</span>
+<span id="cb38-7"><a></a><span class="fu">segments</span>(<span class="fu">c</span>(<span class="dv">0</span>,<span class="dv">0</span>), <span class="fu">c</span>(<span class="dv">0</span>,<span class="dv">0</span>), tmp[,<span class="dv">1</span>], tmp[,<span class="dv">2</span>])</span>
+<span id="cb38-8"><a></a><span class="fu">text</span>(tmp[,<span class="dv">1</span>], tmp[,<span class="dv">2</span>], <span class="at">labels =</span> <span class="fu">rownames</span>(tmp))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
 <section id="example-3-unscaled-3d-plot" class="slide level2">
 <h2>Example 3: unscaled 3D plot</h2>
 
-<img data-src="pca_files/figure-revealjs/unnamed-chunk-35-1.png" width="960" class="r-stretch quarto-figure-center"></section>
+<img data-src="pca_files/figure-revealjs/unnamed-chunk-35-1.png" class="quarto-figure quarto-figure-center r-stretch" width="960"></section>
 <section id="example-3-scaled-3d-plot" class="slide level2">
 <h2>Example 3: scaled 3D plot</h2>
-<div class="cell quarto-layout-panel" data-hash="pca_cache/revealjs/unnamed-chunk-36_15abe5c41ac676963093649f001a4ecd">
-<div class="quarto-layout-row quarto-layout-valign-top">
-<div class="cell-output-display quarto-layout-cell" style="flex-basis: 50.0%;justify-content: center;">
+<div class="cell quarto-layout-panel" data-hash="pca_cache/revealjs/unnamed-chunk-36_15abe5c41ac676963093649f001a4ecd" data-layout-ncol="2">
+<div class="quarto-layout-row">
+<div class="quarto-layout-cell" style="flex-basis: 50.0%;justify-content: flex-start;">
 <div class="quarto-figure quarto-figure-center">
 <figure>
-<p><img data-src="pca_files/figure-revealjs/unnamed-chunk-36-1.png"></p>
+<p><img data-src="pca_files/figure-revealjs/unnamed-chunk-36-1.png" style="width:100.0%"></p>
 <figcaption>Scaling = 1</figcaption>
 </figure>
 </div>
 </div>
-<div class="cell-output-display quarto-layout-cell" style="flex-basis: 50.0%;justify-content: center;">
+<div class="quarto-layout-cell" style="flex-basis: 50.0%;justify-content: flex-start;">
 <div class="quarto-figure quarto-figure-center">
 <figure>
-<p><img data-src="pca_files/figure-revealjs/unnamed-chunk-36-2.png"></p>
+<p><img data-src="pca_files/figure-revealjs/unnamed-chunk-36-2.png" style="width:100.0%"></p>
 <figcaption>Scaling = 2</figcaption>
 </figure>
 </div>
@@ -1002,7 +1016,7 @@ Scaling 2 for species and site scores
 <section id="example-3-summary-output" class="slide level2 smaller">
 <h2>Example 3: summary output</h2>
 <div class="cell" data-hash="pca_cache/revealjs/unnamed-chunk-37_f9563ba018577937c481c78ddb3e89c8">
-<div class="sourceCode cell-code" id="cb39"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb39-1"><a href="#cb39-1"></a>rdaout <span class="sc">|&gt;</span> <span class="fu">summary</span>(<span class="at">display =</span> <span class="cn">NA</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb39"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb39-1"><a></a>rdaout <span class="sc">|&gt;</span> <span class="fu">summary</span>(<span class="at">display =</span> <span class="cn">NA</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
 Call:
@@ -1088,27 +1102,27 @@ v_2 &amp;= \begin{bmatrix} -0.43 &amp; -0.90 &amp;  0.40 \end{bmatrix} \\
 <section id="example-3-correlations-in-r" class="slide level2 smaller">
 <h2>Example 3: correlations in R</h2>
 <div class="cell" data-hash="pca_cache/revealjs/unnamed-chunk-40_2298df3a606577c9e27554144fb505e3">
-<div class="sourceCode cell-code" id="cb41"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb41-1"><a href="#cb41-1"></a>calc_costheta <span class="ot">=</span> <span class="cf">function</span>(v1, v2) {</span>
-<span id="cb41-2"><a href="#cb41-2"></a>  v1 <span class="ot">=</span> <span class="fu">matrix</span>(<span class="fu">as.numeric</span>(v1), <span class="at">ncol =</span> <span class="dv">3</span>)</span>
-<span id="cb41-3"><a href="#cb41-3"></a>  v2 <span class="ot">=</span> <span class="fu">matrix</span>(<span class="fu">as.numeric</span>(v2), <span class="at">ncol =</span> <span class="dv">1</span>)</span>
-<span id="cb41-4"><a href="#cb41-4"></a>  bot <span class="ot">=</span> <span class="fu">sqrt</span>(v1 <span class="sc">%*%</span> <span class="fu">t</span>(v1)) <span class="sc">*</span> <span class="fu">sqrt</span>(<span class="fu">t</span>(v2)  <span class="sc">%*%</span> v2)</span>
-<span id="cb41-5"><a href="#cb41-5"></a>  top <span class="ot">=</span> v1 <span class="sc">%*%</span> v2</span>
-<span id="cb41-6"><a href="#cb41-6"></a>  costheta <span class="ot">=</span> (top<span class="sc">/</span>bot)</span>
-<span id="cb41-7"><a href="#cb41-7"></a>  costheta</span>
-<span id="cb41-8"><a href="#cb41-8"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb41"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb41-1"><a></a>calc_costheta <span class="ot">=</span> <span class="cf">function</span>(v1, v2) {</span>
+<span id="cb41-2"><a></a>  v1 <span class="ot">=</span> <span class="fu">matrix</span>(<span class="fu">as.numeric</span>(v1), <span class="at">ncol =</span> <span class="dv">3</span>)</span>
+<span id="cb41-3"><a></a>  v2 <span class="ot">=</span> <span class="fu">matrix</span>(<span class="fu">as.numeric</span>(v2), <span class="at">ncol =</span> <span class="dv">1</span>)</span>
+<span id="cb41-4"><a></a>  bot <span class="ot">=</span> <span class="fu">sqrt</span>(v1 <span class="sc">%*%</span> <span class="fu">t</span>(v1)) <span class="sc">*</span> <span class="fu">sqrt</span>(<span class="fu">t</span>(v2)  <span class="sc">%*%</span> v2)</span>
+<span id="cb41-5"><a></a>  top <span class="ot">=</span> v1 <span class="sc">%*%</span> v2</span>
+<span id="cb41-6"><a></a>  costheta <span class="ot">=</span> (top<span class="sc">/</span>bot)</span>
+<span id="cb41-7"><a></a>  costheta</span>
+<span id="cb41-8"><a></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Isolate the vectors.</p>
 <div class="cell" data-hash="pca_cache/revealjs/unnamed-chunk-41_781110228b59bb7332ff1e827947b1d7">
-<div class="sourceCode cell-code" id="cb42"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb42-1"><a href="#cb42-1"></a>sl <span class="ot">=</span> vmat[<span class="st">"SL"</span>, ]</span>
-<span id="cb42-2"><a href="#cb42-2"></a>sw <span class="ot">=</span> vmat[<span class="st">"SW"</span>, ]</span>
-<span id="cb42-3"><a href="#cb42-3"></a>pl <span class="ot">=</span> vmat[<span class="st">"PL"</span>, ]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb42"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb42-1"><a></a>sl <span class="ot">=</span> vmat[<span class="st">"SL"</span>, ]</span>
+<span id="cb42-2"><a></a>sw <span class="ot">=</span> vmat[<span class="st">"SW"</span>, ]</span>
+<span id="cb42-3"><a></a>pl <span class="ot">=</span> vmat[<span class="st">"PL"</span>, ]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Calculate <span class="math inline">\(\cos\theta\)</span>.</p>
 <div class="cell columns column-output-location" data-hash="pca_cache/revealjs/unnamed-chunk-42_245cdb6415c73be3748a6491cc86ccf0">
 <div class="column">
-<div class="sourceCode cell-code" id="cb43"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb43-1"><a href="#cb43-1"></a><span class="fu">calc_costheta</span>(sl, sw)</span>
-<span id="cb43-2"><a href="#cb43-2"></a><span class="fu">calc_costheta</span>(sl, pl)</span>
-<span id="cb43-3"><a href="#cb43-3"></a><span class="fu">calc_costheta</span>(pl, sw)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb43"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb43-1"><a></a><span class="fu">calc_costheta</span>(sl, sw)</span>
+<span id="cb43-2"><a></a><span class="fu">calc_costheta</span>(sl, pl)</span>
+<span id="cb43-3"><a></a><span class="fu">calc_costheta</span>(pl, sw)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div><div class="column">
 <div class="cell-output cell-output-stdout">
 <pre><code>           [,1]
@@ -1123,7 +1137,7 @@ v_2 &amp;= \begin{bmatrix} -0.43 &amp; -0.90 &amp;  0.40 \end{bmatrix} \\
 <p>It is easier to calculate the correlations on the original centered data.</p>
 <div class="cell columns column-output-location" data-hash="pca_cache/revealjs/unnamed-chunk-43_0225d66124701cbdf15dd96fe1744891">
 <div class="column">
-<div class="sourceCode cell-code" id="cb45"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb45-1"><a href="#cb45-1"></a><span class="fu">cor</span>(Yc)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb45"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb45-1"><a></a><span class="fu">cor</span>(Yc)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div><div class="column">
 <div class="cell-output cell-output-stdout">
 <pre><code>           SL         SW         PL
@@ -1139,14 +1153,14 @@ PL  0.8717538 -0.4284401  1.0000000</code></pre>
 <p>To determine the correlations of each variable with respect to the principal component axes, use the function.</p>
 <div class="cell columns column-output-location" data-hash="pca_cache/revealjs/unnamed-chunk-44_c180bbe30d9322ca376cab9fd08c65f2">
 <div class="column">
-<div class="sourceCode cell-code" id="cb47"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb47-1"><a href="#cb47-1"></a>I <span class="ot">=</span> <span class="fu">diag</span>(<span class="dv">1</span>, <span class="dv">3</span>, <span class="dv">3</span>)</span>
-<span id="cb47-2"><a href="#cb47-2"></a>cc <span class="ot">=</span> \(x) {<span class="fu">calc_costheta</span>(sl, I[x, ])}</span>
-<span id="cb47-3"><a href="#cb47-3"></a>pcsl <span class="ot">=</span> <span class="fu">sapply</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">3</span>, cc)</span>
-<span id="cb47-4"><a href="#cb47-4"></a>pcsw <span class="ot">=</span> <span class="fu">sapply</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">3</span>, cc)</span>
-<span id="cb47-5"><a href="#cb47-5"></a>pcpl <span class="ot">=</span> <span class="fu">sapply</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">3</span>, cc)</span>
-<span id="cb47-6"><a href="#cb47-6"></a><span class="fu">matrix</span>(<span class="fu">c</span>(pcsl, pcsw, pcpl), <span class="at">ncol =</span> <span class="dv">3</span>,</span>
-<span id="cb47-7"><a href="#cb47-7"></a>       <span class="at">dimnames =</span> <span class="fu">list</span>(<span class="fu">str_glue</span>(<span class="st">"PC{1:3}"</span>), </span>
-<span id="cb47-8"><a href="#cb47-8"></a>                       <span class="fu">c</span>(<span class="st">"SL"</span>, <span class="st">"SW"</span>, <span class="st">"PL"</span>)))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb47"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb47-1"><a></a>I <span class="ot">=</span> <span class="fu">diag</span>(<span class="dv">1</span>, <span class="dv">3</span>, <span class="dv">3</span>)</span>
+<span id="cb47-2"><a></a>cc <span class="ot">=</span> \(x) {<span class="fu">calc_costheta</span>(sl, I[x, ])}</span>
+<span id="cb47-3"><a></a>pcsl <span class="ot">=</span> <span class="fu">sapply</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">3</span>, cc)</span>
+<span id="cb47-4"><a></a>pcsw <span class="ot">=</span> <span class="fu">sapply</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">3</span>, cc)</span>
+<span id="cb47-5"><a></a>pcpl <span class="ot">=</span> <span class="fu">sapply</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">3</span>, cc)</span>
+<span id="cb47-6"><a></a><span class="fu">matrix</span>(<span class="fu">c</span>(pcsl, pcsw, pcpl), <span class="at">ncol =</span> <span class="dv">3</span>,</span>
+<span id="cb47-7"><a></a>       <span class="at">dimnames =</span> <span class="fu">list</span>(<span class="fu">str_glue</span>(<span class="st">"PC{1:3}"</span>), </span>
+<span id="cb47-8"><a></a>                       <span class="fu">c</span>(<span class="st">"SL"</span>, <span class="st">"SW"</span>, <span class="st">"PL"</span>)))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div><div class="column">
 <div class="cell-output cell-output-stdout">
 <pre><code>            SL         SW         PL
@@ -1163,10 +1177,12 @@ PC3 -0.1951939 -0.1951939 -0.1951939</code></pre>
 <p>https://qiita.com/horiem/items/71380db4b659fb9307b4</p>
 <p>https://stats.stackexchange.com/questions/141085/positioning-the-arrows-on-a-pca-biplot</p>
 
+<div class="quarto-auto-generated-content">
 <div class="footer footer-default">
 
 </div>
-<div id="refs" class="references csl-bib-body hanging-indent" role="list">
+</div>
+<div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" role="list">
 <div id="ref-hotelling1933" class="csl-entry" role="listitem">
 Hotelling, H. 1933. <span>“Analysis of a Complex of Statistical Variables into Principal Components.”</span> <em>Journal of Educational Psychology</em> 24 (6): 417–41. <a href="https://doi.org/10.1037/h0071325">https://doi.org/10.1037/h0071325</a>.
 </div>
@@ -1205,7 +1221,6 @@ Pearson, Karl. 1901. <span>“LIII. <span><em>On Lines and Planes of Closest Fit
       Reveal.initialize({
 'controlsAuto': true,
 'previewLinksAuto': false,
-'smaller': false,
 'pdfSeparateFragments': false,
 'autoAnimateEasing': "ease",
 'autoAnimateDuration': 1,
@@ -1504,10 +1519,9 @@ Pearson, Karl. 1901. <span>“LIII. <span><em>On Lines and Planes of Closest Fit
         // clear code selection
         e.clearSelection();
       });
-      function tippyHover(el, contentFn) {
+      function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
         const config = {
           allowHTML: true,
-          content: contentFn,
           maxWidth: 500,
           delay: 100,
           arrow: false,
@@ -1517,8 +1531,17 @@ Pearson, Karl. 1901. <span>“LIII. <span><em>On Lines and Planes of Closest Fit
           interactive: true,
           interactiveBorder: 10,
           theme: 'light-border',
-          placement: 'bottom-start'
+          placement: 'bottom-start',
         };
+        if (contentFn) {
+          config.content = contentFn;
+        }
+        if (onTriggerFn) {
+          config.onTrigger = onTriggerFn;
+        }
+        if (onUntriggerFn) {
+          config.onUntrigger = onUntriggerFn;
+        }
           config['offset'] = [0,0];
           config['maxWidth'] = 700;
         window.tippy(el, config); 

@@ -8,7 +8,7 @@
 <link href="site_libs/quarto-html/light-border.css" rel="stylesheet">
 <link href="site_libs/quarto-html/quarto-html.min.css" rel="stylesheet" data-mode="light">
 <link href="site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles"><meta charset="utf-8">
-  <meta name="generator" content="quarto-1.3.450">
+  <meta name="generator" content="quarto-1.4.549">
 
   <meta name="author" content="Greg Nishihara">
   <title>データ解析（研究室用） - Redundancy Analysis</title>
@@ -31,7 +31,7 @@
     }
     /* CSS for syntax highlighting */
     pre > code.sourceCode { white-space: pre; position: relative; }
-    pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+    pre > code.sourceCode > span { line-height: 1.25; }
     pre > code.sourceCode > span:empty { height: 1.2em; }
     .sourceCode { overflow: visible; }
     code.sourceCode > span { color: inherit; text-decoration: inherit; }
@@ -221,7 +221,8 @@
   }
 
   .callout.callout-titled .callout-body > .callout-content > :last-child {
-    margin-bottom: 0.5rem;
+    padding-bottom: 0.5rem;
+    margin-bottom: 0;
   }
 
   .callout.callout-titled .callout-icon::before {
@@ -400,7 +401,7 @@ Greg Nishihara
 </div>
 </div>
 
-  <p class="date">2023 / 09 / 24</p>
+  <p class="date">2024 / 04 / 07</p>
 </section>
 <section>
 <section id="redundancy-analysis" class="title-slide slide level1 center">
@@ -417,7 +418,7 @@ Greg Nishihara
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure>
-<p><img data-src="rda_files/figure-revealjs/unnamed-chunk-3-1.png" width="438"></p>
+<p><img data-src="rda_files/figure-revealjs/unnamed-chunk-3-1.png" class="quarto-figure quarto-figure-center" width="438"></p>
 </figure>
 </div>
 </div>
@@ -503,7 +504,7 @@ Greg Nishihara
 <p>The dimensions of the matrix (rows and columns).</p>
 <div class="cell columns column-output-location" data-hash="rda_cache/revealjs/unnamed-chunk-6_d218cad4c70fa6bf622121558055f500">
 <div class="column">
-<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1"></a>seaweed <span class="sc">|&gt;</span> <span class="fu">dim</span>() </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a></a>seaweed <span class="sc">|&gt;</span> <span class="fu">dim</span>() </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div><div class="column">
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 147 108</code></pre>
@@ -512,7 +513,7 @@ Greg Nishihara
 </div>
 <p>Example of some data points.</p>
 <div class="cell" data-hash="rda_cache/revealjs/unnamed-chunk-7_b3158bb84bddd74119137f1eeb5002a7">
-<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1"></a>seaweed[<span class="dv">3</span><span class="sc">:</span><span class="dv">5</span>, <span class="dv">3</span><span class="sc">:</span><span class="dv">5</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a></a>seaweed[<span class="dv">3</span><span class="sc">:</span><span class="dv">5</span>, <span class="dv">3</span><span class="sc">:</span><span class="dv">5</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre style="font-size: 0.4em"><code># A tibble: 3 × 3
   `Colpomenia-spp` `Dictyota-spiralis` `Gelidium-spp`
@@ -530,10 +531,10 @@ Greg Nishihara
 y\prime_{ij} = \sqrt{\frac{y_{ij}}{\sum y_{i}}}
 \]</span></p>
 <div class="cell" data-hash="rda_cache/revealjs/unnamed-chunk-8_4f77fff647398c4665c7db4ab5b79afb">
-<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1"></a>Y <span class="ot">=</span> <span class="fu">decostand</span>(seaweed, <span class="st">"hellinger"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a></a>Y <span class="ot">=</span> <span class="fu">decostand</span>(seaweed, <span class="st">"hellinger"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div class="cell" data-hash="rda_cache/revealjs/unnamed-chunk-9_6360a73dfb1acc38dfe7987aae373479">
-<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1"></a>Y[<span class="dv">3</span><span class="sc">:</span><span class="dv">5</span>, <span class="dv">3</span><span class="sc">:</span><span class="dv">5</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a></a>Y[<span class="dv">3</span><span class="sc">:</span><span class="dv">5</span>, <span class="dv">3</span><span class="sc">:</span><span class="dv">5</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>  Colpomenia-spp Dictyota-spiralis Gelidium-spp
 3              0         0.2294157    0.2294157
@@ -542,7 +543,7 @@ y\prime_{ij} = \sqrt{\frac{y_{ij}}{\sum y_{i}}}
 </div>
 </div>
 <div class="cell" data-hash="rda_cache/revealjs/unnamed-chunk-10_a6c543cda455f46e853fefddbf767805">
-<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1"></a><span class="fu">sqrt</span>(seaweed[<span class="dv">3</span><span class="sc">:</span><span class="dv">5</span>, <span class="dv">3</span><span class="sc">:</span><span class="dv">5</span>] <span class="sc">/</span> <span class="fu">rowSums</span>(seaweed)[<span class="dv">3</span><span class="sc">:</span><span class="dv">5</span>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a></a><span class="fu">sqrt</span>(seaweed[<span class="dv">3</span><span class="sc">:</span><span class="dv">5</span>, <span class="dv">3</span><span class="sc">:</span><span class="dv">5</span>] <span class="sc">/</span> <span class="fu">rowSums</span>(seaweed)[<span class="dv">3</span><span class="sc">:</span><span class="dv">5</span>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>  Colpomenia-spp Dictyota-spiralis Gelidium-spp
 1              0         0.2294157    0.2294157
@@ -558,7 +559,7 @@ y\prime_{ij} = \sqrt{\frac{y_{ij}}{\sum y_{i}}}
 z = \frac{x - \bar{x}}{s}
 \]</span> where <span class="math inline">\(x\)</span> is the value, <span class="math inline">\(\bar{x}\)</span> is the mean value of <span class="math inline">\(x\)</span>, and <span class="math inline">\(s\)</span> is the standard deviation of <span class="math inline">\(x\)</span>. This data is already standardized.</p>
 <div class="cell" data-hash="rda_cache/revealjs/unnamed-chunk-11_19cf792833a63a0936ec6d5fe2494a26">
-<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1"></a>envdata <span class="sc">|&gt;</span> <span class="fu">print</span>(<span class="at">n =</span> <span class="dv">3</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a></a>envdata <span class="sc">|&gt;</span> <span class="fu">print</span>(<span class="at">n =</span> <span class="dv">3</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 147 × 10
   year  season station month depth_mean pla_10…¹ sed_d…² herbi…³ compe…⁴ temp_…⁵
@@ -589,7 +590,7 @@ z = \frac{x - \bar{x}}{s}
 </div>
 <div class="cell columns column-output-location" data-hash="rda_cache/revealjs/unnamed-chunk-13_fc651227d3ee087c3bae59ed79541b9f">
 <div class="column">
-<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1"></a><span class="fu">decorana</span>(Y)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a></a><span class="fu">decorana</span>(Y)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div><div class="column">
 <div class="cell-output cell-output-stdout">
 <pre style="font-size: 0.4em"><code>
@@ -626,14 +627,14 @@ Axis lengths         3.5600 2.9877 2.8427 2.1297</code></pre>
 <h2>Null Model</h2>
 <p>Define the null model and the full model of the multiple linear regression component.</p>
 <div class="cell" data-hash="rda_cache/revealjs/unnamed-chunk-14_09d0c1db50e26c3c7c8031e4fc46790a">
-<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1"></a>nullmodel <span class="ot">=</span> Y <span class="sc">~</span> <span class="dv">1</span></span>
-<span id="cb14-2"><a href="#cb14-2"></a>fullmodel <span class="ot">=</span> Y <span class="sc">~</span> pla_100g_day_mean <span class="sc">+</span> </span>
-<span id="cb14-3"><a href="#cb14-3"></a>  temp_range_mean <span class="sc">+</span></span>
-<span id="cb14-4"><a href="#cb14-4"></a>  season <span class="sc">+</span> </span>
-<span id="cb14-5"><a href="#cb14-5"></a>  competing_A_mean <span class="sc">+</span></span>
-<span id="cb14-6"><a href="#cb14-6"></a>  herbivorous_A_mean <span class="sc">+</span></span>
-<span id="cb14-7"><a href="#cb14-7"></a>  sed_day_mean <span class="sc">+</span></span>
-<span id="cb14-8"><a href="#cb14-8"></a>  depth_mean</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a></a>nullmodel <span class="ot">=</span> Y <span class="sc">~</span> <span class="dv">1</span></span>
+<span id="cb14-2"><a></a>fullmodel <span class="ot">=</span> Y <span class="sc">~</span> pla_100g_day_mean <span class="sc">+</span> </span>
+<span id="cb14-3"><a></a>  temp_range_mean <span class="sc">+</span></span>
+<span id="cb14-4"><a></a>  season <span class="sc">+</span> </span>
+<span id="cb14-5"><a></a>  competing_A_mean <span class="sc">+</span></span>
+<span id="cb14-6"><a></a>  herbivorous_A_mean <span class="sc">+</span></span>
+<span id="cb14-7"><a></a>  sed_day_mean <span class="sc">+</span></span>
+<span id="cb14-8"><a></a>  depth_mean</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
 <section id="forward-selection" class="slide level2 smaller">
@@ -641,24 +642,24 @@ Axis lengths         3.5600 2.9877 2.8427 2.1297</code></pre>
 <p>Use forward selection to eliminate unnecessary environmental variables. Removing variables will affect the scores and loadings.</p>
 <p>Fit the null model.</p>
 <div class="cell" data-hash="rda_cache/revealjs/unnamed-chunk-15_26ff36e11d69435b6353b60f70d65f6d">
-<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1"></a>rdamodel0 <span class="ot">=</span> <span class="fu">rda</span>(<span class="fu">formula</span>(nullmodel), <span class="at">data =</span> envdata)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a></a>rdamodel0 <span class="ot">=</span> <span class="fu">rda</span>(<span class="fu">formula</span>(nullmodel), <span class="at">data =</span> envdata)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Fit the full model.</p>
 <div class="cell" data-hash="rda_cache/revealjs/unnamed-chunk-16_3f8188cc5c582932257d4b342b9b95a6">
-<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1"></a>rdamodelf <span class="ot">=</span> <span class="fu">rda</span>(<span class="fu">formula</span>(fullmodel), <span class="at">data =</span> envdata)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a></a>rdamodelf <span class="ot">=</span> <span class="fu">rda</span>(<span class="fu">formula</span>(fullmodel), <span class="at">data =</span> envdata)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Run the forward selection.</p>
 <div class="cell" data-hash="rda_cache/revealjs/unnamed-chunk-17_affce0b54b5d0a0b585e29aa6fca311e">
-<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1"></a>rdamodel <span class="ot">=</span> <span class="fu">ordiR2step</span>(rdamodel0, <span class="co"># null</span></span>
-<span id="cb17-2"><a href="#cb17-2"></a>                     <span class="at">scope =</span> <span class="fu">formula</span>(fullmodel), <span class="co"># full</span></span>
-<span id="cb17-3"><a href="#cb17-3"></a>                     <span class="at">R2permutations =</span> <span class="dv">2</span><span class="sc">^</span><span class="dv">15</span>,</span>
-<span id="cb17-4"><a href="#cb17-4"></a>                     <span class="at">trace =</span> <span class="cn">FALSE</span>) <span class="co"># change to TRUE to see the selection process!</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a></a>rdamodel <span class="ot">=</span> <span class="fu">ordiR2step</span>(rdamodel0, <span class="co"># null</span></span>
+<span id="cb17-2"><a></a>                     <span class="at">scope =</span> <span class="fu">formula</span>(fullmodel), <span class="co"># full</span></span>
+<span id="cb17-3"><a></a>                     <span class="at">R2permutations =</span> <span class="dv">2</span><span class="sc">^</span><span class="dv">15</span>,</span>
+<span id="cb17-4"><a></a>                     <span class="at">trace =</span> <span class="cn">FALSE</span>) <span class="co"># change to TRUE to see the selection process!</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
 <section id="results" class="slide level2">
 <h2>Results</h2>
 
-<img data-src="rda_files/figure-revealjs/unnamed-chunk-19-1.png" width="464" class="r-stretch quarto-figure-center"><div class="r-stack">
+<img data-src="rda_files/figure-revealjs/unnamed-chunk-19-1.png" class="quarto-figure quarto-figure-center r-stretch" width="464"><div class="r-stack">
 <div class="fragment fade-out">
 <div class="columns">
 <div class="column" style="width:50%;">
@@ -691,7 +692,7 @@ Axis lengths         3.5600 2.9877 2.8427 2.1297</code></pre>
 <h2>Variance inflation factor</h2>
 <p>Use the variance inflation factor (VIF)<sup>1</sup> to check for multi-collinearity<sup>2</sup>. If it is larger than 10, then variable is can be removed from the model.</p>
 <div class="cell" data-hash="rda_cache/revealjs/unnamed-chunk-20_36cef38c6dc48ac5805e76361d3e38de">
-<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1"></a><span class="fu">vif.cca</span>(rdamodel)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a></a><span class="fu">vif.cca</span>(rdamodel)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code> pla_100g_day_mean           seasonWS       sed_day_mean herbivorous_A_mean 
           2.064950           1.024439           2.455251           3.070272 
@@ -712,34 +713,34 @@ Axis lengths         3.5600 2.9877 2.8427 2.1297</code></pre>
 <h2>Find the solution</h2>
 <p>First standardize the Y and X matrices.</p>
 <div class="cell" data-hash="rda_cache/revealjs/unnamed-chunk-21_58860eac3fa0da4d0a2a26c5fc8b5fda">
-<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1"></a>Y <span class="ot">=</span> iris[, <span class="dv">1</span><span class="sc">:</span><span class="dv">2</span>]</span>
-<span id="cb20-2"><a href="#cb20-2"></a>X <span class="ot">=</span> iris[, <span class="dv">3</span><span class="sc">:</span><span class="dv">4</span>]</span>
-<span id="cb20-3"><a href="#cb20-3"></a>X <span class="ot">=</span> <span class="fu">apply</span>(X, <span class="dv">2</span>, scale)</span>
-<span id="cb20-4"><a href="#cb20-4"></a>Y <span class="ot">=</span> <span class="fu">apply</span>(Y, <span class="dv">2</span>, scale)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a></a>Y <span class="ot">=</span> iris[, <span class="dv">1</span><span class="sc">:</span><span class="dv">2</span>]</span>
+<span id="cb20-2"><a></a>X <span class="ot">=</span> iris[, <span class="dv">3</span><span class="sc">:</span><span class="dv">4</span>]</span>
+<span id="cb20-3"><a></a>X <span class="ot">=</span> <span class="fu">apply</span>(X, <span class="dv">2</span>, scale)</span>
+<span id="cb20-4"><a></a>Y <span class="ot">=</span> <span class="fu">apply</span>(Y, <span class="dv">2</span>, scale)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Next, fit the <code>rda()</code> version for comparison.</p>
 <div class="cell" data-hash="rda_cache/revealjs/unnamed-chunk-22_b6825c77d2b38bbc6fd7ba8bad570030">
-<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1"></a>rdaout <span class="ot">=</span> <span class="fu">rda</span>(Y<span class="sc">~</span>X)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a></a>rdaout <span class="ot">=</span> <span class="fu">rda</span>(Y<span class="sc">~</span>X)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Then find <span class="math inline">\(\mathbf{\hat{Y}}\)</span> multivariate linear regression <span class="math inline">\(\mathbf{Y} \sim \mathbf{X}\)</span>.</p>
 <div class="cell" data-hash="rda_cache/revealjs/unnamed-chunk-23_7fb07c2aeb262a88fbca7d057a0e3b46">
-<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1"></a>sxxinv <span class="ot">=</span> <span class="fu">solve</span>(<span class="fu">t</span>(X) <span class="sc">%*%</span> X)</span>
-<span id="cb22-2"><a href="#cb22-2"></a>syx <span class="ot">=</span> <span class="fu">t</span>(Y) <span class="sc">%*%</span> X</span>
-<span id="cb22-3"><a href="#cb22-3"></a>syxtr <span class="ot">=</span> <span class="fu">t</span>(syx)</span>
-<span id="cb22-4"><a href="#cb22-4"></a>Yhat <span class="ot">=</span> X <span class="sc">%*%</span> sxxinv <span class="sc">%*%</span> syxtr</span>
-<span id="cb22-5"><a href="#cb22-5"></a>Yres <span class="ot">=</span> Y <span class="sc">-</span> Yhat</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a></a>sxxinv <span class="ot">=</span> <span class="fu">solve</span>(<span class="fu">t</span>(X) <span class="sc">%*%</span> X)</span>
+<span id="cb22-2"><a></a>syx <span class="ot">=</span> <span class="fu">t</span>(Y) <span class="sc">%*%</span> X</span>
+<span id="cb22-3"><a></a>syxtr <span class="ot">=</span> <span class="fu">t</span>(syx)</span>
+<span id="cb22-4"><a></a>Yhat <span class="ot">=</span> X <span class="sc">%*%</span> sxxinv <span class="sc">%*%</span> syxtr</span>
+<span id="cb22-5"><a></a>Yres <span class="ot">=</span> Y <span class="sc">-</span> Yhat</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
 <section id="confirm-the-eigenvalues" class="slide level2">
 <h2>Confirm the eigenvalues</h2>
 <p>Calculate the eigenvalues for the PCA part.</p>
 <div class="cell" data-hash="rda_cache/revealjs/unnamed-chunk-24_ce6e61daedeac530e82eb7fc850bed17">
-<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1"></a><span class="co"># PCA part</span></span>
-<span id="cb23-2"><a href="#cb23-2"></a><span class="fu">svd</span>(Yres)<span class="sc">$</span>d<span class="sc">^</span><span class="dv">2</span> <span class="sc">/</span> (<span class="fu">nrow</span>(Y) <span class="sc">-</span><span class="dv">1</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a></a><span class="co"># PCA part</span></span>
+<span id="cb23-2"><a></a><span class="fu">svd</span>(Yres)<span class="sc">$</span>d<span class="sc">^</span><span class="dv">2</span> <span class="sc">/</span> (<span class="fu">nrow</span>(Y) <span class="sc">-</span><span class="dv">1</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 0.8965380 0.1240973</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1"></a>rdaout<span class="sc">$</span>CA<span class="sc">$</span>eig</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a></a>rdaout<span class="sc">$</span>CA<span class="sc">$</span>eig</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>      PC1       PC2 
 0.8965380 0.1240973 </code></pre>
@@ -747,12 +748,12 @@ Axis lengths         3.5600 2.9877 2.8427 2.1297</code></pre>
 </div>
 <p>Calculate the eigenvalues for the RDA part.</p>
 <div class="cell" data-hash="rda_cache/revealjs/unnamed-chunk-25_833b819fd17bb42f7aed72d8cf43d804">
-<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1"></a><span class="co"># RDA part</span></span>
-<span id="cb27-2"><a href="#cb27-2"></a><span class="fu">svd</span>(Yhat)<span class="sc">$</span>d<span class="sc">^</span><span class="dv">2</span> <span class="sc">/</span> (<span class="fu">nrow</span>(Y) <span class="sc">-</span> <span class="dv">1</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a></a><span class="co"># RDA part</span></span>
+<span id="cb27-2"><a></a><span class="fu">svd</span>(Yhat)<span class="sc">$</span>d<span class="sc">^</span><span class="dv">2</span> <span class="sc">/</span> (<span class="fu">nrow</span>(Y) <span class="sc">-</span> <span class="dv">1</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 0.96547259 0.01389207</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1"></a>rdaout<span class="sc">$</span>CCA<span class="sc">$</span>eig</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a></a>rdaout<span class="sc">$</span>CCA<span class="sc">$</span>eig</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>      RDA1       RDA2 
 0.96547259 0.01389207 </code></pre>
@@ -762,13 +763,13 @@ Axis lengths         3.5600 2.9877 2.8427 2.1297</code></pre>
 <section id="confirm-the-eigenvectors" class="slide level2">
 <h2>Confirm the eigenvectors</h2>
 <div class="cell" data-hash="rda_cache/revealjs/unnamed-chunk-26_5952026517ac7f9a7f36f147fd829265">
-<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1"></a><span class="fu">svd</span>(Yres)<span class="sc">$</span>v</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a></a><span class="fu">svd</span>(Yres)<span class="sc">$</span>v</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>          [,1]       [,2]
 [1,] 0.3767512  0.9263145
 [2,] 0.9263145 -0.3767512</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb33"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1"></a>rdaout<span class="sc">$</span>CA<span class="sc">$</span>v</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb33"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a></a>rdaout<span class="sc">$</span>CA<span class="sc">$</span>v</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>                   PC1        PC2
 Sepal.Length 0.3767512  0.9263145
@@ -776,13 +777,13 @@ Sepal.Width  0.9263145 -0.3767512</code></pre>
 </div>
 </div>
 <div class="cell" data-hash="rda_cache/revealjs/unnamed-chunk-27_7bdcf67a34c27cdaa5b69a71cf0e0dd9">
-<div class="sourceCode cell-code" id="cb35"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1"></a><span class="fu">svd</span>(Yhat)<span class="sc">$</span>v</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb35"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a></a><span class="fu">svd</span>(Yhat)<span class="sc">$</span>v</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>           [,1]      [,2]
 [1,]  0.8891863 0.4575454
 [2,] -0.4575454 0.8891863</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb37"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb37-1"><a href="#cb37-1"></a>rdaout<span class="sc">$</span>CCA<span class="sc">$</span>v</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb37"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb37-1"><a></a>rdaout<span class="sc">$</span>CCA<span class="sc">$</span>v</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>                   RDA1      RDA2
 Sepal.Length  0.8891863 0.4575454
@@ -793,14 +794,14 @@ Sepal.Width  -0.4575454 0.8891863</code></pre>
 <section id="calcualte-inertias" class="slide level2">
 <h2>Calcualte inertias</h2>
 <div class="cell" data-hash="rda_cache/revealjs/unnamed-chunk-28_f5aba543268eef9e219aff9d380e851c">
-<div class="sourceCode cell-code" id="cb39"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb39-1"><a href="#cb39-1"></a>n <span class="ot">=</span> <span class="fu">nrow</span>(Y)</span>
-<span id="cb39-2"><a href="#cb39-2"></a>constrained <span class="ot">=</span> <span class="fu">sum</span>(<span class="fu">svd</span>(Yhat)<span class="sc">$</span>d<span class="sc">^</span><span class="dv">2</span> <span class="sc">/</span> (n <span class="sc">-</span> <span class="dv">1</span>))</span>
-<span id="cb39-3"><a href="#cb39-3"></a>unconstrained <span class="ot">=</span> <span class="fu">sum</span>(<span class="fu">svd</span>(Yres)<span class="sc">$</span>d<span class="sc">^</span><span class="dv">2</span> <span class="sc">/</span> (n <span class="sc">-</span> <span class="dv">1</span>))</span>
-<span id="cb39-4"><a href="#cb39-4"></a>total <span class="ot">=</span> constrained <span class="sc">+</span> unconstrained</span>
-<span id="cb39-5"><a href="#cb39-5"></a></span>
-<span id="cb39-6"><a href="#cb39-6"></a><span class="fu">tibble</span>(<span class="at">type =</span> <span class="fu">c</span>(<span class="st">"Total"</span>, <span class="st">"Constrained"</span>, <span class="st">"Unconstrained"</span>),</span>
-<span id="cb39-7"><a href="#cb39-7"></a>       <span class="at">Inertia =</span> <span class="fu">c</span>(total, constrained, unconstrained)) <span class="sc">|&gt;</span> </span>
-<span id="cb39-8"><a href="#cb39-8"></a>  <span class="fu">mutate</span>(<span class="at">Proportion =</span> Inertia <span class="sc">/</span> total)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb39"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb39-1"><a></a>n <span class="ot">=</span> <span class="fu">nrow</span>(Y)</span>
+<span id="cb39-2"><a></a>constrained <span class="ot">=</span> <span class="fu">sum</span>(<span class="fu">svd</span>(Yhat)<span class="sc">$</span>d<span class="sc">^</span><span class="dv">2</span> <span class="sc">/</span> (n <span class="sc">-</span> <span class="dv">1</span>))</span>
+<span id="cb39-3"><a></a>unconstrained <span class="ot">=</span> <span class="fu">sum</span>(<span class="fu">svd</span>(Yres)<span class="sc">$</span>d<span class="sc">^</span><span class="dv">2</span> <span class="sc">/</span> (n <span class="sc">-</span> <span class="dv">1</span>))</span>
+<span id="cb39-4"><a></a>total <span class="ot">=</span> constrained <span class="sc">+</span> unconstrained</span>
+<span id="cb39-5"><a></a></span>
+<span id="cb39-6"><a></a><span class="fu">tibble</span>(<span class="at">type =</span> <span class="fu">c</span>(<span class="st">"Total"</span>, <span class="st">"Constrained"</span>, <span class="st">"Unconstrained"</span>),</span>
+<span id="cb39-7"><a></a>       <span class="at">Inertia =</span> <span class="fu">c</span>(total, constrained, unconstrained)) <span class="sc">|&gt;</span> </span>
+<span id="cb39-8"><a></a>  <span class="fu">mutate</span>(<span class="at">Proportion =</span> Inertia <span class="sc">/</span> total)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 3 × 3
   type          Inertia Proportion
@@ -811,7 +812,7 @@ Sepal.Width  -0.4575454 0.8891863</code></pre>
 </div>
 </div>
 <div class="cell" data-hash="rda_cache/revealjs/unnamed-chunk-29_df23c15fdb268a4df82a536764302e00">
-<div class="sourceCode cell-code" id="cb41"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb41-1"><a href="#cb41-1"></a>rdaout</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb41"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb41-1"><a></a>rdaout</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Call: rda(formula = Y ~ X)
 
@@ -834,25 +835,25 @@ Eigenvalues for unconstrained axes:
 <section id="confirm-the-site-scores" class="slide level2">
 <h2>Confirm the site scores</h2>
 <div class="cell" data-hash="rda_cache/revealjs/unnamed-chunk-30_9b2b55218f31af94f5994c4d41b2da7a">
-<div class="sourceCode cell-code" id="cb43"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb43-1"><a href="#cb43-1"></a>rdascores <span class="ot">=</span> <span class="fu">scores</span>(rdaout, <span class="at">scaling =</span> <span class="dv">0</span>, <span class="at">display =</span> <span class="st">"sites"</span>) <span class="sc">|&gt;</span> <span class="fu">as_tibble</span>()</span>
-<span id="cb43-2"><a href="#cb43-2"></a>eigscores <span class="ot">=</span> Y <span class="sc">%*%</span> <span class="fu">svd</span>(Yhat)<span class="sc">$</span>v <span class="sc">%*%</span> <span class="fu">diag</span>(<span class="dv">1</span><span class="sc">/</span><span class="fu">svd</span>(Yhat)<span class="sc">$</span>d)  <span class="sc">|&gt;</span> <span class="fu">as_tibble</span>()</span>
-<span id="cb43-3"><a href="#cb43-3"></a><span class="fu">ggplot</span>() <span class="sc">+</span> </span>
-<span id="cb43-4"><a href="#cb43-4"></a>  <span class="fu">geom_point</span>(<span class="fu">aes</span>(<span class="at">x =</span> V1, <span class="at">y =</span> V2, <span class="at">color =</span> <span class="st">"EIG"</span>), <span class="at">data =</span> eigscores, <span class="at">size =</span> <span class="dv">3</span>) <span class="sc">+</span></span>
-<span id="cb43-5"><a href="#cb43-5"></a>  <span class="fu">geom_point</span>(<span class="fu">aes</span>(<span class="at">x =</span> RDA1, <span class="at">y =</span> RDA2, <span class="at">color =</span> <span class="st">"RDA"</span>), <span class="at">data =</span> rdascores, <span class="at">size =</span> <span class="dv">1</span>) <span class="sc">+</span></span>
-<span id="cb43-6"><a href="#cb43-6"></a>  <span class="fu">scale_color_viridis_d</span>(<span class="at">end =</span> <span class="fl">0.8</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb43"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb43-1"><a></a>rdascores <span class="ot">=</span> <span class="fu">scores</span>(rdaout, <span class="at">scaling =</span> <span class="dv">0</span>, <span class="at">display =</span> <span class="st">"sites"</span>) <span class="sc">|&gt;</span> <span class="fu">as_tibble</span>()</span>
+<span id="cb43-2"><a></a>eigscores <span class="ot">=</span> Y <span class="sc">%*%</span> <span class="fu">svd</span>(Yhat)<span class="sc">$</span>v <span class="sc">%*%</span> <span class="fu">diag</span>(<span class="dv">1</span><span class="sc">/</span><span class="fu">svd</span>(Yhat)<span class="sc">$</span>d)  <span class="sc">|&gt;</span> <span class="fu">as_tibble</span>()</span>
+<span id="cb43-3"><a></a><span class="fu">ggplot</span>() <span class="sc">+</span> </span>
+<span id="cb43-4"><a></a>  <span class="fu">geom_point</span>(<span class="fu">aes</span>(<span class="at">x =</span> V1, <span class="at">y =</span> V2, <span class="at">color =</span> <span class="st">"EIG"</span>), <span class="at">data =</span> eigscores, <span class="at">size =</span> <span class="dv">3</span>) <span class="sc">+</span></span>
+<span id="cb43-5"><a></a>  <span class="fu">geom_point</span>(<span class="fu">aes</span>(<span class="at">x =</span> RDA1, <span class="at">y =</span> RDA2, <span class="at">color =</span> <span class="st">"RDA"</span>), <span class="at">data =</span> rdascores, <span class="at">size =</span> <span class="dv">1</span>) <span class="sc">+</span></span>
+<span id="cb43-6"><a></a>  <span class="fu">scale_color_viridis_d</span>(<span class="at">end =</span> <span class="fl">0.8</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 
 </div>
 <img data-src="rda_files/figure-revealjs/unnamed-chunk-30-1.png" width="960" class="r-stretch"></section>
 <section id="confirm-the-environmental-variables" class="slide level2">
 <h2>Confirm the environmental variables</h2>
 <div class="cell" data-hash="rda_cache/revealjs/unnamed-chunk-31_66e12119c8fc4af105591da458604027">
-<div class="sourceCode cell-code" id="cb44"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb44-1"><a href="#cb44-1"></a>variables <span class="ot">=</span> <span class="fu">str_remove_all</span>(<span class="fu">colnames</span>(Y), <span class="st">"[a-z|</span><span class="sc">\\</span><span class="st">.]"</span>)</span>
-<span id="cb44-2"><a href="#cb44-2"></a>rdavariables <span class="ot">=</span> <span class="fu">scores</span>(rdaout, <span class="at">scaling =</span> <span class="dv">0</span>, <span class="at">display =</span> <span class="st">"bp"</span>) <span class="sc">|&gt;</span> <span class="fu">as_tibble</span>()</span>
-<span id="cb44-3"><a href="#cb44-3"></a>temp <span class="ot">=</span> <span class="fu">t</span>(X) <span class="sc">%*%</span> <span class="fu">svd</span>(Yhat)<span class="sc">$</span>u</span>
-<span id="cb44-4"><a href="#cb44-4"></a>svdvariables <span class="ot">=</span> <span class="fu">apply</span>(temp, <span class="dv">1</span>, \(x) x <span class="sc">/</span> <span class="fu">sqrt</span>(<span class="fu">sum</span>(x<span class="sc">^</span><span class="dv">2</span>))) <span class="sc">|&gt;</span> <span class="fu">t</span>() <span class="sc">|&gt;</span> <span class="fu">as_tibble</span>()</span>
-<span id="cb44-5"><a href="#cb44-5"></a>rdavariables <span class="ot">=</span> rdavariables <span class="sc">|&gt;</span> <span class="fu">mutate</span>(<span class="at">variables =</span> variables, <span class="at">.before =</span> <span class="dv">1</span>)</span>
-<span id="cb44-6"><a href="#cb44-6"></a>svdvariables <span class="ot">=</span> svdvariables <span class="sc">|&gt;</span> <span class="fu">mutate</span>(<span class="at">variables =</span> variables, <span class="at">.before =</span> <span class="dv">1</span>)</span>
-<span id="cb44-7"><a href="#cb44-7"></a><span class="fu">full_join</span>(rdavariables, svdvariables, <span class="at">by =</span> <span class="st">"variables"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb44"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb44-1"><a></a>variables <span class="ot">=</span> <span class="fu">str_remove_all</span>(<span class="fu">colnames</span>(Y), <span class="st">"[a-z|</span><span class="sc">\\</span><span class="st">.]"</span>)</span>
+<span id="cb44-2"><a></a>rdavariables <span class="ot">=</span> <span class="fu">scores</span>(rdaout, <span class="at">scaling =</span> <span class="dv">0</span>, <span class="at">display =</span> <span class="st">"bp"</span>) <span class="sc">|&gt;</span> <span class="fu">as_tibble</span>()</span>
+<span id="cb44-3"><a></a>temp <span class="ot">=</span> <span class="fu">t</span>(X) <span class="sc">%*%</span> <span class="fu">svd</span>(Yhat)<span class="sc">$</span>u</span>
+<span id="cb44-4"><a></a>svdvariables <span class="ot">=</span> <span class="fu">apply</span>(temp, <span class="dv">1</span>, \(x) x <span class="sc">/</span> <span class="fu">sqrt</span>(<span class="fu">sum</span>(x<span class="sc">^</span><span class="dv">2</span>))) <span class="sc">|&gt;</span> <span class="fu">t</span>() <span class="sc">|&gt;</span> <span class="fu">as_tibble</span>()</span>
+<span id="cb44-5"><a></a>rdavariables <span class="ot">=</span> rdavariables <span class="sc">|&gt;</span> <span class="fu">mutate</span>(<span class="at">variables =</span> variables, <span class="at">.before =</span> <span class="dv">1</span>)</span>
+<span id="cb44-6"><a></a>svdvariables <span class="ot">=</span> svdvariables <span class="sc">|&gt;</span> <span class="fu">mutate</span>(<span class="at">variables =</span> variables, <span class="at">.before =</span> <span class="dv">1</span>)</span>
+<span id="cb44-7"><a></a><span class="fu">full_join</span>(rdavariables, svdvariables, <span class="at">by =</span> <span class="st">"variables"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 2 × 5
   variables  RDA1  RDA2    V1    V2
@@ -1098,8 +1099,10 @@ Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
 </div>
 
 
-<img data-src="rda_files/figure-revealjs/unnamed-chunk-38-1.png" width="960" class="r-stretch"><div class="footer footer-default">
+<img data-src="rda_files/figure-revealjs/unnamed-chunk-38-1.png" width="960" class="r-stretch"><div class="quarto-auto-generated-content">
+<div class="footer footer-default">
 
+</div>
 </div>
 </section></section>
 
@@ -1129,7 +1132,6 @@ Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
       Reveal.initialize({
 'controlsAuto': true,
 'previewLinksAuto': false,
-'smaller': false,
 'pdfSeparateFragments': false,
 'autoAnimateEasing': "ease",
 'autoAnimateDuration': 1,
@@ -1428,10 +1430,9 @@ Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
         // clear code selection
         e.clearSelection();
       });
-      function tippyHover(el, contentFn) {
+      function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
         const config = {
           allowHTML: true,
-          content: contentFn,
           maxWidth: 500,
           delay: 100,
           arrow: false,
@@ -1441,8 +1442,17 @@ Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
           interactive: true,
           interactiveBorder: 10,
           theme: 'light-border',
-          placement: 'bottom-start'
+          placement: 'bottom-start',
         };
+        if (contentFn) {
+          config.content = contentFn;
+        }
+        if (onTriggerFn) {
+          config.onTrigger = onTriggerFn;
+        }
+        if (onUntriggerFn) {
+          config.onUntrigger = onUntriggerFn;
+        }
           config['offset'] = [0,0];
           config['maxWidth'] = 700;
         window.tippy(el, config); 

@@ -38,6 +38,7 @@ Sys.setlocale("LC_TIME", "en_US.UTF-8") # This is to set the server time locate 
 theme_replace(text = element_text(family = "notosans"))
 ```
 
+
 ```{r}
 #| cache: false
 set.seed(2021)

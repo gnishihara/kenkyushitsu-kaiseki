@@ -7,16 +7,18 @@ slide-number: true
 transition: slide
 progress: true
 fig-align: center
-format: revealjs
+format: 
+  revealjs:
+    fig-width: 4
+    fig-height: 3
 editor: 
   markdown: 
     wrap: 72
 bibliography: references.bib
 execute: 
   cache: true
+  echo: true
 ---
-
-
 
 ```{r}
 #| include: false
@@ -25,16 +27,24 @@ library(tidyverse)
 library(showtext)
 library(lemon)
 library(ggpubr)
+library(ggtext)
+library(patchwork)
 library(knitr)
 library(kableExtra)
 options(knitr.kable.NA = '')
 options(kableExtra.latex.load_packages = FALSE, tidyverse.quiet = TRUE)
+font_add_google("Noto Sans", "notosans")
+font_add_google("Noto Sans JP", "notosansjp")
+font_add_google("Noto Serif", "notoserif")
+theme_grey(base_size = 20, base_family = "notosans") |> 
+  theme_set()
+showtext_auto()
 Sys.setlocale("LC_TIME", "en_US.UTF-8") # This is to set the server time locate to en_US.UTF-8
 ```
 
 ## Mean and expectation
 
-**Mean, average (平均値)**
+**Mean, average (平均値)** or **Expectation（期待値）**
 
 Add all values $(x_i)$ and divide by the total number of samples $(i)$.
 The population mean is $\mu$ and the sample mean is $\overline{X}$.
@@ -42,41 +52,100 @@ The population mean is $\mu$ and the sample mean is $\overline{X}$.
 $$
 \mu \equiv \overline{X} = \frac{1}{n} \sum_{i=1}^{n} x_i
 $$
-
-**Expected value, expectation (期待値)**
-
-A sum of the product of the weighted random variable $(x_i)$ and its probability $(p_i)$.
-The expection is $E[X] = \overline{X}$.
-
 $$
-\mu \equiv E[X]= \sum_{i=1}^{n} x_i p_i
+\text{平均値} = \frac{\text{資料の変量の総和}}{\text{資料の個数}}
 $$
 
-## Properties of the expectation
 
+## Deviation, residual
 
-:::: {.columns}
-::: {.column width="50%"}
-**Linearity of the expectation (線形性)** 
+* Deviation: 偏差
+* Residual: 残渣
 
-$a$ and $b$ are constants (定数) and $X$ and $Y$ are random variables (確率変数).
+```{r}
+#| echo: false
+seed = 2020
+x = sample(1:20, size = 10, replace = TRUE)
+xt = str_flatten(x, collapse = ", ", last = ", ")
+xt = str_c("x = {", xt, "}")
+```
+
+Data: `{r} print(xt)`
+
+Mean or average 
+
+```{r}
+mean(x)
+```
+
+Deviation or residual
+
+```{r}
+x - mean(x)
+```
+
+## Linearity of the expectation（線形性）
+
+$a$ is a constant (定数) and $X$ is the random variable (確率変数).
 
 $$
-E[aX + bY] = aE[X] + bE[Y]
+E[aX] = aE[X]
 $$
 
-**Monotonicity (単調性)**
+```{r}
+#| echo: false
+seed = 2020
+y = 5 * sample(1:20, size = 10, replace = TRUE)
+yt = str_flatten(y, collapse = ", ", last = ", ")
+xt2 = str_c("ax = 5 &times; {", str_flatten(x, ", "), "}")
+yt = str_c("{", yt, "}")
+```
+
+* $X$: `{r} print(xt)`
+* $aX = 5X$: `{r} print(xt2)` = `{r} print(yt)`
+
+## Linearity of the expectation（線形性）
+
+Multiplying a random variable by a constant shifts the mean of the random variable by the same magnitude (constant).
+
+$$
+E[aX] = aE[X]
+$$
+
+```{r}
+#| echo: false
+seed = 2020
+y = 5 * sample(1:20, size = 10, replace = TRUE)
+yt = str_flatten(y, collapse = ", ", last = ", ")
+xt2 = str_c("ax = 5 &times; {", str_flatten(x, ", "), "}")
+yt = str_c("{", yt, "}")
+```
+
+```{r}
+mean(x)
+5 * mean(x)
+mean(5 * x)
+```
+
+## Monotonicity (単調性)
 
 
 $$
 X \leq Y \rightarrow E[X] \leq E[Y]
 $$
 
+```{r}
+#| echo: false
+x = sample(1:5, size = 3, TRUE)
+y = sample(6:10, size = 3, TRUE)
+```
 
-:::
+* `{r} print(str_c("x = {", str_flatten(x, ","), "}"))`
+* `{r} print(str_c("y = {", str_flatten(y, ","), "}"))`
 
-::: {.column width="50%"}
-**Non-multiplicativity (非乗法性)**
+* `{r} mean(x)` &le; `{r} mean(y)`
+
+## Non-multiplicativity (非乗法性)
 
 If the random variables $X$ and $Y$ are **not independent (非独立性)** of each other,
 
@@ -84,187 +153,71 @@ $$
 E[XY] \neq E[X]\cdot E[Y]
 $$ 
 
+```{r}
+#| echo: false
+seed = 2020
+N = 1000
+df1 = tibble(x = rnorm(N, 10)) 
+df1 = df1 |> mutate(x = round(x, 2))
+y = df1$x[sample.int(length(df1$x))]
+
+df1 = df1 |> mutate(y = y)
+
+df2 = MASS::mvrnorm(N, c(10,10), matrix(c(6,5,5,6),2,2))
+df2 = df2 |> as_tibble(.name_repair = ~c("x", "y"))
+x = pull(df2, x)
+y = pull(df2, y)
+p1 = ggplot(df1) + geom_point(aes(x = x, y = y))
+p2 = ggplot(df2) + geom_point(aes(x = x, y = y))
+```
+
+:::: {.columns}
+:::{.column width="50%"}
+```{r}
+#| echo: false
+p2
+```
+:::
+:::{.column width="50%"}
+```{r}
+mean(x * y)
+mean(x) * mean(y)
+```
+:::
+::::
+
+
+## Non-multiplicativity (非乗法性)
+
 If the random variables are **independent (独立性)** of each other,
 
 $$
 E[XY] = E[X]\cdot E[Y]
 $$
-:::
-::::
 
-
-
-
-
-## What is the difference between the mean and expectation
-
-Let's find the sum of two dice.
-We will create three trials.
-
-
-
-```{r}
-set.seed(2020) # 疑似乱数関数のシードを設定する
-dice = c(1,2,3,4,5,6) # dice = 1:6
-X1 = sample(dice, size = 2, replace = TRUE) %>%  sum() # 2回投げる
-X2 = sample(dice, size = 2, replace = TRUE) %>%  sum() # 2回投げる
-X3 = sample(dice, size = 2, replace = TRUE) %>%  sum() # 2回投げる
-mean(c(X1, X2, X3)) # 平均値
-```
-
-
-The mean is `r round(mean(c(X1,X2,X3)), 4)`.
-
-However, if you want to know the **expectation**, we need to create a model.
-
-## The expectation of two dice.
-
-```{r}
-#| include: false
-# https://mathworld.wolfram.com/Dice.html
-# https://www.lucamoroni.it/the-dice-roll-sum-problem/
-
-pdice = function(p,n,s) {
-  nk = function(n,k) {
-    factorial(n) / (factorial(k) * factorial(n-k))
-  }
-  if(p < n) stop("p < n")
-  if(p > n*s) stop("p > n s") 
-  kmax = floor((p - n) / s)
-  tmp = 0
-  for(k in 0:kmax) {
-    tmp = tmp + (-1)^k * nk(n = n, k = k) * nk(n = p-s*k-1, k = n-1)
-  }
-  sum(tmp)
-}
-```
-
-
-
-$$
-\qquad E[X] = \frac{1}{36}\cdot 2  +   \cdots + \frac{6}{36}\cdot7 + \cdots + \frac{1}{36}\cdot 12 = 7
-$$
-:::: {.columns}
-::: {.column width="50%"}
-
-
-```{r}
-#| echo: false
-value = tibble(n = 1:50) %>% 
-  mutate(value = map_dbl(n, function(x) {
-    sum(sample(dice, size = 2, replace = TRUE))
-  })) %>% pull(value)
-```
-
-We run 50 trials to get `r paste0("x = {", paste0(value, collapse = ", "), "}")` .
-
-\vspace*{2ex}
-The mean for this data set is `r round(mean(value), 4)`.
-
-:::
-
-::: {.column width="50%"}
-
-```{r}
-#| echo: false
-labfn = function(x,z=36) {
-  sprintf("%i / %i", x, z)
-}
-
-tibble(n = 2:12) %>% 
-  mutate(counts = map_dbl(n, pdice, n = 2, s = 6)) %>% 
-  ggplot() +
-  geom_col(aes(x = n, y = counts)) +
-  scale_x_continuous("Dice total", breaks = 2:12) +
-  scale_y_continuous("Probability", breaks = 0:6,
-                     labels = labfn) +
-  ggtitle("Probability of dice rolls")
-```
-:::
-::::
-
-
-
-## Let's find the expectation of three dice
-
-
-$$
-\qquad E[X] = \frac{1}{216}\cdot 3  +   \cdots + \frac{27}{216}\cdot 10 + \frac{27}{216}\cdot 11 + \cdots + \frac{1}{216}\cdot 18 = 10.5
-$$
-:::: {.columns}
-::: {.column width="50%"}
-
-
-```{r}
-#| echo: false
-value = tibble(n = 1:50) %>% 
-  mutate(value = map_dbl(n, function(x) {
-    sum(sample(dice, size = 3, replace = TRUE))
-  })) %>% pull(value)
-```
-
-The data for fifty trials, `r paste0("x = {", paste0(value, collapse = ", "), "}")`.
-
-\vspace*{2ex}
-The mean for this dataset is `r round(mean(value), 4)`.
-
-:::
-
-::: {.column width="50%"}
-
-```{r}
-#| echo: false
-labfn = function(x,z=216) {
-  sprintf("%i / %i", x, z)
-}
-
-tibble(n = 3:18) %>% 
-  mutate(counts = map_dbl(n, pdice, n = 3, s = 6)) %>% 
-  ggplot() +
-  geom_col(aes(x = n, y = counts)) +
-  scale_x_continuous("Dice total", breaks = 2:18) +
-  scale_y_continuous("Probability", breaks = seq(0, 28, by = 2),
-                     labels = labfn) +
-  ggtitle("Probability of dice rolls")
-# tibble(n = 3:18) %>% 
-#   mutate(counts = map_dbl(n, pdice, n = 3, s = 6)) %>% 
-#   mutate(P = n * counts/216) %>% pull(P) %>% sum()
-```
-:::
-::::
-
-## Determining the probability of dice
 
 :::: {.columns}
-::: {.column width="50%"}
+:::{.column width="50%"}
 ```{r}
-expand_grid(d1 = 1:6, d2 = 1:6) %>% 
-  mutate(sum = d1 + d2) %>% 
-  mutate(denominator = max(d1)^2) %>% 
-  group_by(sum, denominator) %>% 
-  summarise(numerator = length(sum)) %>% 
-  mutate(probability = numerator / denominator) %>% 
-  print(n = 15)
+#| echo: false
+x = pull(df1, x)
+y = pull(df1, y)
+p1
 ```
-
 :::
-::: {.column width="50%"}
-
+:::{.column width="50%"}
 ```{r}
-expand_grid(d1 = 1:6, d2 = 1:6, d3 = 1:6) %>% 
-  mutate(sum = d1 + d2 + d3) %>% 
-  mutate(denominator = max(d1)^3) %>% 
-  group_by(sum, denominator) %>% 
-  summarise(numerator = length(sum)) %>% 
-  mutate(probability = numerator / denominator) %>% 
-  print(n = 15)
+mean(x * y)
+mean(x) * mean(y)
 ```
+
 :::
 ::::
 
 
 
-## Calculating the probability of dice
+
+## Calculating the probability of dice {visibility="hidden"}
 
 
 :::: {.columns}
@@ -320,9 +273,13 @@ $$
 
 It is a measure of scale (スケール) and decribes the amount of scatter in the data.
 
-## Properties of variance
+## Variance（分散）
 
-\footnotesize
+$$
+\sigma^2\equiv Var(X) = E[(\underbrace{X - E[X]}_{\text{deviation}})^2] = E[X^2] - E[X]^2
+$$
+
+## Properties of the variance（分散の一般的な性質）{.smaller}
 
 **Variance of a constant (定数) is zero**
 
@@ -330,20 +287,16 @@ $$
 Var(a) = 0
 $$
 
-**Non-positive (非負性)**
+**Scale invariance (スケール普遍性)**
 
 $$
-Var(X) \geq 0
+Var(aX+b) = a^2Var(X)
 $$
 
-**Scale invarance (スケール普遍性)**
+**Additivity of independent variables（独立な確立変数の和の分散）**
 
 $$
-Var(X+b) = Var(X)
-$$
-
-$$
-Var(aX) = a^2Var(X)
+Var(X+Y) = Var(X) + Var(Y)
 $$
 
 ## Population variance (母分散)
@@ -355,7 +308,7 @@ $$
 $$
 However, we usually do not know the population mean. So, we must calculate the **sample variance (標本分散)**. 
 
-## Sample variance and the unbiased sample variance)
+## Sample variance and the unbiased sample variance) {.smaller}
 
 There are two ways to calculate the sample variance.
 
@@ -381,6 +334,128 @@ s^2=\frac{1}{n-1}\sum_{i=1}^n\left(x_i - \overline{x}\right)^2
 $$
 When $n$ is small, use the unbiased sample variance (不偏標本分散 $(s^2)$).
 
+:::
+::::
+
+## Unbiased sample variance (不偏標本分散)
+
+```{r}
+#| echo: false
+seed = 2020
+x = sample(1:10, 5, T)
+```
+
+* `{r} str_c("x = {", str_flatten(x, ", "), "}") |> print()`
+* mean: `{r} mean(x)`
+* deviation: `{r} str_c("x = {", str_flatten(x-mean(x), ", "), "}") |> print()`
+* n: `{r} print(length(x))`
+
+```{r}
+z = x -  mean(x)
+n = length(z)
+sum(z^2) / (n - 1) # 数式で求めた値
+var(x)             # Rの固有関数,必ず不遍分散を計算する
+```
+
+## Variance is a measure of variation
+
+::::{.columns}
+:::{.column}
+```{r}
+#| echo: false
+#| cache: false
+#| fig-width: 4
+#| fig-height: 6
+set.seed(2000)
+n = 5000
+df1 = tibble(x = rnorm(N))
+df2 = tibble(x = rnorm(N, sd = 0.5))
+
+p1 = 
+  ggplot(df1) +
+  geom_histogram(aes(x = x)) +
+  annotate("richtext",
+                x = -2, y = Inf,
+           size = 8,
+           vjust = 2,
+                label = "var(x) = 1<br>mean(x) = 0") +
+  scale_x_continuous(limits = c(-3,3))
+p2 = ggplot(df2) +
+  geom_histogram(aes(x = x))+
+  annotate("richtext",
+                x = -2, y = Inf,
+           size = 8,
+           vjust = 2,
+                label = "var(x) = 0.5<br>mean(x) = 0") +
+
+  scale_x_continuous(limits = c(-3,3))
+p1 + p2 + plot_layout(ncol = 1)
+```
+:::
+:::{.column}
+$$
+Var(aX+b) = a^2Var(X)
+$$
+
+$$
+\begin{aligned}
+Var(X) &= 1\\
+Var(aX) &= 0.5\\
+a^2Var(X) &= a^2 1 = 0.5\\
+a &= \sqrt{0.5} = \frac{\sqrt{2}}{2}\\
+\end{aligned}
+$$
+:::
+::::
+
+
+## Variance is a measure of variation
+
+::::{.columns}
+:::{.column}
+```{r}
+#| echo: false
+#| cache: false
+#| fig-width: 4
+#| fig-height: 6
+set.seed(2000)
+n = 5000
+df1 = tibble(x = rnorm(N))
+df2 = df1 |> mutate(x = x + 10)
+
+p1 = 
+  ggplot(df1) +
+  geom_histogram(aes(x = x)) +
+  annotate("richtext",
+                x = -2, y = Inf,
+           size = 8,
+           vjust = 1,
+                label = "var(x) = 1<br>mean(x) = 0") +
+  scale_x_continuous(limits = c(-3,3))
+p2 = ggplot(df2) +
+  geom_histogram(aes(x = x))+
+  annotate("richtext",
+            x = -2+10, y = Inf,
+           size = 8,
+           vjust = 1,
+                label = "var(x) = 0.5<br>mean(x+b) = 10") +
+
+  scale_x_continuous(limits = 10+c(-3,3))
+p1 + p2 + plot_layout(ncol = 1)
+```
+:::
+:::{.column}
+$$
+Var(X+b) = Var(X)
+$$
+
+$$
+\begin{aligned}
+Var(X) &= 1\\
+Var(X+b) &= 1\\
+Var(X) &= Var(X+b)
+\end{aligned}
+$$
 :::
 ::::
 
@@ -420,61 +495,7 @@ $$
 \lim_{n\rightarrow\infty} \frac{s}{\sqrt{n}} = 0
 $$
 
-## Example 1 (n = 5)
-
-\footnotesize
-```{r}
-set.seed(2021)
-x = sample(0:10, size = 5, replace = TRUE)
-x
-```
-
-:::: {.columns}
-::: {.column width="50%"}
-```{r}
-# mean
-mean(x)
-# variance
-var(x)
-```
-:::
-::: {.column width="50%"}
-```{r}
-# standard deviation
-sd(x)
-# standard error
-sd(x) / sqrt(length(x))
-```
-:::
-::::
-
-## Example 2 (n = 50)
-
-```{r}
-set.seed(2021)
-x = sample(0:10, size = 50, replace = TRUE)
-```
-
-:::: {.columns}
-::: {.column width="50%"}
-```{r}
-# mean
-mean(x)
-# variance
-var(x)
-```
-:::
-::: {.column width="50%"}
-```{r}
-# standard deviation
-sd(x)
-# standard error
-sd(x) / sqrt(length(x))
-```
-:::
-::::
-
-## Median (中央値・メディアン)
+## Median (中央値・メディアン){.smaller}
 
 :::: {.columns}
 ::: {.column width="50%"}
@@ -543,7 +564,7 @@ The value `r z %>% slice(1) %>% pull(x)`
 occurs `r z %>% slice(1) %>% pull(n)` times, so 
 it is the mode.
 
-## Median Absolute Deviation (中央絶対偏差)
+## Median Absolute Deviation (中央絶対偏差){.smaller}
 
 The **median absolute deviation (MAD, 中央絶対偏差)** is another measure of variation.
 
@@ -564,7 +585,7 @@ list(mad = mad(x), sd = sd(x))
 ```
 
 
-## Quantile (四分位数・クォンタイル)
+## Quantile (四分位数・クォンタイル){.smaller}
 
 :::: {.columns}
 ::: {.column width="50%"}
@@ -604,6 +625,8 @@ quantile(z)
 
 ```{r}
 #| echo: false
+#| fig-height: 2
+#| fig-width: 5
 y = fivenum(z)
 df1 = tibble(x = 2,
        y0 = min(z),
@@ -627,19 +650,17 @@ ggplot() +
   
   geom_point(aes(x = x, z),
              data = tibble(x=rep(2, length(z)), z), 
-             color = "black", size = 4) +
+             color = "black", size = 2) +
   geom_point(aes(x = x, z),
              data = tibble(x=rep(1, length(z)), z), 
-             color = "black", size = 4) +
-  
+             color = "black", size = 2) +
+  theme_grey(base_family = "notosansjp")+
   theme(legend.title = element_blank(),
         legend.position = "top",
         axis.title = element_blank(),
         axis.text.x = element_blank(),
         axis.ticks.x = element_blank())
 ```
-
-
 
 In this boxplot, the whiskers indicate the minimum and maximum values.
 The line in the center of the box is the median (i.e., second quantile, 第2四分位数).
@@ -650,7 +671,7 @@ The distance between the first and third quantile is called the Inter-Quantile R
 ::::
 
 
-## Quantile in R
+## Quantile in R {.smaller}
 
 
 :::: {.columns}
@@ -667,12 +688,14 @@ quantile(z)
 ::: {.column width="50%"}
 
 ```{r}
-
+#| echo: false
+#| fig-width: 4
+#| fig-height: 2
 tibble(value = z) %>% 
   ggplot() +
   geom_point(aes(x = "Example2", y = value),
              position = position_jitter(width = 0.2, height = 0, seed = 2021),
-             size = 5) +
+             size = 2) +
   geom_boxplot(aes(x = "Example", y = value)) +
   theme(legend.title = element_blank(),
         legend.position = "top",
@@ -681,13 +704,456 @@ tibble(value = z) %>%
         axis.ticks.x = element_blank())
 ```
 
-
-
 In the standard boxplot, the dots beyond the whiskers indicate outliers.
 The whiskers extend to the largest value within 1.5 times the IQR from the each edge.
 :::
 ::::
 
+
+# データの可視化
+
+## Data
+
+::::{.columns}
+:::{.column width="40%"}
+```{r}
+#| echo: false
+#| width: 3
+#| out-width: "100%"
+URL="https://doi.org/10.1111/geb.13515"
+img = qrencoder::qrencode_df(URL) |> mutate(z = factor(z))
+img = ggplot(img) + 
+  geom_raster(aes(x = x, y = y, fill = z), 
+              show.legend = F)+
+  scale_fill_manual(values =c("white", "black"))+
+  coord_equal() +
+  labs(caption = URL)+ 
+  theme_void(base_size = 20, base_family = "notosans") +
+  theme(
+    plot.background = element_rect(fill = "white", color = "white"),
+    panel.background = element_rect(fill = "white", color = "white")
+    ) 
+pdfname = "descriptive-stats-qrcode01.pdf"
+gnnlab::save_plot(pdfname, img)
+magick::image_read_pdf(pdfname)
+```
+:::
+:::{.column width="60%"}
+
+Duarte et al. 2022. Global estimates of the extent and production of macroalgal forests. Global Ecology and Biogeography 31 (7): 1422 - 1439. `{r} print(URL)`
+:::
+::::
+
+```{r}
+#| echo: false
+theme_grey(base_size = 20, base_family = "notosans") |> 
+  theme_set()
+
+dset = read_csv("_data/duarte-etal_2022_GEB_NPP-dataset.csv")
+dset = dset |> 
+  select(habitat = Habitat,
+         npp = Avg_NPP_kg_C_m2_y) |> 
+  drop_na()
+
+```
+
+## 散布図 (scatter plot)
+
+```{r}
+#| echo: true
+#| fig-width: 9
+#| fig-height: 4
+#| out-width: "100%"
+#| output-location: slide
+#| fig-cap: 横軸は因子 (factor)、または離散変数 (discrete variable)
+ggplot(dset) + 
+  geom_point(aes(x = habitat, y = npp))
+```
+
+
+## 散布図とジッター (scatter plot with jitter)
+
+```{r}
+#| echo: true
+#| fig-width: 9
+#| fig-height: 4
+#| out-width: "100%"
+#| output-location: slide
+ggplot(dset) + 
+  geom_point(aes(x = habitat, y = npp),
+             position = position_jitter(0.2))
+```
+
+この図の完成度は低い
+
+## 散布図とジッター (scatter plot with jitter)
+
+```{r}
+#| echo: true
+#| fig-width: 9
+#| fig-height: 4
+#| out-width: "100%"
+#| output-location: slide
+
+xlabel = "Habitat"
+ylabel = "NPP (kg C m<sup>-2</sup> yr<sup>-1</sup>)"
+ybreaks = seq(0, 5, by = 1)
+ggplot(dset) + 
+  geom_point(aes(x = habitat, y = npp),
+             position = position_jitter(0.2),
+             alpha = 0.5,
+             size = 3,
+             stroke = 0) +
+  scale_x_discrete(xlabel) + 
+  scale_y_continuous(ylabel, 
+                   breaks = ybreaks, 
+                   limits = range(ybreaks) + c(-0.25, 0)) +
+  theme(axis.title.y = element_markdown())
+```
+
+
+## 箱ひげ図 (box plot)
+
+```{r}
+#| echo: true
+#| fig-width: 9
+#| fig-height: 4
+#| out-width: "100%"
+#| output-location: slide
+
+ggplot(dset) + 
+  geom_boxplot(aes(x = habitat, y = npp))
+```
+
+## 点とエラーバー (point and error bar)
+
+```{r}
+#| echo: true
+#| fig-width: 9
+#| fig-height: 4
+#| out-width: "100%"
+#| output-location: slide
+#| fig-cap: "エラーバーは１標準偏差"
+
+# Calculate the mean, standard deviation (sd),
+# then number of samples (length), and the standard error.
+
+dset2 = 
+  dset |> 
+  group_by(habitat) |> 
+  summarise(across(npp, 
+                   list(m = mean, sd = sd, n = length))) |> 
+  mutate(npp_se = npp_sd / sqrt(npp_n - 1))
+
+ggplot(dset2) + 
+  geom_point(aes(x = habitat, y = npp_m)) +
+  geom_errorbar(aes(x = habitat, 
+                    ymin = npp_m - npp_sd,
+                    ymax = npp_m + npp_sd),
+                width = 0.25)
+```
+
+
+## 点とエラーバー (point and error bar)
+
+```{r}
+#| echo: true
+#| fig-width: 9
+#| fig-height: 4
+#| out-width: "100%"
+#| output-location: slide
+#| fig-cap: "エラーバーは１標準誤差"
+
+# Calculate the mean, standard deviation (sd),
+# then number of samples (length), and the standard error.
+
+dset2 = 
+  dset |> 
+  group_by(habitat) |> 
+  summarise(across(npp, 
+                   list(m = mean, sd = sd, n = length))) |> 
+  mutate(npp_se = npp_sd / sqrt(npp_n - 1))
+
+ggplot(dset2) + 
+  geom_point(aes(x = habitat, y = npp_m)) +
+  geom_errorbar(aes(x = habitat, 
+                    ymin = npp_m - npp_se,
+                    ymax = npp_m + npp_se),
+                width = 0.25)
+```
+
+## 棒グラフ (bar graph)
+
+```{r}
+#| echo: true
+#| fig-width: 9
+#| fig-height: 4
+#| out-width: "100%"
+#| output-location: slide
+
+dset2 = 
+  dset |> 
+  group_by(habitat) |> 
+  summarise(across(npp, 
+                   list(m = mean, sd = sd, n = length))) |> 
+  mutate(npp_se = npp_sd / sqrt(npp_n - 1))
+
+ggplot(dset2) + 
+  geom_col(aes(x = habitat, y = npp_m))
+```
+
+## 棒グラフとエラーバー (candle stick graph)
+
+```{r}
+#| echo: true
+#| fig-width: 9
+#| fig-height: 4
+#| out-width: "100%"
+#| output-location: slide
+#| fig-cap: "エラーバーは１標準偏差"
+
+dset2 = 
+  dset |> 
+  group_by(habitat) |> 
+  summarise(across(npp, 
+                   list(m = mean, sd = sd, n = length))) |> 
+  mutate(npp_se = npp_sd / sqrt(npp_n - 1))
+
+ggplot(dset2) + 
+  geom_col(aes(x = habitat, y = npp_m),
+           fill = "grey25") + 
+  geom_errorbar(aes(x = habitat,
+                    ymin = npp_m,
+                    ymax = npp_m + npp_sd), 
+                width = 0,
+                linewidth = 2, 
+                color = "grey25")
+```
+
+
+## 棒グラフとエラーバー (candle stick graph)
+
+```{r}
+#| echo: true
+#| fig-width: 9
+#| fig-height: 4
+#| out-width: "100%"
+#| output-location: slide
+#| fig-cap: "エラーバーは１標準誤差"
+
+dset2 = 
+  dset |> 
+  group_by(habitat) |> 
+  summarise(across(npp, 
+                   list(m = mean, sd = sd, n = length))) |> 
+  mutate(npp_se = npp_sd / sqrt(npp_n - 1))
+
+ggplot(dset2) + 
+  geom_col(aes(x = habitat, y = npp_m),
+           fill = "grey25") + 
+  geom_errorbar(aes(x = habitat,
+                    ymin = npp_m,
+                    ymax = npp_m + npp_se), 
+                width = 0,
+                linewidth = 2, 
+                color = "grey25")
+```
+
+
+## 棒グラフとエラーバー (candle stick graph)
+
+```{r}
+#| echo: true
+#| fig-width: 9
+#| fig-height: 4
+#| out-width: "100%"
+#| output-location: slide
+#| fig-cap: "エラーバーは１標準偏差、データを降順に並べ替えた"
+
+dset2 = 
+  dset |> 
+  group_by(habitat) |> 
+  summarise(across(npp, 
+                   list(m = mean, sd = sd, n = length))) |> 
+  mutate(npp_se = npp_sd / sqrt(npp_n - 1)) |> 
+  mutate(habitat = fct_reorder(habitat, npp_m, .desc = TRUE))
+
+ggplot(dset2) + 
+  geom_col(aes(x = habitat, y = npp_m),
+           fill = "grey25") + 
+  geom_errorbar(aes(x = habitat,
+                    ymin = npp_m,
+                    ymax = npp_m + npp_se), 
+                width = 0,
+                linewidth = 2, 
+                color = "grey25")
+```
+
+
+
+
+
+## 散布図 (scatter plot)
+
+```{r}
+#| echo: true
+#| fig-width: 9
+#| fig-height: 4
+#| out-width: "100%"
+#| output-location: slide
+#| fig-cap: 横軸も連続変数(continuous variable)
+
+ggplot(iris) + 
+  geom_point(aes(x = Petal.Width, y = Petal.Length))
+```
+
+## 散布図 (scatter plot)
+
+```{r}
+#| echo: true
+#| fig-width: 9
+#| fig-height: 4
+#| out-width: "100%"
+#| output-location: slide
+#| fig-cap: 横軸も連続変数(continuous variable)
+
+ggplot(iris) + 
+  geom_point(aes(x = Petal.Width, y = Petal.Length, 
+                 color = Species))
+```
+
+
+
+## 折れ線グラフ (line graph)
+
+```{r}
+#| echo: true
+#| fig-width: 9
+#| fig-height: 4
+#| out-width: "100%"
+#| output-location: slide
+#| fig-cap: 横軸も連続変数(continuous variable)
+
+se = function(x) {sd(x) / sqrt(length(x) -1)}
+iris |> 
+  group_by(Species,
+           Petal.Width) |> 
+  summarise(across(Petal.Length,
+                   list(m = mean, sd = sd, se = se))) |> 
+  ggplot() + 
+  geom_point(aes(x = Petal.Width, 
+                 y = Petal.Length_m, 
+                 color = Species)) +
+  geom_line(aes(x = Petal.Width,
+                y = Petal.Length_m, 
+                color = Species))
+```
+
+## 折れ線グラフ (line graph)
+
+```{r}
+#| echo: true
+#| fig-width: 9
+#| fig-height: 4
+#| out-width: "100%"
+#| output-location: slide
+#| fig-cap: １標準偏差（細線）と１標準誤差（太線）を示した
+
+se = function(x) {sd(x) / sqrt(length(x) -1)}
+iris |> 
+  group_by(Species,
+           Petal.Width) |> 
+  summarise(across(Petal.Length,
+                   list(m = mean, sd = sd, se = se))) |> 
+  ggplot() + 
+  geom_line(aes(x = Petal.Width,
+                y = Petal.Length_m, 
+                color = Species)) +
+  geom_errorbar(aes(x = Petal.Width,
+                    ymin = Petal.Length_m - Petal.Length_se,
+                    ymax = Petal.Length_m + Petal.Length_se,
+                    color = Species),
+                linewidth = 2,
+                width = 0.0) +
+  geom_errorbar(aes(x = Petal.Width,
+                    ymin = Petal.Length_m - Petal.Length_sd,
+                    ymax = Petal.Length_m + Petal.Length_sd,
+                    color = Species),
+                width = 0.0)
+```
+
+
+
+## 点とエラーバー (point and error bar)
+
+```{r}
+#| echo: true
+#| fig-width: 9
+#| fig-height: 4
+#| out-width: "100%"
+#| output-location: slide
+#| fig-cap: 横軸も連続変数(continuous variable)
+
+iris |> 
+  group_by(Species) |> 
+  summarise(across(matches("Petal"),
+                   list(m = mean, sd = sd, n = length))) |> 
+  mutate(Petal.Width_se = Petal.Width_sd / sqrt(Petal.Width_n - 1)) |> 
+  mutate(Petal.Length_se = Petal.Length_sd / sqrt(Petal.Length_n - 1)) |> 
+  ggplot() + 
+  geom_point(aes(x = Petal.Width_m, 
+                 y = Petal.Length_m, 
+                 color = Species)) +
+  geom_errorbarh(aes(y = Petal.Length_m,
+                     xmin = Petal.Width_m - Petal.Width_sd,
+                     xmax = Petal.Width_m + Petal.Width_sd,
+                     color = Species),
+                 height = 0.0)+
+  geom_errorbar(aes(x = Petal.Width_m,
+                    ymin = Petal.Length_m - Petal.Length_sd,
+                    ymax = Petal.Length_m + Petal.Length_sd,
+                    color = Species),
+                width = 0.0)
+```
+
+## 点とエラーバー (point and error bar)
+
+```{r}
+#| echo: true
+#| fig-width: 9
+#| fig-height: 4
+#| out-width: "100%"
+#| output-location: slide
+#| fig-cap: 変数ごとの平均値と１標準偏差も示した
+
+iris |> 
+  group_by(Species) |> 
+  summarise(across(matches("Petal"),
+                   list(m = mean, sd = sd, n = length))) |> 
+  mutate(Petal.Width_se = Petal.Width_sd / sqrt(Petal.Width_n - 1)) |> 
+  mutate(Petal.Length_se = Petal.Length_sd / sqrt(Petal.Length_n - 1)) |> 
+  ggplot() + 
+  geom_point(aes(x = Petal.Width,
+                 y = Petal.Length,
+                 color = Species),
+             data = iris,
+             stroke = 0,
+             alpha = 0.5) +
+  geom_point(aes(x = Petal.Width_m, 
+                 y = Petal.Length_m, 
+                 color = Species)) +
+  geom_errorbarh(aes(y = Petal.Length_m,
+                     xmin = Petal.Width_m - Petal.Width_sd,
+                     xmax = Petal.Width_m + Petal.Width_sd,
+                     color = Species),
+                 height = 0.0)+
+  geom_errorbar(aes(x = Petal.Width_m,
+                    ymin = Petal.Length_m - Petal.Length_sd,
+                    ymax = Petal.Length_m + Petal.Length_sd,
+                    color = Species),
+                width = 0.0) +
+  scale_color_viridis_d(end = 0.9)
+```
 
 
 

@@ -8,10 +8,10 @@
 <link href="site_libs/quarto-html/light-border.css" rel="stylesheet">
 <link href="site_libs/quarto-html/quarto-html.min.css" rel="stylesheet" data-mode="light">
 <link href="site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles"><meta charset="utf-8">
-  <meta name="generator" content="quarto-1.3.450">
+  <meta name="generator" content="quarto-1.4.549">
 
   <meta name="author" content="Greg Nishihara">
-  <meta name="dcterms.date" content="2023-09-24">
+  <meta name="dcterms.date" content="2024-04-07">
   <title>データ解析（研究室用） - Comparing multiple groups</title>
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -32,7 +32,7 @@
     }
     /* CSS for syntax highlighting */
     pre > code.sourceCode { white-space: pre; position: relative; }
-    pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+    pre > code.sourceCode > span { line-height: 1.25; }
     pre > code.sourceCode > span:empty { height: 1.2em; }
     .sourceCode { overflow: visible; }
     code.sourceCode > span { color: inherit; text-decoration: inherit; }
@@ -222,7 +222,8 @@
   }
 
   .callout.callout-titled .callout-body > .callout-content > :last-child {
-    margin-bottom: 0.5rem;
+    padding-bottom: 0.5rem;
+    margin-bottom: 0;
   }
 
   .callout.callout-titled .callout-icon::before {
@@ -385,7 +386,6 @@
       margin-right: 0; 
     }
   </style>
-  
   <link href="site_libs/pagedtable-1.1/css/pagedtable.css" rel="stylesheet">
   <script src="site_libs/pagedtable-1.1/js/pagedtable.js"></script>
 </head>
@@ -405,7 +405,7 @@ Greg Nishihara
 </div>
 </div>
 
-  <p class="date">2023-09-24</p>
+  <p class="date">2024-04-07</p>
 </section>
 <section>
 <section id="problems-with-multiple-comparisons" class="title-slide slide level1 center">
@@ -484,7 +484,11 @@ Greg Nishihara
 </div><div class="column" style="width:0.5;">
 <div class="cell" data-hash="anova-slides_cache/revealjs/unnamed-chunk-5_2cd39a6ec2506beb404df2c932d90633">
 <div class="cell-output-display">
+<div>
+<figure>
 <p><img data-src="anova-slides_files/figure-revealjs/unnamed-chunk-5-1.png" width="384"></p>
+</figure>
+</div>
 </div>
 </div>
 </div>
@@ -518,7 +522,6 @@ x_{ij} = \mu + \alpha_i + \epsilon_{ij}
 <section id="一元配置分散分析表" class="slide level2 smaller">
 <h2>一元配置分散分析表</h2>
 <div class="cell" data-hash="anova-slides_cache/revealjs/unnamed-chunk-6_ad0d9118e58b417e000bc12da947cd9c">
-
 <table class="table" style="font-size: 20px; margin-left: auto; margin-right: auto;">
 <thead>
 <tr>
@@ -598,7 +601,6 @@ e
 </td>
 </tr>
 </tbody>
-
 </table>
 </div>
 <p><span class="math inline">\(A\)</span> は要因, <span class="math inline">\(e\)</span> は残渣（誤差項）,<span class="math inline">\(I\)</span> は水準の数, <span class="math inline">\(J\)</span> は標本の数です。<span class="math inline">\(SS_A\)</span> は水準間平方和，<span class="math inline">\(SS_R\)</span> は残渣平方和, <span class="math inline">\(SS_T\)</span>は総平方和です。<span class="math inline">\(MS_A\)</span> は水準間平均平方，<span class="math inline">\(MS_R\)</span> は残渣平均平方です。F値は平均平方の比です。水準間の平均値に対して，誤差（ばらつき，残渣）が大きいと，残渣平均平方も大きくなります。F値の分母が分子より大きくなったら，帰無仮説を棄却しにくくなります。</p>
@@ -626,7 +628,6 @@ e
 <img data-src="anova-slides_files/figure-revealjs/unnamed-chunk-8-1.png" width="768" class="r-stretch"><p>水準間平均平方 (<code>site: Mean Sq</code>) はかわらないが，残渣平均平方 (<code>Residuals: Mean Sq</code>) は小さくなった。</p>
 <div class="cell" data-hash="anova-slides_cache/revealjs/unnamed-chunk-9_08370e0000b8ef7adea5a95ba178044a">
 <div class="cell-output-display">
-
 <div data-pagedtable="false">
   <script data-pagedtable-source="" type="application/json">
 {"columns":[{"label":[""],"name":["_rn_"],"type":[""],"align":["left"]},{"label":["Df"],"name":[1],"type":["int"],"align":["right"]},{"label":["Sum Sq"],"name":[2],"type":["dbl"],"align":["right"]},{"label":["Mean Sq"],"name":[3],"type":["dbl"],"align":["right"]},{"label":["F value"],"name":[4],"type":["dbl"],"align":["right"]},{"label":["Pr(>F)"],"name":[5],"type":["dbl"],"align":["right"]}],"data":[{"1":"2","2":"161.6705","3":"80.835262","4":"15.58537","5":"3.161548e-05","_rn_":"site"},{"1":"27","2":"140.0386","3":"5.186613","4":"NA","5":"NA","_rn_":"Residuals"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
@@ -657,7 +658,6 @@ e
 <p>水準間平均平方 (<code>site: Mean Sq</code>) はかわらないが，残渣平均平方 (<code>Residuals: Mean Sq</code>) は大きくなった。</p>
 <div class="cell" data-hash="anova-slides_cache/revealjs/unnamed-chunk-10_08049e26b1ee8557ad5b9378941e306b">
 <div class="cell-output-display">
-
 <div data-pagedtable="false">
   <script data-pagedtable-source="" type="application/json">
 {"columns":[{"label":[""],"name":["_rn_"],"type":[""],"align":["left"]},{"label":["Df"],"name":[1],"type":["int"],"align":["right"]},{"label":["Sum Sq"],"name":[2],"type":["dbl"],"align":["right"]},{"label":["Mean Sq"],"name":[3],"type":["dbl"],"align":["right"]},{"label":["F value"],"name":[4],"type":["dbl"],"align":["right"]},{"label":["Pr(>F)"],"name":[5],"type":["dbl"],"align":["right"]}],"data":[{"1":"2","2":"161.6705","3":"80.83526","4":"1.731707","5":"0.196065","_rn_":"site"},{"1":"27","2":"1260.3470","3":"46.67952","4":"NA","5":"NA","_rn_":"Residuals"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
@@ -713,7 +713,7 @@ P(x|d_1, d_2) = \frac{1}{\mathrm{B}\left(\frac{d_1}{2}, \frac{d_2}{2}\right)}\le
 <h2>アマモの全長の解析</h2>
 <p>Rでは，いろんな方法で分散分析ができます。</p>
 <div class="cell" data-hash="anova-slides_cache/revealjs/unnamed-chunk-13_45d96ec4a5ce517d710534b2e2797bef">
-<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1"></a><span class="fu">aov</span>(data <span class="sc">~</span> site, <span class="at">data =</span> X) <span class="sc">%&gt;%</span> <span class="fu">summary</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a></a><span class="fu">aov</span>(data <span class="sc">~</span> site, <span class="at">data =</span> X) <span class="sc">%&gt;%</span> <span class="fu">summary</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>            Df Sum Sq Mean Sq F value Pr(&gt;F)  
 site         2  161.7   80.84   3.896 0.0326 *
@@ -723,7 +723,7 @@ Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
 </div>
 </div>
 <div class="cell" data-hash="anova-slides_cache/revealjs/unnamed-chunk-14_3e00f1e80d9b28c2c8b514b09875aa4c">
-<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1"></a><span class="fu">lm</span>(data <span class="sc">~</span> site, X) <span class="sc">%&gt;%</span> <span class="fu">summary.aov</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a></a><span class="fu">lm</span>(data <span class="sc">~</span> site, X) <span class="sc">%&gt;%</span> <span class="fu">summary.aov</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>            Df Sum Sq Mean Sq F value Pr(&gt;F)  
 site         2  161.7   80.84   3.896 0.0326 *
@@ -744,16 +744,16 @@ Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
 <div class="columns">
 <div class="column" style="width:0.5;">
 <div class="cell" data-hash="anova-slides_cache/revealjs/unnamed-chunk-15_c9f69e52668881d30168fbdc0f1c0750">
-<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1"></a><span class="fu">library</span>(pwr)</span>
-<span id="cb5-2"><a href="#cb5-2"></a>J <span class="ot">=</span> <span class="dv">3</span> <span class="co"># 群の数</span></span>
-<span id="cb5-3"><a href="#cb5-3"></a>effect_size <span class="ot">=</span> <span class="dv">1</span> <span class="co"># 効果</span></span>
-<span id="cb5-4"><a href="#cb5-4"></a>MSR <span class="ot">=</span> <span class="dv">1</span> <span class="co"># 残渣平均平方</span></span>
-<span id="cb5-5"><a href="#cb5-5"></a>power <span class="ot">=</span> <span class="fl">0.80</span> <span class="co"># 検出力</span></span>
-<span id="cb5-6"><a href="#cb5-6"></a>alpha <span class="ot">=</span> <span class="fl">0.05</span> <span class="co"># 有意水準・α過誤</span></span>
-<span id="cb5-7"><a href="#cb5-7"></a>lambda <span class="ot">=</span> effect_size <span class="sc">/</span> MSR </span>
-<span id="cb5-8"><a href="#cb5-8"></a><span class="fu">pwr.anova.test</span>(<span class="at">k =</span> J, </span>
-<span id="cb5-9"><a href="#cb5-9"></a>               <span class="at">f =</span> lambda, </span>
-<span id="cb5-10"><a href="#cb5-10"></a>               <span class="at">power =</span> power) <span class="co"># pwr パッケージの関数</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a></a><span class="fu">library</span>(pwr)</span>
+<span id="cb5-2"><a></a>J <span class="ot">=</span> <span class="dv">3</span> <span class="co"># 群の数</span></span>
+<span id="cb5-3"><a></a>effect_size <span class="ot">=</span> <span class="dv">1</span> <span class="co"># 効果</span></span>
+<span id="cb5-4"><a></a>MSR <span class="ot">=</span> <span class="dv">1</span> <span class="co"># 残渣平均平方</span></span>
+<span id="cb5-5"><a></a>power <span class="ot">=</span> <span class="fl">0.80</span> <span class="co"># 検出力</span></span>
+<span id="cb5-6"><a></a>alpha <span class="ot">=</span> <span class="fl">0.05</span> <span class="co"># 有意水準・α過誤</span></span>
+<span id="cb5-7"><a></a>lambda <span class="ot">=</span> effect_size <span class="sc">/</span> MSR </span>
+<span id="cb5-8"><a></a><span class="fu">pwr.anova.test</span>(<span class="at">k =</span> J, </span>
+<span id="cb5-9"><a></a>               <span class="at">f =</span> lambda, </span>
+<span id="cb5-10"><a></a>               <span class="at">power =</span> power) <span class="co"># pwr パッケージの関数</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </div><div class="column" style="width:0.5;">
 <div class="cell" data-hash="anova-slides_cache/revealjs/unnamed-chunk-16_ad3b6d0f14f3ea908160f790f4d98550">
@@ -816,7 +816,11 @@ NOTE: n is number in each group</code></pre>
 <div id="tabset-1-2">
 <div class="cell" data-hash="anova-slides_cache/revealjs/unnamed-chunk-20_29f6a7d4198ddf4cd6ecf72ac5c1ce3b">
 <div class="cell-output-display">
+<div>
+<figure>
 <p><img data-src="anova-slides_files/figure-revealjs/unnamed-chunk-20-1.png" width="768"></p>
+</figure>
+</div>
 </div>
 </div>
 </div>
@@ -834,7 +838,11 @@ NOTE: n is number in each group</code></pre>
 <div id="tabset-2-2">
 <div class="cell" data-hash="anova-slides_cache/revealjs/unnamed-chunk-22_d74bef8618c5f37c2700b0886206f3b1">
 <div class="cell-output-display">
+<div>
+<figure>
 <p><img data-src="anova-slides_files/figure-revealjs/unnamed-chunk-22-1.png" width="768"></p>
+</figure>
+</div>
 </div>
 </div>
 </div>
@@ -852,7 +860,11 @@ NOTE: n is number in each group</code></pre>
 <div id="tabset-3-2">
 <div class="cell" data-hash="anova-slides_cache/revealjs/unnamed-chunk-24_228e57539aa484be951521c88d9fe6f7">
 <div class="cell-output-display">
+<div>
+<figure>
 <p><img data-src="anova-slides_files/figure-revealjs/unnamed-chunk-24-1.png" width="768"></p>
+</figure>
+</div>
 </div>
 </div>
 </div>
@@ -914,21 +926,20 @@ NOTE: n is number in each group</code></pre>
 <p>データ数が少ないのとき，散布図でも問題ないです。</p>
 
 <img data-src="anova-slides_files/figure-revealjs/unnamed-chunk-25-1.png" width="768" class="r-stretch"><div class="cell" data-hash="anova-slides_cache/revealjs/unnamed-chunk-26_ec3b0aaf716f9384cb9566aabc8bcb74">
-<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1"></a><span class="fu">ggplot</span>(X) <span class="sc">+</span> <span class="fu">geom_boxplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> site, <span class="at">y =</span> data, <span class="at">fill =</span> site)) <span class="sc">+</span></span>
-<span id="cb7-2"><a href="#cb7-2"></a>  <span class="fu">geom_point</span>(<span class="fu">aes</span>(<span class="at">x =</span> site, <span class="at">y =</span> data), <span class="at">position =</span> <span class="fu">position_jitter</span>(<span class="fl">0.05</span>)) <span class="sc">+</span></span>
-<span id="cb7-3"><a href="#cb7-3"></a>  <span class="fu">scale_x_discrete</span>(<span class="st">"Field site"</span>) <span class="sc">+</span> <span class="fu">scale_y_continuous</span>(<span class="st">"Length (mm)"</span>) <span class="sc">+</span></span>
-<span id="cb7-4"><a href="#cb7-4"></a>  <span class="fu">theme</span>(<span class="at">legend.position=</span><span class="fu">c</span>(<span class="dv">0</span>,<span class="dv">1</span>), <span class="at">legend.justification=</span><span class="fu">c</span>(<span class="dv">0</span>,<span class="dv">1</span>), <span class="at">legend.title=</span><span class="fu">element_blank</span>())</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a></a><span class="fu">ggplot</span>(X) <span class="sc">+</span> <span class="fu">geom_boxplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> site, <span class="at">y =</span> data, <span class="at">fill =</span> site)) <span class="sc">+</span></span>
+<span id="cb7-2"><a></a>  <span class="fu">geom_point</span>(<span class="fu">aes</span>(<span class="at">x =</span> site, <span class="at">y =</span> data), <span class="at">position =</span> <span class="fu">position_jitter</span>(<span class="fl">0.05</span>)) <span class="sc">+</span></span>
+<span id="cb7-3"><a></a>  <span class="fu">scale_x_discrete</span>(<span class="st">"Field site"</span>) <span class="sc">+</span> <span class="fu">scale_y_continuous</span>(<span class="st">"Length (mm)"</span>) <span class="sc">+</span></span>
+<span id="cb7-4"><a></a>  <span class="fu">theme</span>(<span class="at">legend.position=</span><span class="fu">c</span>(<span class="dv">0</span>,<span class="dv">1</span>), <span class="at">legend.justification=</span><span class="fu">c</span>(<span class="dv">0</span>,<span class="dv">1</span>), <span class="at">legend.title=</span><span class="fu">element_blank</span>())</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
 <section id="等分散性の検定" class="slide level2 scrollable">
 <h2>3. 等分散性の検定</h2>
 <p>箱ひげ図を確認すると，不等分散性の問題はないように見えないが，検定をかけて確認できます。<code>site</code> ごとの不偏分散は次の通りです。</p>
 <div class="cell" data-hash="anova-slides_cache/revealjs/unnamed-chunk-27_a47d5fdefd5a90e005bedd67fb5417fc">
-<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1"></a>X <span class="sc">%&gt;%</span> </span>
-<span id="cb8-2"><a href="#cb8-2"></a>  <span class="fu">group_by</span>(site) <span class="sc">%&gt;%</span> </span>
-<span id="cb8-3"><a href="#cb8-3"></a>  <span class="fu">summarise</span>(<span class="at">sigma =</span> <span class="fu">var</span>(data))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a></a>X <span class="sc">%&gt;%</span> </span>
+<span id="cb8-2"><a></a>  <span class="fu">group_by</span>(site) <span class="sc">%&gt;%</span> </span>
+<span id="cb8-3"><a></a>  <span class="fu">summarise</span>(<span class="at">sigma =</span> <span class="fu">var</span>(data))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-
 <div data-pagedtable="false">
   <script data-pagedtable-source="" type="application/json">
 {"columns":[{"label":["site"],"name":[1],"type":["fct"],"align":["left"]},{"label":["sigma"],"name":[2],"type":["dbl"],"align":["right"]}],"data":[{"1":"A","2":"11.86401"},{"1":"B","2":"22.78478"},{"1":"C","2":"27.59057"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
@@ -939,7 +950,7 @@ NOTE: n is number in each group</code></pre>
 <p>Site A の分散は Site B と Site C と比べると約半分ぐらいです。</p>
 <p><strong>バートレット検定</strong> は正規分布に従わないデータに強く影響されますので，誤った結果になる可能性があります。，</p>
 <div class="cell" data-hash="anova-slides_cache/revealjs/unnamed-chunk-28_c0eabf8cf4b32e49798b718563ff8d04">
-<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1"></a><span class="fu">bartlett.test</span>(data <span class="sc">~</span> site, X)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a></a><span class="fu">bartlett.test</span>(data <span class="sc">~</span> site, X)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
     Bartlett test of homogeneity of variances
@@ -950,9 +961,8 @@ Bartlett's K-squared = 1.5442, df = 2, p-value = 0.462</code></pre>
 </div>
 <p><strong>ルービン検定</strong> は正規分布に従わないデータに対してロバスト (robust, 頑健) です。；</p>
 <div class="cell" data-hash="anova-slides_cache/revealjs/unnamed-chunk-29_c4cc7e73da5baabfef7dbfd1572ebd9e">
-<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1"></a>car<span class="sc">::</span><span class="fu">leveneTest</span>(data <span class="sc">~</span> site, X)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a></a>car<span class="sc">::</span><span class="fu">leveneTest</span>(data <span class="sc">~</span> site, X)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-
 <div data-pagedtable="false">
   <script data-pagedtable-source="" type="application/json">
 {"columns":[{"label":[""],"name":["_rn_"],"type":[""],"align":["left"]},{"label":["Df"],"name":[1],"type":["int"],"align":["right"]},{"label":["F value"],"name":[2],"type":["dbl"],"align":["right"]},{"label":["Pr(>F)"],"name":[3],"type":["dbl"],"align":["right"]}],"data":[{"1":"2","2":"0.5594679","3":"0.5779975","_rn_":"group"},{"1":"27","2":"NA","3":"NA","_rn_":""}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
@@ -985,10 +995,9 @@ Bartlett's K-squared = 1.5442, df = 2, p-value = 0.462</code></pre>
 <h2>4. 分散分析を実施する</h2>
 <p>等分散性に問題なかったので，分散分析をします。</p>
 <div class="cell" data-hash="anova-slides_cache/revealjs/unnamed-chunk-30_70d4859ec2bd5c3fc5f6c37a99dc6603">
-<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1"></a>m1 <span class="ot">=</span> <span class="fu">lm</span>(data <span class="sc">~</span> site, <span class="at">data =</span> X)</span>
-<span id="cb12-2"><a href="#cb12-2"></a><span class="fu">anova</span>(m1)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a></a>m1 <span class="ot">=</span> <span class="fu">lm</span>(data <span class="sc">~</span> site, <span class="at">data =</span> X)</span>
+<span id="cb12-2"><a></a><span class="fu">anova</span>(m1)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-
 <div data-pagedtable="false">
   <script data-pagedtable-source="" type="application/json">
 {"columns":[{"label":[""],"name":["_rn_"],"type":[""],"align":["left"]},{"label":["Df"],"name":[1],"type":["int"],"align":["right"]},{"label":["Sum Sq"],"name":[2],"type":["dbl"],"align":["right"]},{"label":["Mean Sq"],"name":[3],"type":["dbl"],"align":["right"]},{"label":["F value"],"name":[4],"type":["dbl"],"align":["right"]},{"label":["Pr(>F)"],"name":[5],"type":["dbl"],"align":["right"]}],"data":[{"1":"2","2":"161.6705","3":"80.83526","4":"3.896341","5":"0.03260798","_rn_":"site"},{"1":"27","2":"560.1542","3":"20.74645","4":"NA","5":"NA","_rn_":"Residuals"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
@@ -998,11 +1007,11 @@ Bartlett's K-squared = 1.5442, df = 2, p-value = 0.462</code></pre>
 </div>
 <p>分散分析表には，自由度 (<code>Df</code>)，平方和 (<code>Sum Sq</code>)，平均平方 (<code>Mean Sq</code>)，F値 (<code>F value</code>)，P値 (<code>Pr(&gt;F)</code>) がでます。 P値は有意水準 (α = 0.05) より低いので，帰無仮説 (<span class="math inline">\(\mu_A = \mu_B = \mu_C\)</span>) を棄却します。帰無仮説が正しかったら，このデータはとても珍しいです。</p>
 <div class="cell" data-hash="anova-slides_cache/revealjs/unnamed-chunk-31_2b38edb647503361547a7e7fc69ea860">
-<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1"></a><span class="co"># 手順はいくつかあります。</span></span>
-<span id="cb13-2"><a href="#cb13-2"></a><span class="fu">summary.aov</span>(m1)</span>
-<span id="cb13-3"><a href="#cb13-3"></a><span class="fu">lm</span>(data <span class="sc">~</span> site, <span class="at">data =</span> X) <span class="sc">%&gt;%</span> <span class="fu">anova</span>()</span>
-<span id="cb13-4"><a href="#cb13-4"></a><span class="fu">lm</span>(data <span class="sc">~</span> site, <span class="at">data =</span> X) <span class="sc">%&gt;%</span> <span class="fu">summary.aov</span>()</span>
-<span id="cb13-5"><a href="#cb13-5"></a><span class="fu">aov</span>(data <span class="sc">~</span> site, <span class="at">data =</span> X) <span class="sc">%&gt;%</span> <span class="fu">summary</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a></a><span class="co"># 手順はいくつかあります。</span></span>
+<span id="cb13-2"><a></a><span class="fu">summary.aov</span>(m1)</span>
+<span id="cb13-3"><a></a><span class="fu">lm</span>(data <span class="sc">~</span> site, <span class="at">data =</span> X) <span class="sc">%&gt;%</span> <span class="fu">anova</span>()</span>
+<span id="cb13-4"><a></a><span class="fu">lm</span>(data <span class="sc">~</span> site, <span class="at">data =</span> X) <span class="sc">%&gt;%</span> <span class="fu">summary.aov</span>()</span>
+<span id="cb13-5"><a></a><span class="fu">aov</span>(data <span class="sc">~</span> site, <span class="at">data =</span> X) <span class="sc">%&gt;%</span> <span class="fu">summary</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
 <section id="図を用いて残渣の正規性と等分散性を確認する" class="slide level2 smaller">
@@ -1315,10 +1324,9 @@ B &amp;= 1 \mu_\text{setosa} + 1 \mu_\text{versicolor} -    2 \mu_\text{virginic
 <h2>R における解析</h2>
 <p>アヤメのデータをつかって事前比較を初回します。まず，データの準備です。</p>
 <div class="cell" data-hash="anova-slides_cache/revealjs/unnamed-chunk-34_ccaa075ed1866051124b8a8c56c9bbca">
-<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1"></a>iris_new <span class="ot">=</span> iris <span class="sc">%&gt;%</span> <span class="fu">as_tibble</span>()</span>
-<span id="cb14-2"><a href="#cb14-2"></a>iris_new <span class="co"># 内容の確認</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a></a>iris_new <span class="ot">=</span> iris <span class="sc">%&gt;%</span> <span class="fu">as_tibble</span>()</span>
+<span id="cb14-2"><a></a>iris_new <span class="co"># 内容の確認</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-
 <div data-pagedtable="false">
   <script data-pagedtable-source="" type="application/json">
 {"columns":[{"label":["Sepal.Length"],"name":[1],"type":["dbl"],"align":["right"]},{"label":["Sepal.Width"],"name":[2],"type":["dbl"],"align":["right"]},{"label":["Petal.Length"],"name":[3],"type":["dbl"],"align":["right"]},{"label":["Petal.Width"],"name":[4],"type":["dbl"],"align":["right"]},{"label":["Species"],"name":[5],"type":["fct"],"align":["left"]}],"data":[{"1":"5.1","2":"3.5","3":"1.4","4":"0.2","5":"setosa"},{"1":"4.9","2":"3.0","3":"1.4","4":"0.2","5":"setosa"},{"1":"4.7","2":"3.2","3":"1.3","4":"0.2","5":"setosa"},{"1":"4.6","2":"3.1","3":"1.5","4":"0.2","5":"setosa"},{"1":"5.0","2":"3.6","3":"1.4","4":"0.2","5":"setosa"},{"1":"5.4","2":"3.9","3":"1.7","4":"0.4","5":"setosa"},{"1":"4.6","2":"3.4","3":"1.4","4":"0.3","5":"setosa"},{"1":"5.0","2":"3.4","3":"1.5","4":"0.2","5":"setosa"},{"1":"4.4","2":"2.9","3":"1.4","4":"0.2","5":"setosa"},{"1":"4.9","2":"3.1","3":"1.5","4":"0.1","5":"setosa"},{"1":"5.4","2":"3.7","3":"1.5","4":"0.2","5":"setosa"},{"1":"4.8","2":"3.4","3":"1.6","4":"0.2","5":"setosa"},{"1":"4.8","2":"3.0","3":"1.4","4":"0.1","5":"setosa"},{"1":"4.3","2":"3.0","3":"1.1","4":"0.1","5":"setosa"},{"1":"5.8","2":"4.0","3":"1.2","4":"0.2","5":"setosa"},{"1":"5.7","2":"4.4","3":"1.5","4":"0.4","5":"setosa"},{"1":"5.4","2":"3.9","3":"1.3","4":"0.4","5":"setosa"},{"1":"5.1","2":"3.5","3":"1.4","4":"0.3","5":"setosa"},{"1":"5.7","2":"3.8","3":"1.7","4":"0.3","5":"setosa"},{"1":"5.1","2":"3.8","3":"1.5","4":"0.3","5":"setosa"},{"1":"5.4","2":"3.4","3":"1.7","4":"0.2","5":"setosa"},{"1":"5.1","2":"3.7","3":"1.5","4":"0.4","5":"setosa"},{"1":"4.6","2":"3.6","3":"1.0","4":"0.2","5":"setosa"},{"1":"5.1","2":"3.3","3":"1.7","4":"0.5","5":"setosa"},{"1":"4.8","2":"3.4","3":"1.9","4":"0.2","5":"setosa"},{"1":"5.0","2":"3.0","3":"1.6","4":"0.2","5":"setosa"},{"1":"5.0","2":"3.4","3":"1.6","4":"0.4","5":"setosa"},{"1":"5.2","2":"3.5","3":"1.5","4":"0.2","5":"setosa"},{"1":"5.2","2":"3.4","3":"1.4","4":"0.2","5":"setosa"},{"1":"4.7","2":"3.2","3":"1.6","4":"0.2","5":"setosa"},{"1":"4.8","2":"3.1","3":"1.6","4":"0.2","5":"setosa"},{"1":"5.4","2":"3.4","3":"1.5","4":"0.4","5":"setosa"},{"1":"5.2","2":"4.1","3":"1.5","4":"0.1","5":"setosa"},{"1":"5.5","2":"4.2","3":"1.4","4":"0.2","5":"setosa"},{"1":"4.9","2":"3.1","3":"1.5","4":"0.2","5":"setosa"},{"1":"5.0","2":"3.2","3":"1.2","4":"0.2","5":"setosa"},{"1":"5.5","2":"3.5","3":"1.3","4":"0.2","5":"setosa"},{"1":"4.9","2":"3.6","3":"1.4","4":"0.1","5":"setosa"},{"1":"4.4","2":"3.0","3":"1.3","4":"0.2","5":"setosa"},{"1":"5.1","2":"3.4","3":"1.5","4":"0.2","5":"setosa"},{"1":"5.0","2":"3.5","3":"1.3","4":"0.3","5":"setosa"},{"1":"4.5","2":"2.3","3":"1.3","4":"0.3","5":"setosa"},{"1":"4.4","2":"3.2","3":"1.3","4":"0.2","5":"setosa"},{"1":"5.0","2":"3.5","3":"1.6","4":"0.6","5":"setosa"},{"1":"5.1","2":"3.8","3":"1.9","4":"0.4","5":"setosa"},{"1":"4.8","2":"3.0","3":"1.4","4":"0.3","5":"setosa"},{"1":"5.1","2":"3.8","3":"1.6","4":"0.2","5":"setosa"},{"1":"4.6","2":"3.2","3":"1.4","4":"0.2","5":"setosa"},{"1":"5.3","2":"3.7","3":"1.5","4":"0.2","5":"setosa"},{"1":"5.0","2":"3.3","3":"1.4","4":"0.2","5":"setosa"},{"1":"7.0","2":"3.2","3":"4.7","4":"1.4","5":"versicolor"},{"1":"6.4","2":"3.2","3":"4.5","4":"1.5","5":"versicolor"},{"1":"6.9","2":"3.1","3":"4.9","4":"1.5","5":"versicolor"},{"1":"5.5","2":"2.3","3":"4.0","4":"1.3","5":"versicolor"},{"1":"6.5","2":"2.8","3":"4.6","4":"1.5","5":"versicolor"},{"1":"5.7","2":"2.8","3":"4.5","4":"1.3","5":"versicolor"},{"1":"6.3","2":"3.3","3":"4.7","4":"1.6","5":"versicolor"},{"1":"4.9","2":"2.4","3":"3.3","4":"1.0","5":"versicolor"},{"1":"6.6","2":"2.9","3":"4.6","4":"1.3","5":"versicolor"},{"1":"5.2","2":"2.7","3":"3.9","4":"1.4","5":"versicolor"},{"1":"5.0","2":"2.0","3":"3.5","4":"1.0","5":"versicolor"},{"1":"5.9","2":"3.0","3":"4.2","4":"1.5","5":"versicolor"},{"1":"6.0","2":"2.2","3":"4.0","4":"1.0","5":"versicolor"},{"1":"6.1","2":"2.9","3":"4.7","4":"1.4","5":"versicolor"},{"1":"5.6","2":"2.9","3":"3.6","4":"1.3","5":"versicolor"},{"1":"6.7","2":"3.1","3":"4.4","4":"1.4","5":"versicolor"},{"1":"5.6","2":"3.0","3":"4.5","4":"1.5","5":"versicolor"},{"1":"5.8","2":"2.7","3":"4.1","4":"1.0","5":"versicolor"},{"1":"6.2","2":"2.2","3":"4.5","4":"1.5","5":"versicolor"},{"1":"5.6","2":"2.5","3":"3.9","4":"1.1","5":"versicolor"},{"1":"5.9","2":"3.2","3":"4.8","4":"1.8","5":"versicolor"},{"1":"6.1","2":"2.8","3":"4.0","4":"1.3","5":"versicolor"},{"1":"6.3","2":"2.5","3":"4.9","4":"1.5","5":"versicolor"},{"1":"6.1","2":"2.8","3":"4.7","4":"1.2","5":"versicolor"},{"1":"6.4","2":"2.9","3":"4.3","4":"1.3","5":"versicolor"},{"1":"6.6","2":"3.0","3":"4.4","4":"1.4","5":"versicolor"},{"1":"6.8","2":"2.8","3":"4.8","4":"1.4","5":"versicolor"},{"1":"6.7","2":"3.0","3":"5.0","4":"1.7","5":"versicolor"},{"1":"6.0","2":"2.9","3":"4.5","4":"1.5","5":"versicolor"},{"1":"5.7","2":"2.6","3":"3.5","4":"1.0","5":"versicolor"},{"1":"5.5","2":"2.4","3":"3.8","4":"1.1","5":"versicolor"},{"1":"5.5","2":"2.4","3":"3.7","4":"1.0","5":"versicolor"},{"1":"5.8","2":"2.7","3":"3.9","4":"1.2","5":"versicolor"},{"1":"6.0","2":"2.7","3":"5.1","4":"1.6","5":"versicolor"},{"1":"5.4","2":"3.0","3":"4.5","4":"1.5","5":"versicolor"},{"1":"6.0","2":"3.4","3":"4.5","4":"1.6","5":"versicolor"},{"1":"6.7","2":"3.1","3":"4.7","4":"1.5","5":"versicolor"},{"1":"6.3","2":"2.3","3":"4.4","4":"1.3","5":"versicolor"},{"1":"5.6","2":"3.0","3":"4.1","4":"1.3","5":"versicolor"},{"1":"5.5","2":"2.5","3":"4.0","4":"1.3","5":"versicolor"},{"1":"5.5","2":"2.6","3":"4.4","4":"1.2","5":"versicolor"},{"1":"6.1","2":"3.0","3":"4.6","4":"1.4","5":"versicolor"},{"1":"5.8","2":"2.6","3":"4.0","4":"1.2","5":"versicolor"},{"1":"5.0","2":"2.3","3":"3.3","4":"1.0","5":"versicolor"},{"1":"5.6","2":"2.7","3":"4.2","4":"1.3","5":"versicolor"},{"1":"5.7","2":"3.0","3":"4.2","4":"1.2","5":"versicolor"},{"1":"5.7","2":"2.9","3":"4.2","4":"1.3","5":"versicolor"},{"1":"6.2","2":"2.9","3":"4.3","4":"1.3","5":"versicolor"},{"1":"5.1","2":"2.5","3":"3.0","4":"1.1","5":"versicolor"},{"1":"5.7","2":"2.8","3":"4.1","4":"1.3","5":"versicolor"},{"1":"6.3","2":"3.3","3":"6.0","4":"2.5","5":"virginica"},{"1":"5.8","2":"2.7","3":"5.1","4":"1.9","5":"virginica"},{"1":"7.1","2":"3.0","3":"5.9","4":"2.1","5":"virginica"},{"1":"6.3","2":"2.9","3":"5.6","4":"1.8","5":"virginica"},{"1":"6.5","2":"3.0","3":"5.8","4":"2.2","5":"virginica"},{"1":"7.6","2":"3.0","3":"6.6","4":"2.1","5":"virginica"},{"1":"4.9","2":"2.5","3":"4.5","4":"1.7","5":"virginica"},{"1":"7.3","2":"2.9","3":"6.3","4":"1.8","5":"virginica"},{"1":"6.7","2":"2.5","3":"5.8","4":"1.8","5":"virginica"},{"1":"7.2","2":"3.6","3":"6.1","4":"2.5","5":"virginica"},{"1":"6.5","2":"3.2","3":"5.1","4":"2.0","5":"virginica"},{"1":"6.4","2":"2.7","3":"5.3","4":"1.9","5":"virginica"},{"1":"6.8","2":"3.0","3":"5.5","4":"2.1","5":"virginica"},{"1":"5.7","2":"2.5","3":"5.0","4":"2.0","5":"virginica"},{"1":"5.8","2":"2.8","3":"5.1","4":"2.4","5":"virginica"},{"1":"6.4","2":"3.2","3":"5.3","4":"2.3","5":"virginica"},{"1":"6.5","2":"3.0","3":"5.5","4":"1.8","5":"virginica"},{"1":"7.7","2":"3.8","3":"6.7","4":"2.2","5":"virginica"},{"1":"7.7","2":"2.6","3":"6.9","4":"2.3","5":"virginica"},{"1":"6.0","2":"2.2","3":"5.0","4":"1.5","5":"virginica"},{"1":"6.9","2":"3.2","3":"5.7","4":"2.3","5":"virginica"},{"1":"5.6","2":"2.8","3":"4.9","4":"2.0","5":"virginica"},{"1":"7.7","2":"2.8","3":"6.7","4":"2.0","5":"virginica"},{"1":"6.3","2":"2.7","3":"4.9","4":"1.8","5":"virginica"},{"1":"6.7","2":"3.3","3":"5.7","4":"2.1","5":"virginica"},{"1":"7.2","2":"3.2","3":"6.0","4":"1.8","5":"virginica"},{"1":"6.2","2":"2.8","3":"4.8","4":"1.8","5":"virginica"},{"1":"6.1","2":"3.0","3":"4.9","4":"1.8","5":"virginica"},{"1":"6.4","2":"2.8","3":"5.6","4":"2.1","5":"virginica"},{"1":"7.2","2":"3.0","3":"5.8","4":"1.6","5":"virginica"},{"1":"7.4","2":"2.8","3":"6.1","4":"1.9","5":"virginica"},{"1":"7.9","2":"3.8","3":"6.4","4":"2.0","5":"virginica"},{"1":"6.4","2":"2.8","3":"5.6","4":"2.2","5":"virginica"},{"1":"6.3","2":"2.8","3":"5.1","4":"1.5","5":"virginica"},{"1":"6.1","2":"2.6","3":"5.6","4":"1.4","5":"virginica"},{"1":"7.7","2":"3.0","3":"6.1","4":"2.3","5":"virginica"},{"1":"6.3","2":"3.4","3":"5.6","4":"2.4","5":"virginica"},{"1":"6.4","2":"3.1","3":"5.5","4":"1.8","5":"virginica"},{"1":"6.0","2":"3.0","3":"4.8","4":"1.8","5":"virginica"},{"1":"6.9","2":"3.1","3":"5.4","4":"2.1","5":"virginica"},{"1":"6.7","2":"3.1","3":"5.6","4":"2.4","5":"virginica"},{"1":"6.9","2":"3.1","3":"5.1","4":"2.3","5":"virginica"},{"1":"5.8","2":"2.7","3":"5.1","4":"1.9","5":"virginica"},{"1":"6.8","2":"3.2","3":"5.9","4":"2.3","5":"virginica"},{"1":"6.7","2":"3.3","3":"5.7","4":"2.5","5":"virginica"},{"1":"6.7","2":"3.0","3":"5.2","4":"2.3","5":"virginica"},{"1":"6.3","2":"2.5","3":"5.0","4":"1.9","5":"virginica"},{"1":"6.5","2":"3.0","3":"5.2","4":"2.0","5":"virginica"},{"1":"6.2","2":"3.4","3":"5.4","4":"2.3","5":"virginica"},{"1":"5.9","2":"3.0","3":"5.1","4":"1.8","5":"virginica"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
@@ -1361,7 +1369,7 @@ B &amp;= 1 \mu_\text{setosa} + 1 \mu_\text{versicolor} -    2 \mu_\text{virginic
 <h2>R 処理対比</h2>
 <p><code>contrasts()</code> 関数をつかって，アヤメのコーディング行列を確認します。</p>
 <div class="cell" data-hash="anova-slides_cache/revealjs/unnamed-chunk-35_ce8e9a315c055c4b19c5ff42b3cfe78f">
-<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1"></a><span class="fu">contrasts</span>(iris_new<span class="sc">$</span>Species)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a></a><span class="fu">contrasts</span>(iris_new<span class="sc">$</span>Species)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>           versicolor virginica
 setosa              0         0
@@ -1388,10 +1396,10 @@ virginica           0         1</code></pre>
 <section id="処理比較の結果" class="slide level2 scrollable">
 <h2>処理比較の結果</h2>
 <div class="cell" data-hash="anova-slides_cache/revealjs/unnamed-chunk-37_a3db0a08e4e926d4e692833c244ac0fe">
-<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1"></a>m1 <span class="ot">=</span> <span class="fu">lm</span>(Petal.Length <span class="sc">~</span> Species, iris_new)</span>
-<span id="cb18-2"><a href="#cb18-2"></a>m1 <span class="sc">%&gt;%</span> </span>
-<span id="cb18-3"><a href="#cb18-3"></a>  <span class="fu">summary.aov</span>(<span class="at">split =</span> <span class="fu">list</span>(<span class="at">Species =</span><span class="fu">list</span>(<span class="st">"setosa:versicolor"</span> <span class="ot">=</span> <span class="dv">1</span>,</span>
-<span id="cb18-4"><a href="#cb18-4"></a>                                         <span class="st">"setosa:virginica"</span> <span class="ot">=</span> <span class="dv">2</span>)))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a></a>m1 <span class="ot">=</span> <span class="fu">lm</span>(Petal.Length <span class="sc">~</span> Species, iris_new)</span>
+<span id="cb18-2"><a></a>m1 <span class="sc">%&gt;%</span> </span>
+<span id="cb18-3"><a></a>  <span class="fu">summary.aov</span>(<span class="at">split =</span> <span class="fu">list</span>(<span class="at">Species =</span><span class="fu">list</span>(<span class="st">"setosa:versicolor"</span> <span class="ot">=</span> <span class="dv">1</span>,</span>
+<span id="cb18-4"><a></a>                                         <span class="st">"setosa:virginica"</span> <span class="ot">=</span> <span class="dv">2</span>)))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>                              Df Sum Sq Mean Sq F value Pr(&gt;F)    
 Species                        2  437.1   218.6  1180.2 &lt;2e-16 ***
@@ -1404,7 +1412,7 @@ Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
 </div>
 <p>事前比較を指定したときに分散分析表です。<code>setosa</code> 対 <code>versicolor</code> の対比の有意性はとてもたかいです。<span class="math inline">\(P \leq 2\times 10^{-16}\)</span> でした。 <code>setosa</code> 対 <code>virginica</code> の結果も同じです。平均値の差は次のように計算します。 このとき，<code>(Interecept)</code> は <code>setosa</code> の平均値です。</p>
 <div class="cell" data-hash="anova-slides_cache/revealjs/unnamed-chunk-38_31a5eac5ae39c2ba8ba30cae0ea30aa7">
-<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1"></a><span class="fu">summary</span>(m1)<span class="sc">$</span>coefficients</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a></a><span class="fu">summary</span>(m1)<span class="sc">$</span>coefficients</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>                  Estimate Std. Error  t value     Pr(&gt;|t|)
 (Intercept)          1.462 0.06085848 24.02294 9.303052e-53
@@ -1428,12 +1436,12 @@ Speciesvirginica     4.090 0.08606689 47.52118 4.106139e-91</code></pre>
 </ul>
 <p>対比行列はつぎのとおりです。</p>
 <div class="cell" data-hash="anova-slides_cache/revealjs/unnamed-chunk-39_e5bcc6a128ab47d589dbcf06b8d49ee8">
-<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1"></a>X <span class="ot">=</span> </span>
-<span id="cb22-2"><a href="#cb22-2"></a>  <span class="fu">rbind</span>(<span class="fu">c</span>( <span class="dv">1</span>,  <span class="dv">0</span>, <span class="dv">0</span>), <span class="co"># 切片</span></span>
-<span id="cb22-3"><a href="#cb22-3"></a>        <span class="fu">c</span>(<span class="sc">-</span><span class="dv">1</span>,  <span class="dv">1</span>, <span class="dv">0</span>), <span class="co"># 帰無仮説１</span></span>
-<span id="cb22-4"><a href="#cb22-4"></a>        <span class="fu">c</span>( <span class="dv">0</span>, <span class="sc">-</span><span class="dv">1</span>, <span class="dv">1</span>)) <span class="co"># 帰無仮説２</span></span>
-<span id="cb22-5"><a href="#cb22-5"></a></span>
-<span id="cb22-6"><a href="#cb22-6"></a>X</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a></a>X <span class="ot">=</span> </span>
+<span id="cb22-2"><a></a>  <span class="fu">rbind</span>(<span class="fu">c</span>( <span class="dv">1</span>,  <span class="dv">0</span>, <span class="dv">0</span>), <span class="co"># 切片</span></span>
+<span id="cb22-3"><a></a>        <span class="fu">c</span>(<span class="sc">-</span><span class="dv">1</span>,  <span class="dv">1</span>, <span class="dv">0</span>), <span class="co"># 帰無仮説１</span></span>
+<span id="cb22-4"><a></a>        <span class="fu">c</span>( <span class="dv">0</span>, <span class="sc">-</span><span class="dv">1</span>, <span class="dv">1</span>)) <span class="co"># 帰無仮説２</span></span>
+<span id="cb22-5"><a></a></span>
+<span id="cb22-6"><a></a>X</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>     [,1] [,2] [,3]
 [1,]    1    0    0
@@ -1445,11 +1453,11 @@ Speciesvirginica     4.090 0.08606689 47.52118 4.106139e-91</code></pre>
 <section id="ペア毎の比較の結果" class="slide level2">
 <h2>ペア毎の比較の結果</h2>
 <div class="cell" data-hash="anova-slides_cache/revealjs/unnamed-chunk-40_60ee6f2beba3d64f98d0f8c855a9b346">
-<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1"></a>Z <span class="ot">=</span> X <span class="sc">%&gt;%</span> <span class="fu">solve</span>()</span>
-<span id="cb24-2"><a href="#cb24-2"></a>m2 <span class="ot">=</span> <span class="fu">lm</span>(Petal.Length <span class="sc">~</span> Species, iris_new, </span>
-<span id="cb24-3"><a href="#cb24-3"></a>        <span class="at">contrasts=</span><span class="fu">list</span>(<span class="at">Species =</span> Z[, <span class="sc">-</span><span class="dv">1</span>]))</span>
-<span id="cb24-4"><a href="#cb24-4"></a>m2 <span class="sc">%&gt;%</span> <span class="fu">summary.aov</span>(<span class="at">split =</span> <span class="fu">list</span>(<span class="at">Species =</span> <span class="fu">list</span>(<span class="st">"setosa - versicolor"</span> <span class="ot">=</span> <span class="dv">1</span>,</span>
-<span id="cb24-5"><a href="#cb24-5"></a>                                                <span class="st">"versicolor - virginica"</span> <span class="ot">=</span> <span class="dv">2</span>)))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a></a>Z <span class="ot">=</span> X <span class="sc">%&gt;%</span> <span class="fu">solve</span>()</span>
+<span id="cb24-2"><a></a>m2 <span class="ot">=</span> <span class="fu">lm</span>(Petal.Length <span class="sc">~</span> Species, iris_new, </span>
+<span id="cb24-3"><a></a>        <span class="at">contrasts=</span><span class="fu">list</span>(<span class="at">Species =</span> Z[, <span class="sc">-</span><span class="dv">1</span>]))</span>
+<span id="cb24-4"><a></a>m2 <span class="sc">%&gt;%</span> <span class="fu">summary.aov</span>(<span class="at">split =</span> <span class="fu">list</span>(<span class="at">Species =</span> <span class="fu">list</span>(<span class="st">"setosa - versicolor"</span> <span class="ot">=</span> <span class="dv">1</span>,</span>
+<span id="cb24-5"><a></a>                                                <span class="st">"versicolor - virginica"</span> <span class="ot">=</span> <span class="dv">2</span>)))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>                                   Df Sum Sq Mean Sq F value Pr(&gt;F)    
 Species                             2  437.1   218.6  1180.2 &lt;2e-16 ***
@@ -1489,12 +1497,12 @@ Species2       1.292 0.08606689 15.01158 1.810597e-31</code></pre>
 </ul>
 <p>対比行列はつぎのとおりです。</p>
 <div class="cell" data-hash="anova-slides_cache/revealjs/unnamed-chunk-42_cf7ed23c376c4f9c69cf448f1b1eb703">
-<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1"></a>X <span class="ot">=</span> </span>
-<span id="cb28-2"><a href="#cb28-2"></a>  <span class="fu">rbind</span>(<span class="fu">c</span>( <span class="dv">1</span>,  <span class="dv">0</span>,  <span class="dv">0</span>), <span class="co"># 切片</span></span>
-<span id="cb28-3"><a href="#cb28-3"></a>        <span class="fu">c</span>(<span class="sc">-</span><span class="dv">1</span>,  <span class="dv">1</span>,  <span class="dv">0</span>), <span class="co"># 帰無仮説１</span></span>
-<span id="cb28-4"><a href="#cb28-4"></a>        <span class="fu">c</span>( <span class="dv">1</span>,  <span class="dv">1</span>, <span class="sc">-</span><span class="dv">2</span>)) <span class="co"># 帰無仮説２</span></span>
-<span id="cb28-5"><a href="#cb28-5"></a></span>
-<span id="cb28-6"><a href="#cb28-6"></a>X</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a></a>X <span class="ot">=</span> </span>
+<span id="cb28-2"><a></a>  <span class="fu">rbind</span>(<span class="fu">c</span>( <span class="dv">1</span>,  <span class="dv">0</span>,  <span class="dv">0</span>), <span class="co"># 切片</span></span>
+<span id="cb28-3"><a></a>        <span class="fu">c</span>(<span class="sc">-</span><span class="dv">1</span>,  <span class="dv">1</span>,  <span class="dv">0</span>), <span class="co"># 帰無仮説１</span></span>
+<span id="cb28-4"><a></a>        <span class="fu">c</span>( <span class="dv">1</span>,  <span class="dv">1</span>, <span class="sc">-</span><span class="dv">2</span>)) <span class="co"># 帰無仮説２</span></span>
+<span id="cb28-5"><a></a></span>
+<span id="cb28-6"><a></a>X</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>     [,1] [,2] [,3]
 [1,]    1    0    0
@@ -1506,11 +1514,11 @@ Species2       1.292 0.08606689 15.01158 1.810597e-31</code></pre>
 <section id="直交対比の結果" class="slide level2">
 <h2>直交対比の結果</h2>
 <div class="cell" data-hash="anova-slides_cache/revealjs/unnamed-chunk-43_eb00e6dc640ce4c7e8fae0ec39781061">
-<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1"></a>Z <span class="ot">=</span> X <span class="sc">%&gt;%</span> <span class="fu">solve</span>()</span>
-<span id="cb30-2"><a href="#cb30-2"></a>m3 <span class="ot">=</span> <span class="fu">lm</span>(Petal.Length <span class="sc">~</span> Species, iris_new, </span>
-<span id="cb30-3"><a href="#cb30-3"></a>        <span class="at">contrasts=</span><span class="fu">list</span>(<span class="at">Species =</span> Z[, <span class="sc">-</span><span class="dv">1</span>]))</span>
-<span id="cb30-4"><a href="#cb30-4"></a>m3 <span class="sc">%&gt;%</span> <span class="fu">summary.aov</span>(<span class="at">split =</span> <span class="fu">list</span>(<span class="at">Species =</span> <span class="fu">list</span>(<span class="st">"setosa - versicolor"</span> <span class="ot">=</span> <span class="dv">1</span>,</span>
-<span id="cb30-5"><a href="#cb30-5"></a>                                                <span class="st">"mean - virginica"</span> <span class="ot">=</span> <span class="dv">2</span>)))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a></a>Z <span class="ot">=</span> X <span class="sc">%&gt;%</span> <span class="fu">solve</span>()</span>
+<span id="cb30-2"><a></a>m3 <span class="ot">=</span> <span class="fu">lm</span>(Petal.Length <span class="sc">~</span> Species, iris_new, </span>
+<span id="cb30-3"><a></a>        <span class="at">contrasts=</span><span class="fu">list</span>(<span class="at">Species =</span> Z[, <span class="sc">-</span><span class="dv">1</span>]))</span>
+<span id="cb30-4"><a></a>m3 <span class="sc">%&gt;%</span> <span class="fu">summary.aov</span>(<span class="at">split =</span> <span class="fu">list</span>(<span class="at">Species =</span> <span class="fu">list</span>(<span class="st">"setosa - versicolor"</span> <span class="ot">=</span> <span class="dv">1</span>,</span>
+<span id="cb30-5"><a></a>                                                <span class="st">"mean - virginica"</span> <span class="ot">=</span> <span class="dv">2</span>)))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>                                Df Sum Sq Mean Sq F value Pr(&gt;F)    
 Species                          2  437.1  218.55    1180 &lt;2e-16 ***
@@ -1522,7 +1530,7 @@ Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
 </div>
 </div>
 <div class="cell" data-hash="anova-slides_cache/revealjs/unnamed-chunk-44_930cbbde3512a122d36534dbba3ed87d">
-<div class="sourceCode cell-code" id="cb32"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1"></a><span class="fu">summary</span>(m3)<span class="sc">$</span>coefficients</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb32"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a></a><span class="fu">summary</span>(m3)<span class="sc">$</span>coefficients</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>            Estimate Std. Error   t value     Pr(&gt;|t|)
 (Intercept)    1.462 0.06085848  24.02294 9.303052e-53
@@ -1534,24 +1542,24 @@ Species2      -5.382 0.14907223 -36.10330 5.858996e-75</code></pre>
 <p>There is only one way to partition the sum-of-squares, so all of the sum-of-squares, regardless of the comparison are the same!</p>
 </div>
 <div class="cell" data-hash="anova-slides_cache/revealjs/unnamed-chunk-45_2cc7a4f3f44214cb0155f10e27ccbb5d">
-<div class="sourceCode cell-code" id="cb34"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1"></a><span class="fu">lm</span>(Petal.Length <span class="sc">~</span> Species, iris_new, </span>
-<span id="cb34-2"><a href="#cb34-2"></a>        <span class="at">contrasts=</span><span class="fu">list</span>(<span class="at">Species =</span> <span class="fu">contr.helmert</span>(<span class="dv">3</span>))) <span class="sc">%&gt;%</span> </span>
-<span id="cb34-3"><a href="#cb34-3"></a>  <span class="fu">summary.aov</span>(<span class="at">split =</span> <span class="fu">list</span>(<span class="at">Species =</span> <span class="fu">list</span>(<span class="at">a =</span> <span class="dv">1</span>, <span class="at">b =</span> <span class="dv">2</span>)))</span>
-<span id="cb34-4"><a href="#cb34-4"></a></span>
-<span id="cb34-5"><a href="#cb34-5"></a></span>
-<span id="cb34-6"><a href="#cb34-6"></a><span class="fu">lm</span>(Petal.Length <span class="sc">~</span> Species, iris_new, </span>
-<span id="cb34-7"><a href="#cb34-7"></a>        <span class="at">contrasts=</span><span class="fu">list</span>(<span class="at">Species =</span> <span class="fu">contr.diff</span>(<span class="dv">3</span>))) <span class="sc">%&gt;%</span> </span>
-<span id="cb34-8"><a href="#cb34-8"></a>  <span class="fu">summary.aov</span>(<span class="at">split =</span> <span class="fu">list</span>(<span class="at">Species =</span> <span class="fu">list</span>(<span class="at">a =</span> <span class="dv">1</span>, <span class="at">b =</span> <span class="dv">2</span>)))</span>
-<span id="cb34-9"><a href="#cb34-9"></a></span>
-<span id="cb34-10"><a href="#cb34-10"></a></span>
-<span id="cb34-11"><a href="#cb34-11"></a><span class="fu">lm</span>(Petal.Length <span class="sc">~</span> Species, iris_new, </span>
-<span id="cb34-12"><a href="#cb34-12"></a>        <span class="at">contrasts=</span><span class="fu">list</span>(<span class="at">Species =</span> <span class="fu">contr.treatment</span>(<span class="dv">3</span>))) <span class="sc">%&gt;%</span> </span>
-<span id="cb34-13"><a href="#cb34-13"></a>  <span class="fu">summary.aov</span>(<span class="at">split =</span> <span class="fu">list</span>(<span class="at">Species =</span> <span class="fu">list</span>(<span class="at">a =</span> <span class="dv">1</span>, <span class="at">b =</span> <span class="dv">2</span>)))</span>
-<span id="cb34-14"><a href="#cb34-14"></a></span>
-<span id="cb34-15"><a href="#cb34-15"></a></span>
-<span id="cb34-16"><a href="#cb34-16"></a><span class="fu">lm</span>(Petal.Length <span class="sc">~</span> Species, iris_new, </span>
-<span id="cb34-17"><a href="#cb34-17"></a>        <span class="at">contrasts=</span><span class="fu">list</span>(<span class="at">Species =</span> <span class="fu">contr.sum</span>(<span class="dv">3</span>))) <span class="sc">%&gt;%</span> </span>
-<span id="cb34-18"><a href="#cb34-18"></a>  <span class="fu">summary.aov</span>(<span class="at">split =</span> <span class="fu">list</span>(<span class="at">Species =</span> <span class="fu">list</span>(<span class="at">a =</span> <span class="dv">1</span>, <span class="at">b =</span> <span class="dv">2</span>)))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb34"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a></a><span class="fu">lm</span>(Petal.Length <span class="sc">~</span> Species, iris_new, </span>
+<span id="cb34-2"><a></a>        <span class="at">contrasts=</span><span class="fu">list</span>(<span class="at">Species =</span> <span class="fu">contr.helmert</span>(<span class="dv">3</span>))) <span class="sc">%&gt;%</span> </span>
+<span id="cb34-3"><a></a>  <span class="fu">summary.aov</span>(<span class="at">split =</span> <span class="fu">list</span>(<span class="at">Species =</span> <span class="fu">list</span>(<span class="at">a =</span> <span class="dv">1</span>, <span class="at">b =</span> <span class="dv">2</span>)))</span>
+<span id="cb34-4"><a></a></span>
+<span id="cb34-5"><a></a></span>
+<span id="cb34-6"><a></a><span class="fu">lm</span>(Petal.Length <span class="sc">~</span> Species, iris_new, </span>
+<span id="cb34-7"><a></a>        <span class="at">contrasts=</span><span class="fu">list</span>(<span class="at">Species =</span> <span class="fu">contr.diff</span>(<span class="dv">3</span>))) <span class="sc">%&gt;%</span> </span>
+<span id="cb34-8"><a></a>  <span class="fu">summary.aov</span>(<span class="at">split =</span> <span class="fu">list</span>(<span class="at">Species =</span> <span class="fu">list</span>(<span class="at">a =</span> <span class="dv">1</span>, <span class="at">b =</span> <span class="dv">2</span>)))</span>
+<span id="cb34-9"><a></a></span>
+<span id="cb34-10"><a></a></span>
+<span id="cb34-11"><a></a><span class="fu">lm</span>(Petal.Length <span class="sc">~</span> Species, iris_new, </span>
+<span id="cb34-12"><a></a>        <span class="at">contrasts=</span><span class="fu">list</span>(<span class="at">Species =</span> <span class="fu">contr.treatment</span>(<span class="dv">3</span>))) <span class="sc">%&gt;%</span> </span>
+<span id="cb34-13"><a></a>  <span class="fu">summary.aov</span>(<span class="at">split =</span> <span class="fu">list</span>(<span class="at">Species =</span> <span class="fu">list</span>(<span class="at">a =</span> <span class="dv">1</span>, <span class="at">b =</span> <span class="dv">2</span>)))</span>
+<span id="cb34-14"><a></a></span>
+<span id="cb34-15"><a></a></span>
+<span id="cb34-16"><a></a><span class="fu">lm</span>(Petal.Length <span class="sc">~</span> Species, iris_new, </span>
+<span id="cb34-17"><a></a>        <span class="at">contrasts=</span><span class="fu">list</span>(<span class="at">Species =</span> <span class="fu">contr.sum</span>(<span class="dv">3</span>))) <span class="sc">%&gt;%</span> </span>
+<span id="cb34-18"><a></a>  <span class="fu">summary.aov</span>(<span class="at">split =</span> <span class="fu">list</span>(<span class="at">Species =</span> <span class="fu">list</span>(<span class="at">a =</span> <span class="dv">1</span>, <span class="at">b =</span> <span class="dv">2</span>)))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section></section>
 <section>
@@ -1592,7 +1600,7 @@ Species2      -5.382 0.14907223 -36.10330 5.858996e-75</code></pre>
 <section id="ボンフェロニ法" class="slide level2">
 <h2>ボンフェロニ法</h2>
 <div class="cell" data-hash="anova-slides_cache/revealjs/unnamed-chunk-46_03fe4d98932ca6009f47854c9dec57aa">
-<div class="sourceCode cell-code" id="cb35"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1"></a><span class="fu">pairwise.t.test</span>(iris_new<span class="sc">$</span>Petal.Length, iris_new<span class="sc">$</span>Species, <span class="at">p.adjust.method =</span> <span class="st">"bonferroni"</span> )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb35"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a></a><span class="fu">pairwise.t.test</span>(iris_new<span class="sc">$</span>Petal.Length, iris_new<span class="sc">$</span>Species, <span class="at">p.adjust.method =</span> <span class="st">"bonferroni"</span> )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
     Pairwise comparisons using t tests with pooled SD 
@@ -1611,7 +1619,7 @@ P value adjustment method: bonferroni </code></pre>
 <section id="ホルムボンフェロニ法" class="slide level2 scrollable">
 <h2>ホルム=ボンフェロニ法</h2>
 <div class="cell" data-hash="anova-slides_cache/revealjs/unnamed-chunk-47_3d0ca0105f57c6310725fa6b17f9a133">
-<div class="sourceCode cell-code" id="cb37"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb37-1"><a href="#cb37-1"></a><span class="fu">pairwise.t.test</span>(iris_new<span class="sc">$</span>Petal.Length, iris_new<span class="sc">$</span>Species, <span class="at">p.adjust.method =</span> <span class="st">"holm"</span> )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb37"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb37-1"><a></a><span class="fu">pairwise.t.test</span>(iris_new<span class="sc">$</span>Petal.Length, iris_new<span class="sc">$</span>Species, <span class="at">p.adjust.method =</span> <span class="st">"holm"</span> )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
     Pairwise comparisons using t tests with pooled SD 
@@ -1648,10 +1656,10 @@ virginica-versicolor 1.292 1.08822 1.49578     0</code></pre>
 <section id="シェッフェの方法" class="slide level2 scrollable">
 <h2>シェッフェの方法</h2>
 <div class="cell" data-hash="anova-slides_cache/revealjs/unnamed-chunk-49_f75d7a2c2d6b040533c94058c895914b">
-<div class="sourceCode cell-code" id="cb40"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb40-1"><a href="#cb40-1"></a>mout <span class="ot">=</span> <span class="fu">lm</span>(Petal.Length <span class="sc">~</span> Species, iris_new)</span>
-<span id="cb40-2"><a href="#cb40-2"></a>dferror <span class="ot">=</span> <span class="fu">df.residual</span>(mout); mserror <span class="ot">=</span> <span class="fu">deviance</span>(mout)<span class="sc">/</span>dferror; fc <span class="ot">=</span> <span class="fu">summary</span>(mout)<span class="sc">$</span>fstatistic</span>
-<span id="cb40-3"><a href="#cb40-3"></a>agricolae<span class="sc">::</span><span class="fu">scheffe.test</span>(<span class="fu">aov</span>(mout), <span class="at">trt =</span> <span class="st">"Species"</span>, <span class="co"># 因子</span></span>
-<span id="cb40-4"><a href="#cb40-4"></a>                        <span class="at">DFerror =</span> dferror, <span class="at">MSerror=</span>mserror, <span class="at">Fc =</span> fc, <span class="at">group =</span> T, <span class="at">console =</span> <span class="cn">TRUE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb40"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb40-1"><a></a>mout <span class="ot">=</span> <span class="fu">lm</span>(Petal.Length <span class="sc">~</span> Species, iris_new)</span>
+<span id="cb40-2"><a></a>dferror <span class="ot">=</span> <span class="fu">df.residual</span>(mout); mserror <span class="ot">=</span> <span class="fu">deviance</span>(mout)<span class="sc">/</span>dferror; fc <span class="ot">=</span> <span class="fu">summary</span>(mout)<span class="sc">$</span>fstatistic</span>
+<span id="cb40-3"><a></a>agricolae<span class="sc">::</span><span class="fu">scheffe.test</span>(<span class="fu">aov</span>(mout), <span class="at">trt =</span> <span class="st">"Species"</span>, <span class="co"># 因子</span></span>
+<span id="cb40-4"><a></a>                        <span class="at">DFerror =</span> dferror, <span class="at">MSerror=</span>mserror, <span class="at">Fc =</span> fc, <span class="at">group =</span> T, <span class="at">console =</span> <span class="cn">TRUE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
 Study: aov(mout) ~ "Species"
@@ -1685,8 +1693,8 @@ setosa            1.462      c</code></pre>
 <section id="ダネットの検定" class="slide level2">
 <h2>ダネットの検定</h2>
 <div class="cell" data-hash="anova-slides_cache/revealjs/unnamed-chunk-50_4cff7d20ed5208d8dc3c99e6e2bcdcfc">
-<div class="sourceCode cell-code" id="cb42"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb42-1"><a href="#cb42-1"></a>DescTools<span class="sc">::</span><span class="fu">DunnettTest</span>(Petal.Length <span class="sc">~</span> Species, <span class="at">data  =</span> iris_new,</span>
-<span id="cb42-2"><a href="#cb42-2"></a>                      <span class="at">control =</span> <span class="st">"versicolor"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb42"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb42-1"><a></a>DescTools<span class="sc">::</span><span class="fu">DunnettTest</span>(Petal.Length <span class="sc">~</span> Species, <span class="at">data  =</span> iris_new,</span>
+<span id="cb42-2"><a></a>                      <span class="at">control =</span> <span class="st">"versicolor"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
   Dunnett's test for comparing several treatments with a control :  
@@ -1719,7 +1727,7 @@ Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
 <h2>多重比較検定：誤った検定</h2>
 <p>分散分析の結果は：<span class="math inline">\(F_{(2, 27)} = 3.90, P = 0.0326\)</span> でした。<span class="math inline">\(\mu_A=\mu_B=\mu_C\)</span> を棄却しました。</p>
 <div class="cell" data-hash="anova-slides_cache/revealjs/unnamed-chunk-52_3016d8f30ad9c8e8e44a69dd94854f7c">
-<div class="sourceCode cell-code" id="cb44"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb44-1"><a href="#cb44-1"></a><span class="fu">pairwise.t.test</span>(X<span class="sc">$</span>data, X<span class="sc">$</span>site, <span class="at">p.adjust.method =</span> <span class="st">"none"</span> )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb44"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb44-1"><a></a><span class="fu">pairwise.t.test</span>(X<span class="sc">$</span>data, X<span class="sc">$</span>site, <span class="at">p.adjust.method =</span> <span class="st">"none"</span> )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
     Pairwise comparisons using t tests with pooled SD 
@@ -1739,7 +1747,7 @@ P value adjustment method: none </code></pre>
 <h2>多重比較検定：ボンフェロニ法</h2>
 <p>分散分析の結果は：<span class="math inline">\(F_{(2, 27)} = 3.90, P = 0.0326\)</span> でした。<span class="math inline">\(\mu_A=\mu_B=\mu_C\)</span> を棄却しました。</p>
 <div class="cell" data-hash="anova-slides_cache/revealjs/unnamed-chunk-53_ac479ce343f46e58a091708e76de66fc">
-<div class="sourceCode cell-code" id="cb46"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb46-1"><a href="#cb46-1"></a><span class="fu">pairwise.t.test</span>(X<span class="sc">$</span>data, X<span class="sc">$</span>site, <span class="at">p.adjust.method =</span> <span class="st">"bonferroni"</span> )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb46"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb46-1"><a></a><span class="fu">pairwise.t.test</span>(X<span class="sc">$</span>data, X<span class="sc">$</span>site, <span class="at">p.adjust.method =</span> <span class="st">"bonferroni"</span> )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
     Pairwise comparisons using t tests with pooled SD 
@@ -1759,7 +1767,7 @@ P value adjustment method: bonferroni </code></pre>
 <h2>多重比較検定：ボンフェロニ法</h2>
 <p>分散分析の結果は：<span class="math inline">\(F_{(2, 27)} = 3.90, P = 0.0326\)</span> でした。<span class="math inline">\(\mu_A=\mu_B=\mu_C\)</span> を棄却しました。</p>
 <div class="cell" data-hash="anova-slides_cache/revealjs/unnamed-chunk-54_f3cd351ca7e83eb06e21721833525f19">
-<div class="sourceCode cell-code" id="cb48"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb48-1"><a href="#cb48-1"></a><span class="fu">pairwise.t.test</span>(X<span class="sc">$</span>data, X<span class="sc">$</span>site, <span class="at">p.adjust.method =</span> <span class="st">"holm"</span> )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb48"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb48-1"><a></a><span class="fu">pairwise.t.test</span>(X<span class="sc">$</span>data, X<span class="sc">$</span>site, <span class="at">p.adjust.method =</span> <span class="st">"holm"</span> )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
     Pairwise comparisons using t tests with pooled SD 
@@ -1779,8 +1787,8 @@ P value adjustment method: holm </code></pre>
 <h2>多重比較検定：テューキーのHSD法</h2>
 <p>分散分析の結果は：<span class="math inline">\(F_{(2, 27)} = 3.90, P = 0.0326\)</span> でした。<span class="math inline">\(\mu_A=\mu_B=\mu_C\)</span> を棄却しました。</p>
 <div class="cell" data-hash="anova-slides_cache/revealjs/unnamed-chunk-55_b5dfca352192608343072940dd1624da">
-<div class="sourceCode cell-code" id="cb50"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb50-1"><a href="#cb50-1"></a>mout <span class="ot">=</span> <span class="fu">lm</span>(data <span class="sc">~</span> site, X) <span class="sc">%&gt;%</span> <span class="fu">aov</span>()</span>
-<span id="cb50-2"><a href="#cb50-2"></a><span class="fu">TukeyHSD</span>(mout)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb50"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb50-1"><a></a>mout <span class="ot">=</span> <span class="fu">lm</span>(data <span class="sc">~</span> site, X) <span class="sc">%&gt;%</span> <span class="fu">aov</span>()</span>
+<span id="cb50-2"><a></a><span class="fu">TukeyHSD</span>(mout)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>  Tukey multiple comparisons of means
     95% family-wise confidence level
@@ -1796,8 +1804,10 @@ C-B -0.5356154 -5.5861414  4.514911 0.9626557</code></pre>
 </div>
 <p>テューキーのHSD法のとき，<span class="math inline">\(\mu_A = \mu_B\)</span> を棄却できましたが，その他の ペアの帰無仮説を棄却できなかった。<strong>ところが，この解析手順に問題があります。このように，何度も多重仮説検定法を用いて，希望している結果がでるまでおこなうことは誤りです。この手法は P-fishing とよび，帰無仮説の有意性検定の概念に違反しています。</strong> 最初からテューキーのHSD法を使うべきでした。</p>
 
+<div class="quarto-auto-generated-content">
 <div class="footer footer-default">
 
+</div>
 </div>
 </section></section>
     </div>
@@ -1826,7 +1836,6 @@ C-B -0.5356154 -5.5861414  4.514911 0.9626557</code></pre>
       Reveal.initialize({
 'controlsAuto': true,
 'previewLinksAuto': false,
-'smaller': false,
 'pdfSeparateFragments': false,
 'autoAnimateEasing': "ease",
 'autoAnimateDuration': 1,
@@ -2125,10 +2134,9 @@ C-B -0.5356154 -5.5861414  4.514911 0.9626557</code></pre>
         // clear code selection
         e.clearSelection();
       });
-      function tippyHover(el, contentFn) {
+      function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
         const config = {
           allowHTML: true,
-          content: contentFn,
           maxWidth: 500,
           delay: 100,
           arrow: false,
@@ -2138,8 +2146,17 @@ C-B -0.5356154 -5.5861414  4.514911 0.9626557</code></pre>
           interactive: true,
           interactiveBorder: 10,
           theme: 'light-border',
-          placement: 'bottom-start'
+          placement: 'bottom-start',
         };
+        if (contentFn) {
+          config.content = contentFn;
+        }
+        if (onTriggerFn) {
+          config.onTrigger = onTriggerFn;
+        }
+        if (onUntriggerFn) {
+          config.onUntrigger = onUntriggerFn;
+        }
           config['offset'] = [0,0];
           config['maxWidth'] = 700;
         window.tippy(el, config); 

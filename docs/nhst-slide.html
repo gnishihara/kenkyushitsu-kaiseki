@@ -8,7 +8,7 @@
 <link href="site_libs/quarto-html/light-border.css" rel="stylesheet">
 <link href="site_libs/quarto-html/quarto-html.min.css" rel="stylesheet" data-mode="light">
 <link href="site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles"><meta charset="utf-8">
-  <meta name="generator" content="quarto-1.3.450">
+  <meta name="generator" content="quarto-1.4.549">
 
   <meta name="author" content="Greg Nishihara">
   <title>データ解析（研究室用） - 大数の法則と中心極限定理</title>
@@ -31,7 +31,7 @@
     }
     /* CSS for syntax highlighting */
     pre > code.sourceCode { white-space: pre; position: relative; }
-    pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+    pre > code.sourceCode > span { line-height: 1.25; }
     pre > code.sourceCode > span:empty { height: 1.2em; }
     .sourceCode { overflow: visible; }
     code.sourceCode > span { color: inherit; text-decoration: inherit; }
@@ -221,7 +221,8 @@
   }
 
   .callout.callout-titled .callout-body > .callout-content > :last-child {
-    margin-bottom: 0.5rem;
+    padding-bottom: 0.5rem;
+    margin-bottom: 0;
   }
 
   .callout.callout-titled .callout-icon::before {
@@ -400,7 +401,7 @@ Greg Nishihara
 </div>
 </div>
 
-  <p class="date">2023 / 09 / 24</p>
+  <p class="date">2024 / 04 / 07</p>
 </section>
 <section id="大数の法則" class="slide level2">
 <h2>大数の法則</h2>
@@ -497,13 +498,21 @@ P(\lim_{n\rightarrow\infty}\overline{X}=\mu)=1
 <div class="column" style="width:50%;">
 <div class="cell" data-hash="nhst-slide_cache/revealjs/unnamed-chunk-2_3c5b9263c15da450d1532d92ea10385a">
 <div class="cell-output-display">
+<div>
+<figure>
 <p><img data-src="nhst-slide_files/figure-revealjs/unnamed-chunk-2-1.png" width="576"></p>
+</figure>
+</div>
 </div>
 </div>
 </div><div class="column" style="width:50%;">
 <div class="cell" data-hash="nhst-slide_cache/revealjs/unnamed-chunk-3_cf586ced55677767da8e392e105b0864">
 <div class="cell-output-display">
+<div>
+<figure>
 <p><img data-src="nhst-slide_files/figure-revealjs/unnamed-chunk-3-1.gif"></p>
+</figure>
+</div>
 </div>
 </div>
 </div>
@@ -515,7 +524,11 @@ P(\lim_{n\rightarrow\infty}\overline{X}=\mu)=1
 <div class="column" style="width:50%;">
 <div class="cell" data-hash="nhst-slide_cache/revealjs/unnamed-chunk-4_4aa4fa749bca77cf7d9bf18203519cb7">
 <div class="cell-output-display">
+<div>
+<figure>
 <p><img data-src="nhst-slide_files/figure-revealjs/unnamed-chunk-4-1.png" width="576"></p>
+</figure>
+</div>
 </div>
 </div>
 </div><div class="column" style="width:50%;">
@@ -526,10 +539,10 @@ P(\lim_{n\rightarrow\infty}\overline{X}=\mu)=1
 </ul>
 <p><strong>R Code for the pseudo-random values from the normal distribution</strong></p>
 <div class="cell" data-hash="nhst-slide_cache/revealjs/unnamed-chunk-5_b33a4f7c3ba0bddef591238db26809ba">
-<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1"></a>mu <span class="ot">=</span> <span class="dv">10</span>              <span class="co"># 真の平均値</span></span>
-<span id="cb1-2"><a href="#cb1-2"></a>sd <span class="ot">=</span> <span class="dv">10</span>              <span class="co"># 真の標準偏差</span></span>
-<span id="cb1-3"><a href="#cb1-3"></a>n <span class="ot">=</span> <span class="dv">5</span>                <span class="co"># データ回数</span></span>
-<span id="cb1-4"><a href="#cb1-4"></a>m <span class="ot">=</span> <span class="fu">rnorm</span>(n, mu, sd) <span class="co"># 正規分布の疑似乱数</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a></a>mu <span class="ot">=</span> <span class="dv">10</span>              <span class="co"># 真の平均値</span></span>
+<span id="cb1-2"><a></a>sd <span class="ot">=</span> <span class="dv">10</span>              <span class="co"># 真の標準偏差</span></span>
+<span id="cb1-3"><a></a>n <span class="ot">=</span> <span class="dv">5</span>                <span class="co"># データ回数</span></span>
+<span id="cb1-4"><a></a>m <span class="ot">=</span> <span class="fu">rnorm</span>(n, mu, sd) <span class="co"># 正規分布の疑似乱数</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </div>
 </div>
@@ -577,7 +590,11 @@ P(\lim_{n\rightarrow\infty}\overline{X}=\mu)=1
 </div><div class="column" style="width:50%;">
 <div class="cell" data-hash="nhst-slide_cache/revealjs/clt-animation-prep_a655320301b6995ef67bfb1c5534195b">
 <div class="cell-output-display">
+<div>
+<figure>
 <p><img data-src="nhst-slide_files/figure-revealjs/clt-animation-prep-1.png" style="width:80.0%"></p>
+</figure>
+</div>
 </div>
 </div>
 </div>
@@ -597,7 +614,11 @@ P(\lim_{n\rightarrow\infty}\overline{X}=\mu)=1
 <div class="column" style="width:50%;">
 <div class="cell" data-hash="nhst-slide_cache/revealjs/unnamed-chunk-6_e580357b161c9ef2a2d29aa8cd34b981">
 <div class="cell-output-display">
+<div>
+<figure>
 <p><img data-src="nhst-slide_files/figure-revealjs/unnamed-chunk-6-1.png" width="960"></p>
+</figure>
+</div>
 </div>
 </div>
 </div><div class="column" style="width:50%;">
@@ -785,7 +806,7 @@ P(\lim_{n\rightarrow\infty}\overline{X}=\mu)=1
 <section id="type-i-and-ii-error-correctly-rejecting-a-test" class="slide level2">
 <h2>Type-I and II error: Correctly rejecting a test</h2>
 
-<img data-src="nhst-slide_files/figure-revealjs/unnamed-chunk-10-1.png" width="844" class="r-stretch quarto-figure-center"><aside class="notes">
+<img data-src="nhst-slide_files/figure-revealjs/unnamed-chunk-10-1.png" class="quarto-figure quarto-figure-center r-stretch" width="844"><aside class="notes">
 <p><a href="https://www.ncbi.nlm.nih.gov/pmc/articles/PMC2816758/">Biau et al.&nbsp;2010. Clin. Orthop. Relat. Res. 468: 885-892.</a></p>
 <p>Fig. 2 of Biau et al.&nbsp;2010 is wrong, since if the Type-I error rate decreases, then the Type-II error rate increases.</p>
 <p>There is a false impression that if experiments are conducted with a low Type I error, then significant results almost always corresponds to a true effect.</p>
@@ -864,7 +885,11 @@ P(\lim_{n\rightarrow\infty}\overline{X}=\mu)=1
 <div class="column" style="width:50%;">
 <div class="cell" data-hash="nhst-slide_cache/revealjs/unnamed-chunk-11_b1538ebbd0ccc4f990dc35a34cd607ac">
 <div class="cell-output-display">
+<div>
+<figure>
 <p><img data-src="nhst-slide_files/figure-revealjs/unnamed-chunk-11-1.png" width="960"></p>
+</figure>
+</div>
 </div>
 </div>
 </div><div class="column" style="width:50%;">
@@ -888,7 +913,7 @@ mean in group A mean in group B
 <li><span class="math inline">\(H_1: \overline{\mu_A}\neq\overline{\mu_B}~:\text{Alternative hypothesis}\)</span></li>
 <li>True standard deviation：<span class="math inline">\(\sigma_A=\sigma_B\)</span></li>
 <li>True mean: <span class="math inline">\(\overline{\mu_A}=10\)</span> and <span class="math inline">\(\overline{\mu_B}=12\)</span></li>
-<li>In this case, <span class="math inline">\(P = 0.1466 \nless \alpha = 0.05\)</span></li>
+<li>In this case, <span class="math inline">\(P = 0.1466  \nless \alpha = 0.05\)</span></li>
 </ul>
 </div>
 </div>
@@ -918,14 +943,20 @@ mean in group A mean in group B
 </div><div class="column" style="width:50%;">
 <div class="cell" data-hash="nhst-slide_cache/revealjs/unnamed-chunk-13_d699e9b95b9f1d05147f5439c0a0c952">
 <div class="cell-output-display">
+<div>
+<figure>
 <p><img data-src="nhst-slide_files/figure-revealjs/unnamed-chunk-13-1.png" width="960"></p>
+</figure>
+</div>
 </div>
 </div>
 </div>
 </div>
 
+<div class="quarto-auto-generated-content">
 <div class="footer footer-default">
 
+</div>
 </div>
 </section></section>
     </div>
@@ -954,7 +985,6 @@ mean in group A mean in group B
       Reveal.initialize({
 'controlsAuto': true,
 'previewLinksAuto': false,
-'smaller': false,
 'pdfSeparateFragments': false,
 'autoAnimateEasing': "ease",
 'autoAnimateDuration': 1,
@@ -1253,10 +1283,9 @@ mean in group A mean in group B
         // clear code selection
         e.clearSelection();
       });
-      function tippyHover(el, contentFn) {
+      function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
         const config = {
           allowHTML: true,
-          content: contentFn,
           maxWidth: 500,
           delay: 100,
           arrow: false,
@@ -1266,8 +1295,17 @@ mean in group A mean in group B
           interactive: true,
           interactiveBorder: 10,
           theme: 'light-border',
-          placement: 'bottom-start'
+          placement: 'bottom-start',
         };
+        if (contentFn) {
+          config.content = contentFn;
+        }
+        if (onTriggerFn) {
+          config.onTrigger = onTriggerFn;
+        }
+        if (onUntriggerFn) {
+          config.onUntrigger = onUntriggerFn;
+        }
           config['offset'] = [0,0];
           config['maxWidth'] = 700;
         window.tippy(el, config); 
