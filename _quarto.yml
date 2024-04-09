@@ -16,6 +16,7 @@ project:
     - sakuma-drops.qmd
     - piping.qmd
     - descriptive_statistics-slide.qmd
+    - openwater_nep_method.qmd
 
 
 website:
@@ -56,7 +57,9 @@ website:
         - ttest-slides.qmd
         - nhst-slide.qmd
         - anova-slides.qmd
-
+      - section: 研究室用
+        contents: 
+        - openwater_nep_method.qmd
 format:
   html:
     theme: [ cosmo, custom.scss]

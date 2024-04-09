@@ -1,0 +1,476 @@
+---
+title: "有川湾の地図"
+format: 
+  html:
+    html-math-method: katex
+    code-fold: true
+    df-print: paged
+reference-location: margin
+citation-location: margin
+bibliography: references.bib
+---
+
+# 必要なパッケージ
+
+パッケージはここで読み込む。
+
+```{r}
+library(tidyverse)
+library(sf)
+library(ggpubr)
+library(ggspatial)
+library(magick)
+library(ggrepel)
+library(showtext)
+library(gnnlab)
+library(ggsflabel)
+library(patchwork)
+```
+
+図とフォントの設定をする。
+
+```{r}
+Sys.setlocale("LC_TIME", "en_US.UTF-8")
+font_add_google("Noto Sans JP", "notosans")
+theme_gray(base_size = 30, base_family = "notosans") |> theme_set()
+showtext_auto()
+```
+
+# 全国地図データ
+
+地図データは研究室のサーバーにあります。
+まず、範囲的に狭くて、地形の細かい地図をつくります。
+
+```{r}
+filename = "~/Lab_Data/Japan_map_data/Japan/todofuken.rds"
+ghigh = read_rds(filename) |>
+  st_transform(st_crs(2450)) # CRS は 2450 で.
+
+toget = "長崎"
+ghigh = ghigh |> filter(str_detect(N03_001, toget))
+```
+
+調査地点の緯度経度は、グーグルマップにピンをたてて調べた.
+このとき CRS は一旦 4326 にしよう.
+
+
+::: {.callout-note}
+CRSには **地理座標系** と **投影座標系** の2種類があります。
+座標系にはEPSGコードもつけられています。
+
+* EPSG Code: 4326 CRS: WGS84 
+* EPSG Code: 6668 CRS: JGD2011
+* EPSG Code: 6677 CRS: JGD2011 / Japan Plane Rectangular CS IX
+
+最初２つの単位は　degrees だたが、最後のは meters です。
+:::
+
+沿岸線だけのデータ.
+
+```{r}
+#| eval: false
+fname = "~/Lab_Data/Japan_map_data/GSI/coastl_jpn.shp"
+glow = 
+  st_read(fname) |>
+  st_transform(st_crs(2450)) |> summarise()
+
+```
+
+
+次のデータは陸域を色塗できるが、北方領土は含まれていない.
+EPSG 2450 は JGD2000 / Japan Plane Rectangular CS VIII です。
+
+```{r}
+#| eval: false
+fname = "~/Lab_Data/Japan_map_data/gadm36_JPN_2_sf.rds"
+glow = 
+  read_rds(fname) |>
+  st_transform(st_crs(2450)) |> summarise()
+```
+
+有川湾の位置情報を準備する。
+tibble には google map の位置情報（GPS)をいれました。
+Google map の位置情報は EPSG 4326 ですので、後での 2450 に変換する必要があります。
+
+```{r}
+jpn4326 = tibble(long = c(134.50064258737686),
+                 lat = c(35.55559885171853)) |>
+  st_as_sf(coords = c("long", "lat"),
+           crs = st_crs(4326),
+           agr = "constant")
+jpn2450 = 
+  jpn4326 |> 
+  st_transform(crs = st_crs(2450))
+```
+
+ここでは地図を表示する範囲を決定する。
+
+```{r}
+jpn2450cent = jpn2450 |> st_buffer(dist = 1000000)
+jpn2450box = jpn2450cent |> st_bbox()
+```
+
+次は有川湾のデータを準備する。
+
+
+
+元になるデータはここから。
+
+```{r}
+fname = "~/Lab_Data/tanimaes/share_files/kamigoto_report_2022/"
+dset_nnm = dir(fname, full = T, pattern = "dset_50.+.rds")
+```
+
+横浦の定点はここで設定する。
+
+```{r}
+ari4326 = tibble(
+  station = str_c("St.", 1:7),
+  long = c(
+    129.11801934274172,
+    129.1184700774443,
+    129.11904476419005,
+    129.1184954312713,
+    129.11888982413603,
+    129.1190982889792,
+    129.12016878394536
+  ),
+  lat = c(
+    32.98801913636207,
+    32.98802149929502,
+    32.987945885409275,
+    32.988449189116935,
+    32.9885744238659,
+    32.98911553046403,
+    32.98760798505502
+  )
+) |>
+  st_as_sf(coords = c("long", "lat"),
+           crs = st_crs(4326),
+           agr = "constant")
+```
+
+
+```{r}
+st_info = read_rds(dset_nnm[3]) |>
+  add_row(
+    location = "naname",
+    station = as_factor(6),
+    long = 129.0886920203674,
+    lat = 32.983698798553874,
+    label = "St.6"
+  ) |>
+  add_row(
+    location = "naname",
+    station = as_factor(4),
+    long = 129.08872763540384,
+    lat = 32.98377724863941,
+    label = "St.4"
+  ) |>
+  mutate(station = as.double(station))
+
+st_info = st_info |> filter(!(str_detect(location, "nana") &
+                                station == 4)) |> distinct()
+
+st_info = st_info |>
+  st_as_sf(coords = c("long", "lat"),
+           crs = st_crs(4326),
+           agr = "constant")
+```
+
+
+マップを作図するとき、面積や距離を調べるときなどは、 CRS を 2450 に変える.
+
+```{r}
+ari2450 = ari4326 |> st_transform(crs = st_crs(2450))
+naname2450 = st_info |> filter(str_detect(location, "nana")) |> st_transform(crs = st_crs("EPSG:6690"))
+yokoura2450 = st_info |> filter(!str_detect(location, "nana")) |> st_transform(crs = st_crs("EPSG:6690"))
+```
+
+
+```{r}
+# 地図の範囲を決定. ------------------------------------------------------------
+
+# 調査地点の位置情報を１つのポリゴンにまとめ、そのポリゴンの重心を求める.
+ari2450cent = ari2450 |> st_union() |> st_centroid()
+
+# 調査地点の重心にバッファーをもたせる.
+ari2450cent1 = ari2450cent |> st_buffer(dist = 20000)
+ari2450cent2 = ari2450cent |> st_buffer(dist = 150)
+
+naname2450cent = naname2450 |> st_buffer(dist = 50)
+yokoura2450cent = yokoura2450 |> st_buffer(dist = 50)
+
+# バッファーの領域から、図の幅をもとめる.
+ari2450box1 = ari2450cent1 |> st_bbox()
+ari2450box2 = ari2450cent2 |> st_bbox()
+
+naname2450box = naname2450cent |> st_bbox()
+yokoura2450box = yokoura2450cent |> st_bbox()
+```
+
+
+```{r}
+sitedata = tibble(
+  location = c("yokoura", "naname"),
+  label = c("横浦", "七目"),
+  lat = c(32.98823666829777, 32.98379888412241),
+  long = c(129.11806840839094, 129.0887698387881)
+) |> 
+  st_as_sf(coords = c("long", "lat"),
+         crs = st_crs(4326),
+         agr = "constant")
+
+
+oceandata = tibble(
+  location = c("arikawabay", "eastchinasea", "gotonada"),
+  label = c("有川湾", "東シナ海", "五島灘"),
+  lat = c(33.05, 33.05, 32.85),
+  long =c(129.15, 128.95, 129.15)
+) |> 
+  st_as_sf(coords = c("long", "lat"),
+           crs = st_crs(4326),
+           agr = "constant")
+
+sitedata2450 = sitedata |> st_transform(crs = st_crs(2450))
+
+
+```
+
+
+## 全国
+
+色は次のサイトを参考にした (https://ironodata.info).
+
+```{r}
+SEACOLOR = "#006fc5"
+LANDCOLOR = "gray80"
+BOXCOLOR = "#C4000D"
+STCOLOR = "#C4B700"
+
+jpmap = glow |> 
+  ggplot() + 
+  geom_sf(fill = LANDCOLOR, color = "transparent") +
+  geom_sf(
+    data = ari2450cent,
+    color = BOXCOLOR,
+    fill = "transparent",
+    shape = 21,
+    stroke = 1,
+    size = 10
+  ) +
+  coord_sf(
+    xlim = c(jpn2450box[1], jpn2450box[3]),
+    ylim = c(jpn2450box[2], jpn2450box[4])
+  ) +
+  theme_minimal() +
+  theme(
+    panel.background = element_rect(fill = SEACOLOR),
+    panel.border = element_rect(color = SEACOLOR, fill = "transparent"),
+    # panel.grid = element_line(color = SEACOLOR),
+    axis.text = element_text(color = "black", face = "bold"),
+    axis.title.x = element_blank(),
+    axis.title.y = element_blank()
+  )
+```
+
+```{r}
+jpmap
+```
+
+## 調査地点の図
+
+
+
+```{r}
+boxdata = bind_rows(naname = c(naname2450box), 
+          yokoura = c(yokoura2450box), .id = "location") |> 
+  mutate(text = c("七目", "横浦"))
+
+gotomap = ghigh |>
+  ggplot() + geom_sf(fill = LANDCOLOR, color = "transparent") +
+  geom_sf_text(
+    aes(label = label),
+    data = oceandata,
+    family = "notosans",
+    fontface = "bold",
+    color = LANDCOLOR,
+    size = 3,
+    vjust =0.5, 
+    hjust = 0.5) +
+  geom_sf_label_repel(
+    aes(label = label),
+    data = sitedata2450,
+    min.segment.length = 0,
+    point.padding = unit(2.5, "mm"),
+    segment.color = BOXCOLOR,
+    fill = STCOLOR,
+    color = "black",
+    family = "notosans",
+    fontface = "bold",
+    size = 5,
+    box.padding = 1,
+    seed = 2024
+  ) +
+  geom_sf(
+    data = sitedata2450,
+    color = BOXCOLOR,
+    fill = STCOLOR,
+    shape = 1,
+    size = 4
+  ) +
+  coord_sf(
+    xlim = c(ari2450box1[1], ari2450box1[3]),
+    ylim = c(ari2450box1[2], ari2450box1[4])
+  ) +
+  theme_minimal() +
+  theme(
+    panel.background = element_rect(fill = SEACOLOR),
+    panel.border = element_rect(color = SEACOLOR, fill = "transparent"),
+    # panel.grid = element_line(color = STCOLOR),
+    axis.text = element_text(color = "black", face = "bold"),
+    axis.title.x = element_blank(),
+    axis.title.y = element_blank()
+  )
+```
+
+
+```{r}
+yokouramap = ghigh |>
+  st_transform(crs = st_crs("EPSG:6690")) |>
+  ggplot() + geom_sf(fill = LANDCOLOR, color = "transparent") +
+  geom_sf_label_repel(
+    aes(label = station),
+    data = yokoura2450,
+    min.segment.length = 0,
+    fill = STCOLOR,
+    color = "black",
+    family = "notosans",
+    fontface = "bold",
+    size = 5,
+    box.padding = 1,
+    seed = 2024
+  ) +
+  geom_sf(
+    data = yokoura2450,
+    color = "black",
+    fill = STCOLOR,
+    shape = 21,
+    size = 4
+  ) +
+  coord_sf(
+    xlim = c(yokoura2450box[1], yokoura2450box[3]),
+    ylim = c(yokoura2450box[2], yokoura2450box[4])
+  ) +
+  geom_text(aes(x = xmax, 
+                y = ymax, 
+                label = text),
+            data = boxdata |> filter(str_detect(location, "yoko")),
+            family = "notosans",
+            fontface = "bold",
+            color = LANDCOLOR,
+            size = 9,
+            vjust = 1, 
+            hjust = 1) +
+  annotation_scale(pad_x = unit(0.01, "npc"),
+                   pad_y = unit(0.01, "npc"),
+                   height = unit(1, "char"),
+                   bar_cols = c(STCOLOR, SEACOLOR),
+                   line_width = 1,
+                   text_cex = 1,
+                   text_pad = unit(0.5, "char"),
+                   text_family = "notosans",
+                   text_face = "bold") +
+  theme_minimal() +
+  theme(
+    panel.background = element_rect(fill = SEACOLOR),
+    panel.border = element_rect(color = SEACOLOR, fill = "transparent"),
+    panel.grid = element_line(color = SEACOLOR),
+    # axis.text = element_text(face = "bold"),
+    axis.text = element_blank(),
+    axis.title = element_blank()
+  )
+```
+
+
+```{r}
+nanamemap = ghigh |>
+  st_transform(crs = st_crs("EPSG:6690")) |>
+  ggplot() + geom_sf(fill = LANDCOLOR, color = "transparent") +
+  geom_sf_label_repel(
+    aes(label = station),
+    data = naname2450,
+    min.segment.length = 0,
+    fill = STCOLOR,
+    color = "black",
+    family = "notosans",
+    fontface = "bold",
+    size = 5,
+    box.padding = 2
+  ) +
+  geom_sf(
+    data = naname2450,
+    color = "black",
+    fill = STCOLOR,
+    shape = 21,
+    size = 4
+  ) +
+  coord_sf(
+    xlim = c(naname2450box[1], naname2450box[3]),
+    ylim = c(naname2450box[2], naname2450box[4])
+  ) +
+  geom_text(aes(x = xmax, 
+                y = ymax, 
+                label = text),
+            data = boxdata |> filter(str_detect(location, "nana")),
+            family = "notosans",
+            fontface = "bold",
+            color = LANDCOLOR,
+            size = 9,
+            vjust = 1, 
+            hjust = 1) +
+  annotation_scale(pad_x = unit(0.01, "npc"),
+                   pad_y = unit(0.01, "npc"),
+                   height = unit(1, "char"),
+                   bar_cols = c(STCOLOR, SEACOLOR),
+                   line_width = 1,
+                   text_cex = 1,
+                   text_pad = unit(0.5, "char"),
+                   text_family = "notosans",
+                   text_face = "bold") +
+  theme_minimal() +
+  theme(
+    panel.background = element_rect(fill = SEACOLOR),
+    panel.border = element_rect(color = SEACOLOR, fill = "transparent"),
+    panel.grid = element_line(color = SEACOLOR),
+    # axis.text = element_text(face = "bold"),
+    axis.text = element_blank(),
+    axis.title = element_blank()
+  )
+```
+
+
+```{r}
+figuremap = jpmap + gotomap + yokouramap + nanamemap + plot_layout(ncol = 4)
+
+wh = aseries(3)
+save_plot(
+  "./poster/images/study-map.pdf",
+  plot = figuremap,
+  width = wh[2],
+  height = wh[1],
+  density = 300
+)
+```
+
+
+```{r}
+pdfname =   "./poster/images/study-map.pdf"
+pngname = str_replace(pdfname, "pdf", "png")
+
+image_read_pdf(pdfname, density = 600) |> 
+  image_trim() |> 
+  image_border(color = "white", geometry = "50x50") |> 
+  image_write(pngname, format = "png")
+```
+
