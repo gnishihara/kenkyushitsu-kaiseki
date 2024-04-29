@@ -1,5 +1,7 @@
 ---
 title: "研究室と講義の R コード"
+execute: 
+  cache: false
 ---
 
 ```{r}
