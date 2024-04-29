@@ -1,0 +1,480 @@
+---
+title: "研究室の作図法"
+format: 
+  html:
+    html-math-method: katex
+    code-fold: false
+    df-print: paged
+reference-location: margin
+citation-location: margin
+---
+
+研究室の図を評価化してほしいので次のコードを紹介します。
+ではパッケージの読み込みと作図環境を整えましょう。
+
+## Load packages
+
+```{r}
+library(tidyverse)
+library(lubridate)
+library(patchwork)
+library(ggpubr)
+library(ggtext)
+library(lemon)
+library(ggrepel)
+library(showtext)
+library(magick)
+```
+
+これで Google fonts からフォントをダウンロードできます。
+このとき、ネットへつなげる必要があります。
+Noto Sans は英語のフォントですが、
+Noto Sans JP は日本語のフォントです。
+図に日本語を入れたい場合は、日本語フォントの読み込みが必要です。
+
+```{r}
+font_add_google(name = "Noto Sans",
+                family = "notosans")
+font_add_google(name = "Noto Sans JP",
+                family = "notosansjp")
+```
+
+フォントを読み込んだら、図のデフォルトの設定を変えます。
+ここでは `ggpubr` のパッケージから `theme_pubr()` をデフォルト
+に設定しますが、そのときに、
+フォントサイズ `base_size` と
+使用するフォント `base_family` を
+していします。
+`theme_set()` はデフォルトテーマ設定用関数です。
+
+```{r}
+theme_pubr(base_size = 12,
+           base_family = "notosans") |> 
+  theme_set()
+```
+
+次に `theme_pubr()` をちょっとだけ修正します。
+図の背景を白に設定し、図に黒い枠をつけます。
+黒い枠を追加したので、軸の線を外します。
+凡例の背景とタイトルも外します。
+
+```{r}
+theme_pubr() |> 
+  theme_replace(
+    panel.background = element_rect(
+      fill = "white",
+      color = "black",
+      linewidth = 1
+    ),
+    axis.line = element_blank(),
+    legend.background = element_blank(),
+    legend.title = element_blank()
+  )
+```
+
+テーマの設定を適応するためには、次のコードを実行します。
+
+```{r}
+showtext_auto()
+```
+
+## データの読み込み
+
+今回の図は形上湾の予備データを用います。
+データは研究室のサーバにあるので、次のようコードを実行して、
+データを読み込みましょう。
+`read_rds()` の後の `print()` は読み込んだデータの最初の３行を
+コンソールに表示するために追加したが、なくてもいいです。
+
+```{r}
+fname = "~/Lab_Data/standardized_figures/allcarbondata.rds"
+dset = read_rds(fname) |> print(n = 3)
+```
+
+## 作図例その 1
+
+図の軸にはタイトルと関係する単位を必ず追加しましょう。
+もっと合理的な方法として、軸タイトルのオブジェクトをつくことです。
+ここでは、`xlabel` と `ylabel` のオブジェクトを作りました。
+x 軸に当てた変数には単位はありません。
+でも、y 軸の変数には単位が必要です。
+
+まずは箱ひげ図を作ります。
+ところが @fig-figure-01 の見た目がわるい。
+y 軸に範囲を調整して、全てのデータを囲むようにしましょう。
+2群のデータしかないので、わざわざいろで分ける必要はないですが、
+せっかくなので、色分けもしましょう (@fig-figure-02)。
+
+```{r}
+#| label: fig-figure-01
+#| fig-cap: 初期の図
+xlabel = "State"
+ylabel = "Organic carbon content (%)"
+ggplot() + 
+  geom_boxplot(
+    aes(
+      x = Mapping,
+      y = OC,
+    ),
+    data = dset
+  ) +
+  scale_x_discrete(name = xlabel) +
+  scale_y_continuous(name = ylabel)
+```
+
+ここで @fig-figure-01 を修正しました。
+軸と凡例が重複しているので、どちらかを外してもいいとおもいます。
+
+```{r}
+#| label: fig-figure-02
+#| fig-cap: 色の追加、縦軸範囲の調整
+
+xlabel = "State"
+ylabel = "Organic carbon content (%)"
+ylimits = c(0, 6)
+ggplot() + 
+  geom_boxplot(
+    aes(
+      x = Mapping,
+      y = OC,
+      color = Mapping
+    ),
+    data = dset
+  ) +
+  scale_x_discrete(name = xlabel) +
+  scale_y_continuous(name = ylabel,　limits = ylimits) +
+  scale_color_viridis_d(end = 0.9) 
+```
+
+
+@fig-figure-03 は @fig-figure-02 から凡例を外しました。
+`geom_boxplot()` に `show.legend = F` を渡せば、
+その geom の凡例を隠すようにできます。
+
+```{r}
+#| label: fig-figure-03
+#| fig-cap: 凡例を外した。
+
+xlabel = "State"
+ylabel = "Organic carbon content (%)"
+ylimits = c(0, 6)
+ggplot() + 
+  geom_boxplot(
+    aes(
+      x = Mapping,
+      y = OC,
+      color = Mapping
+    ),
+    data = dset,
+    show.legend = F
+  ) +
+  scale_x_discrete(name = xlabel) +
+  scale_y_continuous(name = ylabel,　limits = ylimits) +
+  scale_color_viridis_d(end = 0.9) 
+```
+
+では @fig-figure-03 が完成したので、この図をファイルに保存します。
+ここで重要なのは保存方法です。
+できる限りフォントの大きさを変えずに図を保存しましょう。
+
+最もいい方法は、pdf ファイルへの保存です。
+その後、png ファイルに変換すれば、とても整った使いやすい
+画像ができあがります。
+
+まず保存したい図をオブジェクトに書き込みます。
+この図は `plot1` にいれました。
+
+```{r}
+xlabel = "State"
+ylabel = "Organic carbon content (%)"
+ylimits = c(0, 6)
+plot1 =
+  ggplot() +
+  geom_boxplot(aes(x = Mapping,
+                   y = OC,
+                   color = Mapping),
+               data = dset,
+               show.legend = F) +
+  scale_x_discrete(name = xlabel) +
+  scale_y_continuous(name = ylabel,　limits = ylimits) +
+  scale_color_viridis_d(end = 0.9)
+```
+
+保存先のファイル名を指定します。
+```{r}
+pdfname = "figure01.pdf"
+pngname = str_replace(pdfname, "pdf", "png")
+```
+
+次に図の寸法を指定します。
+研究室用パッケージ `gnnlab` に `aseries()` の関数があります。
+この関数は A判の用紙サイズの寸法を返してくれます。
+
+例えば A4 なら次のように関数をつかいます。
+
+```{r}
+gnnlab::aseries(4)
+```
+
+レポートなどを作るなら、A7 (74 mm &times; 105 mm) はちょうどいいサイズです。
+まず、PDF ファイルとして保存します。
+
+```{r}
+wh = gnnlab::aseries(7)
+
+ggsave(filename = pdfname, 
+       plot = plot1,
+       width = wh[1],
+       height = wh[1],
+       units = "mm")
+```
+
+その次に、PDF ファイルを PNG ファイルに変換します。
+このとき、PDF ファイルを読み込んだときに、解像度を指定できます。
+デフォルトは `density = 300` ですが、もしも `density = 150` の
+PNG ファイルに保存したいのであれば、次のように実行しましょう。
+
+```{r}
+image_read_pdf(pdfname, density = 150) |> 
+  image_write(pngname)
+```
+
+::: {#fig-final01}
+
+```{r}
+#| echo: false
+image_read(pngname)
+```
+
+PNG ファイルに保存した図 (`density = 150`)。
+:::
+
+## 作図その 2
+
+図に特殊な記号や文字の書式を工夫したいなら、`ggtext` のパッケージをつかいましょう。
+次の図は 有機炭素の面積あたりの量とその t 検定の結果を示す図を作ります。
+
+軽いデータ処理をします。
+
+```{r}
+dset = dset |> 
+  mutate(ccm2 = carbon_content / ((1.5 / 100)^2 * pi)) |> 
+  mutate(ccm2 = ccm2 / 1000)
+```
+
+次は t 検定を実施します。
+
+```{r}
+t.test(ccm2 ~ Mapping, data = dset) 
+```
+
+t検定の結果を後で使いたいので、次のように結果を tibble 化をします。
+
+```{r}
+tout = 
+  t.test(ccm2 ~ Mapping, data = dset) |> 
+  broom::tidy() |> 
+  print()
+```
+
+t 検定の結果の文字列を作って、tibble にします。
+
+```{r}
+textout = 
+  sprintf("t<sub>(%0.1f)</sub> = %0.2f (P = %0.4f)",
+          tout$parameter,
+          abs(tout$statistic),
+          tout$p.value) |> print()
+textdf1 = 
+  tibble(x = "Seagrass",
+         y = 3,
+         l = textout)
+```
+
+::: {.callout-note}
+# 出力文字列の書式設定について
+
+`sprintf()` は文字列を出力するための関数ですが、変数を渡して
+他の文字列と組み合わせることができます。
+このとき `%` と変換指定子を使って書式の設定をします。
+
+構造は次のよう通りです： `%(フラグ)(フィールド幅.精度)変換指定子` 
+
+**フラグ**
+
+* `-` 左詰め（デフォルトは右詰め）
+* `+` 符号付き（デフォルトは負のときのみ）
+* `0` フィールド幅未満の場合はゼロで埋める（）
+
+**変更指定子**
+
+* `d` 整数
+* `f` 実数
+* `s` 文字列
+
+ちなみに % を出力したいときは、 %% を記述しましょう。
+
+:::
+
+
+```{r}
+#| label: fig-figure02-02
+#| fig-cap: 面積あたりの有機炭素量
+xlabel = "State"
+ylabel = "Organic carbon density (g m<sup>-2</sup>)"
+plot2 = 
+  ggplot() + 
+  geom_boxplot(
+    aes(
+      x = Mapping,
+      y = ccm2,
+      color = Mapping
+    ),
+    data = dset,
+    show.legend = F
+  ) +
+  geom_point(
+    aes(
+      x = Mapping,
+      y = ccm2,
+      fill = Mapping
+    ),
+    data = dset,
+    shape = 21,
+    size = 3,
+    alpha = 0.25,
+    stroke = 0.1,
+    color = "white",
+    position = position_jitter(0.2),
+    show.legend = F
+  ) +
+  geom_richtext(
+    aes(
+      x = x, 
+      y = y,
+      label = l
+    ), 
+    data = textdf1,
+    family = "notosans",
+    color = "transparent",
+    fill = "transparent",
+    text.color = "black",
+    size = 3, 
+    nudge_x = -0.5,
+    vjust = 1,
+    hjust = 0.5
+  ) +
+  scale_x_discrete(name = xlabel) +
+  scale_y_continuous(name = ylabel,
+                     limits = c(0, 3)) +
+  scale_color_viridis_d(end = 0.9) +
+  scale_fill_viridis_d(end = 0.9) +
+  theme(
+    axis.title.y = element_markdown()
+  )
+```
+
+::: {.callout-note}
+# 図の中の文字列の書式について
+
+`ggtext` パッケージを読み込めば、
+`ggplot` に markdown, HTML, CSS の一部の機能を使えます。
+ここでは文字を上付きや下付きにするために使っています。
+
+* 下付き `CO<sub>2</sub>` は CO~2~ になります。
+* 上付き `m<sup>-2</sup>` は m^-2^ になります。
+* イタリック体 `<i>Sargassum horneri</i>`　は *Sargassum horneri*
+* 改行は `<br>` のタグでできます。
+
+:::
+
+図を保存して、解像度 300 で読みここ見ます。
+
+```{r}
+pdfname = "figure02.pdf"
+pngname = str_replace(pdfname, "pdf", "png")
+
+gnnlab::aseries(4) # A4 サイズ
+wh = gnnlab::aseries(7)
+
+ggsave(filename = pdfname, 
+       plot = plot2,
+       width = wh[1],
+       height = wh[1],
+       units = "mm")
+
+image_read_pdf(pdfname, density = 300) |> 
+  image_write(pngname)
+```
+
+
+::: {#fig-final02}
+
+```{r}
+#| echo: false
+image_read(pngname)
+```
+
+PNG ファイルに保存した図 (`density = 300`)。
+:::
+
+
+図を発表スライドに合わせたいなら、`wh = c(192.0, 108.0)` にします、
+
+```{r}
+pdfname = "figure03.pdf"
+pngname = str_replace(pdfname, "pdf", "png")
+
+wh = c(192.0, 108,0)
+
+ggsave(filename = pdfname, 
+       plot = plot2,
+       width = wh[1],
+       height = wh[2],
+       units = "mm")
+
+image_read_pdf(pdfname, density = 300) |> 
+  image_write(pngname)
+```
+
+
+::: {#fig-final03}
+
+```{r}
+#| echo: false
+image_read(pngname)
+```
+
+スライド１面に合わせた PNG ファイルに保存した図 (`density = 300`)。
+:::
+
+
+スライドの半面に合わせた図。
+
+```{r}
+pdfname = "figure04.pdf"
+pngname = str_replace(pdfname, "pdf", "png")
+
+wh = c(192.0, 108,0)
+
+ggsave(filename = pdfname, 
+       plot = plot2,
+       width = wh[1]/2,
+       height = wh[2],
+       units = "mm")
+
+image_read_pdf(pdfname, density = 300) |> 
+  image_write(pngname)
+```
+
+
+::: {#fig-final04}
+
+```{r}
+#| echo: false
+image_read(pngname)
+```
+
+スライド半面に合わせた PNG ファイルに保存した図 (`density = 300`)。
+:::
+

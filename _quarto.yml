@@ -17,6 +17,7 @@ project:
     - piping.qmd
     - descriptive_statistics-slide.qmd
     - openwater_nep_method.qmd
+    - standardize_figures.qmd
 
 
 website:
@@ -60,6 +61,7 @@ website:
       - section: 研究室用
         contents: 
         - openwater_nep_method.qmd
+        - standardize_figures.qmd
 format:
   html:
     theme: [ cosmo, custom.scss]
