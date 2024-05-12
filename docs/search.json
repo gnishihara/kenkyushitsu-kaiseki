@@ -95,7 +95,7 @@
     "text": "A juvenile Sargassum macrocarpum",
     "crumbs": [
       "基礎統計学用スライド",
-      "Comparing two groups"
+      "2群の分析（t 検定）"
     ]
   },
   {
@@ -106,7 +106,7 @@
     "text": "A random sample\n\n\n\n\nTable 1: Size (mm) of juvenile Sargassum macrocarpum（ノコギリモク）.\n\n\n\n\n  \n\n\n\n\n\n\n\nThe table shows two groups of 6 juvenile Sargassum macrocarpum (ノコギリモク) that were sampled randomly. The two groups of juveniles are from two sites, A and B.\nEach sample is given an sample I.D. of 1 to 6.\nThese data were generated with the R function with a true mean (\\(\\mu\\)) of 20 and 22 for site A and B, respectively. The true standard deviation (\\(\\sigma\\)) is 1 and 1 for site A and B, respectively.",
     "crumbs": [
       "基礎統計学用スライド",
-      "Comparing two groups"
+      "2群の分析（t 検定）"
     ]
   },
   {
@@ -117,7 +117,7 @@
     "text": "Let’s compare the two groups\n\n\n\n\n\n\n\n\n\n\n\n\nThe mean (\\(\\overline{x}\\)), standard deviation (\\(s\\)), and the standard error (s.e.) for juvenile S. macrocarpum from site A and B are:\n\n\\(\\overline{x}_A=\\) 20.033, \\(s_A=\\) 1.003, and s.e. = 0.41\n\\(\\overline{x}_B=\\) 22.25 and \\(s_B=\\) 0.971, and s.e. = 0.396",
     "crumbs": [
       "基礎統計学用スライド",
-      "Comparing two groups"
+      "2群の分析（t 検定）"
     ]
   },
   {
@@ -128,7 +128,7 @@
     "text": "What is our question?\n\nIf we want to statistically compare the size from the two sites, we need a question (i.e., a working hypothesis).\n\n\nWorking hypothesis (作業仮設): The size (width) of juvenile S. macrocarpum collected from site A and B are different.\n\n\nWe know that the means for site A and B are different, but the standard deviations and standard errors are similar.\n\n\\(\\overline{x}_A=\\) 20.033; \\(s=\\) 1.003; s.e. = 0.41\n\\(\\overline{x}_B=\\) 22.25; \\(s=\\) 0.971; s.e. = 0.396",
     "crumbs": [
       "基礎統計学用スライド",
-      "Comparing two groups"
+      "2群の分析（t 検定）"
     ]
   },
   {
@@ -139,7 +139,7 @@
     "text": "Define our hypotheses\nLet’s formally define our statistical hypotheses.\n\n\\(H_0\\) (null hypothesis 帰無仮説): There is no difference in the paired values.\n\\(H_A\\) (alternative hypothesis 対立仮設): There is a difference in the paired values.\n\nOther alternative hypotheses\n\n\\(H_P\\) (alternative hypothesis): The difference in paired values is positive.\n\\(H_N\\) (alternative hypothesis): The difference in paired values is negative.\n\n\nImportant: We can define an infinite number of hypotheses.\nThe most common alternative hypothesis is a test for an effect. For example, \\(H_0\\): there is no effect. \\(H_A\\): There is an effect.\nNote: hypotheses is the plural form (複数形) of hypothesis.",
     "crumbs": [
       "基礎統計学用スライド",
-      "Comparing two groups"
+      "2群の分析（t 検定）"
     ]
   },
   {
@@ -150,7 +150,7 @@
     "text": "Calculate the size differences among pairs\nAssume that we can compare the paired differences (e.g., \\(x_{A,1} - x_{B,1}\\), \\(x_{A,2} - x_{B,2}\\), \\(x_{A,3} - x_{B,3}\\), \\(\\cdots\\), \\(x_{A,6} - x_{B,6}\\)).",
     "crumbs": [
       "基礎統計学用スライド",
-      "Comparing two groups"
+      "2群の分析（t 検定）"
     ]
   },
   {
@@ -161,7 +161,7 @@
     "text": "Recall the hypotheses\nThe two statistical hypotheses that we defined were:\n\n\\(H_0\\): There is no difference in the paired values.\n\\(H_A\\): There is a difference in the paired values.\n\nThe mean difference (\\(\\overline{x}_{A-B}\\)) is -2.217, the standard deviation (\\(s_{A-B}\\)) is 1.289, and the standard error (\\(\\text{s.e.}_{A-B}\\)) is 0.526\nNote: The true difference \\(\\mu_{A-B}\\) is -2, the true standard deviation \\(\\sigma_A = \\sigma_B\\) is 1.\n\nIf the samples can be paired, then the differences between site A and B are easy to determine.\nTherefore, it is easy to calculate the mean, standard deviation, and standard error.\n\\[\n\\begin{aligned}\n\\overline{x} &= \\frac{1}{n}\\sum x \\qquad \\text{mean} \\\\\ns &= \\sqrt{\\frac{1}{n-1} \\sum \\left(x-\\overline{x}\\right)^2} \\qquad \\text{standard deviation} \\\\\n\\text{s.e.} &= \\frac{s}{\\sqrt{n}} \\qquad \\text{standard error of the}\n\\end{aligned}\n\\]\nHow do we statistically test if the differences are significant?",
     "crumbs": [
       "基礎統計学用スライド",
-      "Comparing two groups"
+      "2群の分析（t 検定）"
     ]
   },
   {
@@ -172,7 +172,7 @@
     "text": "Distribution of the mean\nRecall that the central limit theorem (中心極限定理) states that the distribution of the mean has a Gaussian (normal) distribution (正規分布).\n\n\n\n\n\n\n\n\n\n\n\n\n\n\\(\\overline{x}_{A-B} =\\) -2.217 (mean)\n\\(s_{A-B}=\\) 1.289 (standard deviation)\ns.e.A-B = 0.526 (standard error)\n\nThe shaded area is the 95% probability region. The width of the shaded area is called a confidence interval (信頼区間). If the significance level (有意水準) is \\(\\alpha = 0.05\\), then the confidence interval is called a 95% confidence interval (95% 信頼区間).\n\n\n\nThe green vertical line is the sample mean (\\(\\overline{x}\\)).\nThe thick line and the shaded region indicates the 95% confidence interval of the sample mean.\nThe thin line indicates a Gaussian distribution with a sample mean of -2.217.\nThe standard deviation is 0.526, which is the standard error of the mean.\nWe use the standard error because we are interested in the distribution of the mean values. If we were interested in the distribution of the observations, then we would use the standard deviation.\nSince the value of zero is not included in the 95% confidence interval, we can reject the null hypothesis that \\(\\overline{x}_A = \\overline{x}_B\\) or \\(x_{A-B}=0\\).\nSo what is a confidence interval (信頼区間)?",
     "crumbs": [
       "基礎統計学用スライド",
-      "Comparing two groups"
+      "2群の分析（t 検定）"
     ]
   },
   {
@@ -183,7 +183,7 @@
     "text": "Developing the confidence interval\nThe confidence interval is an interval \\([l, u]\\) with a lower bound of \\(l\\) and an upper bound of \\(u\\).\nFor a probability \\(1-\\alpha\\), the interval \\([l, u]\\) for \\(x\\) is\n\\[\nP(l \\le x \\le u) = 1-\\alpha\n\\] If \\(\\overline{x}\\) is a sample mean, then the z-score (z値) is\n\\[\nz = \\frac{\\overline{x}-\\mu}{\\sigma}\n\\]\nwhere \\(\\mu\\) is the population mean and \\(\\sigma\\) is the population standard deviation. Then, to find \\(l\\) and \\(u\\), we need to solve\n\\[\nP(l \\le z \\le u) = 1-\\alpha\n\\]\nfor the interval \\([l, u]\\) of \\(z\\) given a probability of \\(1-\\alpha\\).",
     "crumbs": [
       "基礎統計学用スライド",
-      "Comparing two groups"
+      "2群の分析（t 検定）"
     ]
   },
   {
@@ -194,7 +194,7 @@
     "text": "Central limit theorem (中心極限定理)\nRecall that the central limit theorem states that:\n\\[\n\\lim_{n\\rightarrow\\infty} \\sqrt{n}\\overbrace{\\left(\\frac{\\overline{x}_n-\\mu}{\\sigma}\\right)}^{z}  \\xrightarrow{d} N(0, 1)\n\\]\nTherefore, for \\(\\alpha = 0.05\\), we can define an \\([l, u]\\)\n\\[\nP\\left(l \\le z \\le u \\right) = 1-0.05 = 0.95\n\\]\nFor the standard normal distribution (\\(N(0,1)\\))\n\n\\(l\\) is the \\(\\alpha/2=0.05/2=0.025\\) quantile.\n\\(u\\) is the \\(1-\\alpha/2=1-0.05/2=0.975\\) quantile.\n\n\nThe z-score appears in the definition of the central limit theorem.\n\\[\nz = \\frac{\\overline{x}-\\mu}{\\sigma}\n\\]\nAs the number of samples increase, the distribution of \\(\\sqrt{n}\\left(\\frac{\\overline{x}_n-\\mu}{\\sigma}\\right)\\) converges to a standard normal distribution.\nThe symbol \\(\\xrightarrow{d}\\) in the model means, “converges in distribution.”\nThere are many different types of intervals.\n\nrange (レンジ・範囲)\nprediction interval (予測区間)\ncredible interval (信用区間)\n\nThe confidence interval provides information about the precision of our estimate of the mean.\nThe confidence interval is also a range of observations defined by the quantile of a distribution. For the mean values, a normal distribution is usually assumed because mean values follow the central limit theorem.\nHow do we find the \\(l\\) and \\(u\\) quantiles?",
     "crumbs": [
       "基礎統計学用スライド",
-      "Comparing two groups"
+      "2群の分析（t 検定）"
     ]
   },
   {
@@ -205,7 +205,7 @@
     "text": "Determining the lower and upper quantiles of \\(N(0, 1)\\)\n\nNote that \\([-1 s, 1 s]\\) is the 68.3% interval, \\([-2 s, 2 s]\\) is the 95.4% interval, and \\([-3 s, 3 s]\\) is the 99.7% interval.\n\nThe 50%, 68.3%, 95%, and 99% confidence intervals are indicated by the shaded region.\nThe shaded area indicates the probability.\nAlong the x-axis are the z-scores or a multiple of the standard deviation.",
     "crumbs": [
       "基礎統計学用スライド",
-      "Comparing two groups"
+      "2群の分析（t 検定）"
     ]
   },
   {
@@ -216,7 +216,7 @@
     "text": "Table of quantiles for \\(N(0, 1)\\)\n\n\n\n\n\nSignificance level, α\nConfidence interval (%)\n± quantile\n\n\n\n\n0.500\n50.000\n0.674\n\n\n0.317\n68.269\n1.000\n\n\n0.200\n80.000\n1.282\n\n\n0.100\n90.000\n1.645\n\n\n0.050\n95.000\n1.960\n\n\n0.046\n95.450\n2.000\n\n\n0.025\n97.500\n2.241\n\n\n0.003\n99.730\n3.000\n\n\n0.000\n99.994\n4.000",
     "crumbs": [
       "基礎統計学用スライド",
-      "Comparing two groups"
+      "2群の分析（t 検定）"
     ]
   },
   {
@@ -227,7 +227,7 @@
     "text": "Calculating the confidence interval\nLet \\(x = \\overline{x}_{A-B} =\\) -2.217, \\(s = \\text{s.e.} =\\) 0.526, \\(\\sigma_A = \\sigma_B =\\) 1, and and \\(\\alpha = 0.05\\).\n\\[\nP\\left(l \\le \\frac{\\overline{x}-\\mu}{\\sigma}\\le u\\right) = 1-\\alpha = 0.95\n\\]\n\\[\nP\\left(\\overline{x} +l \\sigma \\le \\mu \\le \\overline{x} + u\\sigma\\right) = 1-\\alpha = 0.95\n\\]\nWhen \\(\\alpha= 0.05\\), the \\(l\\) and \\(u\\) quantiles are \\(l=\\) -1.96 and \\(u=\\) 1.96, and \\(\\sigma = 1\\).\n\\[\nP(\n-2.217 +  -1.96 \\times 1\n\\le x \\le\n-2.217 +  1.96 \\times 1\n)\n\\]\n\\[\nP(\n-4.177\n\\le x \\le\n-0.257\n) = 0.95\n\\]\nThe 95% confidence interval of \\(\\overline{x}=\\) -2.217 is \\([-4.177, -0.257 ]\\).",
     "crumbs": [
       "基礎統計学用スライド",
-      "Comparing two groups"
+      "2群の分析（t 検定）"
     ]
   },
   {
@@ -238,7 +238,7 @@
     "text": "Confidence intervals for each experiment when \\(\\sigma\\) is known\n\n\\(\\sigma_A = \\sigma_B=\\) 1, \\(H_0:\\) \\(\\overline{x}_A = \\overline{x}_B\\) or \\(\\overline{x}_{A-B}=0\\)",
     "crumbs": [
       "基礎統計学用スライド",
-      "Comparing two groups"
+      "2群の分析（t 検定）"
     ]
   },
   {
@@ -249,7 +249,7 @@
     "text": "How often does the confidence interval contain 0?\n\n\n\n\n\n\n\n\n\n\n\n\n\nThe true difference is -2, therefore \\(H_0\\) is false.\nIf we do not reject \\(H_0\\), we are making a Type-II Error (第2種の誤り).\nThe 95% confidence intervals of 8 experiments include 0.\nThe error rate is \\(\\beta=\\) 8 / 20 = 0.4 or 40%.\nThe power of this analysis (\\(1 - \\beta\\)) is 0.6",
     "crumbs": [
       "基礎統計学用スライド",
-      "Comparing two groups"
+      "2群の分析（t 検定）"
     ]
   },
   {
@@ -260,7 +260,7 @@
     "text": "We made some wrong assumptions\nThe z-score when population mean \\(\\mu\\) and population standard deviation \\(\\sigma\\) is known follows a standard normal distribution.\n\\[\nz = \\frac{\\overline{x} - \\mu}{\\sigma}\\sim N(0,1)\n\\] However, if you do not know the population standard deviation, we must calculate the t-value.\n\\[\nt_{\\overline{x}} = \\frac{\\overline{x} - x_0}{s.e.} = \\frac{\\overline{x} - x_0}{s / \\sqrt{n}}\n\\]\nWhich follows a t-distribution. \\(x_0\\) is a constant, and is often set to zero.",
     "crumbs": [
       "基礎統計学用スライド",
-      "Comparing two groups"
+      "2群の分析（t 検定）"
     ]
   },
   {
@@ -271,7 +271,7 @@
     "text": "Determining the lower and upper quantiles of \\(t(d.f.)\\)?\n\nNote that the degrees-of-freedom (d.f., 自由度) for the t-distribution is \\(N -1\\) = 5.",
     "crumbs": [
       "基礎統計学用スライド",
-      "Comparing two groups"
+      "2群の分析（t 検定）"
     ]
   },
   {
@@ -282,7 +282,7 @@
     "text": "Table of quantiles for \\(t(d.f. = 5)\\)\n\n\n\nQuantiles of the t distribution for d.f. = 5.\n\n\n\n\n\n\n\nSignificance level, \\(\\alpha\\)\nConfidence interval (%)\n\\(\\pm\\) quantile\n\n\n\n\n0.500\n50.000\n0.727\n\n\n0.363\n63.678\n1.000\n\n\n0.200\n80.000\n1.476\n\n\n0.102\n89.806\n2.000\n\n\n0.100\n90.000\n2.015\n\n\n0.050\n95.000\n2.571\n\n\n0.030\n96.990\n3.000\n\n\n0.025\n97.500\n3.163\n\n\n0.010\n98.968\n4.000",
     "crumbs": [
       "基礎統計学用スライド",
-      "Comparing two groups"
+      "2群の分析（t 検定）"
     ]
   },
   {
@@ -293,7 +293,7 @@
     "text": "Confidence intervals for each experiment when \\(\\sigma\\) is unknown\n\n\\(H_0:\\) \\(\\overline{x}_A = \\overline{x}_B\\) or \\(\\overline{x}_{A-B}=0\\)\n\nThis figure shows 20 sample means and their confidence intervals. The dashed horizontal line indicates zero and the solid horizontal line indicates the true difference 0.\nThe dots indicate the sample mean and the vertical lines indicate the range of the 95% confidence interval.\nThe green symbols indicates that the interval includes the true mean.\nOut of 20 trials, the 95% confidence included the true difference 19 times.\nWhat does the confidence interval mean?\nA 95% confidence interval implies that after 100 experiments, about 95 of the confidence intervals will include the true mean.\n\nIt does not mean that the true mean is in the interval.\nIt does not mean that there is a 95% chance that the true mean in in the interval, since the size of the confidence interval varies with the sample.\nIt also does not mean that there is a 95% chance that the mean of the next experiment will be in the confidence interval.",
     "crumbs": [
       "基礎統計学用スライド",
-      "Comparing two groups"
+      "2群の分析（t 検定）"
     ]
   },
   {
@@ -304,7 +304,7 @@
     "text": "How often does the confidence interval contain 0?\n\n\n\n\n\n\n\n\n\n\n\n\n\nThe true difference is -2, therefore \\(H_0\\) is false.\nIf we do not reject \\(H_0\\), we are making a Type-II Error (第2種の誤り).\nThe 95% confidence intervals of 5 experiments include 0. So for 5 experiments, we do not reject \\(H_0\\).\nThe error rate is \\(\\beta=\\) 5 / 20 = 0.25 or 25%.\nThe power of this analysis (\\(1 - \\beta\\)) is 0.75\n\n\n\n\nThese are informal ways of testing differences, howerver in practice we use more sophisticated formalized methods.",
     "crumbs": [
       "基礎統計学用スライド",
-      "Comparing two groups"
+      "2群の分析（t 検定）"
     ]
   },
   {
@@ -315,7 +315,7 @@
     "text": "The paired t-test\n\nType-II error rate \\(\\beta\\) = 5 / 20 = 25% and power (\\(1-\\beta\\)) is 0.75.",
     "crumbs": [
       "基礎統計学用スライド",
-      "Comparing two groups"
+      "2群の分析（t 検定）"
     ]
   },
   {
@@ -326,7 +326,7 @@
     "text": "t-test (unpaired assuming unequal variance)\n\nType-II error rate \\(\\beta\\) = 1 / 20 = 5% and power (\\(1-\\beta\\)) is 0.95.",
     "crumbs": [
       "基礎統計学用スライド",
-      "Comparing two groups"
+      "2群の分析（t 検定）"
     ]
   },
   {
@@ -337,7 +337,7 @@
     "text": "The null hypothesis of the t-test\n\\(H_0\\) null hypothesis (帰無仮説): \\(\\overline{x}_A - \\overline{x}_B = \\overline{x}_{A-B}=0\\)",
     "crumbs": [
       "基礎統計学用スライド",
-      "Comparing two groups"
+      "2群の分析（t 検定）"
     ]
   },
   {
@@ -348,7 +348,7 @@
     "text": "Paired t-test\nPaired t-test (対応ありのt検定)\nWe need to calculate the t-value, which is the statistic for the t-test.\n\\[\nt^* = \\frac{\\overline{x}_{A-B} - \\mu}{s_{A-B} / \\sqrt{n}}\n\\]\nAnd determine the degrees-of-freedom (自由度) which is \\(n-1\\).\nUsed when observations can be paired. For example the length of the left and right fin of a fish.",
     "crumbs": [
       "基礎統計学用スライド",
-      "Comparing two groups"
+      "2群の分析（t 検定）"
     ]
   },
   {
@@ -359,7 +359,7 @@
     "text": "Independent two sample t-test\nThere are two versions.\n\n\nEqual variance (等分散)\n\\[\nt^* = \\frac{\\overline{x}_A - \\overline{x}_B}{s_p \\sqrt{1 / n_A + 1/n_B}}\n\\] \\[\ns_p = \\sqrt{\n\\frac{(n_A-1)s_A^2 + (n_B-1)s_B^2}\n{n_A + n_B -2}}\n\\] Degrees-of-freedom is \\(n_A + n_B - 2\\).\n\nUnequal variance, Welch’s t-test (ウェルチのt検定)\n\\[\nt^* = \\frac{\\overline{x}_A - \\overline{x}_B}{s_p}\n\\]\n\\[\ns_p = \\sqrt{\n\\frac{s_A^2}{n_A} +\n\\frac{s_B^2}{n_B}}\n\\] Degrees-of-freedom is calculated with the Welch-Satterthwaite Equation.\n\n\n\\(s\\) is the sample standard deviation. \\(n\\) is the number of samples. \\(\\overline{x}\\) is the mean. \\(t^*\\) is the t-value.",
     "crumbs": [
       "基礎統計学用スライド",
-      "Comparing two groups"
+      "2群の分析（t 検定）"
     ]
   },
   {
@@ -370,7 +370,7 @@
     "text": "Welch-Satterthwaite Equation\n\\[\n\\text{degrees-of-freedom} =\n\\frac{\n\\left(\\frac{s_A^2}{n_A} + \\frac{s_B^2}{n_B}\\right)^2\n}\n{\\frac{\\left(s_A^2 / n_A\\right)^2}{n_A-1} + \\frac{\\left(s_B^2 / n_B\\right)^2}{n_B-1}}\n\\]",
     "crumbs": [
       "基礎統計学用スライド",
-      "Comparing two groups"
+      "2群の分析（t 検定）"
     ]
   },
   {
@@ -381,7 +381,7 @@
     "text": "The unpaired t-test\n\n\n\\[\n\\begin{aligned}\nt^* &= \\frac{\\overline{x}_{A-B} - \\mu}{s_{A-B} / \\sqrt{n}} \\\\\nt^* &= \\frac{-2.467}{2.642 / \\sqrt{6}} \\\\\nt^* &= -2.287\n\\end{aligned}\n\\]\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\\(\\overline{x}_{A-B}=\\) -2.467\n\\(\\mu=0\\)\n\\(n\\) = 6\n\\(s_{A-B}=\\) 2.642\n\n\n\n\\(\\alpha\\) = 0.05\nt-value: -2.287\nOne-sided P-value: 0.035\nTwo-sided P-value: 0.071\n\n\n\nThe juvenile S. macrocarpum size observations cannot be paired, so this is the wrong test.",
     "crumbs": [
       "基礎統計学用スライド",
-      "Comparing two groups"
+      "2群の分析（t 検定）"
     ]
   },
   {
@@ -392,7 +392,7 @@
     "text": "The correct test is Welch’s t-test\n\n\n\\[\n\\begin{aligned}\nt^* &= \\frac{\\overline{x}_A -\\overline{x}_B}{s_p} \\\\\ns_p &= \\sqrt{\\frac{s_A^2}{n_A} + \\frac{s_B^2}{n_B}} \\\\\ns_p &= \\sqrt{\\frac{1.995^2}{6} + \\frac{1.961^2}{6}} \\\\\nt^* &= \\frac{10.05 - 12.517}{1.142} \\\\\nt^* &= -2.16 \\\\\n\\text{d.f.} &= 9.997\n\\end{aligned}\n\\]\n\n\n\n\n\n\n\n\n\n\n\n\\(\\alpha\\) = 0.05\nt-value: -2.16\nOne-sided P-value: 0.028\nTwo-sided P-value: 0.056\n\n\n\nThe P-value decreases, but \\(0.056 \\ge \\alpha= 0.05\\). We can’t reject \\(H_0\\).",
     "crumbs": [
       "基礎統計学用スライド",
-      "Comparing two groups"
+      "2群の分析（t 検定）"
     ]
   },
   {
@@ -403,7 +403,7 @@
     "text": "Behavior of the t-test (equal variance)\n\nIncreasing the number of observations decrease the Type-II error rate and increases the power of the test. The Type-I error rate is fixed at \\(\\alpha=0.05\\).\n\nThe true mean (\\(\\mu\\)) is for site A and B is 20 and 22, respectively. The true standard deviation (\\(\\sigma\\)) for site A and B is 1 and 1, respectively.\nFor each sample size of {2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 142, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, and 16} a total of 2000 simulated samples were created.\nWhen the sample size (\\(N\\)) is small, the Type-II error rate is high and the power of the t-test is low.\nIncreasing the sample size increases the power of the t-test and decreases the Type-II error rate.\nWhen the \\(N\\) = 6, the Type-II error rate is 0.138 and the power of the t-test is 0.862.\nWhen the \\(N\\) = 10, the Type-II error rate is 0.011 and the power of the t-test is 0.99.\nThe Type-I error rate is predefined and does not change with the number of observations.",
     "crumbs": [
       "基礎統計学用スライド",
-      "Comparing two groups"
+      "2群の分析（t 検定）"
     ]
   },
   {
@@ -414,7 +414,7 @@
     "text": "Behavior of the t-test (unequal variance)\n\nUnbalanced variances (\\(s^2\\)) increase the risk of a Type-II error rate (\\(\\beta\\)) and decrease the power (\\(1-\\beta\\)) of the t-test. The Type-I error rate is fixed at \\(\\alpha=0.05\\).\n\nThe true mean (\\(\\mu\\)) is for site A and B is 20 and 22, respectively. The true standard deviation (\\(\\sigma\\)) for site A is 1 and for site B is \\(k\\times\\sigma_B\\), respectively. \\(k\\) is a multiplier.\nWhen the standard deviations (variances) are not equal, the Type-II error rate and power of the t-test varies.\nWhen \\(s_A / s_B \\rightarrow\\infty\\), the Type-II error rate increases and the power decreases.\nWhen the sample size is high, the t-test is less sensitive to unequal variances.\nThe Type-I error rate is predefined and does not change with the number of observations.",
     "crumbs": [
       "基礎統計学用スライド",
-      "Comparing two groups"
+      "2群の分析（t 検定）"
     ]
   },
   {
@@ -425,7 +425,7 @@
     "text": "Welch’s t-test R code\n\nCodeOutput\n\n\n\nlibrary(tidyverse)\nA = c(9.8,11.1,10.7,10.7,11.8,6.2)\nB = c(12.5,13.8,12.0,15.5,9.8,11.5)\ndata = tibble(A, B)\ndata = data %&gt;% pivot_longer(cols = c(A,B))\nt.test(value ~ name, data = data) # ウェルチ t 検定\n# t.test(A, B) # Alternative method\n\n# two-sample, equal variance t-test (等分散 t 検定)\n# t.test(value ~ name, data = data, var.equal = TRUE) \n\nWelch’s t-test does not require equal variances or equal sample size.\nThe two-sample t-test requires equal variances.\n\n\n\n\n\n    Welch Two Sample t-test\n\ndata:  value by name\nt = -2.16, df = 9.9971, p-value = 0.05612\nalternative hypothesis: true difference in means between group A and group B is not equal to 0\n95 percent confidence interval:\n -5.01124979  0.07791646\nsample estimates:\nmean in group A mean in group B \n       10.05000        12.51667",
     "crumbs": [
       "基礎統計学用スライド",
-      "Comparing two groups"
+      "2群の分析（t 検定）"
     ]
   },
   {
@@ -1591,7 +1591,7 @@
     "text": "What is RDA\n\n\nRedundancy analysis (RDA)1 a canonical ordination2 method and is one type of asymmetric canonical analysis3 that is used to analyze two data tables simultaneously. In RDA we are interested in how the environmental data \\((\\mathbf{X})\\) influences ordination of the observation data \\((\\mathbf{Y})\\). Recall that PCA is an unconstrained ordination4.\n\n\n\n\n\n\n\n\n\n\n\n\n冗長性分析制約付き序列化非対称直接傾度分析制約なし序列化",
     "crumbs": [
       "Multivariate",
-      "Redundancy Analysis"
+      "冗長性解消（RDA）"
     ]
   },
   {
@@ -1602,7 +1602,7 @@
     "text": "Asymmetric canonical analysis\n\n\nRDA (Redundancy analysis)\n\nEach canonical axis corresponds to a direction that is most related to linear combinations1 of variables in \\(\\mathbf{X}\\).\nTwo ordinations\n\nLinear combinations of \\(\\mathbf{Y}\\).\nLinear combinations of \\(\\mathbf{\\hat{Y}}\\).\n\nPreserves the Euclidean distance2 among objects.\n\n\nCCA (Canonical correspondence analysis)3\n\nSimlar to RDA, except CCA preserves the \\(\\chi^2\\) distance between objects\n\nLDA (Linear discriminant analysis)4\n\n\\(\\mathbf{Y}\\) is divided in to \\(k\\) groups described by a factor.\nSearches for the linear combinations in \\(\\mathbf{X}\\) that can explain the groups by maximizing the dispersion of the centroids of groups.\n\n\n\n線型結合ユークリッド距離正準対応分析線形判別分析",
     "crumbs": [
       "Multivariate",
-      "Redundancy Analysis"
+      "冗長性解消（RDA）"
     ]
   },
   {
@@ -1613,7 +1613,7 @@
     "text": "Approaches to analyze community data\n\nUse DCA to choose RDA or CCA.\n\n\nIf the length of the first DCA axis &gt; 4 use CCA.\nIf the length of the first DCA axis &gt; 3 use RDA.\nIf the length is between 3 and 4, use either CCA or RDA.\n\n\nIf you transform the \\(\\mathbf{Y}\\),\n\n\nDo not apply DCA.\nChoose RDA for the analysis.\n\n\nUse distance-based RDA.",
     "crumbs": [
       "Multivariate",
-      "Redundancy Analysis"
+      "冗長性解消（RDA）"
     ]
   },
   {
@@ -1624,7 +1624,7 @@
     "text": "RDA preparation\n\nEach variable in \\(\\mathbf{Y}\\) and \\(\\mathbf{X}\\) should be centered (i.e., have means of zero).\nEach variable in \\(\\mathbf{Y}\\) and \\(\\mathbf{X}\\) should be standardized (i.e., divide by the standard deviation).\nCheck for multi-collinearity among \\(\\mathbf{X}\\).\n\n\n\nIn otherwords, determine the z-score \\((z = (x - \\overline{x}) \\big/ s)\\).",
     "crumbs": [
       "Multivariate",
-      "Redundancy Analysis"
+      "冗長性解消（RDA）"
     ]
   },
   {
@@ -1635,7 +1635,7 @@
     "text": "RDA Algorithm\n\nMultiple regression \\(\\mathbf{Y} \\sim \\mathbf{X}\\)\nPCA on the expected value of \\(\\mathbf{Y}\\) determined from the multiple regression (i.e., \\(\\mathbf{\\hat{Y}}\\))\nPCA on the residuals of the multiple regression \\(\\mathbf{Y_{res}} = \\mathbf{Y} - \\mathbf{\\hat{Y}}\\)",
     "crumbs": [
       "Multivariate",
-      "Redundancy Analysis"
+      "冗長性解消（RDA）"
     ]
   },
   {
@@ -1646,7 +1646,7 @@
     "text": "Observation data \\((\\mathbf{Y})\\)\nThe presence-absence community matrix1 is a series of zeros and ones to indicate absence and presence, respectively.\nThe dimensions of the matrix (rows and columns).\n\n\nseaweed |&gt; dim() \n\n\n[1] 147 108\n\n\n\nExample of some data points.\n\nseaweed[3:5, 3:5]\n\n# A tibble: 3 × 3\n  `Colpomenia-spp` `Dictyota-spiralis` `Gelidium-spp`\n             &lt;dbl&gt;               &lt;dbl&gt;          &lt;dbl&gt;\n1                0                   1              1\n2                0                   0              1\n3                0                   0              1\n\n\n在不在群集行列",
     "crumbs": [
       "Multivariate",
-      "Redundancy Analysis"
+      "冗長性解消（RDA）"
     ]
   },
   {
@@ -1657,7 +1657,7 @@
     "text": "Hellinger transform\nIf we are interested in changes of relative species occurrence, then one good transformation is the Hellinger transform. The Hellinger transform is the square root of each element in a row divided by its row-sum.\n\\[\ny\\prime_{ij} = \\sqrt{\\frac{y_{ij}}{\\sum y_{i}}}\n\\]\n\nY = decostand(seaweed, \"hellinger\")\n\n\nY[3:5, 3:5]\n\n  Colpomenia-spp Dictyota-spiralis Gelidium-spp\n3              0         0.2294157    0.2294157\n4              0         0.0000000    0.2182179\n5              0         0.0000000    0.2182179\n\n\n\nsqrt(seaweed[3:5, 3:5] / rowSums(seaweed)[3:5])\n\n  Colpomenia-spp Dictyota-spiralis Gelidium-spp\n1              0         0.2294157    0.2294157\n2              0         0.0000000    0.2182179\n3              0         0.0000000    0.2182179",
     "crumbs": [
       "Multivariate",
-      "Redundancy Analysis"
+      "冗長性解消（RDA）"
     ]
   },
   {
@@ -1668,7 +1668,7 @@
     "text": "Standardize environmental data\nThe environmental variables should be standardized (i.e, find the z-score).\n\\[\nz = \\frac{x - \\bar{x}}{s}\n\\] where \\(x\\) is the value, \\(\\bar{x}\\) is the mean value of \\(x\\), and \\(s\\) is the standard deviation of \\(x\\). This data is already standardized.\n\nenvdata |&gt; print(n = 3)\n\n# A tibble: 147 × 10\n  year  season station month depth_mean pla_10…¹ sed_d…² herbi…³ compe…⁴ temp_…⁵\n  &lt;fct&gt; &lt;fct&gt;  &lt;fct&gt;   &lt;fct&gt;      &lt;dbl&gt;    &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;\n1 2021  WS     St01    4         -0.904   -1.34   -0.904   1.84   -0.372    1.92\n2 2021  WS     St02    4         -0.254   -1.03   -0.783   0.122  -0.673    1.20\n3 2021  WS     St03    4          1.88    -0.151  -0.213   0.837   1.50    -1.32\n# … with 144 more rows, and abbreviated variable names ¹​pla_100g_day_mean,\n#   ²​sed_day_mean, ³​herbivorous_A_mean, ⁴​competing_A_mean, ⁵​temp_range_mean",
     "crumbs": [
       "Multivariate",
-      "Redundancy Analysis"
+      "冗長性解消（RDA）"
     ]
   },
   {
@@ -1679,7 +1679,7 @@
     "text": "Check length of first axis\n\n\nIf the length of the first axis is &gt; 4.5, then use CCA not RDA (Leps & Smilauer 2003).\n\n\n&gt; 4 CCA: cca()\n3 ~ 4: rda() or cca()\n&lt; 3 RDA: rda()\n\n\n\n\n\ndecorana(Y)\n\n\n\nCall:\ndecorana(veg = Y) \n\nDetrended correspondence analysis with 26 segments.\nRescaling of axes with 4 iterations.\nTotal inertia (scaled Chi-square): 4.9589 \n\n                       DCA1   DCA2   DCA3   DCA4\nEigenvalues          0.3195 0.2796 0.1848 0.1298\nAdditive Eigenvalues 0.3195 0.2797 0.1825 0.1250\nDecorana values      0.3435 0.2744 0.1757 0.1325\nAxis lengths         3.5600 2.9877 2.8427 2.1297\n\n\n\n\n\n\n\n\n\nNote\n\n\nIf the Hellinger transform is applied, then it is simpler to use rda() and not worry about the dca().",
     "crumbs": [
       "Multivariate",
-      "Redundancy Analysis"
+      "冗長性解消（RDA）"
     ]
   },
   {
@@ -1690,7 +1690,7 @@
     "text": "Null Model\nDefine the null model and the full model of the multiple linear regression component.\n\nnullmodel = Y ~ 1\nfullmodel = Y ~ pla_100g_day_mean + \n  temp_range_mean +\n  season + \n  competing_A_mean +\n  herbivorous_A_mean +\n  sed_day_mean +\n  depth_mean",
     "crumbs": [
       "Multivariate",
-      "Redundancy Analysis"
+      "冗長性解消（RDA）"
     ]
   },
   {
@@ -1701,7 +1701,7 @@
     "text": "Forward selection\nUse forward selection to eliminate unnecessary environmental variables. Removing variables will affect the scores and loadings.\nFit the null model.\n\nrdamodel0 = rda(formula(nullmodel), data = envdata)\n\nFit the full model.\n\nrdamodelf = rda(formula(fullmodel), data = envdata)\n\nRun the forward selection.\n\nrdamodel = ordiR2step(rdamodel0, # null\n                     scope = formula(fullmodel), # full\n                     R2permutations = 2^15,\n                     trace = FALSE) # change to TRUE to see the selection process!",
     "crumbs": [
       "Multivariate",
-      "Redundancy Analysis"
+      "冗長性解消（RDA）"
     ]
   },
   {
@@ -1712,7 +1712,7 @@
     "text": "Results\n\n\n\n\n\n\n(A) RDA model selected by ordiR2step().\n\n\n\n(B) The variance and proportions explained by the constrained and unconstrained parts of the model.\n\n\n\n\n\n\n\n\n(C) The eigenvalues of the constrained components. These are the eigenvalues of the PCA run on the residuals.\n\n\n\n(D) The eigenvalues of the unconstrained components. These are the eigenvalues of the PCA run on the expected values.",
     "crumbs": [
       "Multivariate",
-      "Redundancy Analysis"
+      "冗長性解消（RDA）"
     ]
   },
   {
@@ -1723,7 +1723,7 @@
     "text": "Variance inflation factor\nUse the variance inflation factor (VIF)1 to check for multi-collinearity2. If it is larger than 10, then variable is can be removed from the model.\n\nvif.cca(rdamodel)\n\n pla_100g_day_mean           seasonWS       sed_day_mean herbivorous_A_mean \n          2.064950           1.024439           2.455251           3.070272 \n  competing_A_mean         depth_mean \n          3.936895           3.396944 \n\n\n分散拡大係数多重共線性",
     "crumbs": [
       "Multivariate",
-      "Redundancy Analysis"
+      "冗長性解消（RDA）"
     ]
   },
   {
@@ -1734,7 +1734,7 @@
     "text": "Redundancy analysis model\nSolve for the eigenvalues \\((\\mathbf{\\lambda_k})\\) and eigenvectors \\((\\mathbf{u_k})\\) of the redundancy analysis model.\n\\[\n\\left(\\mathbf{S_{YX}}\\mathbf{S_{XX}^{-1}}\\mathbf{S_{YX}^\\prime} - \\mathbf{\\lambda_k}\\mathbf{I}\\right)\\mathbf{u_k}=0\n\\]\nwhere, \\(\\mathbf{S_{YX}}\\) is the covariance matrix of \\(\\mathbf{Y}\\) and \\(\\mathbf{Y}\\), \\(\\mathbf{S_{XX}^{-1}}\\) is the covariance matrix of $, and \\(\\mathbf{I}\\) is the identity matrix.",
     "crumbs": [
       "Multivariate",
-      "Redundancy Analysis"
+      "冗長性解消（RDA）"
     ]
   },
   {
@@ -1745,7 +1745,7 @@
     "text": "Find the solution\nFirst standardize the Y and X matrices.\n\nY = iris[, 1:2]\nX = iris[, 3:4]\nX = apply(X, 2, scale)\nY = apply(Y, 2, scale)\n\nNext, fit the rda() version for comparison.\n\nrdaout = rda(Y~X)\n\nThen find \\(\\mathbf{\\hat{Y}}\\) multivariate linear regression \\(\\mathbf{Y} \\sim \\mathbf{X}\\).\n\nsxxinv = solve(t(X) %*% X)\nsyx = t(Y) %*% X\nsyxtr = t(syx)\nYhat = X %*% sxxinv %*% syxtr\nYres = Y - Yhat",
     "crumbs": [
       "Multivariate",
-      "Redundancy Analysis"
+      "冗長性解消（RDA）"
     ]
   },
   {
@@ -1756,7 +1756,7 @@
     "text": "Confirm the eigenvalues\nCalculate the eigenvalues for the PCA part.\n\n# PCA part\nsvd(Yres)$d^2 / (nrow(Y) -1)\n\n[1] 0.8965380 0.1240973\n\nrdaout$CA$eig\n\n      PC1       PC2 \n0.8965380 0.1240973 \n\n\nCalculate the eigenvalues for the RDA part.\n\n# RDA part\nsvd(Yhat)$d^2 / (nrow(Y) - 1)\n\n[1] 0.96547259 0.01389207\n\nrdaout$CCA$eig\n\n      RDA1       RDA2 \n0.96547259 0.01389207",
     "crumbs": [
       "Multivariate",
-      "Redundancy Analysis"
+      "冗長性解消（RDA）"
     ]
   },
   {
@@ -1767,7 +1767,7 @@
     "text": "Confirm the eigenvectors\n\nsvd(Yres)$v\n\n          [,1]       [,2]\n[1,] 0.3767512  0.9263145\n[2,] 0.9263145 -0.3767512\n\nrdaout$CA$v\n\n                   PC1        PC2\nSepal.Length 0.3767512  0.9263145\nSepal.Width  0.9263145 -0.3767512\n\n\n\nsvd(Yhat)$v\n\n           [,1]      [,2]\n[1,]  0.8891863 0.4575454\n[2,] -0.4575454 0.8891863\n\nrdaout$CCA$v\n\n                   RDA1      RDA2\nSepal.Length  0.8891863 0.4575454\nSepal.Width  -0.4575454 0.8891863",
     "crumbs": [
       "Multivariate",
-      "Redundancy Analysis"
+      "冗長性解消（RDA）"
     ]
   },
   {
@@ -1778,7 +1778,7 @@
     "text": "Calcualte inertias\n\nn = nrow(Y)\nconstrained = sum(svd(Yhat)$d^2 / (n - 1))\nunconstrained = sum(svd(Yres)$d^2 / (n - 1))\ntotal = constrained + unconstrained\n\ntibble(type = c(\"Total\", \"Constrained\", \"Unconstrained\"),\n       Inertia = c(total, constrained, unconstrained)) |&gt; \n  mutate(Proportion = Inertia / total)\n\n# A tibble: 3 × 3\n  type          Inertia Proportion\n  &lt;chr&gt;           &lt;dbl&gt;      &lt;dbl&gt;\n1 Total           2.00       1    \n2 Constrained     0.979      0.490\n3 Unconstrained   1.02       0.510\n\n\n\nrdaout\n\nCall: rda(formula = Y ~ X)\n\n              Inertia Proportion Rank\nTotal          2.0000     1.0000     \nConstrained    0.9794     0.4897    2\nUnconstrained  1.0206     0.5103    2\nInertia is variance \n\nEigenvalues for constrained axes:\n  RDA1   RDA2 \n0.9655 0.0139 \n\nEigenvalues for unconstrained axes:\n   PC1    PC2 \n0.8965 0.1241",
     "crumbs": [
       "Multivariate",
-      "Redundancy Analysis"
+      "冗長性解消（RDA）"
     ]
   },
   {
@@ -1789,7 +1789,7 @@
     "text": "Confirm the site scores\n\nrdascores = scores(rdaout, scaling = 0, display = \"sites\") |&gt; as_tibble()\neigscores = Y %*% svd(Yhat)$v %*% diag(1/svd(Yhat)$d)  |&gt; as_tibble()\nggplot() + \n  geom_point(aes(x = V1, y = V2, color = \"EIG\"), data = eigscores, size = 3) +\n  geom_point(aes(x = RDA1, y = RDA2, color = \"RDA\"), data = rdascores, size = 1) +\n  scale_color_viridis_d(end = 0.8)",
     "crumbs": [
       "Multivariate",
-      "Redundancy Analysis"
+      "冗長性解消（RDA）"
     ]
   },
   {
@@ -1800,7 +1800,7 @@
     "text": "Confirm the environmental variables\n\nvariables = str_remove_all(colnames(Y), \"[a-z|\\\\.]\")\nrdavariables = scores(rdaout, scaling = 0, display = \"bp\") |&gt; as_tibble()\ntemp = t(X) %*% svd(Yhat)$u\nsvdvariables = apply(temp, 1, \\(x) x / sqrt(sum(x^2))) |&gt; t() |&gt; as_tibble()\nrdavariables = rdavariables |&gt; mutate(variables = variables, .before = 1)\nsvdvariables = svdvariables |&gt; mutate(variables = variables, .before = 1)\nfull_join(rdavariables, svdvariables, by = \"variables\")\n\n# A tibble: 2 × 5\n  variables  RDA1  RDA2    V1    V2\n  &lt;chr&gt;     &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;\n1 SL        0.988 0.152 0.988 0.152\n2 SW        0.911 0.413 0.911 0.413",
     "crumbs": [
       "Multivariate",
-      "Redundancy Analysis"
+      "冗長性解消（RDA）"
     ]
   },
   {
@@ -1811,7 +1811,7 @@
     "text": "Example analysis\nExample data set.\nDune meadow vegetation data.\n\nA1 soil thickness\nMoisture ordered factor of levels 1 &lt; 2 &lt; 4 &lt; 5\nManagement factor of 4 levels\nUse ordered factor Hayfield &lt; Haypastu &lt; Pasture\nManure Ordered factor 0 &lt; 1 &lt; 2 &lt; 3 &lt; 4\n\n\n\n   Achimill Agrostol Airaprae Alopgeni Anthodor Bellpere Bromhord Chenalbu\n1         1        0        0        0        0        0        0        0\n2         1        0        0        1        0        1        1        0\n3         0        1        0        1        0        1        0        0\n4         0        1        0        1        0        1        1        0\n5         1        0        0        0        1        1        1        0\n6         1        0        0        0        1        0        0        0\n7         1        0        0        0        1        0        1        0\n8         0        1        0        1        0        0        0        0\n9         0        1        0        1        0        0        0        0\n10        1        0        0        0        1        1        1        0\n11        0        0        0        0        0        0        0        0\n12        0        1        0        1        0        0        0        0\n13        0        1        0        1        0        0        0        1\n14        0        1        0        0        0        0        0        0\n15        0        1        0        0        0        0        0        0\n16        0        1        0        1        0        0        0        0\n17        1        0        1        0        1        0        0        0\n18        0        0        0        0        0        1        0        0\n19        0        0        1        0        1        0        0        0\n20        0        1        0        0        0        0        0        0\n   Cirsarve Comapalu Eleopalu Elymrepe Empenigr Hyporadi Juncarti Juncbufo\n1         0        0        0        1        0        0        0        0\n2         0        0        0        1        0        0        0        0\n3         0        0        0        1        0        0        0        0\n4         1        0        0        1        0        0        0        0\n5         0        0        0        1        0        0        0        0\n6         0        0        0        0        0        0        0        0\n7         0        0        0        0        0        0        0        1\n8         0        0        1        0        0        0        1        0\n9         0        0        0        1        0        0        1        1\n10        0        0        0        0        0        0        0        0\n11        0        0        0        0        0        1        0        0\n12        0        0        0        0        0        0        0        1\n13        0        0        0        0        0        0        0        1\n14        0        1        1        0        0        0        0        0\n15        0        1        1        0        0        0        1        0\n16        0        0        1        0        0        0        1        0\n17        0        0        0        0        0        1        0        0\n18        0        0        0        0        0        0        0        0\n19        0        0        0        0        1        1        0        0\n20        0        0        1        0        0        0        1        0\n   Lolipere Planlanc Poaprat Poatriv Ranuflam Rumeacet Sagiproc Salirepe\n1         1        0       1       1        0        0        0        0\n2         1        0       1       1        0        0        0        0\n3         1        0       1       1        0        0        0        0\n4         1        0       1       1        0        0        1        0\n5         1        1       1       1        0        1        0        0\n6         1        1       1       1        0        1        0        0\n7         1        1       1       1        0        1        0        0\n8         1        0       1       1        1        0        1        0\n9         1        0       1       1        0        1        1        0\n10        1        1       1       1        0        0        0        0\n11        1        1       1       0        0        0        1        0\n12        0        0       0       1        0        1        1        0\n13        0        0       1       1        1        0        1        0\n14        0        0       0       0        1        0        0        0\n15        0        0       0       0        1        0        0        0\n16        0        0       0       1        1        0        0        0\n17        0        1       1       0        0        0        0        0\n18        1        1       1       0        0        0        0        1\n19        0        0       0       0        0        0        1        1\n20        0        0       0       0        1        0        0        1\n   Scorautu Trifprat Trifrepe Vicilath Bracruta Callcusp\n1         0        0        0        0        0        0\n2         1        0        1        0        0        0\n3         1        0        1        0        1        0\n4         1        0        1        0        1        0\n5         1        1        1        0        1        0\n6         1        1        1        0        1        0\n7         1        1        1        0        1        0\n8         1        0        1        0        1        0\n9         1        0        1        0        1        0\n10        1        0        1        1        1        0\n11        1        0        1        1        1        0\n12        1        0        1        0        1        0\n13        1        0        1        0        0        0\n14        1        0        1        0        0        1\n15        1        0        1        0        1        0\n16        0        0        0        0        1        1\n17        1        0        0        0        0        0\n18        1        0        1        1        1        0\n19        1        0        1        0        1        0\n20        1        0        0        0        1        1\n\n\n\n\n     A1 Moisture Management      Use Manure\n1   2.8        1         SF Haypastu      4\n2   3.5        1         BF Haypastu      2\n3   4.3        2         SF Haypastu      4\n4   4.2        2         SF Haypastu      4\n5   6.3        1         HF Hayfield      2\n6   4.3        1         HF Haypastu      2\n7   2.8        1         HF  Pasture      3\n8   4.2        5         HF  Pasture      3\n9   3.7        4         HF Hayfield      1\n10  3.3        2         BF Hayfield      1\n11  3.5        1         BF  Pasture      1\n12  5.8        4         SF Haypastu      2\n13  6.0        5         SF Haypastu      3\n14  9.3        5         NM  Pasture      0\n15 11.5        5         NM Haypastu      0\n16  5.7        5         SF  Pasture      3\n17  4.0        2         NM Hayfield      0\n18  4.6        1         NM Hayfield      0\n19  3.7        5         NM Hayfield      0\n20  3.5        5         NM Hayfield      0\n\n\n\n\n# A tibble: 20 × 5\n      A1 Moisture Management Use      Manure\n   &lt;dbl&gt; &lt;ord&gt;    &lt;fct&gt;      &lt;ord&gt;    &lt;ord&gt; \n 1   2.8 1        SF         Haypastu 4     \n 2   3.5 1        BF         Haypastu 2     \n 3   4.3 2        SF         Haypastu 4     \n 4   4.2 2        SF         Haypastu 4     \n 5   6.3 1        HF         Hayfield 2     \n 6   4.3 1        HF         Haypastu 2     \n 7   2.8 1        HF         Pasture  3     \n 8   4.2 5        HF         Pasture  3     \n 9   3.7 4        HF         Hayfield 1     \n10   3.3 2        BF         Hayfield 1     \n11   3.5 1        BF         Pasture  1     \n12   5.8 4        SF         Haypastu 2     \n13   6   5        SF         Haypastu 3     \n14   9.3 5        NM         Pasture  0     \n15  11.5 5        NM         Haypastu 0     \n16   5.7 5        SF         Pasture  3     \n17   4   2        NM         Hayfield 0     \n18   4.6 1        NM         Hayfield 0     \n19   3.7 5        NM         Hayfield 0     \n20   3.5 5        NM         Hayfield 0     \n\n\n\n\n\nCall:\nrda(formula = dune ~ A1 + Moisture + Use + Manure, data = dune.env) \n\nPartitioning of variance:\n              Inertia Proportion\nTotal           5.261     1.0000\nConstrained     3.384     0.6432\nUnconstrained   1.877     0.3568\n\nEigenvalues, and their contribution to the variance \n\nImportance of components:\n                        RDA1   RDA2    RDA3    RDA4    RDA5    RDA6    RDA7\nEigenvalue            1.4129 0.7859 0.28559 0.24176 0.17851 0.15076 0.12636\nProportion Explained  0.2686 0.1494 0.05429 0.04596 0.03393 0.02866 0.02402\nCumulative Proportion 0.2686 0.4180 0.47226 0.51822 0.55215 0.58081 0.60483\n                        RDA8    RDA9    RDA10     PC1     PC2     PC3     PC4\nEigenvalue            0.1021 0.06278 0.037263 0.43922 0.43799 0.29683 0.22855\nProportion Explained  0.0194 0.01193 0.007083 0.08349 0.08326 0.05643 0.04345\nCumulative Proportion 0.6242 0.63616 0.643248 0.72674 0.81000 0.86643 0.90988\n                          PC5     PC6     PC7     PC8      PC9\nEigenvalue            0.16015 0.12726 0.09615 0.06368 0.026875\nProportion Explained  0.03044 0.02419 0.01828 0.01210 0.005109\nCumulative Proportion 0.94032 0.96451 0.98279 0.99489 1.000000\n\nAccumulated constrained eigenvalues\nImportance of components:\n                        RDA1   RDA2   RDA3    RDA4    RDA5    RDA6    RDA7\nEigenvalue            1.4129 0.7859 0.2856 0.24176 0.17851 0.15076 0.12636\nProportion Explained  0.4175 0.2322 0.0844 0.07144 0.05275 0.04455 0.03734\nCumulative Proportion 0.4175 0.6498 0.7342 0.80563 0.85838 0.90293 0.94027\n                         RDA8    RDA9   RDA10\nEigenvalue            0.10206 0.06278 0.03726\nProportion Explained  0.03016 0.01855 0.01101\nCumulative Proportion 0.97043 0.98899 1.00000\n\nScaling 2 for species and site scores\n* Species are scaled proportional to eigenvalues\n* Sites are unscaled: weighted dispersion equal on all dimensions\n* General scaling constant of scores:  \n\n\nPermutation test for rda under reduced model\nTerms added sequentially (first to last)\nPermutation: free\nNumber of permutations: 999\n\nModel: rda(formula = dune ~ A1 + Moisture + Use + Manure, data = dune.env)\n         Df Variance      F Pr(&gt;F)   \nA1        1  0.54865 2.6311  0.006 **\nMoisture  3  1.44897 2.3162  0.002 **\nUse       2  0.50253 1.2050  0.257   \nManure    4  0.88368 1.0595  0.406   \nResidual  9  1.87670                 \n---\nSignif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1\n\n\nPermutation test for rda under reduced model\nForward tests for axes\nPermutation: free\nNumber of permutations: 999\n\nModel: rda(formula = dune ~ A1 + Moisture + Use + Manure, data = dune.env)\n         Df Variance      F Pr(&gt;F)   \nRDA1      1  1.41288 6.7757  0.002 **\nRDA2      1  0.78586 3.7687  0.117   \nRDA3      1  0.28559 1.3696  0.996   \nRDA4      1  0.24176 1.1594  1.000   \nRDA5      1  0.17851 0.8561  0.999   \nRDA6      1  0.15076 0.7230  1.000   \nRDA7      1  0.12636 0.6060  1.000   \nRDA8      1  0.10206 0.4894  1.000   \nRDA9      1  0.06278 0.3011  1.000   \nRDA10     1  0.03726 0.1787  0.999   \nResidual  9  1.87670                 \n---\nSignif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1",
     "crumbs": [
       "Multivariate",
-      "Redundancy Analysis"
+      "冗長性解消（RDA）"
     ]
   },
   {
@@ -1819,7 +1819,7 @@
     "href": "index.html",
     "title": "研究室と講義の R コード",
     "section": "",
-    "text": "水圏植物生態学研究室 では藻場生態系の機能と保全について研究しています。\nこのサイトは研究室と学部生用の基礎統計学と教育関係共同利用拠点の 水産海洋データ解析演習 のために準備しました。\nマニュアルの更新日：2024年05月12日 15:26:42 JST\n【重要】R コードに自身あるが、日本語は怪しいです。It is easier to explain this stuff in English.\nコードは考えずにコピペしないでください。 コードに使用したデータは研究室のサーバにあるので、公開されていません。\n研究室の皆さん： 研究室用のデータは RStudio の ~/Lab_Data/ に入っています。\nはここ https://cran.r-project.org/ からダウンロードできます。Windows ユーザは Rtools42 もインストールしましょう。ページ内の Rtools42 installer のリンクを探してね。\nRStudio もインストールしましょう。Rのデフォルトの IDE はとても使いにくいです。\n重要: Windows にインストールするとき、OneDrive にインストールされないように注意してください。 詳細は 奥村先生のサイト を参考にしてください。\nSession Information",
+    "text": "水圏植物生態学研究室 では藻場生態系の機能と保全について研究しています。\nこのサイトは研究室と学部生用の基礎統計学と教育関係共同利用拠点の 水産海洋データ解析演習 のために準備しました。\nマニュアルの更新日：2024年05月13日 08:37:19 JST\n【重要】R コードに自身あるが、日本語は怪しいです。It is easier to explain this stuff in English.\nコードは考えずにコピペしないでください。 コードに使用したデータは研究室のサーバにあるので、公開されていません。\n研究室の皆さん： 研究室用のデータは RStudio の ~/Lab_Data/ に入っています。\nはここ https://cran.r-project.org/ からダウンロードできます。Windows ユーザは Rtools43 もインストールしましょう。ページ内の Rtools42 installer のリンクを探してね。\nRStudio もインストールしましょう。Rのデフォルトの IDE はとても使いにくいです。\n重要: Windows にインストールするとき、OneDrive にインストールされないように注意してください。 詳細は 奥村先生のサイト を参考にしてください。\nSession Information",
     "crumbs": [
       "その前に",
       "研究室と講義の R コード"
@@ -1855,7 +1855,7 @@
     "text": "Principal component analysis (PCA)\nPCA1 is the eigenanalysis2 of the \\(p\\times p\\) variance – covariance matrix3 \\(\\Sigma\\)\n\\[\n\\mathbf{\\Sigma} = \\frac{\\mathbf{Y_c}^\\top \\mathbf{Y_c}}{n-1}\n\\]\n\n\n\\(\\mathbf{Y}_c\\) is the column-centered matrix of the orignal data \\(\\mathbf{Y}\\). \\(n\\) is the number of rows in \\(\\mathbf{Y}_c\\).\n主成分分析固有値解析分散共分散行列",
     "crumbs": [
       "Multivariate",
-      "Principal Component Analysis"
+      "主成分分析（PCA）"
     ]
   },
   {
@@ -1866,7 +1866,7 @@
     "text": "Definition of \\(\\mathbf{Y_c}\\)\n\n\\[\n\\overbrace{\\begin{bmatrix}2.25 & 2.00 & 2.00\\\\-1.75 &  0.00 & -2.00\\\\ 0.25 & -1.00 & -2.00\\\\-0.75 & -1.00 &  2.00\\end{bmatrix}}^{\\mathbf{Y_c}} =\n\\overbrace{\\begin{bmatrix}5 & 4 & 5\\\\1 & 2 & 1\\\\3 & 1 & 1\\\\2 & 1 & 5\\end{bmatrix}}^{\\mathbf{Y}} -\n\\overbrace{\\begin{bmatrix}2.75 & 2.00 & 3.00\\\\2.75 & 2.00 & 3.00\\\\2.75 & 2.00 & 3.00\\\\2.75 & 2.00 & 3.00\\end{bmatrix}}^{\\overline{\\mathbf{Y}}}\n\\]\n\n\\(\\mathbf{Y}\\) is the original data, \\(\\overline{\\mathbf{Y}}\\) is the column-means of \\(\\mathbf{Y}\\).",
     "crumbs": [
       "Multivariate",
-      "Principal Component Analysis"
+      "主成分分析（PCA）"
     ]
   },
   {
@@ -1877,7 +1877,7 @@
     "text": "Decomposition of \\(\\mathbf{Y_c}\\)\nThe eigenanalysis of \\(\\Sigma\\) is defined as the following:\n\\[\n\\frac{\\mathbf{Y_c}^\\top \\mathbf{Y_c}}{n-1}  = \\mathbf{\\Sigma} = \\mathbf{V}_{pca}\\mathbf{L}\\mathbf{V}_{pca}^\\top\n\\]\nwhere, \\(\\mathbf{V}_{pca} = \\begin{bmatrix}\\mathbf{v_1} & \\mathbf{v_2} & \\cdots & \\mathbf{v_p}\\end{bmatrix}\\) is a matrix of \\(p\\) eigenvectors1 and \\(\\mathbf{L}\\) is a diagonal matrix of the eigenvalues2. Each \\(\\mathbf{v_i}\\) is also known as the \\(i\\)th principal component3.\n固有ベクトル固有値主成分",
     "crumbs": [
       "Multivariate",
-      "Principal Component Analysis"
+      "主成分分析（PCA）"
     ]
   },
   {
@@ -1888,7 +1888,7 @@
     "text": "Eigenvalue\nThe eigenvalue matrix is a \\(p\\times p\\) diagonal matrix1.\n\\[\n\\mathbf{L} =\n\\begin{bmatrix}\n\\lambda_1 & 0 & 0 & \\cdots & 0 \\\\\n0 & \\lambda_2  & 0 & \\cdots & 0 \\\\\n\\vdots  &   & \\ddots  & \\   & \\vdots  \\\\\n0 & 0 & 0 & \\cdots & \\lambda_p \\\\\n\\end{bmatrix}\n\\]\n\n\nRecall that \\(p\\) is the number of variables (i.e., columns) in \\(\\mathbf{Y_c}\\)\n対角行列",
     "crumbs": [
       "Multivariate",
-      "Principal Component Analysis"
+      "主成分分析（PCA）"
     ]
   },
   {
@@ -1899,7 +1899,7 @@
     "text": "Singular value decomposition\nInstead of solving \\(\\frac{\\mathbf{Y_c}^\\top \\mathbf{Y_c}}{n-1} = \\mathbf{\\Sigma} = \\mathbf{V}_{pca}\\mathbf{L}\\mathbf{V}_{pca}^\\top\\) (i.e., eigenanalysis1), it is easier to do a singular value decomposition (SVD)2.\n\\[\n\\mathbf{Y_c} = \\mathbf{U}\\mathbf{D}\\mathbf{V}_{svd}^\\top\n\\]\n固有値解析特異値分解",
     "crumbs": [
       "Multivariate",
-      "Principal Component Analysis"
+      "主成分分析（PCA）"
     ]
   },
   {
@@ -1910,7 +1910,7 @@
     "text": "SVD\n\\[\n\\mathbf{Y_c} = \\mathbf{U}\\mathbf{D}\\mathbf{V}_{svd}^\\top\n\\]\n\\(\\mathbf{U}\\) is the left singular vectors1 of \\(\\mathbf{Y_c}\\) and are the eigenvectors of \\(\\mathbf{Y_c}\\mathbf{Y_c}^\\top\\).\n左特異値ベクトル",
     "crumbs": [
       "Multivariate",
-      "Principal Component Analysis"
+      "主成分分析（PCA）"
     ]
   },
   {
@@ -1921,7 +1921,7 @@
     "text": "SVD\n\\[\n\\mathbf{Y_c} = \\mathbf{U}\\mathbf{D}\\mathbf{V}_{svd}^\\top\n\\]\n\\(\\mathbf{D}\\) is a diagonal matrix of the singular values1.\n特異値",
     "crumbs": [
       "Multivariate",
-      "Principal Component Analysis"
+      "主成分分析（PCA）"
     ]
   },
   {
@@ -1932,7 +1932,7 @@
     "text": "SVD\n\\[\n\\mathbf{Y_c} = \\mathbf{U}\\mathbf{D}\\mathbf{V}_{svd}^\\top\n\\]\n\\(\\mathbf{V}_{svd}\\) is the right singular vectors1 of \\(\\mathbf{Y_c}\\) and are the eigenvectors of \\(\\mathbf{Y_c}^\\top\\mathbf{Y_c}\\).\n\n\nNote that \\(\\mathbf{V}_{pca} \\approx \\mathbf{V}_{sda}\\).\n右特異値ベクトル",
     "crumbs": [
       "Multivariate",
-      "Principal Component Analysis"
+      "主成分分析（PCA）"
     ]
   },
   {
@@ -1943,7 +1943,7 @@
     "text": "Solving for \\(\\mathbf{L}\\)\nTo find the eigenvalue, we must solve for \\(\\mathbf{\\Sigma}\\).\n\\[\n\\mathbf{\\Sigma} = \\frac{\\mathbf{Y_c}^\\top \\mathbf{Y_c}}{n-1 }\n\\]\n\\[\n\\mathbf{Y_c} = \\mathbf{U}\\mathbf{D}\\mathbf{V}_{svd}^\\top\n\\]",
     "crumbs": [
       "Multivariate",
-      "Principal Component Analysis"
+      "主成分分析（PCA）"
     ]
   },
   {
@@ -1954,7 +1954,7 @@
     "text": "Substitute \\(\\mathbf{Y_c}\\) in to \\(\\mathbf{\\Sigma}\\)\n\\[\n\\begin{aligned}\n\\mathbf{\\Sigma} &= \\frac{\\mathbf{Y_c}^\\top \\mathbf{Y_c}}{n-1 }\\\\\n& \\mathbf{Y_c} = \\mathbf{U}\\mathbf{D}\\mathbf{V}_{svd}^\\top \\\\\n\\mathbf{\\Sigma} &= \\frac{(\\mathbf{U}\\mathbf{D}\\mathbf{V}_{svd}^\\top )^\\top (\\mathbf{D}\\mathbf{S}\\mathbf{V}_{svd}^\\top )}{n-1 } \\\\\n\\mathbf{\\Sigma} &= \\frac{\\mathbf{V}_{svd}\\mathbf{D}^\\top\\mathbf{U}^\\top \\mathbf{U} \\mathbf{D} \\mathbf{V}_{svd}^\\top}{n-1 }\\\\\n\\end{aligned}\n\\]",
     "crumbs": [
       "Multivariate",
-      "Principal Component Analysis"
+      "主成分分析（PCA）"
     ]
   },
   {
@@ -1965,7 +1965,7 @@
     "text": "Substitute \\(\\mathbf{Y_c}\\) in to \\(\\mathbf{\\Sigma}\\)\nSince \\(\\mathbf{U}^\\top\\mathbf{U}=1\\),\n\\[\n\\mathbf{\\Sigma} =\n\\frac{\\mathbf{V}_{svd}\\mathbf{D}^\\top \\mathbf{D} \\mathbf{V}_{svd}^\\top}{n-1 } =\n\\mathbf{V}_{pca}\\mathbf{L}\\mathbf{V}_{pca}^\\top\n\\]\nand \\(\\mathbf{V}^\\top\\mathbf{V}=1\\),\n\\[\n\\mathbf{\\Sigma} =\n\\frac{\\mathbf{D}^\\top\\mathbf{D}}{n-1} = \\mathbf{L}\n\\]\nor more simply, \\(\\lambda_i = \\frac{d_i^2}{n-1}\\).",
     "crumbs": [
       "Multivariate",
-      "Principal Component Analysis"
+      "主成分分析（PCA）"
     ]
   },
   {
@@ -1976,7 +1976,7 @@
     "text": "Visualize what we want to do\n\nThe rotation angle \\(\\theta\\) can also be determined from the rotation vector as follows: \\(\\mathbf{V}_\\text{svd} = \\begin{bmatrix} \\cos\\theta & -\\sin\\theta\\\\ \\sin\\theta & \\cos\\theta\\\\ \\end{bmatrix}\\).",
     "crumbs": [
       "Multivariate",
-      "Principal Component Analysis"
+      "主成分分析（PCA）"
     ]
   },
   {
@@ -1987,7 +1987,7 @@
     "text": "Computation mechanics\n\nApply SVD to the previous example results in the following equation.\n\\[\n\\overbrace{\\begin{bmatrix}2.25 & 2.00 & 2.00\\\\-1.75 &  0.00 & -2.00\\\\ 0.25 & -1.00 & -2.00\\\\-0.75 & -1.00 &  2.00\\end{bmatrix}}^{\\mathbf{Y_c}} =\n\\overbrace{\\begin{bmatrix}-0.73 &  0.43 & -0.15\\\\ 0.526 &  0.078 & -0.683\\\\0.39 & 0.33 & 0.70\\\\-0.18 & -0.84 &  0.13\\end{bmatrix} }^{\\mathbf{U}}\\times\n\\overbrace{\\begin{bmatrix}4.66 & 0.00 & 0.00\\\\0.00 & 2.63 & 0.00\\\\0.00 & 0.00 & 1.47\\end{bmatrix} }^{\\mathbf{D}}\\times\n\\overbrace{\\begin{bmatrix}-0.50 & -0.36 & -0.79\\\\ 0.59 &  0.52 & -0.62\\\\ 0.633 & -0.772 & -0.051\\end{bmatrix} }^{\\mathbf{V}^\\top}\n\\]",
     "crumbs": [
       "Multivariate",
-      "Principal Component Analysis"
+      "主成分分析（PCA）"
     ]
   },
   {
@@ -1998,7 +1998,7 @@
     "text": "Example 1: determine \\(\\mathbf{Y_c}\\)\nCalculate the centered data matrix.\n\n\nY = iris[1:50, 1:2]\ncolnames(Y) = colnames(iris)[1:2] |&gt; \n  str_remove_all(\"[a-z|\\\\.]+\") \nnm = dim(Y)\nYbar = apply(Y, 2, mean)\nYbar = matrix(Ybar, ncol = nm[2], \n              nrow = nm[1],\n              byrow = TRUE)\nYc = Y - Ybar\nYc |&gt; head()\n\n\n      SL     SW\n1  0.094  0.072\n2 -0.106 -0.428\n3 -0.306 -0.228\n4 -0.406 -0.328\n5 -0.006  0.172\n6  0.394  0.472",
     "crumbs": [
       "Multivariate",
-      "Principal Component Analysis"
+      "主成分分析（PCA）"
     ]
   },
   {
@@ -2009,7 +2009,7 @@
     "text": "Example 1: SVD\nCalculate the eigenvectors, eigenvalues, and singular values using svd().\n\nsvdout = svd(Yc)\numat = svdout$u  # Left singular vectors\nvmat = svdout$v  # Right singular vectors (i.e., eigenvectors)\nd = svdout$d     # Singular values\nn = nm[1]        # Data rows\np = nm[2]        # Data columns (i.e., variables)",
     "crumbs": [
       "Multivariate",
-      "Principal Component Analysis"
+      "主成分分析（PCA）"
     ]
   },
   {
@@ -2020,7 +2020,7 @@
     "text": "Example 1: eigenvalues\nRecall that,\n\\[\n\\lambda_i = \\frac{d_i^2} {n-1}\n\\]\n\n# lambda = ((diag(d) %*% t(diag(d))) / (n - 1)) |&gt; diag()\nlambda = d^2 / (n - 1)\n\nTherefore, the eigenvalues are 0.2337 and 0.0343.",
     "crumbs": [
       "Multivariate",
-      "Principal Component Analysis"
+      "主成分分析（PCA）"
     ]
   },
   {
@@ -2031,7 +2031,7 @@
     "text": "Example 1: eigenvectors\n\nrownames(vmat) = colnames(Yc)\ncolnames(vmat) = str_glue(\"PC{1:p}\")\n\nThe eigenvectors are:\n\n\nvmat\n\n\n          PC1        PC2\nSL -0.6717496 -0.7407783\nSW -0.7407783  0.6717496",
     "crumbs": [
       "Multivariate",
-      "Principal Component Analysis"
+      "主成分分析（PCA）"
     ]
   },
   {
@@ -2042,7 +2042,7 @@
     "text": "Example 1: mechanics of rotating \\(\\mathbf{Y_c}\\)\n\n\n\n\n\n\n\n\n\n\n\nThe eigenvectors indicate the direction of the vectors that maximizes the variance of each axis. In this case, maximizing the variance in one axis lead to a minimization in the other.",
     "crumbs": [
       "Multivariate",
-      "Principal Component Analysis"
+      "主成分分析（PCA）"
     ]
   },
   {
@@ -2053,7 +2053,7 @@
     "text": "Example 1: derived information\nThe total variance before rotation is:\n\n\ndiag(var(Yc)) |&gt; sum()\n\n\n[1] 0.2679388\n\n\n\nand should be the same as the total inertia (i.e., variance) after rotation:\n\n\nsum(lambda)\n\n\n[1] 0.2679388\n\n\n\nThe variance of SL and SW is:\n\n\ndiag(var(Yc))\n\n\n       SL        SW \n0.1242490 0.1436898",
     "crumbs": [
       "Multivariate",
-      "Principal Component Analysis"
+      "主成分分析（PCA）"
     ]
   },
   {
@@ -2064,7 +2064,7 @@
     "text": "Example 1: more derived information\nThe relative importance of SL and SW is:\n\n\ndiag(var(Yc)) / sum(diag(var(Yc)))\n\n\n       SL        SW \n0.4637215 0.5362785 \n\n\n\nHowever, the variance of the principal components and their relative importance is different:\n\n\nlambda # The variance\n\n\n[1] 0.23366074 0.03427804\n\nimportance = lambda / sum(lambda)\nnames(importance) = colnames(vmat)\nimportance # The relative importance\n\n      PC1       PC2 \n0.8720677 0.1279323 \n\n\n\n\n\nThe relative importance indicates the proportion of variation explained by the principal component axis. Conceptually, \\(\\mathbf{Y_c}\\) is rotated until each component is maximized successively.",
     "crumbs": [
       "Multivariate",
-      "Principal Component Analysis"
+      "主成分分析（PCA）"
     ]
   },
   {
@@ -2075,7 +2075,7 @@
     "text": "Example 1: scores and loadings\nScores1 are the data points projected onto the principal component axes.\n\n# There are a total of n = 50 scores.\nscores = umat %*% diag(d)\ncolnames(scores) = str_c(\"PC\", 1:ncol(scores))\nscores |&gt; head()\n\n            PC1         PC2\n[1,] -0.1164805 -0.02126719\n[2,]  0.3882586 -0.20898631\n[3,]  0.3744528  0.07351926\n[4,]  0.5157056  0.08042214\n[5,] -0.1233834  0.11998560\n[6,] -0.6143167  0.02519914\n\n\n主成分得点: あるデータ点を主成分ベクトルで表現した場合の値",
     "crumbs": [
       "Multivariate",
-      "Principal Component Analysis"
+      "主成分分析（PCA）"
     ]
   },
   {
@@ -2086,7 +2086,7 @@
     "text": "Example 1: scores and loadings\nLoadings (rescaled loadings)1 indicates the relationship of the variable with the principal component axes.\n\n\nloadings = (vmat %*% diag(d)) / sqrt(n-1)\ncolnames(loadings) = str_glue(\"PC{1:p}\")\nloadings\n\n\n          PC1        PC2\nSL -0.3247134 -0.1371501\nSW -0.3580809  0.1243699\n\n\n\nTherefore, for variable SL, the loadings on PC1 and PC2 are -0.325 and -0.137, respectively. The cosine of the angle between loadings are their correlation.\n\n\nSL = loadings[1, ]\nSW = loadings[2, ]\nL1 = atan2(y = SL[2], x = SL[1])\nL2 = atan2(y = SW[2], x = SW[1])\ntheta = abs(L1 - L2)\ncos(theta)\n\n\n      PC2 \n0.7425467 \n\n\n\n主成分負荷量: ある主成分ベクトルのデータ点に対する重み",
     "crumbs": [
       "Multivariate",
-      "Principal Component Analysis"
+      "主成分分析（PCA）"
     ]
   },
   {
@@ -2097,7 +2097,7 @@
     "text": "Example 2: vegan::rda()\nFirst run the analysis with both rda() and `svd().\n\n\nrdaout = rda(Yc)\nsvdout = svd(Yc)\n\n\n\n\nLeft singular matrix1\n\n\nsvdout$u |&gt; head(n = 2)     # SDV result\nrdaout$CA$u |&gt; head(n = 2)  # RDA result\n\n\n            [,1]        [,2]\n[1,] -0.03442408 -0.01640983\n[2,]  0.11474404 -0.16125450\n          PC1         PC2\n1 -0.03442408 -0.01640983\n2  0.11474404 -0.16125450\n\n\n\nRight singular matrix2\n\n\nsvdout$v |&gt; head(n = 2)    # SDV result\nrdaout$CA$v |&gt; head(n = 2) # RDA result\n\n\n           [,1]       [,2]\n[1,] -0.6717496 -0.7407783\n[2,] -0.7407783  0.6717496\n          PC1        PC2\nSL -0.6717496 -0.7407783\nSW -0.7407783  0.6717496\n\n\n\n左特異値ベクトル右特異値ベクトル",
     "crumbs": [
       "Multivariate",
-      "Principal Component Analysis"
+      "主成分分析（PCA）"
     ]
   },
   {
@@ -2108,7 +2108,7 @@
     "text": "Example 2: vegan::rda()\nEigenvalues\n\n\n(svdout$d^2)/(n-1) # SDV result\nrdaout$CA$eig      # RDA result\n\n\n[1] 0.23366074 0.03427804\n       PC1        PC2 \n0.23366074 0.03427804",
     "crumbs": [
       "Multivariate",
-      "Principal Component Analysis"
+      "主成分分析（PCA）"
     ]
   },
   {
@@ -2119,7 +2119,7 @@
     "text": "Example 2: similar output\n\nrdaout |&gt; summary(display = NA)\n\n\nCall:\nrda(X = Yc) \n\nPartitioning of variance:\n              Inertia Proportion\nTotal          0.2679          1\nUnconstrained  0.2679          1\n\nEigenvalues, and their contribution to the variance \n\nImportance of components:\n                         PC1     PC2\nEigenvalue            0.2337 0.03428\nProportion Explained  0.8721 0.12793\nCumulative Proportion 0.8721 1.00000\n\nScaling 2 for species and site scores\n* Species are scaled proportional to eigenvalues\n* Sites are unscaled: weighted dispersion equal on all dimensions\n* General scaling constant of scores:  \n\n\n\n\nNote the total inertia is the sum of the eigenvalues 0.268.\nThe proportion explained is the ratio of the eigenvalues to the sum of the eigenvalues \\((\\lambda_i / \\sum{\\lambda_i})\\).\n\n\n\n\nAt this stage numeric results from svd() and rda() are equivalent. However, the scores and loadings are scaled differently.",
     "crumbs": [
       "Multivariate",
-      "Principal Component Analysis"
+      "主成分分析（PCA）"
     ]
   },
   {
@@ -2130,7 +2130,7 @@
     "text": "Example 2: vegan-like analysis\nIn vegan::rda(), the scores are scaled according to the following:\n\nscaling = 1:1 \\(C\\sqrt{\\lambda_i / \\sum\\lambda_i}\\)\nscaling = 2:2 \\(C\\)\n\nThe constant term is \\(C = \\sqrt[4]{(n -1)\\sum{\\lambda_i}}\\).\nSee the decision-vegan.pdf vignette for details.\n\nconst = ((n - 1) * sum(lambda))^{1/4}\nscale1 = sqrt(lambda / sum(lambda) ) * const\nscale2 = const\numat1 = umat %*% diag(scale1)\numat2 = umat * scale2\nvmat1 = vmat %*% diag(scale1)\nvmat2 = vmat * scale2\n\nInterpret spatial patterns.Interpret vector directions and angles.",
     "crumbs": [
       "Multivariate",
-      "Principal Component Analysis"
+      "主成分分析（PCA）"
     ]
   },
   {
@@ -2141,7 +2141,7 @@
     "text": "Example 2: scaling = 1 and 2\nScaling 1\n\\[\n\\mathbf{U}_1 =\n\\mathbf{U} \\times\n\\begin{bmatrix}\n\\frac{\\sqrt{\\lambda_1}}{\\sum\\lambda_k} & 0 & 0 & \\cdots & 0\\\\\n0 & \\frac{\\sqrt{\\lambda_2}}{\\sum\\lambda_k} & 0 & \\cdots & 0\\\\\n0 & 0 & \\ddots & \\cdots & 0 \\\\\n0 & 0 & 0 & \\cdots  & \\frac{\\sqrt{\\lambda_k}}{\\sum\\lambda_k} \\\\\n\\end{bmatrix} \\times\n\\sqrt[4]{(n -1)\\sum{\\lambda_k}}\n\\]\nScaling 2\n\\[\n\\mathbf{U}_2 = \\mathbf{U} \\times\n\\sqrt[4]{(n -1)\\sum{\\lambda_k}}\n\\]\n\\(\\mathbf{U}_1\\) and \\(\\mathbf{U}_2\\) are the scaled scores.",
     "crumbs": [
       "Multivariate",
-      "Principal Component Analysis"
+      "主成分分析（PCA）"
     ]
   },
   {
@@ -2152,7 +2152,7 @@
     "text": "Example 2: no scaling\n\n\n\n\n\n\n\n\n\n\n\n\nThe unscaled principal components are in the matrix \\(\\mathbf{U}\\). The black circles indicate the vegan::rda() output and the colored dots indicate the results based on the SVD.\n\n\n\nlimits = c(-0.5, 0.5)\ntmp = scores(rdaout, scaling = \"none\", display = \"species\")\ntmp = tmp %*% diag(1/diag(sqrt(tmp %*% t(tmp)))) / 2\nscores(rdaout, scaling = \"none\", display = \"sites\") |&gt; \n  plot(cex = 1.5, xlim = limits, ylim = limits)\npoints(umat[,1], umat[,2], pch = 19, col = \"blue\", cex = 0.5)\nsegments(c(0,0), c(0,0), tmp[,1], tmp[,2])\ntext(tmp[,1], tmp[,2], labels = rownames(tmp))",
     "crumbs": [
       "Multivariate",
-      "Principal Component Analysis"
+      "主成分分析（PCA）"
     ]
   },
   {
@@ -2163,7 +2163,7 @@
     "text": "Example 2: scaling 1\n\n\n\n\n\n\n\n\n\n\n\n\nThe scaled principal components are in the matrix \\(\\mathbf{U}_1\\). The black circles indicate the vegan::rda() output and the colored dots indicate the results based on the SVD. Distances between dots indicate approximate euclidean distances \\((d = \\sqrt{x^2+y^2})\\)1.\n\n\n\nlimits = c(-1, 1)\ntmp = scores(rdaout, scaling = 1, display = \"species\")\ntmp = tmp %*% diag(1/diag(sqrt(tmp %*% t(tmp))))\nscores(rdaout, scaling = 1, display = \"sites\") |&gt; \n  plot(cex = 1.5, xlim = limits, ylim = limits)\npoints(umat1[,1], umat1[,2], pch = 19, col = \"blue\", cex = 0.5)\nsegments(c(0,0), c(0,0), tmp[,1], tmp[,2])\ntext(tmp[,1], tmp[,2], labels = rownames(tmp))\n\nユークリッド距離",
     "crumbs": [
       "Multivariate",
-      "Principal Component Analysis"
+      "主成分分析（PCA）"
     ]
   },
   {
@@ -2174,7 +2174,7 @@
     "text": "Example 2: scaling 2\n\n\n\n\n\n\n\n\n\n\n\n\nThe scaled principal components are in the matrix \\(\\mathbf{U}_2\\). The black circles indicate the vegan::rda() output and the colored dots indicate the results based on the SVD. Angles between vectors (radians) indicate correlation.\n\n\n\nlimits = c(-1.5, 1.5)\ntmp = scores(rdaout, choices = c(1,2), scaling = 2, display = \"species\")\ntmp = tmp %*% diag(1/diag(sqrt(tmp %*% t(tmp)))) \nscores(rdaout, scaling = 2, display = \"sites\") |&gt; \n  plot(cex = 1.5, xlim = limits, ylim = limits)\npoints(umat2[,1], umat2[,2], pch = 19, col = \"blue\", cex = 0.5)\nsegments(c(0,0), c(0,0), tmp[,1], tmp[,2])\ntext(tmp[,1], tmp[,2], labels = rownames(tmp))",
     "crumbs": [
       "Multivariate",
-      "Principal Component Analysis"
+      "主成分分析（PCA）"
     ]
   },
   {
@@ -2185,7 +2185,7 @@
     "text": "Example 3: unscaled 3D plot",
     "crumbs": [
       "Multivariate",
-      "Principal Component Analysis"
+      "主成分分析（PCA）"
     ]
   },
   {
@@ -2196,7 +2196,7 @@
     "text": "Example 3: scaled 3D plot\n\n\n\n\n\n\nScaling = 1\n\n\n\n\n\n\n\nScaling = 2",
     "crumbs": [
       "Multivariate",
-      "Principal Component Analysis"
+      "主成分分析（PCA）"
     ]
   },
   {
@@ -2207,7 +2207,7 @@
     "text": "Example 3: summary output\n\nrdaout |&gt; summary(display = NA)\n\n\nCall:\nrda(X = Yc) \n\nPartitioning of variance:\n              Inertia Proportion\nTotal           3.992          1\nUnconstrained   3.992          1\n\nEigenvalues, and their contribution to the variance \n\nImportance of components:\n                         PC1     PC2     PC3\nEigenvalue            3.6911 0.24138 0.05945\nProportion Explained  0.9246 0.06047 0.01489\nCumulative Proportion 0.9246 0.98511 1.00000\n\nScaling 2 for species and site scores\n* Species are scaled proportional to eigenvalues\n* Sites are unscaled: weighted dispersion equal on all dimensions\n* General scaling constant of scores:  \n\n\nPC1 explains 92.46 % of the inertia, therefore most of the variation occurs along the PC1 axis.",
     "crumbs": [
       "Multivariate",
-      "Principal Component Analysis"
+      "主成分分析（PCA）"
     ]
   },
   {
@@ -2218,7 +2218,7 @@
     "text": "Example 4: correlations among vectors\nThe correlation between two vectors is determined as\n\\[\n\\begin{aligned}\n\\cos\\theta &= \\frac{v_1\\cdot v_2}{\\lVert v_1 \\rVert \\lVert v_2 \\rVert} \\\\\n\\sin\\theta &= \\frac{\\lVert v_1\\times v_2 \\rVert}{\\lVert v_1 \\rVert \\lVert v_2 \\rVert} \\\\\n\\tan\\theta &= \\frac{\\lVert v_1\\times v_2\\rVert}{v_1 \\cdot v_2 } \\\\\n\\end{aligned}\n\\]",
     "crumbs": [
       "Multivariate",
-      "Principal Component Analysis"
+      "主成分分析（PCA）"
     ]
   },
   {
@@ -2229,7 +2229,7 @@
     "text": "Example 3: problem\n\n\nThe correlation between two vectors is the cosine of the angle between the vectors.\n\\[\n\\cos\\theta = \\frac{v_1\\cdot v_2}{\\lVert v_1 \\rVert \\lVert v_2 \\rVert}\n\\]\n\n\n\n\n\n\nDetermine the angle of the shaded region.",
     "crumbs": [
       "Multivariate",
-      "Principal Component Analysis"
+      "主成分分析（PCA）"
     ]
   },
   {
@@ -2240,7 +2240,7 @@
     "text": "Example 3: partial solution\n\\[\n\\cos\\theta = \\frac{v_1\\cdot v_2}{\\lVert v_1 \\rVert \\lVert v_2 \\rVert}\n\\]\n\\[\n\\begin{aligned}\nv_1 &= \\begin{bmatrix}  1.85 & -0.78 & -0.40 \\end{bmatrix} \\\\\nv_2 &= \\begin{bmatrix} -0.43 & -0.90 &  0.40 \\end{bmatrix} \\\\\n\\lVert v_1\\rVert &= \\sqrt{\\begin{bmatrix}  1.85 & -0.78 & -0.40 \\end{bmatrix} \\begin{bmatrix}  1.85 \\\\ -0.78 \\\\ -0.40 \\end{bmatrix}}  = 2.05 \\\\\n\\lVert v_2\\rVert &= \\sqrt{\\begin{bmatrix} -0.43 & -0.90 &  0.40 \\end{bmatrix} \\begin{bmatrix} -0.43 \\\\ -0.90 \\\\  0.40 \\end{bmatrix}}  = 1.08 \\\\\n\\end{aligned}\n\\]",
     "crumbs": [
       "Multivariate",
-      "Principal Component Analysis"
+      "主成分分析（PCA）"
     ]
   },
   {
@@ -2251,7 +2251,7 @@
     "text": "Example 3: final solution\n\\[\n\\cos\\theta = \\frac{\\begin{bmatrix}  1.85 & -0.78 & -0.40 \\end{bmatrix} \\begin{bmatrix} -0.43 \\\\ -0.90 \\\\  0.40 \\end{bmatrix}}{2.05 \\times 1.08}\n\\]\n\\[\n\\cos\\theta = \\frac{-0.26}{2.05 \\times1.08} = -0.12\n\\] The correlation between the two vectors is -0.12. The angle between the two vectors is \\(\\cos^{-1}(\\text{-0.1176}) =\\) 1.6886 radians, or 96.7519\\({}^\\circ\\).",
     "crumbs": [
       "Multivariate",
-      "Principal Component Analysis"
+      "主成分分析（PCA）"
     ]
   },
   {
@@ -2262,7 +2262,7 @@
     "text": "Example 3: correlations in R\n\ncalc_costheta = function(v1, v2) {\n  v1 = matrix(as.numeric(v1), ncol = 3)\n  v2 = matrix(as.numeric(v2), ncol = 1)\n  bot = sqrt(v1 %*% t(v1)) * sqrt(t(v2)  %*% v2)\n  top = v1 %*% v2\n  costheta = (top/bot)\n  costheta\n}\n\nIsolate the vectors.\n\nsl = vmat[\"SL\", ]\nsw = vmat[\"SW\", ]\npl = vmat[\"PL\", ]\n\nCalculate \\(\\cos\\theta\\).\n\n\ncalc_costheta(sl, sw)\ncalc_costheta(sl, pl)\ncalc_costheta(pl, sw)\n\n\n           [,1]\n[1,] -0.1175698\n          [,1]\n[1,] 0.8717538\n           [,1]\n[1,] -0.4284401\n\n\n\nIt is easier to calculate the correlations on the original centered data.\n\n\ncor(Yc)\n\n\n           SL         SW         PL\nSL  1.0000000 -0.1175698  0.8717538\nSW -0.1175698  1.0000000 -0.4284401\nPL  0.8717538 -0.4284401  1.0000000",
     "crumbs": [
       "Multivariate",
-      "Principal Component Analysis"
+      "主成分分析（PCA）"
     ]
   },
   {
@@ -2273,7 +2273,7 @@
     "text": "Example 3: variable – PC correlations\nTo determine the correlations of each variable with respect to the principal component axes, use the function.\n\n\nI = diag(1, 3, 3)\ncc = \\(x) {calc_costheta(sl, I[x, ])}\npcsl = sapply(1:3, cc)\npcsw = sapply(1:3, cc)\npcpl = sapply(1:3, cc)\nmatrix(c(pcsl, pcsw, pcpl), ncol = 3,\n       dimnames = list(str_glue(\"PC{1:3}\"), \n                       c(\"SL\", \"SW\", \"PL\")))\n\n\n            SL         SW         PL\nPC1  0.9044678  0.9044678  0.9044678\nPC2 -0.3792589 -0.3792589 -0.3792589\nPC3 -0.1951939 -0.1951939 -0.1951939\n\n\n\nThe SL and PL vectors are positively correlated with PC1 (0.9045 and 0.9045, respectively). Whereas the SW vector is negatively correlated with PC2 (-0.3793).",
     "crumbs": [
       "Multivariate",
-      "Principal Component Analysis"
+      "主成分分析（PCA）"
     ]
   },
   {
@@ -2284,7 +2284,7 @@
     "text": "References\nhttps://qiita.com/horiem/items/71380db4b659fb9307b4\nhttps://stats.stackexchange.com/questions/141085/positioning-the-arrows-on-a-pca-biplot\n\n\n\n\n\n\n\n\nHotelling, H. 1933. “Analysis of a Complex of Statistical Variables into Principal Components.” Journal of Educational Psychology 24 (6): 417–41. https://doi.org/10.1037/h0071325.\n\n\nJolliffe, Ian T., and Jorge Cadima. 2016. “Principal Component Analysis: A Review and Recent Developments.” Philosophical Transactions of the Royal Society A: Mathematical, Physical and Engineering Sciences 374 (2065): 20150202. https://doi.org/10.1098/rsta.2015.0202.\n\n\nPearson, Karl. 1901. “LIII. On Lines and Planes of Closest Fit to Systems of Points in Space.” The London, Edinburgh, and Dublin Philosophical Magazine and Journal of Science 2 (11): 559–72. https://doi.org/10.1080/14786440109462720.",
     "crumbs": [
       "Multivariate",
-      "Principal Component Analysis"
+      "主成分分析（PCA）"
     ]
   },
   {
@@ -2691,7 +2691,7 @@
     "text": "アマモの全長の比較\n3つの沿岸域（A, B, and C）のアマモ (Zostera marina) を採取しました。 作業仮説は「アマモの全長は沿岸域によって，長さがことなる」です。",
     "crumbs": [
       "基礎統計学用スライド",
-      "Comparing multiple groups"
+      "3群以上の分析（分散分析）"
     ]
   },
   {
@@ -2702,7 +2702,7 @@
     "text": "t検定で比較する\n3 カ所の全長を比較するのであれば，次のような組み合わせを考えられます。\n\nA – B\nA – C\nB – C\n\nt 検定を 3 回実行して，比較してみたら，結果は次の通りです。\n\n\n\n\n\nTest\nt-value\nd.f.\np-value\n\n\n\n\nA-B\n-2.778\n16.373\n0.0132\n\n\nA-C\n-2.333\n15.532\n0.0334\n\n\nB-C\n0.239\n17.838\n0.8141\n\n\n\n\n\n\n\nNHST （帰無仮説の有意性検定）によると，A–B と A–C の帰無仮説は棄却できますが，B–C の帰無仮説の棄却はできません。",
     "crumbs": [
       "基礎統計学用スライド",
-      "Comparing multiple groups"
+      "3群以上の分析（分散分析）"
     ]
   },
   {
@@ -2713,7 +2713,7 @@
     "text": "多重仮説検定の問題\n\\(\\alpha\\) は有意水準ですが，第 1 種の誤りを起こす確率でもあります。つまり，\\(\\alpha\\) は帰無仮説が正しくても誤って棄却する確率です。\nアマモの全長の解析には，t 検定を 3 回しました。1 回の検定にかかる第 1 種の誤りは 0.05 でしたが，3 回も検定したので（多重仮説検定），全体の第 1 種の誤りを起こす確率は次の通りです。\n\\[\nα_{all}=1-(1-α)_{\\text{A-B}}(1-α)_{\\text{A-C}}(1-α)_{\\text{B-C}} = 1-0.95^3 = 0.1426\n\\]",
     "crumbs": [
       "基礎統計学用スライド",
-      "Comparing multiple groups"
+      "3群以上の分析（分散分析）"
     ]
   },
   {
@@ -2724,7 +2724,7 @@
     "text": "多重仮説検定したときの α 過誤\n\n\n多重仮説検定をするときに，全ての仮説の中から少なくとも 1 つの正しい帰無仮説が誤って棄却されてしまう確率が \\(\\alpha_{\\text{fwer}}\\) です。\n\\[\n\\alpha_{\\text{fwer}} = 1 - (1-\\alpha)^n\n\\]\n全体の \\(\\alpha\\) 過誤をおさえたければ，各実験の \\(\\alpha\\) を抑えれことが必要です。\n\n\n\n\n\n\n\n\n\n\n\n\nfwer: family-wise error rate （ファミリーワイズエラー率）",
     "crumbs": [
       "基礎統計学用スライド",
-      "Comparing multiple groups"
+      "3群以上の分析（分散分析）"
     ]
   },
   {
@@ -2735,7 +2735,7 @@
     "text": "一元配置分散分析\n一元配置分散分析 (One-way ANOVA) は， 1つの要因（因子, factor）A の複数の水準（群, group, level） A1, A2, …, Ap にたいして，各水準の母平均の差を検証するための検定です。\n\n帰無仮説: \\(\\mu_1 = \\mu_2 = \\cdots = \\mu_p\\)\n全水準の平均値は等しい",
     "crumbs": [
       "基礎統計学用スライド",
-      "Comparing multiple groups"
+      "3群以上の分析（分散分析）"
     ]
   },
   {
@@ -2746,7 +2746,7 @@
     "text": "一元配置分散分析\n解析に使うモデルの次の方程式で定義します。\n\\[\nx_{ij} = \\mu + \\alpha_i + \\epsilon_{ij}\n\\]\n\\(\\mu\\) は総平均値，\\(x_{ij}\\) は水準 \\(i\\) の指数 \\(j\\) の観測値です。\\(\\alpha_i\\) は\\(\\mu\\) に対する水準 \\(i\\) の効果です。\\(\\epsilon_{ij}\\) はお互いに独立に正規分布 \\((N(0, \\sigma^2))\\) に従う誤差項です。ただし，\\(\\sum_{i=1}^n \\alpha_i = 0\\) とします。このとき，帰無仮説は \\(\\alpha_1 = \\alpha_2 = \\cdots = \\alpha_n\\) です。\n\n\nこのときの α は有意水準ではない。",
     "crumbs": [
       "基礎統計学用スライド",
-      "Comparing multiple groups"
+      "3群以上の分析（分散分析）"
     ]
   },
   {
@@ -2757,7 +2757,7 @@
     "text": "一元配置分散分析表\n\n\n\n\n\n要因\n\n\n自由度 (df)\n\n\n平方和 (SS)\n\n\n平均平方 (MS)\n\n\nF値\n\n\nP値\n\n\n\n\n\n\nA\n\n\n\\(df_A = I-1\\)\n\n\n\\(SS_A\\)\n\n\n\\(MS_A = SS_A / df_A\\)\n\n\n\\(MS_A / MS_R\\)\n\n\n\\(qf(1-α, df_A, df_R)\\)\n\n\n\n\ne\n\n\n\\(df_R = I(J-1)\\)\n\n\n\\(SS_R\\)\n\n\n\\(MS_R = SS_R / df_R\\)\n\n\n\n\n\n\n\n\n\n\n\\(df_T =IJ-1\\)\n\n\n\\(SS_T\\)\n\n\n\n\n\n\n\n\n\n\n\n\\(A\\) は要因, \\(e\\) は残渣（誤差項）,\\(I\\) は水準の数, \\(J\\) は標本の数です。\\(SS_A\\) は水準間平方和，\\(SS_R\\) は残渣平方和, \\(SS_T\\)は総平方和です。\\(MS_A\\) は水準間平均平方，\\(MS_R\\) は残渣平均平方です。F値は平均平方の比です。水準間の平均値に対して，誤差（ばらつき，残渣）が大きいと，残渣平均平方も大きくなります。F値の分母が分子より大きくなったら，帰無仮説を棄却しにくくなります。",
     "crumbs": [
       "基礎統計学用スライド",
-      "Comparing multiple groups"
+      "3群以上の分析（分散分析）"
     ]
   },
   {
@@ -2768,7 +2768,7 @@
     "text": "平方和の方程式\n\\[\n\\underbrace{\\sum_{i=1}^I\\sum_{j=1}^J(x_{ij} - \\overline{\\overline{x}})^2 }_{\\text{総平方和}\\;(SS_T)} =\n\\overbrace{J\\sum_{i=1}^I(\\overline{x}_{i}+\\overline{\\overline{x}})^2}^{\\text{水準間平方和}\\;SS_A} +\n\\underbrace{\\sum_{i=1}^I\\sum_{j=1}^J(x_{ij} - \\overline{x}_i)^2}_{\\text{残渣平方和}\\;SS_R}\n\\]\n\\(\\bar{x}_i\\) は標本平均，\\(\\bar{\\bar{x}}\\) は総平均です。",
     "crumbs": [
       "基礎統計学用スライド",
-      "Comparing multiple groups"
+      "3群以上の分析（分散分析）"
     ]
   },
   {
@@ -2779,7 +2779,7 @@
     "text": "平均方和を分解すると\n\n残渣平均平方は Field site (site 変数) ごとの残渣に影響されます。残渣のばらつきが小さいほど，残渣平均平方が小さくなります。 総平均に対する Field site の効果が大きければ，水準間平均平方が大きくなります。\n\nThe simulated data case, where the MS of the site is larger than the MS of the residuals.",
     "crumbs": [
       "基礎統計学用スライド",
-      "Comparing multiple groups"
+      "3群以上の分析（分散分析）"
     ]
   },
   {
@@ -2790,7 +2790,7 @@
     "text": "平均方和: 水準ごとのばらつきが小さいとき\n\n水準間平均平方 (site: Mean Sq) はかわらないが，残渣平均平方 (Residuals: Mean Sq) は小さくなった。\n\n\n\n  \n\n\n\n\n\nThe same data but the variation within the sites are made smaller.\nThe variation among sites are not changes.\nIn this case, the MS of the residuals decrease.",
     "crumbs": [
       "基礎統計学用スライド",
-      "Comparing multiple groups"
+      "3群以上の分析（分散分析）"
     ]
   },
   {
@@ -2801,7 +2801,7 @@
     "text": "平均方和: 水準ごとのばらつきが大きいとき\n水準間平均平方 (site: Mean Sq) はかわらないが，残渣平均平方 (Residuals: Mean Sq) は大きくなった。\n\n\n\n  \n\n\n\n\n\n\nThe same data but the variation within the sites are made larger.\nThe variation among sites are not changes.\nIn this case, the MS of the residuals increase, because the noise is larger in the residuals.",
     "crumbs": [
       "基礎統計学用スライド",
-      "Comparing multiple groups"
+      "3群以上の分析（分散分析）"
     ]
   },
   {
@@ -2812,7 +2812,7 @@
     "text": "分散分析の統計量\n分散分析で求める統計量は F値 とよびます。\n\\[\nF = \\left . \\frac{SS_A}{I-1} \\right / \\frac{SS_R}{I(J-1)}  = \\frac{MS_A}{MS_R}\n\\]\nF値は自由度 \\(I-1, I(J-1)\\) のF分布に従います。",
     "crumbs": [
       "基礎統計学用スライド",
-      "Comparing multiple groups"
+      "3群以上の分析（分散分析）"
     ]
   },
   {
@@ -2823,7 +2823,7 @@
     "text": "F値の確率密度関数\n\\[\nP(x|d_1, d_2) = \\frac{1}{\\mathrm{B}\\left(\\frac{d_1}{2}, \\frac{d_2}{2}\\right)}\\left(\\frac{d_1}{d_2}\\right)^{\\left(\\frac{d_1}{2}\\right)}x^{\\left(\\frac{d_1}{2}-1\\right)}\\left(1+\\frac{d_1}{d_2}x\\right)^{\\left(-\\frac{d_1+d_2}{2}\\right)}\n\\]\n\\(\\mathrm{B}(d_1, d_2)=\\int_0^1t^{x-1}(1-t)^{y-1}dt\\) はベータ関数，\\(d_1\\) と \\(d_2\\) は正数です。\\(x\\) が確率変数です。",
     "crumbs": [
       "基礎統計学用スライド",
-      "Comparing multiple groups"
+      "3群以上の分析（分散分析）"
     ]
   },
   {
@@ -2834,7 +2834,7 @@
     "text": "一元配置分散分析の仮定\n分散分析に次の仮定が定義されています。\n\n母集団の分散は等しい\n残渣は正規分布する\n任意の水準の応答（応答変数，説明したいデータ，y軸の値）はお互いに独立で同一の分布に従う正規確率変数であること",
     "crumbs": [
       "基礎統計学用スライド",
-      "Comparing multiple groups"
+      "3群以上の分析（分散分析）"
     ]
   },
   {
@@ -2845,7 +2845,7 @@
     "text": "アマモの全長の解析\nRでは，いろんな方法で分散分析ができます。\n\naov(data ~ site, data = X) %&gt;% summary()\n\n            Df Sum Sq Mean Sq F value Pr(&gt;F)  \nsite         2  161.7   80.84   3.896 0.0326 *\nResiduals   27  560.2   20.75                 \n---\nSignif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1\n\n\n\nlm(data ~ site, X) %&gt;% summary.aov()\n\n            Df Sum Sq Mean Sq F value Pr(&gt;F)  \nsite         2  161.7   80.84   3.896 0.0326 *\nResiduals   27  560.2   20.75                 \n---\nSignif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1\n\n\n実は，oneway.test(), aov(), と lm() 関数で分散分析ができます。 不等分散のとき，oneway.test() はウェルチの分散分析を実行してくれますが，一般的につかわれていません。 さらに，oneway.test() の結果から解析の診断や多重仮説検定を簡単にできません。 aov() は lm() ラッパー (wrapper) なので，aov() を実行したとき，裏で lm() が実行されます。",
     "crumbs": [
       "基礎統計学用スライド",
-      "Comparing multiple groups"
+      "3群以上の分析（分散分析）"
     ]
   },
   {
@@ -2856,7 +2856,7 @@
     "text": "α過誤，β過誤，検出力\n\n\n\nlibrary(pwr)\nJ = 3 # 群の数\neffect_size = 1 # 効果\nMSR = 1 # 残渣平均平方\npower = 0.80 # 検出力\nalpha = 0.05 # 有意水準・α過誤\nlambda = effect_size / MSR \npwr.anova.test(k = J, \n               f = lambda, \n               power = power) # pwr パッケージの関数\n\n\n\n\n\n     Balanced one-way analysis of variance power calculation \n\n              k = 3\n              n = 4.381443\n              f = 1\n      sig.level = 0.05\n          power = 0.8\n\nNOTE: n is number in each group\n\n\n\n\n一元配置分散分析の検出力は 0.80，\\(\\alpha\\) は 0.05， 水準の数は 3，標本平均の最小と最大の差（効果）は 1， 残渣平均平方と効果の比を 1 にしたとき，各群の標本数を求めました。 このときの効果は 1 としましたが，lambda (\\(\\lambda\\)) の方程式は次のとおりです。\n\\[\n\\lambda = \\frac{\\sum_{j-1}^Jn\\beta_j}{\\sigma_e^2}\n\\] \\(\\beta_j\\) は \\(j\\) 水準の効果，\\(n\\) は \\(j\\) 群の標本数，\\(\\sigma_e^2\\) は母分散です。 \\(n\\), \\(\\beta_j\\), \\(\\sigma_e^2\\) は未知なので，客観的に選ぶ必要があります。\n必要な標本数は n = \\(4.38 \\rightarrow 5\\) でした。\n\nWhen the null hypothesis is TRUE, then the F-value follows a central F-distribution. When the null hypothesis is FALSE, then the F-value follows a non-central F-distribution. This requires determining the non-centrality parameter (ncp).\n\\[\n\\displaystyle\n\\lambda = \\frac{\\sum_{j-1}^Jn\\beta_j}{\\sigma_e^2}\n\\]\nwhere \\(\\beta\\) is the effect size (difference between the group mean and the grand mean), \\(n\\) is the number of samples in group \\(j\\), and \\(\\sigma_e^2\\) is population variance.\nhttps://stats.idre.ucla.edu/r/dae/one-way-anova-power-analysis/\nhttps://rpubs.com/davidtnly/411707\nhttp://users.stat.umn.edu/~corbett/classes/5303/ANOVA_power_handout.pdf\nCohen’s f2 is just the VAR(A) / VAR(R)",
     "crumbs": [
       "基礎統計学用スライド",
-      "Comparing multiple groups"
+      "3群以上の分析（分散分析）"
     ]
   },
   {
@@ -2867,7 +2867,7 @@
     "text": "分散分析のP値も一様分布する\n帰無仮説が正しいとき，分散分析のP値は一様分布します。 シミュレーションの水準数は 3，各水準の標本数は 10，等分散には従っています。",
     "crumbs": [
       "基礎統計学用スライド",
-      "Comparing multiple groups"
+      "3群以上の分析（分散分析）"
     ]
   },
   {
@@ -2878,7 +2878,7 @@
     "text": "不等分散のときα過誤は少々あがる(N=10)\n\n説明図\n\n\n帰無仮説が正しいとき，そして等分散性が守られていないとき，P値は一様分布しません。 それにして，帰無仮説を棄却しやすくなりません。 実施される F 検定は保守的なので，どちらかというと，有意な結果はでません。 つまり，第１種の過誤を起こす確率はあまりあがりません。 20・30・30 や 10・10・30 は水準間の平均値に対する分散の％割合を示しています。 等分散の群は Control です。このときの標本数は10, 水準数は 3 です。",
     "crumbs": [
       "基礎統計学用スライド",
-      "Comparing multiple groups"
+      "3群以上の分析（分散分析）"
     ]
   },
   {
@@ -2889,7 +2889,7 @@
     "text": "標本数をあげればα過誤は若干さがる(N=100)\n\n説明図\n\n\n帰無仮説が正しいとき，標本数を100 にしたら第１種の過誤を起こす確率は若干さがります。 20・30・30 や 10・10・30 は水準間の平均値に対する分散の％割合を示しています。 等分散の群は Control です。",
     "crumbs": [
       "基礎統計学用スライド",
-      "Comparing multiple groups"
+      "3群以上の分析（分散分析）"
     ]
   },
   {
@@ -2900,7 +2900,7 @@
     "text": "不等分散のときβ過誤はあがる(N=10)\n\n説明図\n\n\n帰無仮説が正しくないとき，さらに 等分散性が守られていないとき，正しく帰無仮説を棄却しにくくなります。 第2種の過誤が起きやすくなります。 20・30・30 や 10・10・30 は水準間の平均値に対する分散の％割合を示しています。 等分散の群は Control です。",
     "crumbs": [
       "基礎統計学用スライド",
-      "Comparing multiple groups"
+      "3群以上の分析（分散分析）"
     ]
   },
   {
@@ -2911,7 +2911,7 @@
     "text": "分散分析の手順\n\n作業仮説，帰無仮説，対立仮説をたてる。\n実験をデザインして，実行する。\n集めたデータの箱ヒゲ図を作図する。\n\n不等分散性が気になるなら，等分散性の検定を行なう。\nBartlett’s test バートレット検定 (bartlett.test())\nLevene’s test ルビーン検定 (car パケージに leveneTest() があります。)\nHartley’s test ハートリー検定\nBrownForsythe test\nFisher Ratio\nConover test\n\n分散分析を実施する。\n図を用いて残渣の正規性と等分散性を確認する。\n問題なければ，結果を報告する。問題があったとき，さらにデータ処理を行い，再び分散分析をする。\n\n\nhttps://stats.stackexchange.com/questions/135232/bartletts-test-vs-levenes-test",
     "crumbs": [
       "基礎統計学用スライド",
-      "Comparing multiple groups"
+      "3群以上の分析（分散分析）"
     ]
   },
   {
@@ -2922,7 +2922,7 @@
     "text": "0. 作業仮説・帰無仮説・対立仮説の設定\n最初の紹介した海域ごとのアマモの全長を解析します。\n作業仮説： アマモの全長は沿岸域によって，長さがことなる\n帰無仮説： アマモの海域ごとの全長は等しい \\((\\mu_A = \\mu_B = \\mu_C)\\)\n対立仮説： 一つ以上のアマモの海域ごとの全長は異なる \\((\\mu_A \\neq \\mu_B |\\mu_A \\neq \\mu_C|\\mu_B \\neq \\mu_C)\\)",
     "crumbs": [
       "基礎統計学用スライド",
-      "Comparing multiple groups"
+      "3群以上の分析（分散分析）"
     ]
   },
   {
@@ -2933,7 +2933,7 @@
     "text": "1. 実験をデザインして実行する\n2019年3月1日に沿岸A，沿岸B，沿岸Cにおいて，各沿岸域から無作為に 10 個体のアマモを採取して，定規で全長を測定した。\n帰無仮説を検証するために，一元配置分差分析を実施する。",
     "crumbs": [
       "基礎統計学用スライド",
-      "Comparing multiple groups"
+      "3群以上の分析（分散分析）"
     ]
   },
   {
@@ -2944,7 +2944,7 @@
     "text": "2. 集めたデータの箱ヒゲ図\nデータ数が少ないのとき，散布図でも問題ないです。\n\n\nggplot(X) + geom_boxplot(aes(x = site, y = data, fill = site)) +\n  geom_point(aes(x = site, y = data), position = position_jitter(0.05)) +\n  scale_x_discrete(\"Field site\") + scale_y_continuous(\"Length (mm)\") +\n  theme(legend.position=c(0,1), legend.justification=c(0,1), legend.title=element_blank())",
     "crumbs": [
       "基礎統計学用スライド",
-      "Comparing multiple groups"
+      "3群以上の分析（分散分析）"
     ]
   },
   {
@@ -2955,7 +2955,7 @@
     "text": "3. 等分散性の検定\n箱ひげ図を確認すると，不等分散性の問題はないように見えないが，検定をかけて確認できます。site ごとの不偏分散は次の通りです。\n\nX %&gt;% \n  group_by(site) %&gt;% \n  summarise(sigma = var(data))\n\n\n  \n\n\n\nSite A の分散は Site B と Site C と比べると約半分ぐらいです。\nバートレット検定 は正規分布に従わないデータに強く影響されますので，誤った結果になる可能性があります。，\n\nbartlett.test(data ~ site, X)\n\n\n    Bartlett test of homogeneity of variances\n\ndata:  data by site\nBartlett's K-squared = 1.5442, df = 2, p-value = 0.462\n\n\nルービン検定 は正規分布に従わないデータに対してロバスト (robust, 頑健) です。；\n\ncar::leveneTest(data ~ site, X)\n\n\n  \n\n\n\nどちらも，帰無仮説を棄却する結果を示していないので，水準ごとの分散は等しいと解釈できます。\n\n第 1 種の過誤を起こす性質： Levene &gt; Bartlett\n第 2 種の過誤を起こす性質： Bartlett &gt; Levene\n\n\nLevene’s test is just a t-test or an ANOVA of the absolute values of the deviations of the data from their group means. So, the assumptions that need to be satisfied are the same as a t-test or an ANOVA. However, since it uses the absolute value, the t-test/ANOVA assumptionare are not truely satsified, since the value being tested can never be less than 0.\nBartlett’s test assumes the data come from a normal distribution.\nNote that there is a Brown-Forsythe test, which is a robust Levene’s test that uses the absolute deviation from the median. There are two packages with a function, onewaytests and lawstat. I think the calculation in onewaytests is wrong, because it appears to be using the mean and not the median.",
     "crumbs": [
       "基礎統計学用スライド",
-      "Comparing multiple groups"
+      "3群以上の分析（分散分析）"
     ]
   },
   {
@@ -2966,7 +2966,7 @@
     "text": "4. 分散分析を実施する\n等分散性に問題なかったので，分散分析をします。\n\nm1 = lm(data ~ site, data = X)\nanova(m1)\n\n\n  \n\n\n\n分散分析表には，自由度 (Df)，平方和 (Sum Sq)，平均平方 (Mean Sq)，F値 (F value)，P値 (Pr(&gt;F)) がでます。 P値は有意水準 (α = 0.05) より低いので，帰無仮説 (\\(\\mu_A = \\mu_B = \\mu_C\\)) を棄却します。帰無仮説が正しかったら，このデータはとても珍しいです。\n\n# 手順はいくつかあります。\nsummary.aov(m1)\nlm(data ~ site, data = X) %&gt;% anova()\nlm(data ~ site, data = X) %&gt;% summary.aov()\naov(data ~ site, data = X) %&gt;% summary()",
     "crumbs": [
       "基礎統計学用スライド",
-      "Comparing multiple groups"
+      "3群以上の分析（分散分析）"
     ]
   },
   {
@@ -2977,7 +2977,7 @@
     "text": "5. 図を用いて残渣の正規性と等分散性を確認する\n\nResidual vs. site と Residual vs. Fitted Value の図は残渣の性質を確認するための図です。 この二つの図で確認するのは，残渣のばらつきとばらつきの性質です。ばらつきが説明変数となんかしらの関係があれば，解析に問題があると示します。Normal-QQ Plot は残渣の正規性を確認するための図です。残渣は正規分布に従えば，赤線とかさなります。この結果をみると，正規性に問題はないが，期待値が高いときの残渣のばらつきは期待値の低いときのばらつきより大きいです。\n\nhttps://towardsdatascience.com/a-comprehensive-list-of-handy-r-packages-e85dad294b3d",
     "crumbs": [
       "基礎統計学用スライド",
-      "Comparing multiple groups"
+      "3群以上の分析（分散分析）"
     ]
   },
   {
@@ -2988,7 +2988,7 @@
     "text": "6. 結果を報告する\n結果の報告について，まずは分散分析表の記述が必要です。\n\n\n\n\n\n文中に記述するなら，次のとおりです。\n\n沿岸域によってアマモの全長が異なるかを，一元配置分散分析によって検討したところ，沿岸域 \\((F_{(2, 27)} = 3.90, P = 0.0326)\\) の効果は有意だった。\n\nF値，自由度，P値を記述することがポイントです。",
     "crumbs": [
       "基礎統計学用スライド",
-      "Comparing multiple groups"
+      "3群以上の分析（分散分析）"
     ]
   },
   {
@@ -2999,7 +2999,7 @@
     "text": "分散分析の帰無仮説を棄却したとき\n\n分散分析に帰無仮説を棄却したら，\\(\\mu_1 \\ne \\mu_2 \\ne \\cdots \\ne \\mu_p\\) と考えられるが， 水準ごとの違いは明らかではないです。多重比較はペアごとの平均値を比較するときにつかう手法です。2 種類の多重比較があります。\n\na priori comparisons「事前比較」\n\n分散分析をするまえに，事前に設定した多重比較\n\npost hoc comparisons「事後比較」\n\n分散分析をしたあとにする多重比較\n\n\n事前比較のとき，第 1 種の誤りは分散分析の \\(\\alpha\\) と同じです。 事後比較のとき，第 1 種の誤りを新たに求める必要があります。\n\n\nThis site is completely wrong! http://plaza.umin.ac.jp/~beehappy/stat/com-ph.html",
     "crumbs": [
       "基礎統計学用スライド",
-      "Comparing multiple groups"
+      "3群以上の分析（分散分析）"
     ]
   },
   {
@@ -3010,7 +3010,7 @@
     "text": "線型結合\n\n確率変数 \\(x_1, x_2, \\cdots, x_p\\) の線型結合は次のように定義します。\n\\[\nL = c_1 x_1 + c_2 x_2 + \\cdots + c_p x_p\n\\] このとき，\\(c_i\\) はあらかじめ決めたモデル係数です。",
     "crumbs": [
       "基礎統計学用スライド",
-      "Comparing multiple groups"
+      "3群以上の分析（分散分析）"
     ]
   },
   {
@@ -3021,7 +3021,7 @@
     "text": "事前比較\n\n事前比較のとき，あらかじめ決めたモデル係数と平均値の積和（線型結合）はつぎのとおりです。\\(\\Lambda\\) は大文字のラムダ (\\(\\lambda\\)) です。\n\\[\n\\Lambda = \\sum_i c_i \\mu_i\n\\] \n水準 \\(i\\) の平均値 \\(\\mu_i\\) の対比は先ほどの式で表せます。 このとき，\\(c_i\\) はモデルの係数です。\n\\[\n\\sum_i c_i = 0\n\\] 事前比較の線型結合は上の条件を満たさなければなりません。",
     "crumbs": [
       "基礎統計学用スライド",
-      "Comparing multiple groups"
+      "3群以上の分析（分散分析）"
     ]
   },
   {
@@ -3032,7 +3032,7 @@
     "text": "事前比較の線型結合の例\n一般的な線型結合の例\n\\[\nL = \\left(\\frac{1}{p}\\right)x_1 +\\left(\\frac{1}{p}\\right)x_2 +\\cdots +\\left(\\frac{1}{p}\\right)x_p\n\\] 事前比較の線型結合の例\n\\[\nL = \\left(\\frac{1}{3}\\right)x_1 +\n\\left(\\frac{1}{3}\\right)x_2 +\n\\left(\\frac{1}{3}\\right)x_3 -\n\\left(\\frac{1}{2}\\right)x_4 -\n\\left(\\frac{1}{2}\\right)x_5\n\\] \\(\\rightarrow\\) 事前比較の係数の和は \\(\\frac{1}{3}+\\frac{1}{3}+\\frac{1}{3}-\\frac{1}{2}-\\frac{1}{2}=0\\).",
     "crumbs": [
       "基礎統計学用スライド",
-      "Comparing multiple groups"
+      "3群以上の分析（分散分析）"
     ]
   },
   {
@@ -3043,7 +3043,7 @@
     "text": "事前比較\n\n直交対比 (orthogonal contrasts) は特別な線型結合です。\n複数 (\\(k\\)) の対比 (\\(\\Lambda_j = \\sum_i c_{ji}\\mu_i\\), \\(\\Lambda_k = \\sum_i c_{ki}\\mu_i\\)) があった場合，\n\\[\n\\sum_i  \\frac{c_{ji}c_{ki}}{n_i}= 0\n\\] さらに上の条件を満たさなければなりません。\n\n\nA contrast is a linear combination of treatment group means (\\(\\mu_i\\)),\n\\[\n\\Lambda = \\sum_i c_i \\mu_i\n\\] where the coefficients \\(c_i\\) are predetermined values that must satisfy the condition \\(\\sum_i c_i = 0\\).\nIf there are \\(k\\) multiple contrasts (e.g., \\(\\Lambda_j = \\sum_i c_{ji}\\mu_i\\), \\(\\Lambda_k = \\sum_i c_{ki}\\mu_i\\)), and if they satisfy the constraint,\n\\[\n\\sum_i  \\frac{c_{ji}c_{ki}}{n_i}= 0\n\\]\nthen these contrasts are called orthogonal contrasts.\nj and k refer to a contrast, and there are there are \\(J-1\\) orthogonal contrasts. Where \\(J\\) is the number of levels.\nOrthogonal contrasts are comparisons that are statistically independent.\nIf we compare setosa with virginica and setosa with versicolor, we have implicitly compared virginica with versicolor.\nChoose the contrasts depending on your hypothesis. So if we want to compare virginica and versicolor with setosa, we must build a contrast matrix to do so.\nA contrast matrix has contrast coefficients that must sum to zero. But in R the default contrasts do not",
     "crumbs": [
       "基礎統計学用スライド",
-      "Comparing multiple groups"
+      "3群以上の分析（分散分析）"
     ]
   },
   {
@@ -3054,7 +3054,7 @@
     "text": "直交対比の例\n\n\\(\\mu_1\\), \\(\\mu_2\\), \\(\\mu_3\\) の平均値と関係するモデル係数の線型結合は次の用な形をとります。\n\\[\n\\Lambda = \\overbrace{c_1 \\mu_1}^{p=1} + \\overbrace{c_2 \\mu_2}^{p=2} + \\overbrace{c_3 \\mu_3}^{p=3}\n\\] 最大 \\(p-1\\) の直交比較は設定できます。このとき，\\(p=3\\) なので，直交比較の数は \\(2\\) です。つまり，ここで設定できる直交比較は \\[\n\\begin{aligned}\nA &= a_1 \\mu_1 + a_2 \\mu_2 + a_3 \\mu_3 \\\\\nB &= b_1 \\mu_1 + b_2 \\mu_2 + b_3 \\mu_3\n\\end{aligned}\n\\]\n問題は，\\(\\sum_i a_i = 0\\)，\\(\\sum_i b_i = 0\\)，\\(\\sum_i \\frac{a_i b_i}{n_i}=0\\) を満たす係数をきめることです。",
     "crumbs": [
       "基礎統計学用スライド",
-      "Comparing multiple groups"
+      "3群以上の分析（分散分析）"
     ]
   },
   {
@@ -3065,7 +3065,7 @@
     "text": "直交比較の例\n\n係数の組み合わせは無限にありますが，実際には仮説をたててきめます。このとき，\\(\\mu_1 = \\mu_2\\) と \\(\\frac{1}{2}(\\mu_1 + \\mu_2) = \\mu_3\\) が多重比較の帰無仮説としたら，直交比較は次のとおりです。\n\\[\n\\begin{aligned}\nA &= 1 \\mu_1 + (-1) \\mu_2 +    0 \\mu_3 \\\\\nB &= 1 \\mu_1 +   1  \\mu_2 + (-2) \\mu_3\n\\end{aligned}\n\\]\n\n\\(\\sum_i a_i \\rightarrow 1 + (-1) = 0\\)\n\\(\\sum_i b_i \\rightarrow 1 + 1 + (-2) = 0\\),\n\\(\\sum_i \\frac{a_i b_i} {n_i} \\rightarrow 1\\times 1 + (-1)\\times 1 + 0\\times(-2) = 0\\)",
     "crumbs": [
       "基礎統計学用スライド",
-      "Comparing multiple groups"
+      "3群以上の分析（分散分析）"
     ]
   },
   {
@@ -3076,7 +3076,7 @@
     "text": "多重比較\n\n\n多重比較（線型比較, linear contrasts）は \\(p\\) 平均値の比較をします。\n\n直交比較を満たさない多重比較の比較は独立ではない。\n\n直交比較は (orthogonal contrasts) も \\(p\\) 平均値の比較をしていますが，独立した比較をしています。\n\n独立した比較は \\(p-1\\) あります。\n\nFamily wise error rate (FWER: ファミリーワイズエラー率) を 0.05 におさえるのであれば，各比較の test wise error rate (TWER: テストワイズエラー率) を下げる必要があります。",
     "crumbs": [
       "基礎統計学用スライド",
-      "Comparing multiple groups"
+      "3群以上の分析（分散分析）"
     ]
   },
   {
@@ -3087,7 +3087,7 @@
     "text": "FWER\n\nファミリーワイズエラー率は多重仮説検定をするときに，全ての仮説のなで，少なくとも１つの第１種の過誤を起こす確率です。FWER の決め方に，数種類の手法があります。\n\nBonferroni’s correction\n\nボンフェローニ補正\n\nSidak’s procedure\n\nシダックの手法\n\nHolmes-Bonferroni’s procedure\n\nホルム・ボンフェローニ手法\n\nDunnet’s correction\n\nダネット補正",
     "crumbs": [
       "基礎統計学用スライド",
-      "Comparing multiple groups"
+      "3群以上の分析（分散分析）"
     ]
   },
   {
@@ -3098,7 +3098,7 @@
     "text": "ボンフェローニ補正\n\nBonferroni’s correction\n\n帰無仮説 \\(H_i\\) を検定するための P値を \\(p_i\\) とする。\n\\(p_i \\leq \\alpha / m\\) であれば，\\(H_i\\) を棄却する。",
     "crumbs": [
       "基礎統計学用スライド",
-      "Comparing multiple groups"
+      "3群以上の分析（分散分析）"
     ]
   },
   {
@@ -3109,7 +3109,7 @@
     "text": "シダックの手法\n\nSidak’s procedure\n\nTWER は \\(\\alpha_{sidak} = 1 - (1-\\alpha)^\\frac{1}{m}\\)\nボンフェローニ補正より検出力が高い。",
     "crumbs": [
       "基礎統計学用スライド",
-      "Comparing multiple groups"
+      "3群以上の分析（分散分析）"
     ]
   },
   {
@@ -3120,7 +3120,7 @@
     "text": "ホルム・ボンフェローニ手法\n\nHolmes-Bonferroni’s procedure\n\nP値を最小から最大までにならべ，\\(P_1, P_2, \\cdots, P_n\\)に対して帰無仮説 \\(H_1, H_2, \\cdots, H_n\\)とする。\n\\(P_k \\leq \\frac{\\alpha}{m+1 - k}\\) が最大になったときの \\(k\\) は \\(R\\) とする。\n\\(H_1, \\cdots, H_k\\) までの帰無仮説を棄却する。",
     "crumbs": [
       "基礎統計学用スライド",
-      "Comparing multiple groups"
+      "3群以上の分析（分散分析）"
     ]
   },
   {
@@ -3131,7 +3131,7 @@
     "text": "ダネット補正\n\nDunnet’s correction\n\n多数の水準を単一の対象水準と比較したいときにつきます。\nダネット補正のとき，\\(j-1\\)回 の比較しかありません。",
     "crumbs": [
       "基礎統計学用スライド",
-      "Comparing multiple groups"
+      "3群以上の分析（分散分析）"
     ]
   },
   {
@@ -3142,7 +3142,7 @@
     "text": "花びらの長さの事前比較（直交ではない比較）\n\\(\\mu_\\text{setosa} = \\mu_\\text{versicolor} = \\mu_\\text{virginica}\\) の帰無仮説でなくて，\\(\\mu_\\text{setosa} = \\mu_\\text{versicolor}\\) と \\(\\mu_\\text{setosa} = \\mu_\\text{virginica}\\) が帰無仮説です。\n線型結合は次のとおりです。 \\[\n\\begin{aligned}\nA &= 1 \\mu_\\text{setosa} - 1 \\mu_\\text{versicolor} +    0 \\mu_\\text{virginica} \\\\\nB &= 1 \\mu_\\text{setosa} + 0 \\mu_\\text{versicolor} -    1 \\mu_\\text{virginica} \\\\\n\\end{aligned}\n\\]\n\n\\(\\sum_i a_i = 0\\) と \\(\\sum_i b_i = 0\\) を満たしています。\n\\(\\sum_i \\frac{a_i b_i} {n_i} \\rightarrow (1 \\times 1) + (-1\\times 0) + (0\\times-1) = 1\\) ので，直交比較の条件を満たしていません。\n\nこのときの 2 回比較するので（帰無仮説は２つある），(\\(\\alpha_{fwer} = 0.05\\)) をするなら，ボンフェローニ補正で補正した\\(\\alpha_{twer} = \\alpha / 2 = 0.025\\) です。直交比較ではないので，帰無仮説は独立していないので，棄却した場合慎重に解釈したほうがいい。\n\nhttps://stats.stackexchange.com/questions/9751/do-we-need-a-global-test-before-post-hoc-tests/9753\nJust because the ANOVA can’t reject the global null (omnibus test) doesn’t mean that you cant run a multiple comparisons test. However, an ANOVA still needs to be calculated because the mean-square-errors from the ANOVA are used in the multiple comparisons test.",
     "crumbs": [
       "基礎統計学用スライド",
-      "Comparing multiple groups"
+      "3群以上の分析（分散分析）"
     ]
   },
   {
@@ -3153,7 +3153,7 @@
     "text": "花びらの長さの事前比較（直交比較）\n\\(\\mu_\\text{setosa} = \\mu_\\text{versicolor} = \\mu_\\text{virginica}\\) の帰無仮説でなくて，\\(\\mu_\\text{setosa} = \\mu_\\text{versicolor}\\) と \\(\\frac{1}{2}(\\mu_\\text{setosa} +\\mu_\\text{versicolor})= \\mu_\\text{virginica}\\) が帰無仮説です。\n線型結合は次のとおりです。 \\[\n\\begin{aligned}\nA &= 1 \\mu_\\text{setosa} - 1 \\mu_\\text{versicolor} +    0 \\mu_\\text{virginica} \\\\\nB &= 1 \\mu_\\text{setosa} + 1 \\mu_\\text{versicolor} -    2 \\mu_\\text{virginica} \\\\\n\\end{aligned}\n\\]\n\n\\(\\sum_i a_i = 0\\) と \\(\\sum_i b_i = 0\\) を満たしています。\n\\(\\sum_i \\frac{a_i b_i} {n_i} \\rightarrow (1 \\times 1) + (-1\\times 1) + (0\\times-2) = 0\\) ので，直交比較の条件を満たしています。\n\nこのときも 2 回比較しているので，各帰無仮説のαは ボンフェローニ補正で補正したものを使用します (\\(\\alpha_{twer} = \\alpha / 2 = 0.025\\))。直交比較なので，帰無仮説は独立しています。",
     "crumbs": [
       "基礎統計学用スライド",
-      "Comparing multiple groups"
+      "3群以上の分析（分散分析）"
     ]
   },
   {
@@ -3164,7 +3164,7 @@
     "text": "R における解析\nアヤメのデータをつかって事前比較を初回します。まず，データの準備です。\n\niris_new = iris %&gt;% as_tibble()\niris_new # 内容の確認\n\n\n  \n\n\n\n\nIn R contrasts() does not return the coefficient for the first level, because it is implicitly 1. But when assigning a contrast matrix, the matrix can be of size JxJ and the first level can be set.",
     "crumbs": [
       "基礎統計学用スライド",
-      "Comparing multiple groups"
+      "3群以上の分析（分散分析）"
     ]
   },
   {
@@ -3175,7 +3175,7 @@
     "text": "デフォルト比較は treatment contrasts\nRでは，すでに設定されている比較があります。数種類の対比行列は関数で設定できます。\n\ntreatment contrasts 処理対比 (contr.treatment())\nHelmert contrasts ヘルマーと対比・直交対比 (contr.helmert())\nsum to zero contrasts 零和対比 (contr.sum())\npolynomial contrasts 多項式対比 (contr.poly())\nSAS contrasts SAS式対比 (contr.SAS())\n\n実際には，これらの関数はコーディング行列を返します。 Rでは，contr.treatment() がデフォルトの比較です。",
     "crumbs": [
       "基礎統計学用スライド",
-      "Comparing multiple groups"
+      "3群以上の分析（分散分析）"
     ]
   },
   {
@@ -3186,7 +3186,7 @@
     "text": "処理対比\nRのデフォルト事前比較は処理対比です。線型結合の式は次の通りです。\n\\[\n\\begin{aligned}\n\\Lambda_1 &= 1 \\times \\text{setosa} - 1 \\times \\text{versicolor} + 0 \\times\\text{virginica} \\\\\n\\Lambda_2 &= 1 \\times \\text{setosa} + 0 \\times \\text{versicolor} - 1 \\times\\text{virginica}\n\\end{aligned}\n\\]\nこのときの帰無仮説は\n\n\\(\\mu_\\text{setosa} = \\mu_\\text{veriscolor}\\)\n\\(\\mu_\\text{setosa} = \\mu_\\text{virginica}\\)",
     "crumbs": [
       "基礎統計学用スライド",
-      "Comparing multiple groups"
+      "3群以上の分析（分散分析）"
     ]
   },
   {
@@ -3197,7 +3197,7 @@
     "text": "R 処理対比\ncontrasts() 関数をつかって，アヤメのコーディング行列を確認します。\n\ncontrasts(iris_new$Species)\n\n           versicolor virginica\nsetosa              0         0\nversicolor          1         0\nvirginica           0         1\n\n\n対比行列に変換するには，列に 1 を代入した列行列を先に足して，その行列の逆行列をもとめる必要があります。\nコーディング行列から対比行列への変換\n\n\n   1 2 3\n   1 0 0\n2 -1 1 0\n3 -1 0 1\n\n\n\n1 行目は setosa の平均値\n2 行目は setosa と versicolor の平均値の差\n3 行目は setosa と virginica の平均値の差",
     "crumbs": [
       "基礎統計学用スライド",
-      "Comparing multiple groups"
+      "3群以上の分析（分散分析）"
     ]
   },
   {
@@ -3208,7 +3208,7 @@
     "text": "処理比較の結果\n\nm1 = lm(Petal.Length ~ Species, iris_new)\nm1 %&gt;% \n  summary.aov(split = list(Species =list(\"setosa:versicolor\" = 1,\n                                         \"setosa:virginica\" = 2)))\n\n                              Df Sum Sq Mean Sq F value Pr(&gt;F)    \nSpecies                        2  437.1   218.6  1180.2 &lt;2e-16 ***\n  Species: setosa:versicolor   1   18.9    18.9   102.1 &lt;2e-16 ***\n  Species: setosa:virginica    1  418.2   418.2  2258.3 &lt;2e-16 ***\nResiduals                    147   27.2     0.2                   \n---\nSignif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1\n\n\n事前比較を指定したときに分散分析表です。setosa 対 versicolor の対比の有意性はとてもたかいです。\\(P \\leq 2\\times 10^{-16}\\) でした。 setosa 対 virginica の結果も同じです。平均値の差は次のように計算します。 このとき，(Interecept) は setosa の平均値です。\n\nsummary(m1)$coefficients\n\n                  Estimate Std. Error  t value     Pr(&gt;|t|)\n(Intercept)          1.462 0.06085848 24.02294 9.303052e-53\nSpeciesversicolor    2.798 0.08606689 32.50960 5.254587e-69\nSpeciesvirginica     4.090 0.08606689 47.52118 4.106139e-91",
     "crumbs": [
       "基礎統計学用スライド",
-      "Comparing multiple groups"
+      "3群以上の分析（分散分析）"
     ]
   },
   {
@@ -3219,7 +3219,7 @@
     "text": "ペア毎の比較\n\\[\n\\begin{aligned}\n\\Lambda_1 &= 1 \\times \\text{setosa} - 1 \\times \\text{versicolor} + 0 \\times\\text{virginica} \\\\\n\\Lambda_2 &= 0 \\times \\text{setosa} + 1 \\times \\text{versicolor} - 1 \\times\\text{virginica}\n\\end{aligned}\n\\]\n次の帰無仮説は下記のとおりです。\n\n\\(\\mu_\\text{setosa} = \\mu_\\text{versicolor}\\)\n\\(\\mu_\\text{versicolor} = \\mu_\\text{virginica}\\)\n\n対比行列はつぎのとおりです。\n\nX = \n  rbind(c( 1,  0, 0), # 切片\n        c(-1,  1, 0), # 帰無仮説１\n        c( 0, -1, 1)) # 帰無仮説２\n\nX\n\n     [,1] [,2] [,3]\n[1,]    1    0    0\n[2,]   -1    1    0\n[3,]    0   -1    1",
     "crumbs": [
       "基礎統計学用スライド",
-      "Comparing multiple groups"
+      "3群以上の分析（分散分析）"
     ]
   },
   {
@@ -3230,7 +3230,7 @@
     "text": "ペア毎の比較の結果\n\nZ = X %&gt;% solve()\nm2 = lm(Petal.Length ~ Species, iris_new, \n        contrasts=list(Species = Z[, -1]))\nm2 %&gt;% summary.aov(split = list(Species = list(\"setosa - versicolor\" = 1,\n                                                \"versicolor - virginica\" = 2)))\n\n                                   Df Sum Sq Mean Sq F value Pr(&gt;F)    \nSpecies                             2  437.1   218.6  1180.2 &lt;2e-16 ***\n  Species: setosa - versicolor      1  395.4   395.4  2135.0 &lt;2e-16 ***\n  Species: versicolor - virginica   1   41.7    41.7   225.3 &lt;2e-16 ***\nResiduals                         147   27.2     0.2                   \n---\nSignif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1\n\n\n\n\n            Estimate Std. Error  t value     Pr(&gt;|t|)\n(Intercept)    1.462 0.06085848 24.02294 9.303052e-53\nSpecies1       2.798 0.08606689 32.50960 5.254587e-69\nSpecies2       1.292 0.08606689 15.01158 1.810597e-31\n\n\n\nWe can also get the F-values with this code.\naov(m1) %&gt;% \n  summary(split = list(Species = list(versicolor = 1, virginica = 2)))",
     "crumbs": [
       "基礎統計学用スライド",
-      "Comparing multiple groups"
+      "3群以上の分析（分散分析）"
     ]
   },
   {
@@ -3241,7 +3241,7 @@
     "text": "直交対比\n\\[\n\\begin{aligned}\n\\Lambda_1 &= 1 \\times \\text{setosa} - 1 \\times \\text{versicolor} + 0 \\times\\text{virginica} \\\\\n\\Lambda_2 &= 1 \\times \\text{setosa} + 1 \\times \\text{versicolor} - 2 \\times\\text{virginica}\n\\end{aligned}\n\\]\n次の帰無仮説は下記のとおりです。\n\n\\(\\mu_\\text{setosa} = \\mu_\\text{versicolor}\\)\n\\(\\frac{1}{2}(\\mu_\\text{setosa} + \\mu_\\text{versicolor}) = \\mu_\\text{virginica}\\)\n\n対比行列はつぎのとおりです。\n\nX = \n  rbind(c( 1,  0,  0), # 切片\n        c(-1,  1,  0), # 帰無仮説１\n        c( 1,  1, -2)) # 帰無仮説２\n\nX\n\n     [,1] [,2] [,3]\n[1,]    1    0    0\n[2,]   -1    1    0\n[3,]    1    1   -2",
     "crumbs": [
       "基礎統計学用スライド",
-      "Comparing multiple groups"
+      "3群以上の分析（分散分析）"
     ]
   },
   {
@@ -3252,7 +3252,7 @@
     "text": "直交対比の結果\n\nZ = X %&gt;% solve()\nm3 = lm(Petal.Length ~ Species, iris_new, \n        contrasts=list(Species = Z[, -1]))\nm3 %&gt;% summary.aov(split = list(Species = list(\"setosa - versicolor\" = 1,\n                                                \"mean - virginica\" = 2)))\n\n                                Df Sum Sq Mean Sq F value Pr(&gt;F)    \nSpecies                          2  437.1  218.55    1180 &lt;2e-16 ***\n  Species: setosa - versicolor   1  195.7  195.72    1057 &lt;2e-16 ***\n  Species: mean - virginica      1  241.4  241.38    1303 &lt;2e-16 ***\nResiduals                      147   27.2    0.19                   \n---\nSignif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1\n\n\n\nsummary(m3)$coefficients\n\n            Estimate Std. Error   t value     Pr(&gt;|t|)\n(Intercept)    1.462 0.06085848  24.02294 9.303052e-53\nSpecies1       2.798 0.08606689  32.50960 5.254587e-69\nSpecies2      -5.382 0.14907223 -36.10330 5.858996e-75\n\n\n\nThere is only one way to partition the sum-of-squares, so all of the sum-of-squares, regardless of the comparison are the same!\n\n\nlm(Petal.Length ~ Species, iris_new, \n        contrasts=list(Species = contr.helmert(3))) %&gt;% \n  summary.aov(split = list(Species = list(a = 1, b = 2)))\n\n\nlm(Petal.Length ~ Species, iris_new, \n        contrasts=list(Species = contr.diff(3))) %&gt;% \n  summary.aov(split = list(Species = list(a = 1, b = 2)))\n\n\nlm(Petal.Length ~ Species, iris_new, \n        contrasts=list(Species = contr.treatment(3))) %&gt;% \n  summary.aov(split = list(Species = list(a = 1, b = 2)))\n\n\nlm(Petal.Length ~ Species, iris_new, \n        contrasts=list(Species = contr.sum(3))) %&gt;% \n  summary.aov(split = list(Species = list(a = 1, b = 2)))",
     "crumbs": [
       "基礎統計学用スライド",
-      "Comparing multiple groups"
+      "3群以上の分析（分散分析）"
     ]
   },
   {
@@ -3263,7 +3263,7 @@
     "text": "事後比較\n事前に比較を検討しなかった場合，事後の比較も可能です。事後比較も数種類あります。\n\nBonferroni Procedure ボンフェロニ法\nHolm-Bonferroni Method ホルム=ボンフェロニ法\nTukey’s Honest Significant Difference Test テューキーのHSD検定\n\nTukey-Kramer method, Tukey’s test\n\nScheffe’s Method シェッフェの方法\nDunnett’s Test ダネットの検定\nFisher’s Least Significant Difference フィッシャーの最小有意差法\nDuncan’s new multiple range test ダンカンの新多重範囲検定\n\n他にもありますが，ダンカンとフィッシャーの検定は第 1 種の過誤を起こしやすいです。 最初の4つは，ペアごとの比較をしますが，ダネットの検定は基準水準との比較だけします。\n\nhttp://rtutorialseries.blogspot.com/2011/03/r-tutorial-series-anova-pairwise.html?utm_source=feedburner&utm_medium=feed&utm_campaign=Feed%3A+RTutorialSeries+%28R+Tutorial+Series%29",
     "crumbs": [
       "基礎統計学用スライド",
-      "Comparing multiple groups"
+      "3群以上の分析（分散分析）"
     ]
   },
   {
@@ -3274,7 +3274,7 @@
     "text": "ボンフェロニ法\n\npairwise.t.test(iris_new$Petal.Length, iris_new$Species, p.adjust.method = \"bonferroni\" )\n\n\n    Pairwise comparisons using t tests with pooled SD \n\ndata:  iris_new$Petal.Length and iris_new$Species \n\n           setosa versicolor\nversicolor &lt;2e-16 -         \nvirginica  &lt;2e-16 &lt;2e-16    \n\nP value adjustment method: bonferroni \n\n\nボンフェロニ法でファミリワイズエラー率を調整するとき，\\(\\alpha_{\\text{fwer}} = \\alpha / m\\) です。 ここで表示されている P 値は t 検定で求めたP値と \\(m\\) の積です。",
     "crumbs": [
       "基礎統計学用スライド",
-      "Comparing multiple groups"
+      "3群以上の分析（分散分析）"
     ]
   },
   {
@@ -3285,7 +3285,7 @@
     "text": "ホルム=ボンフェロニ法\n\npairwise.t.test(iris_new$Petal.Length, iris_new$Species, p.adjust.method = \"holm\" )\n\n\n    Pairwise comparisons using t tests with pooled SD \n\ndata:  iris_new$Petal.Length and iris_new$Species \n\n           setosa versicolor\nversicolor &lt;2e-16 -         \nvirginica  &lt;2e-16 &lt;2e-16    \n\nP value adjustment method: holm \n\n\nボンフェロニ法ににていますが，有意水準を対比ごとに変えます。 まず，P値の低い値から高い値に並べます。 最初のP値の有意水準は \\(\\alpha / m\\) です。次のP値の有意水準は \\(\\alpha / (m-1)\\) です。 このように，有意水準を徐々に \\(\\alpha\\) に戻します。 ここで表示されているP値も t 検定で求めたP値と \\(m\\) の積です。",
     "crumbs": [
       "基礎統計学用スライド",
-      "Comparing multiple groups"
+      "3群以上の分析（分散分析）"
     ]
   },
   {
@@ -3296,7 +3296,7 @@
     "text": "テューキーのHSD法\n\n\n  Tukey multiple comparisons of means\n    95% family-wise confidence level\n\nFit: aov(formula = .)\n\n$Species\n                      diff     lwr     upr p adj\nversicolor-setosa    2.798 2.59422 3.00178     0\nvirginica-setosa     4.090 3.88622 4.29378     0\nvirginica-versicolor 1.292 1.08822 1.49578     0\n\n\nテューキーのHSD法は各2水準間の平均値の差の検定を行っています。 t 検定とちがって，求めた統計量はステューデント化範囲の分布にしたます。",
     "crumbs": [
       "基礎統計学用スライド",
-      "Comparing multiple groups"
+      "3群以上の分析（分散分析）"
     ]
   },
   {
@@ -3307,7 +3307,7 @@
     "text": "シェッフェの方法\n\nmout = lm(Petal.Length ~ Species, iris_new)\ndferror = df.residual(mout); mserror = deviance(mout)/dferror; fc = summary(mout)$fstatistic\nagricolae::scheffe.test(aov(mout), trt = \"Species\", # 因子\n                        DFerror = dferror, MSerror=mserror, Fc = fc, group = T, console = TRUE)\n\n\nStudy: aov(mout) ~ \"Species\"\n\nScheffe Test for Petal.Length \n\nMean Square Error  : 0.1851878 \n\nSpecies,  means\n\n           Petal.Length       std  r Min Max\nsetosa            1.462 0.1736640 50 1.0 1.9\nversicolor        4.260 0.4699110 50 3.0 5.1\nvirginica         5.552 0.5518947 50 4.5 6.9\n\nAlpha: 0.05 ; DF Error: 147 \nCritical Value of F: 3.057621 \n\nMinimum Significant Difference: 0.2128349 \n\nMeans with the same letter are not significantly different.\n\n           Petal.Length groups\nvirginica         5.552      a\nversicolor        4.260      b\nsetosa            1.462      c\n\n\nこの手法は分散分析のF値と残渣平均平方を用いて，ペア毎の比較を行います。 テューキーのHSD法の方が検出力高いので，一般的に使われていません。",
     "crumbs": [
       "基礎統計学用スライド",
-      "Comparing multiple groups"
+      "3群以上の分析（分散分析）"
     ]
   },
   {
@@ -3318,7 +3318,7 @@
     "text": "ダネットの検定\n\nDescTools::DunnettTest(Petal.Length ~ Species, data  = iris_new,\n                      control = \"versicolor\")\n\n\n  Dunnett's test for comparing several treatments with a control :  \n    95% family-wise confidence level\n\n$versicolor\n                       diff   lwr.ci   upr.ci    pval    \nsetosa-versicolor    -2.798 -2.99024 -2.60576 2.2e-16 ***\nvirginica-versicolor  1.292  1.09976  1.48424 &lt; 2e-16 ***\n\n---\nSignif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1\n\n\n因子の水準にコントロールがあるとき，他の水準をコントロールと比較することがあります。 このとき，ダネットの検定を使います。対比を制限したテューキーのHSD法もつかえます。",
     "crumbs": [
       "基礎統計学用スライド",
-      "Comparing multiple groups"
+      "3群以上の分析（分散分析）"
     ]
   },
   {
@@ -3329,7 +3329,7 @@
     "text": "分散分析をしたあとの手順\n\n実は，最初から多重比較をするつもりであれば，分散分析をする必要はないです。 分散分析をすることにより，\\(\\alpha_{\\text{fwer}}\\) をあえて上げています。ところが， 有意性のある分散分析を求めてから，多重仮説検定を行なうことが一般です。\nANOVA procedure で有意な結果がでて，さらに残渣・正規性に問題がなかったので，多重仮説検定をおこないます。",
     "crumbs": [
       "基礎統計学用スライド",
-      "Comparing multiple groups"
+      "3群以上の分析（分散分析）"
     ]
   },
   {
@@ -3340,7 +3340,7 @@
     "text": "多重比較検定：誤った検定\n分散分析の結果は：\\(F_{(2, 27)} = 3.90, P = 0.0326\\) でした。\\(\\mu_A=\\mu_B=\\mu_C\\) を棄却しました。\n\npairwise.t.test(X$data, X$site, p.adjust.method = \"none\" )\n\n\n    Pairwise comparisons using t tests with pooled SD \n\ndata:  X$data and X$site \n\n  A     B    \nB 0.017 -    \nC 0.031 0.795\n\nP value adjustment method: none \n\n\nファミリワイズエラー率を調整していないときのペアごとの t 検定によって， \\(\\mu_A =\\mu_B\\) と \\(\\mu_A =\\mu_C\\) を棄却できました。ところが，\\(\\alpha_\\text{fwer}\\) を調整していないので，第 1 種の過誤を起こす確率は \\(1 - (1-\\alpha)^m = 1 - (1-0.05)^3 = 0.1426\\) ですので，誤って帰無仮説を棄却している可能性は十分あります。",
     "crumbs": [
       "基礎統計学用スライド",
-      "Comparing multiple groups"
+      "3群以上の分析（分散分析）"
     ]
   },
   {
@@ -3351,7 +3351,7 @@
     "text": "多重比較検定：ボンフェロニ法\n分散分析の結果は：\\(F_{(2, 27)} = 3.90, P = 0.0326\\) でした。\\(\\mu_A=\\mu_B=\\mu_C\\) を棄却しました。\n\npairwise.t.test(X$data, X$site, p.adjust.method = \"bonferroni\" )\n\n\n    Pairwise comparisons using t tests with pooled SD \n\ndata:  X$data and X$site \n\n  A     B    \nB 0.052 -    \nC 0.093 1.000\n\nP value adjustment method: bonferroni \n\n\nファミリワイズエラー率をボンフェロニ法で調整しましたが，ペアごと平均値の差に有意性のある結果は得られなかったが，A–B のP値は 0.052 でした。",
     "crumbs": [
       "基礎統計学用スライド",
-      "Comparing multiple groups"
+      "3群以上の分析（分散分析）"
     ]
   },
   {
@@ -3362,7 +3362,7 @@
     "text": "多重比較検定：ボンフェロニ法\n分散分析の結果は：\\(F_{(2, 27)} = 3.90, P = 0.0326\\) でした。\\(\\mu_A=\\mu_B=\\mu_C\\) を棄却しました。\n\npairwise.t.test(X$data, X$site, p.adjust.method = \"holm\" )\n\n\n    Pairwise comparisons using t tests with pooled SD \n\ndata:  X$data and X$site \n\n  A     B    \nB 0.052 -    \nC 0.062 0.795\n\nP value adjustment method: holm \n\n\nホルム=ボンフェロニ法はボンフェロニ法と同様な結果でした。",
     "crumbs": [
       "基礎統計学用スライド",
-      "Comparing multiple groups"
+      "3群以上の分析（分散分析）"
     ]
   },
   {
@@ -3373,7 +3373,7 @@
     "text": "多重比較検定：テューキーのHSD法\n分散分析の結果は：\\(F_{(2, 27)} = 3.90, P = 0.0326\\) でした。\\(\\mu_A=\\mu_B=\\mu_C\\) を棄却しました。\n\nmout = lm(data ~ site, X) %&gt;% aov()\nTukeyHSD(mout)\n\n  Tukey multiple comparisons of means\n    95% family-wise confidence level\n\nFit: aov(formula = .)\n\n$site\n          diff        lwr       upr     p adj\nB-A  5.1704004  0.1198744 10.220927 0.0440187\nC-A  4.6347851 -0.4157410  9.685311 0.0767033\nC-B -0.5356154 -5.5861414  4.514911 0.9626557\n\n\nテューキーのHSD法のとき，\\(\\mu_A = \\mu_B\\) を棄却できましたが，その他の ペアの帰無仮説を棄却できなかった。ところが，この解析手順に問題があります。このように，何度も多重仮説検定法を用いて，希望している結果がでるまでおこなうことは誤りです。この手法は P-fishing とよび，帰無仮説の有意性検定の概念に違反しています。 最初からテューキーのHSD法を使うべきでした。",
     "crumbs": [
       "基礎統計学用スライド",
-      "Comparing multiple groups"
+      "3群以上の分析（分散分析）"
     ]
   },
   {

@@ -30,7 +30,7 @@ z = sessionInfo() |> pluck(1)
 
 **研究室の皆さん：** 研究室用のデータは RStudio の `~/Lab_Data/` に入っています。
 
-[`r fontawesome::fa("r-project", height = "1.5em")`](https://cran.r-project.org/) はここ <https://cran.r-project.org/> からダウンロードできます。Windows ユーザは [Rtools42](https://cran.r-project.org/bin/windows/Rtools/rtools42/rtools.html) もインストールしましょう。ページ内の Rtools42 installer のリンクを探してね。
+[`r fontawesome::fa("r-project", height = "1.5em")`](https://cran.r-project.org/) はここ <https://cran.r-project.org/> からダウンロードできます。Windows ユーザは [Rtools43](https://cran.r-project.org/bin/windows/Rtools/rtools43/rtools.html) もインストールしましょう。ページ内の Rtools42 installer のリンクを探してね。
 
 [RStudio](https://posit.co/download/rstudio-desktop/) もインストールしましょう。Rのデフォルトの IDE はとても使いにくいです。
 
@@ -45,7 +45,7 @@ z = sessionInfo() |> pluck(1)
 library(tidyverse)
 library(patchwork)
 link1 = "https://cran.r-project.org/"
-link2 = "https://cran.r-project.org/bin/windows/Rtools/rtools42/rtools.html"
+link2 = "https://cran.r-project.org/bin/windows/Rtools/rtools43/rtools.html"
 link3 = "https://posit.co/download/rstudio-desktop/"
 fix_name = \(x) sprintf("V%04d", 1:length(x))
 z1 = qrcode::qr_code(link1, "H") |> as_tibble(.name_repair = fix_name) |> 
@@ -77,7 +77,7 @@ q1 = ggplot(z1) +
         panel.background = element_blank())
 q2 = ggplot(z2) + 
   geom_tile(aes(x = x, y = rev(y), fill = value), show.legend = F) +
-  annotate("text", x = median(z2$x), y = 0, label = "Rtools42 のリンク", 
+  annotate("text", x = median(z2$x), y = 0, label = "Rtools43 のリンク", 
            family = "notosans", fontface = "bold", color = "grey30") +
   scale_fill_grey(start = 1, end = 0) +
   coord_equal() +
