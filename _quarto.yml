@@ -18,7 +18,7 @@ project:
     - descriptive_statistics-slide.qmd
     - openwater_nep_method.qmd
     - standardize_figures.qmd
-
+    - tic_memo.qmd
 
 website:
   title: "データ解析（研究室用）"
@@ -62,6 +62,7 @@ website:
         contents: 
         - openwater_nep_method.qmd
         - standardize_figures.qmd
+        - tic_memo.qmd
 format:
   html:
     theme: [ cosmo, custom.scss]

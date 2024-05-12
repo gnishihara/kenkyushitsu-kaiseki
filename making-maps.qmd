@@ -1,5 +1,5 @@
 ---
-title: "有川湾の地図"
+title: "地図の作り方（有川湾の例）"
 format: 
   html:
     html-math-method: katex
@@ -16,76 +16,141 @@ bibliography: references.bib
 
 ```{r}
 library(tidyverse)
-library(sf)
+
+# 作図用補助パッケージ
 library(ggpubr)
-library(ggspatial)
-library(magick)
 library(ggrepel)
-library(showtext)
-library(gnnlab)
 library(ggsflabel)
 library(patchwork)
+
+# ggplot フォントの設定ようパッケージ
+library(showtext)
+library(magick)
+
+# 地図データ用パッケージ
+library(sf)
+library(ggspatial)
 ```
 
+# 図の初期設定
+
 図とフォントの設定をする。
+`base_size` はフォントサイズです。
+`base_family` はフォントの種類です。
+`showtext_auto()` はフォントを自動的に設定する関数です。
 
 ```{r}
-Sys.setlocale("LC_TIME", "en_US.UTF-8")
+# 日本語の曜日を英語にするための関数ですが、
+# 研究室のサーバを使っているのであれば、不要です。
+Sys.setlocale("LC_TIME", "en_US.UTF-8") 
+
+# フォントの設定
 font_add_google("Noto Sans JP", "notosans")
-theme_gray(base_size = 30, base_family = "notosans") |> theme_set()
+
+theme_pubclean(base_size = 30, base_family = "notosans") |> 
+  theme_set()
 showtext_auto()
 ```
 
 # 全国地図データ
 
-地図データは研究室のサーバーにあります。
-まず、範囲的に狭くて、地形の細かい地図をつくります。
+地図データは、国土地理院のデータをもとに準備しました。
+地図データは研究室のサーバーに保存しているので、
+`sf` パッケージで読み込めます。
 
 ```{r}
-filename = "~/Lab_Data/Japan_map_data/Japan/todofuken.rds"
-ghigh = read_rds(filename) |>
-  st_transform(st_crs(2450)) # CRS は 2450 で.
+folderpath = "~/Lab_Data/Japan_map_data/Japan/"
+filename = "todofuken.rds"
 
-toget = "長崎"
-ghigh = ghigh |> filter(str_detect(N03_001, toget))
+japan = 
+  str_c(folderpath, filename) |> 
+  read_rds(filename)
 ```
 
-調査地点の緯度経度は、グーグルマップにピンをたてて調べた.
-このとき CRS は一旦 4326 にしよう.
+CRS (Coordinate Reference System) とは、座標参照系のことです。
+`japan` の CRS を確認しましょう。
 
+```{r}
+st_crs(japan)
+```
 
-::: {.callout-note}
-CRSには **地理座標系** と **投影座標系** の2種類があります。
-座標系にはEPSGコードもつけられています。
+`japan` のCRSは **JGD2011** ですね。
+CRS以外に、EPSG (European Petroleum Survey Group) の表記もあります。
+EPSGコードは、座標系を一意に識別するための番号です。
+`japan` のEPSGコードは **6668** でした。
 
-* EPSG Code: 4326 CRS: WGS84 
-* EPSG Code: 6668 CRS: JGD2011
-* EPSG Code: 6677 CRS: JGD2011 / Japan Plane Rectangular CS IX
+座標参照系には、地理座標系と投影座標系の2種類があります。
 
-最初２つの単位は　degrees だたが、最後のは meters です。
+* 地理座標系: 緯度経度のような球面座標系（単位は度）
+* 投影座標系: 平面座標系（単位はメートル）
+
+* EPSG Code: 4326 CRS: WGS84（度）
+* EPSG Code: 6668 CRS: JGD2011（度）
+* EPSG Code: 6669 CRS: JGD2011 (メートル)
+
+**重要!** 
+
+研究室のガーミンのGPSの EPSGコードは 4326 ですが、
+グーグルマップの EPSGコードは 3857 です。
+EPSGコード（座標参照系）を統一してから、
+地図データを結合する必要があります。
+
+ではここで長崎の情報を `japan` から抽出します。
+
+```{r}
+nagasaki = japan |> 
+  filter(str_detect(N03_001, "長崎"))
+```
+
+```{r}
+SEACOLOR = "#006fc5"
+LANDCOLOR = "gray80"
+NAGASAKICOLOR = "#C4B700"
+
+pout =
+  ggplot() +
+  geom_sf(data = japan,
+          color = NA,
+          fill = LANDCOLOR) +
+  geom_sf(data = nagasaki, 
+          color = NA,
+          fill = NAGASAKICOLOR) +
+  coord_sf(datum = NA)+ 
+  theme_minimal() +
+  theme(
+    panel.background = element_rect(fill = SEACOLOR, color = NA),
+    plot.background = element_rect(fill = SEACOLOR, color = NA)
+  )
+
+fname = "./Images/nagasaki-map.png"
+ggsave(fname, pout, width = 10, height = 10)
+```
+
+::: {#fig-nagasaki-map-simple}
+![長崎県の地図](./Images/nagasaki-map.png)
 :::
+
 
 沿岸線だけのデータ.
 
 ```{r}
 #| eval: false
 fname = "~/Lab_Data/Japan_map_data/GSI/coastl_jpn.shp"
-glow = 
-  st_read(fname) |>
-  st_transform(st_crs(2450)) |> summarise()
+coastline = st_read(fname) 
+coastline = coastline |>
+  st_transform(6669) |> summarise()
 
 ```
 
 
 次のデータは陸域を色塗できるが、北方領土は含まれていない.
-EPSG 2450 は JGD2000 / Japan Plane Rectangular CS VIII です。
 
 ```{r}
 #| eval: false
 fname = "~/Lab_Data/Japan_map_data/gadm36_JPN_2_sf.rds"
-glow = 
+coastline = 
   read_rds(fname) |>
-  st_transform(st_crs(2450)) |> summarise()
+  st_transform(6669) |> summarise()
 ```
 
 有川湾の位置情報を準備する。
@@ -96,18 +161,18 @@ Google map の位置情報は EPSG 4326 ですので、後での 2450 に変換�
 jpn4326 = tibble(long = c(134.50064258737686),
                  lat = c(35.55559885171853)) |>
   st_as_sf(coords = c("long", "lat"),
-           crs = st_crs(4326),
+           crs = 4326,
            agr = "constant")
-jpn2450 = 
+jpn6669 = 
   jpn4326 |> 
-  st_transform(crs = st_crs(2450))
+  st_transform(crs = 6669)
 ```
 
 ここでは地図を表示する範囲を決定する。
 
 ```{r}
-jpn2450cent = jpn2450 |> st_buffer(dist = 1000000)
-jpn2450box = jpn2450cent |> st_bbox()
+jpn6669centroid = jpn6669 |> st_buffer(dist = 1000000)
+jpn6669box = jpn6669centroid |> st_bbox()
 ```
 
 次は有川湾のデータを準備する。
@@ -146,7 +211,7 @@ ari4326 = tibble(
   )
 ) |>
   st_as_sf(coords = c("long", "lat"),
-           crs = st_crs(4326),
+           crs = 4326,
            agr = "constant")
 ```
 
@@ -174,7 +239,7 @@ st_info = st_info |> filter(!(str_detect(location, "nana") &
 
 st_info = st_info |>
   st_as_sf(coords = c("long", "lat"),
-           crs = st_crs(4326),
+           crs = 4326,
            agr = "constant")
 ```
 
@@ -182,9 +247,9 @@ st_info = st_info |>
 マップを作図するとき、面積や距離を調べるときなどは、 CRS を 2450 に変える.
 
 ```{r}
-ari2450 = ari4326 |> st_transform(crs = st_crs(2450))
-naname2450 = st_info |> filter(str_detect(location, "nana")) |> st_transform(crs = st_crs("EPSG:6690"))
-yokoura2450 = st_info |> filter(!str_detect(location, "nana")) |> st_transform(crs = st_crs("EPSG:6690"))
+ari6669 = ari4326 |> st_transform(crs = 6669)
+naname6669 = st_info |> filter(str_detect(location, "nana")) |> st_transform(crs = 6669)
+yokoura6669 = st_info |> filter(!str_detect(location, "nana")) |> st_transform(crs = 6669)
 ```
 
 
@@ -192,21 +257,21 @@ yokoura2450 = st_info |> filter(!str_detect(location, "nana")) |> st_transform(c
 # 地図の範囲を決定. ------------------------------------------------------------
 
 # 調査地点の位置情報を１つのポリゴンにまとめ、そのポリゴンの重心を求める.
-ari2450cent = ari2450 |> st_union() |> st_centroid()
+ari6669centroid = ari6669 |> st_union() |> st_centroid()
 
 # 調査地点の重心にバッファーをもたせる.
-ari2450cent1 = ari2450cent |> st_buffer(dist = 20000)
-ari2450cent2 = ari2450cent |> st_buffer(dist = 150)
+ari6669centroid1 = ari6669centroid |> st_buffer(dist = 20000)
+ari6669centroid2 = ari6669centroid |> st_buffer(dist = 150)
 
-naname2450cent = naname2450 |> st_buffer(dist = 50)
-yokoura2450cent = yokoura2450 |> st_buffer(dist = 50)
+naname6669centroid = naname6669 |> st_buffer(dist = 50)
+yokoura6669centroid = yokoura6669 |> st_buffer(dist = 50)
 
 # バッファーの領域から、図の幅をもとめる.
-ari2450box1 = ari2450cent1 |> st_bbox()
-ari2450box2 = ari2450cent2 |> st_bbox()
+ari6669box1 = ari6669centroid1 |> st_bbox()
+ari6669box2 = ari6669centroid2 |> st_bbox()
 
-naname2450box = naname2450cent |> st_bbox()
-yokoura2450box = yokoura2450cent |> st_bbox()
+naname6669box = naname6669centroid |> st_bbox()
+yokoura6669box = yokoura6669centroid |> st_bbox()
 ```
 
 
@@ -218,7 +283,7 @@ sitedata = tibble(
   long = c(129.11806840839094, 129.0887698387881)
 ) |> 
   st_as_sf(coords = c("long", "lat"),
-         crs = st_crs(4326),
+         crs = 4326,
          agr = "constant")
 
 
@@ -229,11 +294,11 @@ oceandata = tibble(
   long =c(129.15, 128.95, 129.15)
 ) |> 
   st_as_sf(coords = c("long", "lat"),
-           crs = st_crs(4326),
+           crs = 4326,
            agr = "constant")
 
-sitedata2450 = sitedata |> st_transform(crs = st_crs(2450))
-
+sitedata6669 = sitedata |> st_transform(crs = 6669)
+oceandata6669 = oceandata |> st_transform(crs = 6669)
 
 ```
 
@@ -248,11 +313,12 @@ LANDCOLOR = "gray80"
 BOXCOLOR = "#C4000D"
 STCOLOR = "#C4B700"
 
-jpmap = glow |> 
+jpmap = 
+  coastline |> 
   ggplot() + 
   geom_sf(fill = LANDCOLOR, color = "transparent") +
   geom_sf(
-    data = ari2450cent,
+    data = ari6669centroid,
     color = BOXCOLOR,
     fill = "transparent",
     shape = 21,
@@ -260,8 +326,8 @@ jpmap = glow |>
     size = 10
   ) +
   coord_sf(
-    xlim = c(jpn2450box[1], jpn2450box[3]),
-    ylim = c(jpn2450box[2], jpn2450box[4])
+    xlim = c(jpn6669box[1], jpn6669box[3]),
+    ylim = c(jpn6669box[2], jpn6669box[4])
   ) +
   theme_minimal() +
   theme(
@@ -283,11 +349,18 @@ jpmap
 
 
 ```{r}
-boxdata = bind_rows(naname = c(naname2450box), 
-          yokoura = c(yokoura2450box), .id = "location") |> 
+boxdata = 
+  bind_rows(naname = c(naname6669box), 
+          yokoura = c(yokoura6669box), .id = "location") |> 
   mutate(text = c("七目", "横浦"))
 
-gotomap = ghigh |>
+bdata  = boxdata |> 
+reframe(across(c(xmin, ymin, xmax, ymax), 
+\(x) sign(x) * abs(max(x))))
+
+
+
+gotomap = japan |>
   ggplot() + geom_sf(fill = LANDCOLOR, color = "transparent") +
   geom_sf_text(
     aes(label = label),
@@ -300,7 +373,7 @@ gotomap = ghigh |>
     hjust = 0.5) +
   geom_sf_label_repel(
     aes(label = label),
-    data = sitedata2450,
+    data = sitedata6669,
     min.segment.length = 0,
     point.padding = unit(2.5, "mm"),
     segment.color = BOXCOLOR,
@@ -313,15 +386,15 @@ gotomap = ghigh |>
     seed = 2024
   ) +
   geom_sf(
-    data = sitedata2450,
+    data = sitedata6669,
     color = BOXCOLOR,
     fill = STCOLOR,
     shape = 1,
     size = 4
   ) +
   coord_sf(
-    xlim = c(ari2450box1[1], ari2450box1[3]),
-    ylim = c(ari2450box1[2], ari2450box1[4])
+    xlim = c(bdata[1], bdata[3]),
+    ylim = c(bdata[2], bdata[4])
   ) +
   theme_minimal() +
   theme(
@@ -332,16 +405,17 @@ gotomap = ghigh |>
     axis.title.x = element_blank(),
     axis.title.y = element_blank()
   )
+gotomap
 ```
 
 
 ```{r}
-yokouramap = ghigh |>
-  st_transform(crs = st_crs("EPSG:6690")) |>
+yokouramap = japan |>
+  st_transform(crs = 6669) |>
   ggplot() + geom_sf(fill = LANDCOLOR, color = "transparent") +
   geom_sf_label_repel(
     aes(label = station),
-    data = yokoura2450,
+    data = yokoura6669,
     min.segment.length = 0,
     fill = STCOLOR,
     color = "black",
@@ -352,15 +426,15 @@ yokouramap = ghigh |>
     seed = 2024
   ) +
   geom_sf(
-    data = yokoura2450,
+    data = yokoura6669,
     color = "black",
     fill = STCOLOR,
     shape = 21,
     size = 4
   ) +
   coord_sf(
-    xlim = c(yokoura2450box[1], yokoura2450box[3]),
-    ylim = c(yokoura2450box[2], yokoura2450box[4])
+    xlim = c(yokoura6669box[1], yokoura6669box[3]),
+    ylim = c(yokoura6669box[2], yokoura6669box[4])
   ) +
   geom_text(aes(x = xmax, 
                 y = ymax, 
@@ -394,12 +468,13 @@ yokouramap = ghigh |>
 
 
 ```{r}
-nanamemap = ghigh |>
-  st_transform(crs = st_crs("EPSG:6690")) |>
+nanamemap = 
+  japan |>
+  st_transform(crs = 6669) |>
   ggplot() + geom_sf(fill = LANDCOLOR, color = "transparent") +
   geom_sf_label_repel(
     aes(label = station),
-    data = naname2450,
+    data = naname6669,
     min.segment.length = 0,
     fill = STCOLOR,
     color = "black",
@@ -409,15 +484,15 @@ nanamemap = ghigh |>
     box.padding = 2
   ) +
   geom_sf(
-    data = naname2450,
+    data = naname6669,
     color = "black",
     fill = STCOLOR,
     shape = 21,
     size = 4
   ) +
   coord_sf(
-    xlim = c(naname2450box[1], naname2450box[3]),
-    ylim = c(naname2450box[2], naname2450box[4])
+    xlim = c(naname6669box[1], naname6669box[3]),
+    ylim = c(naname6669box[2], naname6669box[4])
   ) +
   geom_text(aes(x = xmax, 
                 y = ymax, 
@@ -453,9 +528,9 @@ nanamemap = ghigh |>
 ```{r}
 figuremap = jpmap + gotomap + yokouramap + nanamemap + plot_layout(ncol = 4)
 
-wh = aseries(3)
-save_plot(
-  "./poster/images/study-map.pdf",
+wh = gnnlab::aseries(3)
+gnnlab::save_plot(
+  "./Images/study-map.pdf",
   plot = figuremap,
   width = wh[2],
   height = wh[1],
@@ -465,7 +540,7 @@ save_plot(
 
 
 ```{r}
-pdfname =   "./poster/images/study-map.pdf"
+pdfname =   "Images/study-map.pdf"
 pngname = str_replace(pdfname, "pdf", "png")
 
 image_read_pdf(pdfname, density = 600) |> 

@@ -1,0 +1,124 @@
+---
+title: "TIC分析機器のメモ"
+format: 
+  html:
+    html-math-method: katex
+    code-fold: true
+    df-print: paged
+reference-location: margin
+citation-location: margin
+bibliography: references.bib
+---
+
+# 必要なパッケージ
+
+パッケージはここで読み込む。
+
+```{r}
+library(tidyverse)
+
+# 作図用補助パッケージ
+library(ggpubr)
+library(patchwork)
+
+# ggplot フォントの設定ようパッケージ
+library(showtext)
+library(magick)
+```
+
+
+# 理想気体の状態方程式 (Ideal gas law)
+
+$$
+PV = nRT
+$$
+
+* P : 圧力 Pressure (Pa)
+* V : 体積 Volume (m^3^; 1000 L = 1 m^3^)
+* n : 物質量 Amount of material (mol)
+* R : モル気体定数 gas constant (8.314 J (mol K)^-1^)
+* T : 絶対温度 Absolute temperature (K)
+
+# ガスボンベについて (About the gas cylinder)
+
+
+Elementar TIC分析計は, キャリアガスの供給にガスボンベを使用します。
+ガスボンベは高圧ガスボンベで, ガスは一定の圧力で分析計に供給されます。
+ガスボンベには, ボンベ内の圧力をモニターする圧力計が装備されています。
+
+The Elementar TIC analyzer uses a gas cylinder to supply the carrier gas. The gas cylinder is a high-pressure gas cylinder, and the gas is supplied to the analyzer at a constant pressure. The gas cylinder is equipped with a pressure gauge to monitor the pressure inside the cylinder.
+
+N~2~ ガスボンベの容量は 47 L です。
+ガスボンベの圧力は 15 MPa です。
+温度は 25 &degrees;C と仮定します。
+
+The volume of the N~2~ gas cylinder is 47 L.
+The pressure is 15 MPa.
+Assume the temperature is 25 &degrees;C.
+
+:::{.callout-info}
+## Conversion factor
+* 1 J is 1 Pa m^3^.
+* 1000 L is  m^3^.
+* 20 &degrees;C is 293.15 K.
+
+:::
+
+# ガスボンベの残圧から使用したガスの量を計算します。Calculate the amount of gas used from the residual pressure in the gas cylinder.
+
+```{r}
+calc_n = function(pressure, volume, temperature) {
+  R = 8.314                     # J/(mol K)
+  kelvin = temperature + 273.15 # Convert to Kelvin
+  volume = volume / 1000        # Convert to m^3^
+  pressure = pressure * 1000000 # Convert to Pa
+  pressure * volume / (R * kelvin)
+}
+
+n_15 = calc_n(pressure = 15, volume = 47, temperature = 25)
+n_10 = calc_n(pressure = 10, volume = 47, temperature = 25)
+```
+
+
+ガスボンベの初期のモル数は `r n_15` mol です。
+ガスボンベの最終のモル数は `r n_10` mol です。
+消費された N~2~ ガスのモル数は `r n_15 - n_10` mol です。
+
+The initial number of moles of N~2~ gas in the cylinder is `r n_15` mol. 
+The final number of moles of N~2~ gas in the cylinder is `r n_10` mol.
+The number of moles of N~2~ gas consumed is `r n_15 - n_10` mol.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

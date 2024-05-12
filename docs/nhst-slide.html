@@ -11,7 +11,7 @@
   <meta name="generator" content="quarto-1.4.549">
 
   <meta name="author" content="Greg Nishihara">
-  <title>データ解析（研究室用） - 大数の法則と中心極限定理</title>
+  <title>データ解析（研究室用） - | 大数の法則と | 中心極限定理</title>
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
@@ -29,71 +29,6 @@
       margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
       vertical-align: middle;
     }
-    /* CSS for syntax highlighting */
-    pre > code.sourceCode { white-space: pre; position: relative; }
-    pre > code.sourceCode > span { line-height: 1.25; }
-    pre > code.sourceCode > span:empty { height: 1.2em; }
-    .sourceCode { overflow: visible; }
-    code.sourceCode > span { color: inherit; text-decoration: inherit; }
-    div.sourceCode { margin: 1em 0; }
-    pre.sourceCode { margin: 0; }
-    @media screen {
-    div.sourceCode { overflow: auto; }
-    }
-    @media print {
-    pre > code.sourceCode { white-space: pre-wrap; }
-    pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
-    }
-    pre.numberSource code
-      { counter-reset: source-line 0; }
-    pre.numberSource code > span
-      { position: relative; left: -4em; counter-increment: source-line; }
-    pre.numberSource code > span > a:first-child::before
-      { content: counter(source-line);
-        position: relative; left: -1em; text-align: right; vertical-align: baseline;
-        border: none; display: inline-block;
-        -webkit-touch-callout: none; -webkit-user-select: none;
-        -khtml-user-select: none; -moz-user-select: none;
-        -ms-user-select: none; user-select: none;
-        padding: 0 4px; width: 4em;
-        color: #aaaaaa;
-      }
-    pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
-    div.sourceCode
-      { color: #003b4f; background-color: #f1f3f5; }
-    @media screen {
-    pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
-    }
-    code span { color: #003b4f; } /* Normal */
-    code span.al { color: #ad0000; } /* Alert */
-    code span.an { color: #5e5e5e; } /* Annotation */
-    code span.at { color: #657422; } /* Attribute */
-    code span.bn { color: #ad0000; } /* BaseN */
-    code span.bu { } /* BuiltIn */
-    code span.cf { color: #003b4f; } /* ControlFlow */
-    code span.ch { color: #20794d; } /* Char */
-    code span.cn { color: #8f5902; } /* Constant */
-    code span.co { color: #5e5e5e; } /* Comment */
-    code span.cv { color: #5e5e5e; font-style: italic; } /* CommentVar */
-    code span.do { color: #5e5e5e; font-style: italic; } /* Documentation */
-    code span.dt { color: #ad0000; } /* DataType */
-    code span.dv { color: #ad0000; } /* DecVal */
-    code span.er { color: #ad0000; } /* Error */
-    code span.ex { } /* Extension */
-    code span.fl { color: #ad0000; } /* Float */
-    code span.fu { color: #4758ab; } /* Function */
-    code span.im { color: #00769e; } /* Import */
-    code span.in { color: #5e5e5e; } /* Information */
-    code span.kw { color: #003b4f; } /* Keyword */
-    code span.op { color: #5e5e5e; } /* Operator */
-    code span.ot { color: #003b4f; } /* Other */
-    code span.pp { color: #ad0000; } /* Preprocessor */
-    code span.sc { color: #5e5e5e; } /* SpecialChar */
-    code span.ss { color: #20794d; } /* SpecialString */
-    code span.st { color: #20794d; } /* String */
-    code span.va { color: #111111; } /* Variable */
-    code span.vs { color: #20794d; } /* VerbatimString */
-    code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
   </style>
   <link rel="stylesheet" href="site_libs/revealjs/dist/theme/quarto.css">
   <link href="site_libs/revealjs/plugin/quarto-line-highlight/line-highlight.css" rel="stylesheet">
@@ -391,7 +326,8 @@
     <div class="slides">
 
 <section id="title-slide" class="quarto-title-block center">
-  <h1 class="title">大数の法則と中心極限定理</h1>
+  <h1 class="title"><div class="line-block">大数の法則と<br>
+中心極限定理</div></h1>
 
 <div class="quarto-title-authors">
 <div class="quarto-title-author">
@@ -401,171 +337,113 @@ Greg Nishihara
 </div>
 </div>
 
-  <p class="date">2024 / 04 / 29</p>
+  <p class="date">2024 / 05 / 01</p>
 </section>
-<section id="大数の法則" class="slide level2">
-<h2>大数の法則</h2>
-<p><strong>Law of large numbers (大数の法則)</strong></p>
+<section>
+<section id="law-of-large-numbers" class="title-slide slide level1 center">
+<h1>Law of large numbers</h1>
+
+</section>
+<section id="度数-frequency" class="slide level2">
+<h2>度数 (frequency)</h2>
 <div class="callout callout-note callout-titled callout-style-default">
 <div class="callout-body">
 <div class="callout-title">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
-<p><strong>大数の法則は、</strong></p>
+<p><strong>度数（頻度）とは</strong></p>
 </div>
 <div class="callout-content">
-<p>ランダムな試行を繰り返す回数が増えるにつれて、 試行の平均的な結果がその試行の期待値により近づいていく過程です。</p>
-<p>つまり、ランダムな出来事は時間の経過とともに均等になる傾向があるという考えに基づいています。</p>
+<p>ある標本で特定のデータの値が得られた回数。 相対度数は標本数に対する度数の割合です。</p>
 </div>
 </div>
+</div>
+<p>{3, 1, 5, 1, 4, 2, 5, 2, 3, 2, 6, 3, 3, 1, 3, 4, 1, 4, 4, 2, 1, 6, 1, 1, 1, 2, 1, 2, 6, 4} に対する 6 の度数は 3 です。</p>
+<p><strong>相対度数は</strong></p>
+
+<img data-src="nhst-slide_files/figure-revealjs/unnamed-chunk-4-1.png" class="quarto-figure quarto-figure-center r-stretch" width="260"><p>です。</p>
+</section>
+<section id="コイン投げの例" class="slide level2">
+<h2>コイン投げの例</h2>
+
+<img data-src="nhst-slide_files/figure-revealjs/unnamed-chunk-5-1.png" class="quarto-figure quarto-figure-center r-stretch" width="384"><div style="font-size:50%;">
+<p>フェア (fair) なコインを投げた場合、表が出る確率は 0.50 です。 では、コインを 100 回投げた場合、 表がでる相対度数は 0.50 でしょうか。</p>
 </div>
 </section>
-<section id="大数の弱法則" class="slide level2 smaller">
+<section id="コイン投げの例-1" class="slide level2">
+<h2>コイン投げの例</h2>
+
+<img data-src="nhst-slide_files/figure-revealjs/unnamed-chunk-6-1.png" class="quarto-figure quarto-figure-center r-stretch" width="384"><div style="font-size:50%;">
+<p>今回の実験では、 表が出る度数が 0.50 に収束するためには、 おおよそ 15,000 回投げました。</p>
+<p>コイン投げの回数が少なければ（小数） 表が出る確率と相対度数に大きな違いがありましたが、 投げる回数が増えると（大数）相対度数と確率の違いは小さくなりました。</p>
+</div>
+</section>
+<section id="大数の弱法則" class="slide level2">
 <h2>大数の弱法則</h2>
 <p><strong>Weak law of large numbers (大数の弱法則)</strong></p>
+<div style="font-size:50%;">
+<p>平均値 <span class="math inline">\(\mu\)</span>、 分散 <span class="math inline">\(\sigma^2\)</span> の分布にお互いに独立に従う 確率変数 <span class="math inline">\(X_1, X_2, \cdots, X_n\)</span> と、任意の <span class="math inline">\(\varepsilon &gt; 0\)</span> の場合、</p>
+</div>
 <p><span class="math display">\[
-\overline{X}_n \xrightarrow{P} \mu \; \text{when}\; n\rightarrow \infty
+\lim_{n\rightarrow\infty} P \left(\left |\frac{X_1+X_2+\cdots+X_n}{n}-\mu\right | &lt; \varepsilon\right) = 1
 \]</span></p>
-<p>or,</p>
-<p><span class="math display">\[
-\forall{\epsilon}&gt;0;\;\lim_{n\rightarrow\infty}P(|\overline{X}-\mu|&lt;\epsilon)=1
-\]</span></p>
-<div class="callout callout-note callout-titled callout-style-default">
-<div class="callout-body">
-<div class="callout-title">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
+<div style="font-size:50%;">
+<p>つまり、標本平均と母平均の差が <span class="math inline">\(\varepsilon\)</span> 以下になる確率は 試行回数 <span class="math inline">\((n)\)</span> を増やせば <span class="math inline">\(1\)</span> に<strong>確率収束 (stochastic convergence)</strong> すると意味します。</p>
 </div>
-<p><strong>大数の弱法則</strong></p>
-</div>
-<div class="callout-content">
-<p>観測回数が増えるにつれて、標本平均は確率収束に従って母集団平均に収束していきます。 つまり、標本の大きさが増えるにつれて、標本平均が母集団平均に近くなる確率が高くなります。</p>
-</div>
-</div>
-</div>
-<aside class="notes">
-<ul>
-<li>The sample mean X-bar converges in probability to the population mean mu as the sample size n approaches infinity.</li>
-<li>標本平均 X-bar が、標本サイズ n が無限に近づくにつれて、確率収束において母集団平均 mu に収束する。</li>
-<li>For any positive value of epsilon, the probability that the sample mean (X-bar) will be within epsilon of the population mean (mu) approaches 1 as the sample size approaches infinity.</li>
-<li>任意の正の値 エプシロン に対して、標本平均 (X-bar) が母集団平均 (ミュー) から エプシロン の範囲内にある確率が、標本サイズが無限に近づくにつれて1に収束する」という意味です。</li>
-</ul>
-<style type="text/css">
-        span.MJX_Assistive_MathML {
-          position:absolute!important;
-          clip: rect(1px, 1px, 1px, 1px);
-          padding: 1px 0 0 0!important;
-          border: 0!important;
-          height: 1px!important;
-          width: 1px!important;
-          overflow: hidden!important;
-          display:block!important;
-      }</style></aside>
 </section>
 <section id="大数の強法則" class="slide level2">
 <h2>大数の強法則</h2>
 <p><strong>Strong law of large numbers (大数の強法則)</strong></p>
 <p><span class="math display">\[
-\overline{X}_n \xrightarrow{a.s.} \mu \; \text{when}\; n\rightarrow \infty
+P \left(\lim_{n\rightarrow\infty} \frac{X_1+X_2+\cdots+X_n}{n}=\mu \right) = 1
 \]</span></p>
-<p>or</p>
-<p><span class="math display">\[
-P(\lim_{n\rightarrow\infty}\overline{X}=\mu)=1
-\]</span></p>
-<aside class="notes">
-<ul>
-<li><p>The sample mean X-bar converges almost surely to the population mean mu as the sample size n approaches infinity.</p></li>
-<li><p>標本平均 X-bar が、標本サイズ n が無限に近づくにつれて、ほとんど確実に母集団平均 mu に収束する。</p></li>
-<li><p>The probability that the sample mean X-bar will approach the population mean mu as the sample size approaches infinity is equal to 1.</p></li>
-<li><p>標本サイズが無限に近づくにつれて、標本平均 X-bar が母集団平均 mu に近づく確率は1に等しい。</p></li>
-</ul>
-<style type="text/css">
-        span.MJX_Assistive_MathML {
-          position:absolute!important;
-          clip: rect(1px, 1px, 1px, 1px);
-          padding: 1px 0 0 0!important;
-          border: 0!important;
-          height: 1px!important;
-          width: 1px!important;
-          overflow: hidden!important;
-          display:block!important;
-      }</style></aside>
-</section>
-<section id="コインの裏表デモ" class="slide level2">
-<h2>コインの裏表デモ</h2>
-<div class="columns">
-<div class="column" style="width:50%;">
-<div class="cell" data-hash="nhst-slide_cache/revealjs/unnamed-chunk-2_3c5b9263c15da450d1532d92ea10385a">
-<div class="cell-output-display">
-<div>
-<figure>
-<p><img data-src="nhst-slide_files/figure-revealjs/unnamed-chunk-2-1.png" width="576"></p>
-</figure>
-</div>
-</div>
-</div>
-</div><div class="column" style="width:50%;">
-<div class="cell" data-hash="nhst-slide_cache/revealjs/unnamed-chunk-3_cf586ced55677767da8e392e105b0864">
-<div class="cell-output-display">
-<div>
-<figure>
-<p><img data-src="nhst-slide_files/figure-revealjs/unnamed-chunk-3-1.gif"></p>
-</figure>
-</div>
-</div>
-</div>
-</div>
-</div>
+<p>観測回数が増えるにつれて、標本平均は<strong>概収束（ほとんど確実に収束; almost sure convergence）</strong>に従って母平均に収束します。</p>
 </section>
 <section id="平均値のデモ" class="slide level2">
 <h2>平均値のデモ</h2>
-<div class="columns">
-<div class="column" style="width:50%;">
-<div class="cell" data-hash="nhst-slide_cache/revealjs/unnamed-chunk-4_4aa4fa749bca77cf7d9bf18203519cb7">
-<div class="cell-output-display">
-<div>
-<figure>
-<p><img data-src="nhst-slide_files/figure-revealjs/unnamed-chunk-4-1.png" width="576"></p>
-</figure>
+
+<img data-src="nhst-slide_files/figure-revealjs/unnamed-chunk-7-1.png" class="quarto-figure quarto-figure-center r-stretch" width="384"><div style="font-size:50%;">
+<p>標本 (<code>y</code>) は 0 から 1 の一様分布に従う確率変数です。 点は <code>y</code> の観測値、線は <code>y</code> の累積平均値（標本平均）です。 標本数が増えれるにつれて、<code>y</code> の標本平均（線）は母平均 (μ = 0.50) に収束する。</p>
 </div>
-</div>
-</div>
-</div><div class="column" style="width:50%;">
-<ul>
-<li><p>True mean <span class="math inline">\(\mu=10\)</span></p></li>
-<li><p>True variance <span class="math inline">\(\sigma^2 = 10^2\)</span></p></li>
-<li><p>Number of data ranged from <span class="math inline">\(1\)</span> to <span class="math inline">\(1000\)</span></p></li>
-</ul>
-<p><strong>R Code for the pseudo-random values from the normal distribution</strong></p>
-<div class="cell" data-hash="nhst-slide_cache/revealjs/unnamed-chunk-5_b33a4f7c3ba0bddef591238db26809ba">
-<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a></a>mu <span class="ot">=</span> <span class="dv">10</span>              <span class="co"># 真の平均値</span></span>
-<span id="cb1-2"><a></a>sd <span class="ot">=</span> <span class="dv">10</span>              <span class="co"># 真の標準偏差</span></span>
-<span id="cb1-3"><a></a>n <span class="ot">=</span> <span class="dv">5</span>                <span class="co"># データ回数</span></span>
-<span id="cb1-4"><a></a>m <span class="ot">=</span> <span class="fu">rnorm</span>(n, mu, sd) <span class="co"># 正規分布の疑似乱数</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
-</div>
-</div>
-</section>
+</section></section>
 <section>
 <section id="central-limit-theorem" class="title-slide slide level1 center">
 <h1>Central limit theorem</h1>
 
 </section>
-<section id="中心極限定理" class="slide level2">
-<h2>中心極限定理</h2>
-<p>中心極限定理とは、多数の独立かつ同一分布に従う確率変数の平均値の分布が、 一定の条件下では、正規分布に近似することを示す。</p>
-<p>データの分布に関わらず、データの平均値を大量に求めると、その平均値自体が正規分布に近似することが期待できる。 平均値は、正規分布に従うことで、母集団の平均値や分散についての推論ができるようになる。</p>
-<p>統計学において非常に重要な定理です。</p>
+<section id="clt-dice-example1" class="slide level2" data-menu-title="CLTサイコロの例1">
+<h2></h2>
+
+<img data-src="nhst-slide_files/figure-revealjs/unnamed-chunk-9-1.png" class="quarto-figure quarto-figure-center r-stretch" width="576"><div style="font-size:50%;">
+<p>一回の実験に２個のサイコロを４９回投げました。 実験は 2<sup>15</sup> 回繰り返して行い、実験ごとに２個のサイコロの和の平均値を求めました。 標準平均から母平均（７）を引いたあと、標本の標準偏差で割りました <span class="math inline">\((Z = \frac{x_i - \overline{x}}{s})\)</span>。 もとのデータの分布は正規分布ではないが、平均値は正規分布に従っています。</p>
+</div>
+</section>
+<section id="clt-dice-example2" class="slide level2" data-menu-title="CLTサイコロの例2">
+<h2></h2>
+
+<img data-src="nhst-slide_files/figure-revealjs/unnamed-chunk-11-1.png" class="quarto-figure quarto-figure-center r-stretch" width="576"><div style="font-size:50%;">
+<p>一回の実験に 1 個のサイコロを４９回投げました。 実験は 2<sup>15</sup> 回繰り返して行い、 実験ごとに 1 個のサイコロの出目の平均値を求めました。 標準平均から母平均（3.5）を引いたあと、標本の標準偏差で割りました <span class="math inline">\((Z = \frac{x_i - \overline{x}}{s})\)</span>。 もとのデータの分布は正規分布ではないが、平均値は正規分布に従っています。</p>
+</div>
 </section>
 <section id="central-limit-theorem-中心極限定理" class="slide level2">
 <h2>Central limit theorem (中心極限定理)</h2>
+<p>中心極限定理とは、多数の独立かつ同一分布に従う確率変数の 平均値の分布が、一定の条件下では、正規分布に近似することを示す。</p>
+<p>データの分布に関わらず、データの平均値を大量に求めると、 その平均値自体が正規分布に近似することが期待できる。 平均値は、正規分布に従うことで、母集団の平均値や分散についての 推論ができるようになる。</p>
+<p>統計学において非常に重要な定理です。</p>
+</section>
+<section id="中心極限定理" class="slide level2">
+<h2>中心極限定理</h2>
 <p><span class="math display">\[
 \lim_{n\rightarrow \infty}\sqrt{n}\left(\frac{\overline{X}_n - \mu}{\sigma}\right) \xrightarrow{d} N(0, \sigma^2)
 \]</span></p>
+<p>標本数 <span class="math inline">\(n\)</span> が無限大に近づくにつれて、<span class="math inline">\(\sqrt{n}\)</span> と <span class="math inline">\(\frac{\overline{X}_n - \mu}{\sigma}\)</span> の積は、平均 <span class="math inline">\(0\)</span>、分散 <span class="math inline">\(\sigma^2\)</span> の正規分布に近づくことを意味します。</p>
+<ul>
+<li><span class="math inline">\(\overline{X}_n\)</span> は標本 n の標本平均値です。</li>
+<li><span class="math inline">\(\xrightarrow{d}\)</span> は法則収束または分布収束 (converges in distribution)　と意味します。</li>
+</ul>
 <aside class="notes">
 <p>This equation expresses that as the sample size <span class="math inline">\(n\)</span> approaches infinity, the standardized sample mean <span class="math inline">\(\frac{\overline{X}_n - \mu}{\sigma}\)</span> multiplied by <span class="math inline">\(\sqrt{n}\)</span> approaches a normal distribution with mean <span class="math inline">\(0\)</span> and variance <span class="math inline">\(\sigma^2\)</span>.</p>
-<p>この式は、標本数 <span class="math inline">\(n\)</span> が無限大に近づくにつれて、<span class="math inline">\(\sqrt{n}\)</span> と <span class="math inline">\(\frac{\overline{X}_n - \mu}{\sigma}\)</span> の積は、平均 <span class="math inline">\(0\)</span>、分散 <span class="math inline">\(\sigma^2\)</span> の正規分布に近づくことを表す。</p>
 <style type="text/css">
         span.MJX_Assistive_MathML {
           position:absolute!important;
@@ -577,60 +455,6 @@ P(\lim_{n\rightarrow\infty}\overline{X}=\mu)=1
           overflow: hidden!important;
           display:block!important;
       }</style></aside>
-</section>
-<section id="サイコロのデモ" class="slide level2">
-<h2>サイコロのデモ</h2>
-<div class="columns">
-<div class="column" style="width:50%;">
-<ul>
-<li>各試行は6つのサイコロの出目の平均です。</li>
-<li><span class="math inline">\(N\)</span> が増えるにつれて、標本平均は正規分布に収束します（中心極限定理）。</li>
-<li>大数の法則により、標本平均は真の平均値（<span class="math inline">\(\mu = 3.5\)</span>）に収束することが保証されます。</li>
-</ul>
-</div><div class="column" style="width:50%;">
-<div class="cell" data-hash="nhst-slide_cache/revealjs/clt-animation-prep_a655320301b6995ef67bfb1c5534195b">
-<div class="cell-output-display">
-<div>
-<figure>
-<p><img data-src="nhst-slide_files/figure-revealjs/clt-animation-prep-1.png" style="width:80.0%"></p>
-</figure>
-</div>
-</div>
-</div>
-</div>
-</div>
-</section>
-<section id="binomial-distribution" class="slide level2">
-<h2>Binomial distribution</h2>
-<p>The mean and variance of the binomial distribution (二項分布)</p>
-<ul>
-<li><span class="math inline">\(\mu=np\)</span></li>
-<li><span class="math inline">\(\sigma^2 = np(1-p)\)</span></li>
-</ul>
-</section>
-<section id="demonstration" class="slide level2">
-<h2>Demonstration</h2>
-<div class="columns">
-<div class="column" style="width:50%;">
-<div class="cell" data-hash="nhst-slide_cache/revealjs/unnamed-chunk-6_e580357b161c9ef2a2d29aa8cd34b981">
-<div class="cell-output-display">
-<div>
-<figure>
-<p><img data-src="nhst-slide_files/figure-revealjs/unnamed-chunk-6-1.png" width="960"></p>
-</figure>
-</div>
-</div>
-</div>
-</div><div class="column" style="width:50%;">
-<ul>
-<li><span class="math inline">\(n = 40\)</span></li>
-<li><span class="math inline">\(p = 0.45\)</span></li>
-<li>number of trials = 100,000</li>
-<li><span class="math inline">\(np = 18\)</span> (mean)</li>
-<li><span class="math inline">\(np(1-p) = 9.9\)</span> (variance)</li>
-</ul>
-</div>
-</div>
 </section></section>
 <section>
 <section id="scientific-method" class="title-slide slide level1 center">
@@ -759,15 +583,19 @@ P(\lim_{n\rightarrow\infty}\overline{X}=\mu)=1
           display:block!important;
       }</style></aside>
 </section>
-<section id="p-value-distribution-when-h_0-is-true" class="slide level2">
-<h2>P-value distribution when <span class="math inline">\(H_0\)</span> is true</h2>
+<section id="帰無仮説は正しいときのp値" class="slide level2">
+<h2>帰無仮説は正しいときのP値</h2>
 
-<img data-src="nhst-slide_files/figure-revealjs/unnamed-chunk-7-1.png" width="960" class="r-stretch"><p><strong>When the null hypothesis is true, (<span class="math inline">\((\mu_0=50) = (\mu_A=50)\)</span>) and the P-value has a uniform distribution.</strong> For 10000 simulations <span class="math inline">\(P(\text{P-value}&lt;0.05) = 0.0487\)</span>.</p>
+<img data-src="nhst-slide_files/figure-revealjs/unnamed-chunk-12-1.png" class="quarto-figure quarto-figure-center r-stretch" width="384"><div style="font-size:50%;">
+<p>帰無仮説が正しいとき <span class="math inline">\(((\mu_0=50) = (\mu_A=50))\)</span>、 P値は一様分布に従います。 実験を10万回繰り返し実施たとき、 <span class="math inline">\(P(\text{P-value}&lt;0.05) = 0.0501\)</span>でした。</p>
+</div>
 </section>
-<section id="p-value-distribution-when-h_0-is-false" class="slide level2">
-<h2>P-value distribution when <span class="math inline">\(H_0\)</span> is false</h2>
+<section id="帰無仮説は正しくないときのp値" class="slide level2">
+<h2>帰無仮説は正しくないときのP値</h2>
 
-<img data-src="nhst-slide_files/figure-revealjs/unnamed-chunk-8-1.png" width="960" class="r-stretch"><p><strong>When the null hypothesis is false, (<span class="math inline">\((\mu_0=50) \ne (\mu_A=51)\)</span>), and the P-value approaches 0.</strong> For 10000 simulations<span class="math inline">\(P(\text{P-value}&lt;0.05) = 0.5546\)</span>. However, the Type-II error rate (第 2 種の誤り) is 0.4454.</p>
+<img data-src="nhst-slide_files/figure-revealjs/unnamed-chunk-13-1.png" class="quarto-figure quarto-figure-center r-stretch" width="384"><div style="font-size:50%;">
+<p>帰無仮説は正しくないとき <span class="math inline">\(((\mu_0=50) \ne (\mu_A=51))\)</span>、 P値は一様分布に従いません。 実験を10万回繰り返し実施たとき、 <span class="math inline">\(P(\text{P-value}&lt;0.05) = 0.5604\)</span>でした。</p>
+</div>
 </section>
 <section id="仮説検定" class="slide level2">
 <h2>仮説検定</h2>
@@ -783,16 +611,16 @@ P(\lim_{n\rightarrow\infty}\overline{X}=\mu)=1
 </ul></li>
 </ul>
 </section>
-<section id="帰無仮説にきをつけろ" class="slide level2">
-<h2>帰無仮説にきをつけろ！</h2>
+<section id="帰無仮説に注意" class="slide level2">
+<h2>帰無仮説に注意</h2>
 <p>Neyman-Pearson の仮説検定法は <strong>Null Hypothesis Significance Test (NHST) (帰無仮説の有意性検定)</strong> といいます。 意思決定をするための手法なので、誤りを起こすこともある</p>
 <ul>
 <li><strong>Type-I Error (第１種の誤り):</strong> 帰無仮説が正しいのに、帰無仮説を棄却する誤り。誤る確率は <span class="math inline">\(\alpha\)</span>　（有意水準と同じ値）</li>
 <li><strong>Type-II Error (第２種の誤り):</strong> 帰無仮説が正しくないのに、帰無仮説を棄却しない誤り。誤る確率は <span class="math inline">\(\beta\)</span>（単純に求められない）</li>
 </ul>
 </section>
-<section id="帰無仮説にきをつけろ-1" class="slide level2">
-<h2>帰無仮説にきをつけろ！</h2>
+<section id="帰無仮説に注意-1" class="slide level2">
+<h2>帰無仮説に注意</h2>
 <ul>
 <li><span class="math inline">\(\alpha\)</span> 有意水準および第1種の誤り</li>
 <li><span class="math inline">\(\beta\)</span> 第2種の誤り</li>
@@ -803,10 +631,10 @@ P(\lim_{n\rightarrow\infty}\overline{X}=\mu)=1
 \alpha \propto 1/\beta
 \]</span></p>
 </section>
-<section id="type-i-and-ii-error-correctly-rejecting-a-test" class="slide level2">
-<h2>Type-I and II error: Correctly rejecting a test</h2>
+<section id="第１種と第２種の誤り" class="slide level2">
+<h2>第１種と第２種の誤り</h2>
 
-<img data-src="nhst-slide_files/figure-revealjs/unnamed-chunk-10-1.png" class="quarto-figure quarto-figure-center r-stretch" width="844"><aside class="notes">
+<img data-src="nhst-slide_files/figure-revealjs/unnamed-chunk-15-1.png" class="quarto-figure quarto-figure-center r-stretch" width="844"><aside class="notes">
 <p><a href="https://www.ncbi.nlm.nih.gov/pmc/articles/PMC2816758/">Biau et al.&nbsp;2010. Clin. Orthop. Relat. Res. 468: 885-892.</a></p>
 <p>Fig. 2 of Biau et al.&nbsp;2010 is wrong, since if the Type-I error rate decreases, then the Type-II error rate increases.</p>
 <p>There is a false impression that if experiments are conducted with a low Type I error, then significant results almost always corresponds to a true effect.</p>
@@ -852,7 +680,6 @@ P(\lim_{n\rightarrow\infty}\overline{X}=\mu)=1
 </ul>
 </div>
 </div>
-<p>Most scientists mix the two methods, which is wrong!</p>
 <aside class="notes">
 <ul>
 <li><a href="https://www.ncbi.nlm.nih.gov/pmc/articles/PMC2816758/">Biau et al.&nbsp;2010. Clin. Orthop. Relat. Res. 468: 885-892.</a></li>
@@ -883,17 +710,17 @@ P(\lim_{n\rightarrow\infty}\overline{X}=\mu)=1
 <h2>Example</h2>
 <div class="columns">
 <div class="column" style="width:50%;">
-<div class="cell" data-hash="nhst-slide_cache/revealjs/unnamed-chunk-11_b1538ebbd0ccc4f990dc35a34cd607ac">
+<div class="cell">
 <div class="cell-output-display">
 <div>
 <figure>
-<p><img data-src="nhst-slide_files/figure-revealjs/unnamed-chunk-11-1.png" width="960"></p>
+<p><img data-src="nhst-slide_files/figure-revealjs/unnamed-chunk-16-1.png" width="960"></p>
 </figure>
 </div>
 </div>
 </div>
 </div><div class="column" style="width:50%;">
-<div class="cell" data-hash="nhst-slide_cache/revealjs/unnamed-chunk-12_54053007567928aa55ee1b79151552c4">
+<div class="cell">
 <div class="cell-output cell-output-stdout">
 <pre><code>
     Welch Two Sample t-test
@@ -908,6 +735,9 @@ mean in group A mean in group B
        9.897632       10.453938 </code></pre>
 </div>
 </div>
+</div>
+</div>
+<div style="font-size:50%;">
 <ul>
 <li><span class="math inline">\(H_0: \overline{\mu_A}=\overline{\mu_B}~:\text{Null hypothesis}\)</span></li>
 <li><span class="math inline">\(H_1: \overline{\mu_A}\neq\overline{\mu_B}~:\text{Alternative hypothesis}\)</span></li>
@@ -915,7 +745,6 @@ mean in group A mean in group B
 <li>True mean: <span class="math inline">\(\overline{\mu_A}=10\)</span> and <span class="math inline">\(\overline{\mu_B}=12\)</span></li>
 <li>In this case, <span class="math inline">\(P = 0.1466  \nless \alpha = 0.05\)</span></li>
 </ul>
-</div>
 </div>
 <aside class="notes">
 <p>The true means are different, yet the P-value for the Welch’s two sample t-test is greater than 0.05. What does this mean?</p>
@@ -938,20 +767,22 @@ mean in group A mean in group B
 <div class="columns">
 <div class="column" style="width:50%;">
 <blockquote>
-<p>Let’s be clear about what must stop: we should never conclude there is ‘no difference’ or ‘no association’ just because a P-value is larger than a threshold such as 0.05 or, equivalently, because a confidense interval includes zero. –Amerhein et al.&nbsp;2019</p>
+<p>Let’s be clear about what must stop: we should never conclude there is ‘no difference’ or ‘no association’ just because a P-value is larger than a threshold such as 0.05 … –Amerhein et al.&nbsp;2019</p>
 </blockquote>
 </div><div class="column" style="width:50%;">
-<div class="cell" data-hash="nhst-slide_cache/revealjs/unnamed-chunk-13_d699e9b95b9f1d05147f5439c0a0c952">
+<div class="cell">
 <div class="cell-output-display">
 <div>
 <figure>
-<p><img data-src="nhst-slide_files/figure-revealjs/unnamed-chunk-13-1.png" width="960"></p>
+<p><img data-src="nhst-slide_files/figure-revealjs/unnamed-chunk-18-1.png" width="960"></p>
 </figure>
 </div>
 </div>
 </div>
 </div>
 </div>
+<p>P値は 0.05 より大きい場合、「違いはない」、「実験の影響はない」、 「関係性はない」のような解釈は誤りです。</p>
+<p><span class="math inline">\(P&gt;0.05\)</span> は、帰無仮説を棄却するほどの情報量がないだけを意味します。 決定的に実験の効果がないまでは言えませんが、効果がなかったことについては丁寧に考察する必要はあるでしょう。 帰無仮説を棄却したときも同じように疑いながら結果の考察は重要です。 たまたま棄却できたときもあります（第２種誤り）。</p>
 
 <div class="quarto-auto-generated-content">
 <div class="footer footer-default">
@@ -1143,7 +974,7 @@ mean in group A mean in group B
         margin: 0.1,
 
         math: {
-          mathjax: 'https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js',
+          mathjax: 'https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js',
           config: 'TeX-AMS_HTML-full',
           tex2jax: {
             inlineMath: [['\\(','\\)']],

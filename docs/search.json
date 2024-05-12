@@ -981,265 +981,265 @@
   {
     "objectID": "nhst-slide.html#大数の法則",
     "href": "nhst-slide.html#大数の法則",
-    "title": "大数の法則と中心極限定理",
+    "title": "大数の法則と\n中心極限定理",
     "section": "大数の法則",
     "text": "大数の法則\nLaw of large numbers (大数の法則)\n\n\n\n\n\n\n大数の法則は、\n\n\nランダムな試行を繰り返す回数が増えるにつれて、 試行の平均的な結果がその試行の期待値により近づいていく過程です。\nつまり、ランダムな出来事は時間の経過とともに均等になる傾向があるという考えに基づいています。",
     "crumbs": [
       "基礎統計学用スライド",
-      "大数の法則と中心極限定理"
+      "| 大数の法則と\n| 中心極限定理"
     ]
   },
   {
     "objectID": "nhst-slide.html#大数の弱法則",
     "href": "nhst-slide.html#大数の弱法則",
-    "title": "大数の法則と中心極限定理",
+    "title": "大数の法則と\n中心極限定理",
     "section": "大数の弱法則",
-    "text": "大数の弱法則\nWeak law of large numbers (大数の弱法則)\n\\[\n\\overline{X}_n \\xrightarrow{P} \\mu \\; \\text{when}\\; n\\rightarrow \\infty\n\\]\nor,\n\\[\n\\forall{\\epsilon}&gt;0;\\;\\lim_{n\\rightarrow\\infty}P(|\\overline{X}-\\mu|&lt;\\epsilon)=1\n\\]\n\n\n\n\n\n\n大数の弱法則\n\n\n観測回数が増えるにつれて、標本平均は確率収束に従って母集団平均に収束していきます。 つまり、標本の大きさが増えるにつれて、標本平均が母集団平均に近くなる確率が高くなります。\n\n\n\n\n\nThe sample mean X-bar converges in probability to the population mean mu as the sample size n approaches infinity.\n標本平均 X-bar が、標本サイズ n が無限に近づくにつれて、確率収束において母集団平均 mu に収束する。\nFor any positive value of epsilon, the probability that the sample mean (X-bar) will be within epsilon of the population mean (mu) approaches 1 as the sample size approaches infinity.\n任意の正の値 エプシロン に対して、標本平均 (X-bar) が母集団平均 (ミュー) から エプシロン の範囲内にある確率が、標本サイズが無限に近づくにつれて1に収束する」という意味です。",
+    "text": "大数の弱法則\nWeak law of large numbers (大数の弱法則)\n\n平均値 \\(\\mu\\)、 分散 \\(\\sigma^2\\) の分布にお互いに独立に従う 確率変数 \\(X_1, X_2, \\cdots, X_n\\) と、任意の \\(\\varepsilon &gt; 0\\) の場合、\n\n\\[\n\\lim_{n\\rightarrow\\infty} P \\left(\\left |\\frac{X_1+X_2+\\cdots+X_n}{n}-\\mu\\right | &lt; \\varepsilon\\right) = 1\n\\]\n\nつまり、標本平均と母平均の差が \\(\\varepsilon\\) 以下になる確率は 試行回数 \\((n)\\) を増やせば \\(1\\) に確率収束 (stochastic convergence) すると意味します。",
     "crumbs": [
       "基礎統計学用スライド",
-      "大数の法則と中心極限定理"
+      "| 大数の法則と\n| 中心極限定理"
     ]
   },
   {
     "objectID": "nhst-slide.html#大数の強法則",
     "href": "nhst-slide.html#大数の強法則",
-    "title": "大数の法則と中心極限定理",
+    "title": "大数の法則と\n中心極限定理",
     "section": "大数の強法則",
-    "text": "大数の強法則\nStrong law of large numbers (大数の強法則)\n\\[\n\\overline{X}_n \\xrightarrow{a.s.} \\mu \\; \\text{when}\\; n\\rightarrow \\infty\n\\]\nor\n\\[\nP(\\lim_{n\\rightarrow\\infty}\\overline{X}=\\mu)=1\n\\]\n\n\nThe sample mean X-bar converges almost surely to the population mean mu as the sample size n approaches infinity.\n標本平均 X-bar が、標本サイズ n が無限に近づくにつれて、ほとんど確実に母集団平均 mu に収束する。\nThe probability that the sample mean X-bar will approach the population mean mu as the sample size approaches infinity is equal to 1.\n標本サイズが無限に近づくにつれて、標本平均 X-bar が母集団平均 mu に近づく確率は1に等しい。",
+    "text": "大数の強法則\nStrong law of large numbers (大数の強法則)\n\\[\nP \\left(\\lim_{n\\rightarrow\\infty} \\frac{X_1+X_2+\\cdots+X_n}{n}=\\mu \\right) = 1\n\\]\n観測回数が増えるにつれて、標本平均は概収束（ほとんど確実に収束; almost sure convergence）に従って母平均に収束します。",
     "crumbs": [
       "基礎統計学用スライド",
-      "大数の法則と中心極限定理"
+      "| 大数の法則と\n| 中心極限定理"
     ]
   },
   {
     "objectID": "nhst-slide.html#コインの裏表デモ",
     "href": "nhst-slide.html#コインの裏表デモ",
-    "title": "大数の法則と中心極限定理",
+    "title": "大数の法則と\n中心極限定理",
     "section": "コインの裏表デモ",
     "text": "コインの裏表デモ",
     "crumbs": [
       "基礎統計学用スライド",
-      "大数の法則と中心極限定理"
+      "| 大数の法則と\n| 中心極限定理"
     ]
   },
   {
     "objectID": "nhst-slide.html#平均値のデモ",
     "href": "nhst-slide.html#平均値のデモ",
-    "title": "大数の法則と中心極限定理",
+    "title": "大数の法則と\n中心極限定理",
     "section": "平均値のデモ",
-    "text": "平均値のデモ\n\n\n\n\n\n\n\n\n\n\n\n\n\nTrue mean \\(\\mu=10\\)\nTrue variance \\(\\sigma^2 = 10^2\\)\nNumber of data ranged from \\(1\\) to \\(1000\\)\n\nR Code for the pseudo-random values from the normal distribution\n\nmu = 10              # 真の平均値\nsd = 10              # 真の標準偏差\nn = 5                # データ回数\nm = rnorm(n, mu, sd) # 正規分布の疑似乱数",
+    "text": "平均値のデモ\n\n\n標本 (y) は 0 から 1 の一様分布に従う確率変数です。 点は y の観測値、線は y の累積平均値（標本平均）です。 標本数が増えれるにつれて、y の標本平均（線）は母平均 (μ = 0.50) に収束する。",
     "crumbs": [
       "基礎統計学用スライド",
-      "大数の法則と中心極限定理"
+      "| 大数の法則と\n| 中心極限定理"
     ]
   },
   {
     "objectID": "nhst-slide.html#中心極限定理",
     "href": "nhst-slide.html#中心極限定理",
-    "title": "大数の法則と中心極限定理",
+    "title": "大数の法則と\n中心極限定理",
     "section": "中心極限定理",
-    "text": "中心極限定理\n中心極限定理とは、多数の独立かつ同一分布に従う確率変数の平均値の分布が、 一定の条件下では、正規分布に近似することを示す。\nデータの分布に関わらず、データの平均値を大量に求めると、その平均値自体が正規分布に近似することが期待できる。 平均値は、正規分布に従うことで、母集団の平均値や分散についての推論ができるようになる。\n統計学において非常に重要な定理です。",
+    "text": "中心極限定理\n\\[\n\\lim_{n\\rightarrow \\infty}\\sqrt{n}\\left(\\frac{\\overline{X}_n - \\mu}{\\sigma}\\right) \\xrightarrow{d} N(0, \\sigma^2)\n\\]\n標本数 \\(n\\) が無限大に近づくにつれて、\\(\\sqrt{n}\\) と \\(\\frac{\\overline{X}_n - \\mu}{\\sigma}\\) の積は、平均 \\(0\\)、分散 \\(\\sigma^2\\) の正規分布に近づくことを意味します。\n\n\\(\\overline{X}_n\\) は標本 n の標本平均値です。\n\\(\\xrightarrow{d}\\) は法則収束または分布収束 (converges in distribution)　と意味します。\n\n\nThis equation expresses that as the sample size \\(n\\) approaches infinity, the standardized sample mean \\(\\frac{\\overline{X}_n - \\mu}{\\sigma}\\) multiplied by \\(\\sqrt{n}\\) approaches a normal distribution with mean \\(0\\) and variance \\(\\sigma^2\\).",
     "crumbs": [
       "基礎統計学用スライド",
-      "大数の法則と中心極限定理"
+      "| 大数の法則と\n| 中心極限定理"
     ]
   },
   {
     "objectID": "nhst-slide.html#central-limit-theorem-中心極限定理",
     "href": "nhst-slide.html#central-limit-theorem-中心極限定理",
-    "title": "大数の法則と中心極限定理",
+    "title": "大数の法則と\n中心極限定理",
     "section": "Central limit theorem (中心極限定理)",
-    "text": "Central limit theorem (中心極限定理)\n\\[\n\\lim_{n\\rightarrow \\infty}\\sqrt{n}\\left(\\frac{\\overline{X}_n - \\mu}{\\sigma}\\right) \\xrightarrow{d} N(0, \\sigma^2)\n\\]\n\nThis equation expresses that as the sample size \\(n\\) approaches infinity, the standardized sample mean \\(\\frac{\\overline{X}_n - \\mu}{\\sigma}\\) multiplied by \\(\\sqrt{n}\\) approaches a normal distribution with mean \\(0\\) and variance \\(\\sigma^2\\).\nこの式は、標本数 \\(n\\) が無限大に近づくにつれて、\\(\\sqrt{n}\\) と \\(\\frac{\\overline{X}_n - \\mu}{\\sigma}\\) の積は、平均 \\(0\\)、分散 \\(\\sigma^2\\) の正規分布に近づくことを表す。",
+    "text": "Central limit theorem (中心極限定理)\n中心極限定理とは、多数の独立かつ同一分布に従う確率変数の 平均値の分布が、一定の条件下では、正規分布に近似することを示す。\nデータの分布に関わらず、データの平均値を大量に求めると、 その平均値自体が正規分布に近似することが期待できる。 平均値は、正規分布に従うことで、母集団の平均値や分散についての 推論ができるようになる。\n統計学において非常に重要な定理です。",
     "crumbs": [
       "基礎統計学用スライド",
-      "大数の法則と中心極限定理"
+      "| 大数の法則と\n| 中心極限定理"
     ]
   },
   {
     "objectID": "nhst-slide.html#サイコロのデモ",
     "href": "nhst-slide.html#サイコロのデモ",
-    "title": "大数の法則と中心極限定理",
+    "title": "大数の法則と\n中心極限定理",
     "section": "サイコロのデモ",
     "text": "サイコロのデモ\n\n\n\n各試行は6つのサイコロの出目の平均です。\n\\(N\\) が増えるにつれて、標本平均は正規分布に収束します（中心極限定理）。\n大数の法則により、標本平均は真の平均値（\\(\\mu = 3.5\\)）に収束することが保証されます。",
     "crumbs": [
       "基礎統計学用スライド",
-      "大数の法則と中心極限定理"
+      "| 大数の法則と\n| 中心極限定理"
     ]
   },
   {
     "objectID": "nhst-slide.html#binomial-distribution",
     "href": "nhst-slide.html#binomial-distribution",
-    "title": "大数の法則と中心極限定理",
+    "title": "大数の法則と\n中心極限定理",
     "section": "Binomial distribution",
     "text": "Binomial distribution\nThe mean and variance of the binomial distribution (二項分布)\n\n\\(\\mu=np\\)\n\\(\\sigma^2 = np(1-p)\\)",
     "crumbs": [
       "基礎統計学用スライド",
-      "大数の法則と中心極限定理"
+      "| 大数の法則と\n| 中心極限定理"
     ]
   },
   {
     "objectID": "nhst-slide.html#demonstration",
     "href": "nhst-slide.html#demonstration",
-    "title": "大数の法則と中心極限定理",
+    "title": "大数の法則と\n中心極限定理",
     "section": "Demonstration",
     "text": "Demonstration\n\n\n\n\n\n\n\n\n\n\n\n\n\n\\(n = 40\\)\n\\(p = 0.45\\)\nnumber of trials = 100,000\n\\(np = 18\\) (mean)\n\\(np(1-p) = 9.9\\) (variance)",
     "crumbs": [
       "基礎統計学用スライド",
-      "大数の法則と中心極限定理"
+      "| 大数の法則と\n| 中心極限定理"
     ]
   },
   {
     "objectID": "nhst-slide.html#scientific-method-科学的方法",
     "href": "nhst-slide.html#scientific-method-科学的方法",
-    "title": "大数の法則と中心極限定理",
+    "title": "大数の法則と\n中心極限定理",
     "section": "Scientific Method (科学的方法)　",
     "text": "Scientific Method (科学的方法)　\n合理的に研究をするためには、科学的方法を用います。 科学的方法には6つのステップがあり、切り返して行うことが一般的です。\n\n観察：まず、自然界を観察します。\n質問：観察した自然現象について、科学的に検証できる（実験）課題を考えます。\n仮説：仮説は、質問に対する合理的な推測です。実験で検証できるものです。\n実験：実験を行い、考えた仮説が正しいかどうかを確認します。ここでデータ収集します。\n分析：実験で得たデータを統計学的に解析します。データは、考え上げた仮説を支持するか否定するかを検証します。\n結論：仮説が支持された場合は、考え上げた仮説が現段階で正しいと結論つけられますが、否定された場合は、仮説を修正するかまたは新たな仮説を開発します。\n\n\n科学的方法は周期的なプロセスです。実験を終了した後、最初に戻って新しい観察を行うか、新しい質問をする必要が生じる場合があります。これは、科学的方法が自然界について学ぶ方法だからです。より多くのことを学ぶにつれて、仮説や理論を変更する必要があるかもしれません。\n科学的方法は、自然界を理解するための強力なツールです。科学者はこの方法を使用して、原子から銀河までのあらゆるものを理解するための大きな進歩を遂げました。科学的方法は、継続的な学習と発見のプロセスです。それは、自然界の真実を見つける方法です",
     "crumbs": [
       "基礎統計学用スライド",
-      "大数の法則と中心極限定理"
+      "| 大数の法則と\n| 中心極限定理"
     ]
   },
   {
     "objectID": "nhst-slide.html#hypothesis-仮説",
     "href": "nhst-slide.html#hypothesis-仮説",
-    "title": "大数の法則と中心極限定理",
+    "title": "大数の法則と\n中心極限定理",
     "section": "Hypothesis (仮説)",
     "text": "Hypothesis (仮説)\n\n仮説は実験を行う前に決めるもの。データ見てから仮説を決めません。\n一般的には、仮説を証明（採択）したいが、統計学の視点から考えると、仮説は棄却するものです。\n\n仮説を証明（採択）することはできません。仮説は棄却するものです。",
     "crumbs": [
       "基礎統計学用スライド",
-      "大数の法則と中心極限定理"
+      "| 大数の法則と\n| 中心極限定理"
     ]
   },
   {
     "objectID": "nhst-slide.html#model-モデル",
     "href": "nhst-slide.html#model-モデル",
-    "title": "大数の法則と中心極限定理",
+    "title": "大数の法則と\n中心極限定理",
     "section": "Model (モデル)",
     "text": "Model (モデル)\n\nモデルはデータを見てから考えるもの。\nモデルも検証する必要があります。\nモデルは予測に使用できます。",
     "crumbs": [
       "基礎統計学用スライド",
-      "大数の法則と中心極限定理"
+      "| 大数の法則と\n| 中心極限定理"
     ]
   },
   {
     "objectID": "nhst-slide.html#有意性検定および仮説検定",
     "href": "nhst-slide.html#有意性検定および仮説検定",
-    "title": "大数の法則と中心極限定理",
+    "title": "大数の法則と\n中心極限定理",
     "section": "有意性検定および仮説検定",
     "text": "有意性検定および仮説検定\n\n\nSignificance testing (有意性検定論)\n\n1920年代に、R.A. Fisher が提案した。\n帰無仮説 \\(H_0\\)　に対して集めたデータを得られるエビデンス（証拠）。\nP値が小さいとき、エビデンスは弱い\n\n\\(\\text{P-value} = P(T(X) \\ge T_0(X)|H_0)\\)\n\n仮説の棄却や採択はしない\n\n\nHypothesis testing (仮説検定論)\n\n1930年代に、 J. Neyman と E.S. Pearson が提案した。\n最も使われている手法\n帰無仮説 \\(H_0\\) と対立仮説 \\(H_A\\)を定義します\n有意水準 (significance level \\(\\alpha\\)) を基準にして、 \\(H_A\\) の採択または棄却をする手法。\n\n\n\n\nSir Ronald Aylmer Fisher was a British statistician and geneticist. His work win agricultural experiments led to the development of the Analysis of Variance. In 1925 he published the book Statistical Methods for Research Workers, that introduced the concept of the P-value.\nJerzy Neyman was a Polish mathematician and statician, and Egon Sharpe Pearson was a British statician. They co-invented and popularized the hypothesis testing techniques and the rejection and acceptance of the null hypothesis or the alternative hypothesis.",
     "crumbs": [
       "基礎統計学用スライド",
-      "大数の法則と中心極限定理"
+      "| 大数の法則と\n| 中心極限定理"
     ]
   },
   {
     "objectID": "nhst-slide.html#what-is-the-p-value-p値とは",
     "href": "nhst-slide.html#what-is-the-p-value-p値とは",
-    "title": "大数の法則と中心極限定理",
+    "title": "大数の法則と\n中心極限定理",
     "section": "What is the P-value (P値とは)?",
     "text": "What is the P-value (P値とは)?\n統計解析をすることで、P値を求めることは当たり前のようになりました。\n\\[\n\\text{P-value} = P(T(X) \\ge T_0(X)|H_0)\n\\]\n\n帰無仮説 \\(H_0\\) にたいして、\\(T(X) &gt; T_0(X)\\) がおきる確率\n帰無仮説に対して、収集したデータの整合性を指標科した値\nP値は 0 ~ 1 (\\(0 \\leq \\text{P-value} \\leq 1\\)) の範囲をとる。\n帰無仮説が正しいとき、P値は一様分布に従う。\n帰無仮説が正しくとき：\\(\\displaystyle \\lim_{n \\rightarrow \\infty} P \\rightarrow 0\\)。\n\n\n\nThe P-value only makes sense when the null hypothesis is true. This is why we assume a true null, so that we can get a P-value.\nThe original definition of the P-value: the chance of obtaining an effect equal to or more extreme than the one observed considering the null hypothesis is true.\n\nLinks to StackExchange: Cross Validated Questions.S\n\nIntepretation of p-value in hypothesis testing.\nWhat is the relationship between p values and type I errors\nHow do I find the probability of type II errors",
     "crumbs": [
       "基礎統計学用スライド",
-      "大数の法則と中心極限定理"
+      "| 大数の法則と\n| 中心極限定理"
     ]
   },
   {
     "objectID": "nhst-slide.html#p-value-distribution-when-h_0-is-true",
     "href": "nhst-slide.html#p-value-distribution-when-h_0-is-true",
-    "title": "大数の法則と中心極限定理",
+    "title": "大数の法則と\n中心極限定理",
     "section": "P-value distribution when \\(H_0\\) is true",
     "text": "P-value distribution when \\(H_0\\) is true\n\nWhen the null hypothesis is true, (\\((\\mu_0=50) = (\\mu_A=50)\\)) and the P-value has a uniform distribution. For 10000 simulations \\(P(\\text{P-value}&lt;0.05) = 0.0487\\).",
     "crumbs": [
       "基礎統計学用スライド",
-      "大数の法則と中心極限定理"
+      "| 大数の法則と\n| 中心極限定理"
     ]
   },
   {
     "objectID": "nhst-slide.html#p-value-distribution-when-h_0-is-false",
     "href": "nhst-slide.html#p-value-distribution-when-h_0-is-false",
-    "title": "大数の法則と中心極限定理",
+    "title": "大数の法則と\n中心極限定理",
     "section": "P-value distribution when \\(H_0\\) is false",
     "text": "P-value distribution when \\(H_0\\) is false\n\nWhen the null hypothesis is false, (\\((\\mu_0=50) \\ne (\\mu_A=51)\\)), and the P-value approaches 0. For 10000 simulations\\(P(\\text{P-value}&lt;0.05) = 0.5546\\). However, the Type-II error rate (第 2 種の誤り) is 0.4454.",
     "crumbs": [
       "基礎統計学用スライド",
-      "大数の法則と中心極限定理"
+      "| 大数の法則と\n| 中心極限定理"
     ]
   },
   {
     "objectID": "nhst-slide.html#仮説検定",
     "href": "nhst-slide.html#仮説検定",
-    "title": "大数の法則と中心極限定理",
+    "title": "大数の法則と\n中心極限定理",
     "section": "仮説検定",
     "text": "仮説検定\n仮説検定は客観的に意思決定をするために使います。\n\nP値は帰無仮説と対立仮説を比較するために使います。\n帰無仮説を棄却するルールは有意水準を用いて行います。\n\\(\\text{P-value} \\leq \\alpha\\)　のとき帰無仮説を棄却します。\n帰無仮説を棄却・採択することで、誤りを起こすことになる\n\n第１種の誤り, α過誤 (Type-I error)\n第２種の誤り, β過誤 (Type-II error)",
     "crumbs": [
       "基礎統計学用スライド",
-      "大数の法則と中心極限定理"
+      "| 大数の法則と\n| 中心極限定理"
     ]
   },
   {
     "objectID": "nhst-slide.html#帰無仮説にきをつけろ",
     "href": "nhst-slide.html#帰無仮説にきをつけろ",
-    "title": "大数の法則と中心極限定理",
+    "title": "大数の法則と\n中心極限定理",
     "section": "帰無仮説にきをつけろ！",
     "text": "帰無仮説にきをつけろ！\nNeyman-Pearson の仮説検定法は Null Hypothesis Significance Test (NHST) (帰無仮説の有意性検定) といいます。 意思決定をするための手法なので、誤りを起こすこともある\n\nType-I Error (第１種の誤り): 帰無仮説が正しいのに、帰無仮説を棄却する誤り。誤る確率は \\(\\alpha\\)　（有意水準と同じ値）\nType-II Error (第２種の誤り): 帰無仮説が正しくないのに、帰無仮説を棄却しない誤り。誤る確率は \\(\\beta\\)（単純に求められない）",
     "crumbs": [
       "基礎統計学用スライド",
-      "大数の法則と中心極限定理"
+      "| 大数の法則と\n| 中心極限定理"
     ]
   },
   {
     "objectID": "nhst-slide.html#帰無仮説にきをつけろ-1",
     "href": "nhst-slide.html#帰無仮説にきをつけろ-1",
-    "title": "大数の法則と中心極限定理",
+    "title": "大数の法則と\n中心極限定理",
     "section": "帰無仮説にきをつけろ！",
     "text": "帰無仮説にきをつけろ！\n\n\\(\\alpha\\) 有意水準および第1種の誤り\n\\(\\beta\\) 第2種の誤り\n\\(1-\\beta\\) 検定の検出力、正しくない帰無仮説を棄却する確率\n第1種の誤りを厳しくすると、第2種の誤りはあまくなる (お互いに反比例する)\n\n\\[\n\\alpha \\propto 1/\\beta\n\\]",
     "crumbs": [
       "基礎統計学用スライド",
-      "大数の法則と中心極限定理"
+      "| 大数の法則と\n| 中心極限定理"
     ]
   },
   {
     "objectID": "nhst-slide.html#type-i-and-ii-error-correctly-rejecting-a-test",
     "href": "nhst-slide.html#type-i-and-ii-error-correctly-rejecting-a-test",
-    "title": "大数の法則と中心極限定理",
+    "title": "大数の法則と\n中心極限定理",
     "section": "Type-I and II error: Correctly rejecting a test",
     "text": "Type-I and II error: Correctly rejecting a test\n\n\nBiau et al. 2010. Clin. Orthop. Relat. Res. 468: 885-892.\nFig. 2 of Biau et al. 2010 is wrong, since if the Type-I error rate decreases, then the Type-II error rate increases.\nThere is a false impression that if experiments are conducted with a low Type I error, then significant results almost always corresponds to a true effect.\nOut of 1000 null hypothesis, 10% are actually false. In otherwords, the null hypothesis is rarely false. So, 900 are true null hypothesis and 100 are false null hypothesis. However, we do not know this. Suppose that we perform tests that have an α of 0.10 and a β of 0.24, Among the true null hypothesis, since our Type-I error rate is 0.10, then 90 experiments will be erroneously rejected. Among the false null hypothesis, since our Type-II error rate is 0.24, then 24 experiments will be erroneously not rejected and 80 will be correctly rejected.\nTherefore, a total of 90+76 null hypotheses will be rejected, but only 76 / (90+76) = 0.46 of these were correctly rejected.\nI am not sure if this is a good example, since the null hypothesis is only rare false. What is the point of this?",
     "crumbs": [
       "基礎統計学用スライド",
-      "大数の法則と中心極限定理"
+      "| 大数の法則と\n| 中心極限定理"
     ]
   },
   {
     "objectID": "nhst-slide.html#有意性検定と仮説検定の違い",
     "href": "nhst-slide.html#有意性検定と仮説検定の違い",
-    "title": "大数の法則と中心極限定理",
+    "title": "大数の法則と\n中心極限定理",
     "section": "有意性検定と仮説検定の違い",
-    "text": "有意性検定と仮説検定の違い\n\n\nSignificance testing (有意性検定)\n\nFisher の手法\nP値の値は重要\n帰無仮説を棄却するために使う\nデータを見てから計算する\n解析したデータのみに有効\nSubjective decision (主観的な判断)\nエビデンスによる意思決定\n\n\nNHST (仮説検定)\n\nNeyman and Pearson の手法\n第1種の誤りが重要\n第1種と第2種の誤りを最低限にする\nデータを見てから、α と β を選ぶ\n実験は十分に反復されており、今後も似たようなデータを期待できる\nObjective decision (客観的)\nルールに基づいた意思決定\n\n\n\nMost scientists mix the two methods, which is wrong!\n\n\nBiau et al. 2010. Clin. Orthop. Relat. Res. 468: 885-892.\n\nSee Fig. 1A-B in this paper. Since Fisher’s P-value is valid for each experiment individually, some experiments will provide evidence for rejecting the null and some won’t.\n\nThe p value is not the probability of the null hypothesis being true; it is the probability of observing these data, or more extreme data, if the null is true.\nHowever, for Neyman-Pearson method, there is only a chance of making an error of rejecting or accepting a hypothesis based on an α and β value.",
+    "text": "有意性検定と仮説検定の違い\n\n\nSignificance testing (有意性検定)\n\nFisher の手法\nP値の値は重要\n帰無仮説を棄却するために使う\nデータを見てから計算する\n解析したデータのみに有効\nSubjective decision (主観的な判断)\nエビデンスによる意思決定\n\n\nNHST (仮説検定)\n\nNeyman and Pearson の手法\n第1種の誤りが重要\n第1種と第2種の誤りを最低限にする\nデータを見てから、α と β を選ぶ\n実験は十分に反復されており、今後も似たようなデータを期待できる\nObjective decision (客観的)\nルールに基づいた意思決定\n\n\n\n\n\nBiau et al. 2010. Clin. Orthop. Relat. Res. 468: 885-892.\n\nSee Fig. 1A-B in this paper. Since Fisher’s P-value is valid for each experiment individually, some experiments will provide evidence for rejecting the null and some won’t.\n\nThe p value is not the probability of the null hypothesis being true; it is the probability of observing these data, or more extreme data, if the null is true.\nHowever, for Neyman-Pearson method, there is only a chance of making an error of rejecting or accepting a hypothesis based on an α and β value.",
     "crumbs": [
       "基礎統計学用スライド",
-      "大数の法則と中心極限定理"
+      "| 大数の法則と\n| 中心極限定理"
     ]
   },
   {
     "objectID": "nhst-slide.html#example",
     "href": "nhst-slide.html#example",
-    "title": "大数の法則と中心極限定理",
+    "title": "大数の法則と\n中心極限定理",
     "section": "Example",
-    "text": "Example\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n    Welch Two Sample t-test\n\ndata:  observation by experiment\nt = -1.4885, df = 31.452, p-value = 0.1466\nalternative hypothesis: true difference in means between group A and group B is not equal to 0\n95 percent confidence interval:\n -1.3181200  0.2055077\nsample estimates:\nmean in group A mean in group B \n       9.897632       10.453938 \n\n\n\n\\(H_0: \\overline{\\mu_A}=\\overline{\\mu_B}~:\\text{Null hypothesis}\\)\n\\(H_1: \\overline{\\mu_A}\\neq\\overline{\\mu_B}~:\\text{Alternative hypothesis}\\)\nTrue standard deviation：\\(\\sigma_A=\\sigma_B\\)\nTrue mean: \\(\\overline{\\mu_A}=10\\) and \\(\\overline{\\mu_B}=12\\)\nIn this case, \\(P = 0.1466  \\nless \\alpha = 0.05\\)\n\n\n\n\nThe true means are different, yet the P-value for the Welch’s two sample t-test is greater than 0.05. What does this mean?\nDo we accept the alternative hypothesis?\nDo we reject the null hypothesis?",
+    "text": "Example\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n    Welch Two Sample t-test\n\ndata:  observation by experiment\nt = -1.4885, df = 31.452, p-value = 0.1466\nalternative hypothesis: true difference in means between group A and group B is not equal to 0\n95 percent confidence interval:\n -1.3181200  0.2055077\nsample estimates:\nmean in group A mean in group B \n       9.897632       10.453938 \n\n\n\n\n\n\n\\(H_0: \\overline{\\mu_A}=\\overline{\\mu_B}~:\\text{Null hypothesis}\\)\n\\(H_1: \\overline{\\mu_A}\\neq\\overline{\\mu_B}~:\\text{Alternative hypothesis}\\)\nTrue standard deviation：\\(\\sigma_A=\\sigma_B\\)\nTrue mean: \\(\\overline{\\mu_A}=10\\) and \\(\\overline{\\mu_B}=12\\)\nIn this case, \\(P = 0.1466  \\nless \\alpha = 0.05\\)\n\n\n\nThe true means are different, yet the P-value for the Welch’s two sample t-test is greater than 0.05. What does this mean?\nDo we accept the alternative hypothesis?\nDo we reject the null hypothesis?",
     "crumbs": [
       "基礎統計学用スライド",
-      "大数の法則と中心極限定理"
+      "| 大数の法則と\n| 中心極限定理"
     ]
   },
   {
     "objectID": "nhst-slide.html#amerhein-et-al.-2019.-nature-567-305-307",
     "href": "nhst-slide.html#amerhein-et-al.-2019.-nature-567-305-307",
-    "title": "大数の法則と中心極限定理",
+    "title": "大数の法則と\n中心極限定理",
     "section": "Amerhein et al. 2019. Nature 567: 305-307",
-    "text": "Amerhein et al. 2019. Nature 567: 305-307\n\n\n\nLet’s be clear about what must stop: we should never conclude there is ‘no difference’ or ‘no association’ just because a P-value is larger than a threshold such as 0.05 or, equivalently, because a confidense interval includes zero. –Amerhein et al. 2019",
+    "text": "Amerhein et al. 2019. Nature 567: 305-307\n\n\n\nLet’s be clear about what must stop: we should never conclude there is ‘no difference’ or ‘no association’ just because a P-value is larger than a threshold such as 0.05 … –Amerhein et al. 2019\n\n\n\n\n\n\n\n\n\n\n\n\n\nP値は 0.05 より大きい場合、「違いはない」、「実験の影響はない」、 「関係性はない」のような解釈は誤りです。\n\\(P&gt;0.05\\) は、帰無仮説を棄却するほどの情報量がないだけを意味します。 決定的に実験の効果がないまでは言えませんが、効果がなかったことについては丁寧に考察する必要はあるでしょう。 帰無仮説を棄却したときも同じように疑いながら結果の考察は重要です。 たまたま棄却できたときもあります（第２種誤り）。",
     "crumbs": [
       "基礎統計学用スライド",
-      "大数の法則と中心極限定理"
+      "| 大数の法則と\n| 中心極限定理"
     ]
   },
   {
@@ -4903,6 +4903,116 @@
     "crumbs": [
       "研究室用",
       "開放型溶存酸素法"
+    ]
+  },
+  {
+    "objectID": "nhst-slide.html#度数-frequency",
+    "href": "nhst-slide.html#度数-frequency",
+    "title": "大数の法則と\n中心極限定理",
+    "section": "度数 (frequency)",
+    "text": "度数 (frequency)\n\n\n\n\n\n\n度数（頻度）とは\n\n\nある標本で特定のデータの値が得られた回数。 相対度数は標本数に対する度数の割合です。\n\n\n\n{3, 1, 5, 1, 4, 2, 5, 2, 3, 2, 6, 3, 3, 1, 3, 4, 1, 4, 4, 2, 1, 6, 1, 1, 1, 2, 1, 2, 6, 4} に対する 6 の度数は 3 です。\n相対度数は\n\nです。",
+    "crumbs": [
+      "基礎統計学用スライド",
+      "| 大数の法則と\n| 中心極限定理"
+    ]
+  },
+  {
+    "objectID": "nhst-slide.html#コイン投げの例",
+    "href": "nhst-slide.html#コイン投げの例",
+    "title": "大数の法則と\n中心極限定理",
+    "section": "コイン投げの例",
+    "text": "コイン投げの例\n\n\nフェア (fair) なコインを投げた場合、表が出る確率は 0.50 です。 では、コインを 100 回投げた場合、 表がでる相対度数は 0.50 でしょうか。",
+    "crumbs": [
+      "基礎統計学用スライド",
+      "| 大数の法則と\n| 中心極限定理"
+    ]
+  },
+  {
+    "objectID": "nhst-slide.html#コイン投げの例-1",
+    "href": "nhst-slide.html#コイン投げの例-1",
+    "title": "大数の法則と\n中心極限定理",
+    "section": "コイン投げの例",
+    "text": "コイン投げの例\n\n\n今回の実験では、 表が出る度数が 0.50 に収束するためには、 おおよそ 15,000 回投げました。\nコイン投げの回数が少なければ（小数） 表が出る確率と相対度数に大きな違いがありましたが、 投げる回数が増えると（大数）相対度数と確率の違いは小さくなりました。",
+    "crumbs": [
+      "基礎統計学用スライド",
+      "| 大数の法則と\n| 中心極限定理"
+    ]
+  },
+  {
+    "objectID": "nhst-slide.html#clt-dice-example1",
+    "href": "nhst-slide.html#clt-dice-example1",
+    "title": "大数の法則と\n中心極限定理",
+    "section": "",
+    "text": "一回の実験に２個のサイコロを４９回投げました。 実験は 215 回繰り返して行い、実験ごとに２個のサイコロの和の平均値を求めました。 標準平均から母平均（７）を引いたあと、標本の標準偏差で割りました \\((Z = \\frac{x_i - \\overline{x}}{s})\\)。 もとのデータの分布は正規分布ではないが、平均値は正規分布に従っています。",
+    "crumbs": [
+      "基礎統計学用スライド",
+      "| 大数の法則と\n| 中心極限定理"
+    ]
+  },
+  {
+    "objectID": "nhst-slide.html#clt-dice-example2",
+    "href": "nhst-slide.html#clt-dice-example2",
+    "title": "大数の法則と\n中心極限定理",
+    "section": "",
+    "text": "一回の実験に 1 個のサイコロを４９回投げました。 実験は 215 回繰り返して行い、 実験ごとに 1 個のサイコロの出目の平均値を求めました。 標準平均から母平均（3.5）を引いたあと、標本の標準偏差で割りました \\((Z = \\frac{x_i - \\overline{x}}{s})\\)。 もとのデータの分布は正規分布ではないが、平均値は正規分布に従っています。",
+    "crumbs": [
+      "基礎統計学用スライド",
+      "| 大数の法則と\n| 中心極限定理"
+    ]
+  },
+  {
+    "objectID": "nhst-slide.html#帰無仮説は正しいときのp値",
+    "href": "nhst-slide.html#帰無仮説は正しいときのp値",
+    "title": "大数の法則と\n中心極限定理",
+    "section": "帰無仮説は正しいときのP値",
+    "text": "帰無仮説は正しいときのP値\n\n\n帰無仮説が正しいとき \\(((\\mu_0=50) = (\\mu_A=50))\\)、 P値は一様分布に従います。 実験を10万回繰り返し実施たとき、 \\(P(\\text{P-value}&lt;0.05) = 0.0501\\)でした。",
+    "crumbs": [
+      "基礎統計学用スライド",
+      "| 大数の法則と\n| 中心極限定理"
+    ]
+  },
+  {
+    "objectID": "nhst-slide.html#帰無仮説は正しくないときのp値",
+    "href": "nhst-slide.html#帰無仮説は正しくないときのp値",
+    "title": "大数の法則と\n中心極限定理",
+    "section": "帰無仮説は正しくないときのP値",
+    "text": "帰無仮説は正しくないときのP値\n\n\n帰無仮説は正しくないとき \\(((\\mu_0=50) \\ne (\\mu_A=51))\\)、 P値は一様分布に従いません。 実験を10万回繰り返し実施たとき、 \\(P(\\text{P-value}&lt;0.05) = 0.5604\\)でした。",
+    "crumbs": [
+      "基礎統計学用スライド",
+      "| 大数の法則と\n| 中心極限定理"
+    ]
+  },
+  {
+    "objectID": "nhst-slide.html#第１種と第２種の誤り",
+    "href": "nhst-slide.html#第１種と第２種の誤り",
+    "title": "大数の法則と\n中心極限定理",
+    "section": "第１種と第２種の誤り",
+    "text": "第１種と第２種の誤り\n\n\nBiau et al. 2010. Clin. Orthop. Relat. Res. 468: 885-892.\nFig. 2 of Biau et al. 2010 is wrong, since if the Type-I error rate decreases, then the Type-II error rate increases.\nThere is a false impression that if experiments are conducted with a low Type I error, then significant results almost always corresponds to a true effect.\nOut of 1000 null hypothesis, 10% are actually false. In otherwords, the null hypothesis is rarely false. So, 900 are true null hypothesis and 100 are false null hypothesis. However, we do not know this. Suppose that we perform tests that have an α of 0.10 and a β of 0.24, Among the true null hypothesis, since our Type-I error rate is 0.10, then 90 experiments will be erroneously rejected. Among the false null hypothesis, since our Type-II error rate is 0.24, then 24 experiments will be erroneously not rejected and 80 will be correctly rejected.\nTherefore, a total of 90+76 null hypotheses will be rejected, but only 76 / (90+76) = 0.46 of these were correctly rejected.\nI am not sure if this is a good example, since the null hypothesis is only rare false. What is the point of this?",
+    "crumbs": [
+      "基礎統計学用スライド",
+      "| 大数の法則と\n| 中心極限定理"
+    ]
+  },
+  {
+    "objectID": "nhst-slide.html#帰無仮説に注意",
+    "href": "nhst-slide.html#帰無仮説に注意",
+    "title": "大数の法則と\n中心極限定理",
+    "section": "帰無仮説に注意",
+    "text": "帰無仮説に注意\nNeyman-Pearson の仮説検定法は Null Hypothesis Significance Test (NHST) (帰無仮説の有意性検定) といいます。 意思決定をするための手法なので、誤りを起こすこともある\n\nType-I Error (第１種の誤り): 帰無仮説が正しいのに、帰無仮説を棄却する誤り。誤る確率は \\(\\alpha\\)　（有意水準と同じ値）\nType-II Error (第２種の誤り): 帰無仮説が正しくないのに、帰無仮説を棄却しない誤り。誤る確率は \\(\\beta\\)（単純に求められない）",
+    "crumbs": [
+      "基礎統計学用スライド",
+      "| 大数の法則と\n| 中心極限定理"
+    ]
+  },
+  {
+    "objectID": "nhst-slide.html#帰無仮説に注意-1",
+    "href": "nhst-slide.html#帰無仮説に注意-1",
+    "title": "大数の法則と\n中心極限定理",
+    "section": "帰無仮説に注意",
+    "text": "帰無仮説に注意\n\n\\(\\alpha\\) 有意水準および第1種の誤り\n\\(\\beta\\) 第2種の誤り\n\\(1-\\beta\\) 検定の検出力、正しくない帰無仮説を棄却する確率\n第1種の誤りを厳しくすると、第2種の誤りはあまくなる (お互いに反比例する)\n\n\\[\n\\alpha \\propto 1/\\beta\n\\]",
+    "crumbs": [
+      "基礎統計学用スライド",
+      "| 大数の法則と\n| 中心極限定理"
     ]
   }
 ]

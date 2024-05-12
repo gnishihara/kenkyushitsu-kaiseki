@@ -1,5 +1,7 @@
 ---
-title: "大数の法則と中心極限定理"
+title: |
+       | 大数の法則と
+       | 中心極限定理
 shorttitle: "NHST, LLN, CLT"
 author: "Greg Nishihara"
 date: today
@@ -9,6 +11,7 @@ transition: slide
 progress: true
 fig-align: center
 format: revealjs
+html-math-method: mathjax
 editor: 
   markdown: 
     wrap: 72
@@ -19,6 +22,8 @@ execute:
   
 ---
 
+# Law of large numbers
+
 ```{r}
 #| include: false
 #| cache: false
@@ -28,210 +33,335 @@ library(tikzDevice)
 library(lemon)
 library(ggrepel)
 library(ggpubr)
+library(patchwork)
 library(knitr)
 library(kableExtra)
+library(ggtext)
+library(showtext)
+library(gganimate)
+library(magick)
+
+font_add_google("Noto Sans", "notosans")
+font_add_google("Noto Sans JP", "notosansjp")
+font_add_google("Noto Sans Symbols", "notosanssymbol")
+theme_gray(base_family = "notosansjp",
+           base_size = 20) |> 
+  theme_set()
+showtext_auto()
 options(knitr.kable.NA = '')
 Sys.setlocale("LC_TIME", "en_US.UTF-8") # This is to set the server time locate to en_US.UTF-8
 ```
 
-
-## 大数の法則
-
-**Law of large numbers (大数の法則)**
+## 度数 (frequency)
 
 ::: {.callout-note}
-# 大数の法則は、
-ランダムな試行を繰り返す回数が増えるにつれて、
-試行の平均的な結果がその試行の期待値により近づいていく過程です。
+## 度数（頻度）とは
 
-つまり、ランダムな出来事は時間の経過とともに均等になる傾向があるという考えに基づいています。
+ある標本で特定のデータの値が得られた回数。
+相対度数は標本数に対する度数の割合です。
 :::
 
+```{r}
+size = 30
+x = sample(1:6, size = size, replace = T)
+xm = max(x)
+l = sum(xm == x)
+s = l/size
+
+text = sprintf("{frac(6~の度数, 標本数) == frac(%d , %d)} == %0.2f",l, size, l/size)
+
+```
+
+`{r} str_c("{", str_flatten_comma(x), "}")` に対する 
+`{r} xm` の度数は `{r} l` です。
+
+**相対度数は** 
+
+```{r}
+#| results: hide
+
+w = 800
+h = 300
+img = image_blank(w, h, "white") |> image_border()
+img = image_draw(img)
+text(w/2,h/2,
+     parse(text = text),
+     family = "notosansjp", cex = 6)
+dev.off()
+```
 
 
-## 大数の弱法則 {.smaller}
+```{r}
+#| fig-width: 5
+#| fig-height: 2
+#| fig-align: "center"
+
+img
+```
+
+
+です。
+
+## コイン投げの例
+
+```{r}
+#| fig-width: 4.00
+#| fig-height: 2.25
+#| fig-align: "center"
+set.seed(2024)
+size = 20000
+x = sample(c(0,1), size = size, replace = T)
+y = cumsum(x) / seq_along(x)
+dset = tibble(x = seq_along(x), y)
+dset |> 
+  slice_head(n = 100) |> 
+  ggplot() + 
+  geom_line(aes(x = x, y = y))+
+  scale_x_continuous("投げた回数") +
+  scale_y_continuous("表が出る相対度数",
+                     limits = c(0, 1))
+```
+
+::: {style="font-size:50%;"}
+フェア (fair) なコインを投げた場合、表が出る確率は 0.50 です。
+では、コインを 100 回投げた場合、
+表がでる相対度数は 0.50 でしょうか。
+:::
+
+## コイン投げの例
+
+```{r}
+#| fig-width: 4.00
+#| fig-height: 2.25
+#| fig-align: "center"
+d1 = dset |> slice(10^c(0,1,2,3,4,5))
+d2 = dset |> slice_sample(n = 1000)
+bind_rows(d1, d2) |> distinct() |> 
+  ggplot() + 
+  geom_line(aes(x = x, y = y))+
+  scale_x_continuous("投げた回数") +
+  scale_y_continuous("表が出る相対度数",
+                     limits = c(0, 1))
+```
+
+::: {style="font-size:50%;"}
+今回の実験では、
+表が出る度数が 0.50 に収束するためには、
+おおよそ 15,000 回投げました。
+
+コイン投げの回数が少なければ（小数）
+表が出る確率と相対度数に大きな違いがありましたが、
+投げる回数が増えると（大数）相対度数と確率の違いは小さくなりました。
+:::
+
+## 大数の弱法則
 
 **Weak law of large numbers (大数の弱法則)**
 
-
-$$
-\overline{X}_n \xrightarrow{P} \mu \; \text{when}\; n\rightarrow \infty
-$$
-
-or,
-
-$$
-\forall{\epsilon}>0;\;\lim_{n\rightarrow\infty}P(|\overline{X}-\mu|<\epsilon)=1
-$$
-
-::: {.callout-note}
-# 大数の弱法則
-
-観測回数が増えるにつれて、標本平均は確率収束に従って母集団平均に収束していきます。
-つまり、標本の大きさが増えるにつれて、標本平均が母集団平均に近くなる確率が高くなります。
+::: {style="font-size:50%;"}
+平均値 $\mu$、 分散 $\sigma^2$ の分布にお互いに独立に従う
+確率変数 $X_1, X_2, \cdots, X_n$ と、任意の $\varepsilon > 0$ 
+の場合、
 :::
 
+$$
+\lim_{n\rightarrow\infty} P \left(\left |\frac{X_1+X_2+\cdots+X_n}{n}-\mu\right | < \varepsilon\right) = 1
+$$
 
-
-
-::: {.notes}
-
-- The sample mean X-bar converges in probability to the population mean mu as the sample size n approaches infinity.
-- 標本平均 X-bar が、標本サイズ n が無限に近づくにつれて、確率収束において母集団平均 mu に収束する。
-- For any positive value of epsilon, the probability that the sample mean (X-bar) will be within epsilon of the population mean (mu) approaches 1 as the sample size approaches infinity.
-- 任意の正の値 エプシロン に対して、標本平均 (X-bar) が母集団平均 (ミュー) から エプシロン の範囲内にある確率が、標本サイズが無限に近づくにつれて1に収束する」という意味です。
-
+::: {style="font-size:50%;"}
+つまり、標本平均と母平均の差が $\varepsilon$ 以下になる確率は
+試行回数 $(n)$ を増やせば $1$ に**確率収束 (stochastic convergence)** すると意味します。
 :::
+
 
 ## 大数の強法則
 
 **Strong law of large numbers (大数の強法則)**
 
-$$
-\overline{X}_n \xrightarrow{a.s.} \mu \; \text{when}\; n\rightarrow \infty
-$$
-
-or
 
 $$
-P(\lim_{n\rightarrow\infty}\overline{X}=\mu)=1
+P \left(\lim_{n\rightarrow\infty} \frac{X_1+X_2+\cdots+X_n}{n}=\mu \right) = 1
 $$
 
-::: {.notes}
-
-- The sample mean X-bar converges almost surely to the population mean mu as the sample size n approaches infinity.
-- 標本平均 X-bar が、標本サイズ n が無限に近づくにつれて、ほとんど確実に母集団平均 mu に収束する。
-
-- The probability that the sample mean X-bar will approach the population mean mu as the sample size approaches infinity is equal to 1.
-- 標本サイズが無限に近づくにつれて、標本平均 X-bar が母集団平均 mu に近づく確率は1に等しい。
-
-:::
-
-## コインの裏表デモ
-
-:::: {.columns}
-::: {.column width="50%"}
-
-```{r}
-#| fig-width: 6
-#| fig-height: 6
-# Load the libraries
-library(ggplot2)
-library(gganimate)
-library(tidyverse)
-library(patchwork)
-n_trials <- 10
-make_data = function(n_trials = 10) {
-  tibble(data = rbinom(n_trials, size = 1, prob = 0.5)) |> mutate(color = factor(data))
-}
-p1 = ggplot(data = make_data(), aes(x = 1:n_trials, y = 1, color = color)) +
-  geom_point(size = 10, show.legend = F) +
-  theme(axis.text = element_blank(),
-        axis.title = element_blank(),
-        axis.ticks = element_blank())
-p2 = ggplot(data = make_data(), aes(x = 1:n_trials, y = 1, color = color)) +
-  geom_point(size = 10, show.legend = F) +
-  theme(axis.text = element_blank(),
-        axis.title = element_blank(),
-        axis.ticks = element_blank())
-p3 = ggplot(data = make_data(), aes(x = 1:n_trials, y = 1, color = color)) +
-  geom_point(size = 10, show.legend = F) +
-  theme(axis.text = element_blank(),
-        axis.title = element_blank(),
-        axis.ticks = element_blank())
-p1 + p2 + p3 + plot_layout(ncol = 1)
-```
-
-:::
-::: {.column width="50%"}
-
-```{r}
-#| fig-width: 6
-#| fig-height: 6
-set.seed(2023)
-pout = 
-  tibble(size = c(seq(5, 5000, by = 5))) |> 
-  mutate(ones = map_int(size, rbinom, n = 1, prob = 0.5)) |> 
-  mutate(zeros = size - ones) |> 
-  mutate(ratio = ones / zeros) |> 
-  ggplot() + 
-  geom_segment(aes(x = size, xend = size, y = 1, yend = ratio), linewidth = 2) +
-  scale_x_continuous("Number of coin flips") +
-  scale_y_continuous("Ratio") +
-  transition_reveal(size) +
-  shadow_trail(color = "orangered", distance = 0.005)
-  
-animate(pout, nframes = 200, width = 400, height = 400)
-```
-:::
-::::
-
+観測回数が増えるにつれて、標本平均は**概収束（ほとんど確実に収束; almost sure convergence）**に従って母平均に収束します。
 
 ## 平均値のデモ
 
-:::: {.columns}
-::: {.column width="50%"}
 ```{r}
-#| fig-width: 6
-#| fig-height: 6
-mu = 10
-sigma2 = mu^2
-n = 2:1000
-fn1 = function(n,mu,sd) mean(rnorm(n, mu, sd))
-m = sapply(n, fn1,mu=mu,sd=sqrt(sigma2))
-df1 = data.frame(m = m, n = n)
-ggplot(df1) +
-  geom_line(aes(x=n,y=m), size = 0.1) +
-  geom_hline(yintercept = mu, 
-             color = "orangered") +
-  scale_x_continuous("データ数 (n)") +
-  scale_y_continuous("平均値",
-                     limits = c(floor(min(df1$m)), ceiling(max(df1$m))),
-                     breaks = c(floor(min(df1$m)), mu, ceiling(max(df1$m)))) +
-    geom_text_repel(aes(x=n, y=mu, label = label), 
-                  data = tibble(n = 500, mu = mu,
-                                label = "真の平均値 (μ = 10)"),
-                  color = "navy",
-                  ylim = c(14),
-                  xlim = c(250))
-```
-:::
-::: {.column width="50%"}
+#| fig-width: 4
+#| fig-height: 2.25
+#| fig-align: "center"
 
-* True mean $\mu=10$
+y = runif(2^10)
+n = seq_along(y)
+dset = tibble(n,y)
+dset = dset |> 
+  mutate(m = cummean(y))
 
-* True variance $\sigma^2 = 10^2$
+ggplot(dset) + 
+  geom_point(aes(n , y),
+             stroke = 0, alpha = 0.5) +
+  geom_line(aes(n, y = m),
+            color = "darkred")
 
-* Number of data ranged from $1$ to $1000$
-
-**R Code for the pseudo-random values from the normal distribution**
-
-```{r}
-#| eval: false
-#| echo: true
-mu = 10              # 真の平均値
-sd = 10              # 真の標準偏差
-n = 5                # データ回数
-m = rnorm(n, mu, sd) # 正規分布の疑似乱数
 ```
 
+::: {style="font-size:50%;"}
+標本 (`y`) は 0 から 1 の一様分布に従う確率変数です。
+点は `y` の観測値、線は `y` の累積平均値（標本平均）です。
+標本数が増えれるにつれて、`y` の標本平均（線）は母平均 (&mu; = 0.50) に収束する。
 :::
-::::
+
 
 # Central limit theorem
 
-## 中心極限定理
+## {#clt-dice-example1 data-menu-title="CLTサイコロの例1"}
 
-中心極限定理とは、多数の独立かつ同一分布に従う確率変数の平均値の分布が、
-一定の条件下では、正規分布に近似することを示す。
+```{r}
+dset = table(outer(1:6, 1:6, "+")) |> 
+  as.matrix() |> 
+  as_tibble(rownames = "n") |> 
+  mutate(p = V1/36,
+         n = as.integer(n))
 
-データの分布に関わらず、データの平均値を大量に求めると、その平均値自体が正規分布に近似することが期待できる。
-平均値は、正規分布に従うことで、母集団の平均値や分散についての推論ができるようになる。
+dset = dset |> 
+  mutate(l = str_c(V1, "/", "36")) |> 
+  arrange(p)
+ybreaks = dset$p |> unique() 
+ylabels = dset$l |> unique() 
+
+p1 = ggplot(dset)+ 
+  geom_col(aes(x = n, y = p)) +
+  scale_x_continuous("2 個のサイコロの和", breaks = 2:12) +
+  scale_y_continuous("確率",
+                     breaks = c(0, ybreaks),
+                     labels = c("0/36", ylabels))
+
+probability = table(outer(1:6,1:6, "+"))/36
+N = 2^15
+X = replicate(N,
+              sample(
+                2:12,
+                size = 49,
+                replace = T,
+                prob = probability
+              ))
+
+dset = tibble(x = (apply(X, 2, mean))) |> 
+  mutate(s = sd(x))
+dset = dset |> 
+  mutate(x = (x - 7)/s)
+
+p2 = tibble(dset) |> 
+  ggplot( )+
+  geom_histogram(aes(x, y = after_stat(density)),
+                 bins = 21) +
+  geom_function(fun = dnorm,
+                color = "orangered") +
+  scale_x_continuous("Z値（標準得点, Z-score）") +
+  theme(
+    axis.title.y = element_blank(),
+    axis.text.y = element_blank(),
+    axis.ticks.y = element_blank()
+  )
+```
+
+```{r}
+#| fig-width: 6
+#| fig-height: 2
+#| fig-align: "center"
+p1 + p2
+```
+
+::: {style="font-size:50%;"}
+
+一回の実験に２個のサイコロを４９回投げました。
+実験は 2^15^ 回繰り返して行い、実験ごとに２個のサイコロの和の平均値を求めました。
+標準平均から母平均（７）を引いたあと、標本の標準偏差で割りました
+$(Z = \frac{x_i - \overline{x}}{s})$。
+もとのデータの分布は正規分布ではないが、平均値は正規分布に従っています。
+:::
+
+
+## {#clt-dice-example2 data-menu-title="CLTサイコロの例2"}
+
+```{r}
+dset = 
+  tibble(n = 1:6,
+         p = rep(1/6, 6)) |> 
+  mutate(l = str_c(1, "/", "6")) |> 
+  arrange(p)
+ybreaks = dset$p |> unique() 
+ylabels = dset$l |> unique() 
+
+p1 = ggplot(dset)+ 
+  geom_col(aes(x = n, y = p)) +
+  scale_x_continuous("1 個のサイコロ", breaks = 1:6) +
+  scale_y_continuous("確率",
+                     breaks = c(0, ybreaks),
+                     labels = c("0/6", ylabels))
+
+probability = rep(1/6, 6)
+N = 2^15
+X = replicate(N,
+              sample(
+                1:6,
+                size = 49,
+                replace = T,
+                prob = probability
+              ))
+
+dset = tibble(x = (apply(X, 2, mean))) |> 
+  mutate(s = sd(x))
+dset = dset |> 
+  mutate(x = (x - 3.5)/s)
+
+p2 = tibble(dset) |> 
+  ggplot( )+
+  geom_histogram(aes(x, y = after_stat(density)),
+                 bins = 19) +
+  geom_function(fun = dnorm, 
+                color = "orangered") +
+  scale_x_continuous("Z値（標準得点, Z-score）") +
+  theme(
+    axis.title.y = element_blank(),
+    axis.text.y = element_blank(),
+    axis.ticks.y = element_blank()
+  )
+```
+
+```{r}
+#| fig-width: 6
+#| fig-height: 2
+#| fig-align: "center"
+p1 + p2
+```
+
+::: {style="font-size:50%;"}
+
+一回の実験に 1 個のサイコロを４９回投げました。
+実験は 2^15^ 回繰り返して行い、
+実験ごとに 1 個のサイコロの出目の平均値を求めました。
+標準平均から母平均（3.5）を引いたあと、標本の標準偏差で割りました
+$(Z = \frac{x_i - \overline{x}}{s})$。
+もとのデータの分布は正規分布ではないが、平均値は正規分布に従っています。
+:::
+
+
+## Central limit theorem (中心極限定理)
+
+中心極限定理とは、多数の独立かつ同一分布に従う確率変数の
+平均値の分布が、一定の条件下では、正規分布に近似することを示す。
+
+データの分布に関わらず、データの平均値を大量に求めると、
+その平均値自体が正規分布に近似することが期待できる。
+平均値は、正規分布に従うことで、母集団の平均値や分散についての
+推論ができるようになる。
 
 統計学において非常に重要な定理です。
 
 
-## Central limit theorem (中心極限定理)
+## 中心極限定理
 
 
 $$
@@ -239,100 +369,17 @@ $$
 $$
 
 
+標本数 $n$ が無限大に近づくにつれて、$\sqrt{n}$ と $\frac{\overline{X}_n - \mu}{\sigma}$ の積は、平均 $0$、分散 $\sigma^2$ の正規分布に近づくことを意味します。
+
+* $\overline{X}_n$ は標本 n の標本平均値です。
+* $\xrightarrow{d}$ は法則収束または分布収束 (converges in distribution)　と意味します。
+
+
 ::: {.notes}
 This equation expresses that as the sample size $n$ approaches infinity, the standardized sample mean $\frac{\overline{X}_n - \mu}{\sigma}$ multiplied by $\sqrt{n}$ approaches a normal distribution with mean $0$ and variance $\sigma^2$.
 
-この式は、標本数 $n$ が無限大に近づくにつれて、$\sqrt{n}$ と $\frac{\overline{X}_n - \mu}{\sigma}$ の積は、平均 $0$、分散 $\sigma^2$ の正規分布に近づくことを表す。
 
 :::
-
-
-## サイコロのデモ
-
-:::: {.columns}
-::: {.column width="50%"}
-
-* 各試行は6つのサイコロの出目の平均です。
-* $N$ が増えるにつれて、標本平均は正規分布に収束します（中心極限定理）。
-* 大数の法則により、標本平均は真の平均値（$\mu = 3.5$）に収束することが保証されます。
-
-:::
-::: {.column width="50%"}
-
-```{r clt-animation-prep, echo = F, fig.height = 5, fig.width = 5, out.width = "80%"}
-set.seed(2020)
-N=c(5, 10, 100, 10^3, 10^4, 10^5)
-X = tibble(n = N) |> 
-  mutate(x = map(n, function(x) {
-    replicate(x, mean(sample(1:6, 5, replace = TRUE), na.rm = T))
-  })) |> mutate(state = (n))
-
-X = X |> unnest(x)
-Y = X |> group_by(state) |> summarise(m = mean(x))
-
-wraplabel = function(x) sprintf("試行回数 = %s",x)
-
-ggplot(X , aes(x = x, group = state)) +
-  geom_histogram(aes(y = ..density..), binwidth = 0.2) +
-  stat_function(fun = dnorm, args = list(mean = 3.5, sd = 0.8)) +
-  scale_y_continuous("確率密度") +
-  scale_x_continuous("平均値", limits = c(1, 6), breaks = 1:6) +
-  geom_vline(aes(xintercept = m, group = state), data = Y, color = "orangered") +
-  facet_wrap("state", labeller = as_labeller(wraplabel)) +
-  ggtitle("試行回数が増えると真の平均値に収束しする")
-```
-
-:::
-::::
-
-## Binomial distribution
-
-
-The mean and variance of the binomial distribution (二項分布)
-
-* $\mu=np$
-* $\sigma^2 = np(1-p)$
-
-
-## Demonstration
-
-:::: {.columns}
-::: {.column width="50%"}
-
-```{r, echo=FALSE}
-p = 0.45
-n = 40
-m = c(10,100,200,500)
-
-df1 = tibble(m = c(5,10,50,10000)) |> 
-  mutate(data = map(m, function(x) {
-    p = 0.45
-    n = 40
-    tibble(r = replicate(x, rbinom(1,n,p)))
-  }))
-
-df1 |> unnest(data) |> 
-  ggplot() +
-  geom_histogram(aes(x = r, y = ..density..),
-                 binwidth = 1) +
-  stat_function(fun = dnorm, args = list(mean = n*p, sd = sqrt(n*p*(1-p)))) +
-  scale_x_continuous(limit = c(0, 40)) + 
-  facet_wrap("m")
-
-```
-
-
-:::
-::: {.column width="50%"}
-
-* $n = 40$
-* $p = 0.45$
-* number of trials = 100,000
-* $np = `r n*p`$ (mean)
-* $np(1-p) = `r n*p*(1-p)`$ (variance)
-
-:::
-::::
 
 
 # Scientific Method
@@ -432,24 +479,28 @@ $$
 
 :::
 
-## P-value distribution when $H_0$ is true
+## 帰無仮説は正しいときのP値
 
 ```{r}
 #| echo: false
 #| warning: false
 #| message: false
-t_test = function(x) {t.test(x$x1, x$x2, var.equal = TRUE)}
-X= tibble(n = 1:10000) |> 
-  mutate(data = map(n, function(x) {
-    tibble(x1 = rnorm(10, mean = 50),
-           x2 = rnorm(10, mean = 50))
-  })) |> 
-  mutate(tout = map(data, t_test)) |> 
-  mutate(tout2 = map(tout, broom::glance)) |> 
-  unnest(tout2) 
-X |> 
-  ggplot() +
-  geom_histogram(aes(x = p.value), binwidth = 0.05) + 
+#| cache: true
+#| fig-width: 4
+#| fig-height: 2
+#| fig-align: "center"
+
+t_test = function(n = 10, mu = 50) {
+  x1 = rnorm(n, mean = mu)
+  x2 = rnorm(n, mean = mu)
+  t.test(x1, x2, var.equal = TRUE)$p.value
+  }
+
+dset = tibble(p.value = replicate(10000, t_test())) 
+
+ggplot(dset) +
+  geom_histogram(aes(x = p.value), binwidth = 0.05,
+                 boundary = 0.0) + 
   geom_vline(xintercept = 0.05, color = "orangered") +
   scale_x_continuous("P-values") + 
   scale_y_continuous("") +
@@ -457,45 +508,53 @@ X |>
         axis.ticks.y = element_blank(),
         legend.title = element_blank(), 
         panel.grid = element_blank())
-x = X |> summarise(cnt = sum(p.value < 0.05) / length(p.value))
+x = dset |> summarise(cnt = sum(p.value < 0.05) / length(p.value))
 ```
 
-**When the null hypothesis is true, ($(\mu_0=50) = (\mu_A=50)$) and the P-value has a uniform distribution.**
-For 10000 simulations $P(\text{P-value}<0.05) = `r round(x, 4)`$.
+::: {style="font-size:50%;"}
 
-## P-value distribution when $H_0$ is false
+帰無仮説が正しいとき $((\mu_0=50) = (\mu_A=50))$、
+P値は一様分布に従います。
+実験を10万回繰り返し実施たとき、 $P(\text{P-value}<0.05) = `r round(x, 4)`$でした。
+:::
+
+## 帰無仮説は正しくないときのP値
 
 ```{r}
 #| echo: false
 #| warning: false
 #| message: false
+#| cache: true
+#| fig-width: 4
+#| fig-height: 2
+#| fig-align: "center"
 
-t_test = function(x) {t.test(x$x1, x$x2, var.equal = TRUE)}
+t_test = function(n = 10, mu = 50) {
+  x1 = rnorm(n, mean = mu)
+  x2 = rnorm(n, mean = 51)
+  t.test(x1, x2, var.equal = TRUE)$p.value
+  }
 
-X = tibble(n = 1:10000) |> 
-  mutate(data = map(n, function(x) {
-    tibble(x1 = rnorm(10, mean = 50),
-           x2 = rnorm(10, mean = 51))
-  })) |> 
-  mutate(tout = map(data, t_test)) |> 
-  mutate(tout2 = map(tout, broom::glance)) |> 
-  unnest(tout2)
-X |> 
-  ggplot() +
-  geom_histogram(aes(x = p.value)) + 
+dset = tibble(p.value = replicate(10000, t_test())) 
+
+ggplot(dset) +
+  geom_histogram(aes(x = p.value), binwidth = 0.05,
+                 boundary = 0.0) + 
   geom_vline(xintercept = 0.05, color = "orangered") +
-  scale_x_continuous("P-values") +
+  scale_x_continuous("P-values") + 
   scale_y_continuous("") +
   theme(axis.text.y = element_blank(),
         axis.ticks.y = element_blank(),
         legend.title = element_blank(), 
         panel.grid = element_blank())
-x = X |> summarise(cnt = sum(p.value <= 0.05) / length(p.value))  
+x = dset |> summarise(cnt = sum(p.value < 0.05) / length(p.value))
 ```
 
-**When the null hypothesis is false, ($(\mu_0=50) \ne (\mu_A=51)$), and the P-value approaches 0.**
-For 10000 simulations$P(\text{P-value}<0.05) = `r round(x, 4)`$.
-However, the Type-II error rate (第 2 種の誤り) is `r round(1-x, 4)`.
+::: {style="font-size:50%;"}
+帰無仮説は正しくないとき $((\mu_0=50) \ne (\mu_A=51))$、
+P値は一様分布に従いません。
+実験を10万回繰り返し実施たとき、 $P(\text{P-value}<0.05) = `{r} round(x, 4)`$でした。
+:::
 
 ## 仮説検定
 
@@ -509,7 +568,7 @@ However, the Type-II error rate (第 2 種の誤り) is `r round(1-x, 4)`.
     - 第１種の誤り, α過誤 (Type-I error)
     - 第２種の誤り, β過誤 (Type-II error)
 
-## 帰無仮説にきをつけろ！
+## 帰無仮説に注意
 
 Neyman-Pearson の仮説検定法は **Null Hypothesis Significance Test (NHST) (帰無仮説の有意性検定)** といいます。
 意思決定をするための手法なので、誤りを起こすこともある
@@ -517,7 +576,7 @@ Neyman-Pearson の仮説検定法は **Null Hypothesis Significance Test (NHST) 
 * **Type-I Error (第１種の誤り):** 帰無仮説が正しいのに、帰無仮説を棄却する誤り。誤る確率は $\alpha$　（有意水準と同じ値）
 * **Type-II Error (第２種の誤り):** 帰無仮説が正しくないのに、帰無仮説を棄却しない誤り。誤る確率は $\beta$（単純に求められない）
 
-## 帰無仮説にきをつけろ！
+## 帰無仮説に注意
 
 * $\alpha$ 有意水準および第1種の誤り
 * $\beta$ 第2種の誤り
@@ -529,7 +588,7 @@ $$
 $$
 
 
-## Type-I and II error: Correctly rejecting a test
+## 第１種と第２種の誤り
 
 ```{r}
 #| echo: false
@@ -608,9 +667,6 @@ Therefore, a total of 90+76 null hypotheses will be rejected, but only 76 / (90+
 :::
 ::::
 
-Most scientists mix the two methods, which is wrong!
-
-
 ::: {.notes}
 
 - [Biau et al. 2010. Clin. Orthop. Relat. Res. 468: 885-892.](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC2816758/)
@@ -655,14 +711,16 @@ out = t.test(observation ~ experiment, data = data)
 t.test(observation ~ experiment, data = data)
 ```
 
+:::
+::::
+
+::: {style="font-size:50%;"}
 * $H_0: \overline{\mu_A}=\overline{\mu_B}~:\text{Null hypothesis}$
 * $H_1: \overline{\mu_A}\neq\overline{\mu_B}~:\text{Alternative hypothesis}$
 * True standard deviation：$\sigma_A=\sigma_B$
 * True mean: $\overline{\mu_A}=10$ and $\overline{\mu_B}=12$
 * In this case, $P = `r round(out$p.value, 4)`  \nless \alpha = 0.05$
-
 :::
-::::
 
 ::: {.notes}
 The true means are different, yet the P-value for the Welch's two sample t-test is greater than 0.05.
@@ -679,7 +737,7 @@ Do we reject the null hypothesis?
 ::: {.column width="50%"}
 
 
-> Let's be clear about what must stop: we should never conclude there is 'no difference' or 'no association' just because a P-value is larger than a threshold such as 0.05 or, equivalently, because a confidense interval includes zero. --Amerhein et al. 2019
+> Let's be clear about what must stop: we should never conclude there is 'no difference' or 'no association' just because a P-value is larger than a threshold such as 0.05 ... --Amerhein et al. 2019
 
 :::
 ::: {.column width="50%"}
@@ -725,5 +783,12 @@ data |>
 :::
 ::::
 
+P値は 0.05 より大きい場合、「違いはない」、「実験の影響はない」、
+「関係性はない」のような解釈は誤りです。
+
+$P>0.05$ は、帰無仮説を棄却するほどの情報量がないだけを意味します。
+決定的に実験の効果がないまでは言えませんが、効果がなかったことについては丁寧に考察する必要はあるでしょう。
+帰無仮説を棄却したときも同じように疑いながら結果の考察は重要です。
+たまたま棄却できたときもあります（第２種誤り）。
 
 
