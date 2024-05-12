@@ -13,23 +13,6 @@ execute:
   freeze: false
 ---
 
-# 必要なパッケージ
-
-パッケージはここで読み込む。
-
-```{r}
-library(tidyverse)
-
-# 作図用補助パッケージ
-library(ggpubr)
-library(patchwork)
-
-# ggplot フォントの設定ようパッケージ
-library(showtext)
-library(magick)
-```
-
-
 # 理想気体の状態方程式 (Ideal gas law)
 
 $$
@@ -75,7 +58,8 @@ calc_n = function(pressure, volume, temperature) {
   kelvin = temperature + 273.15 # Convert to Kelvin
   volume = volume / 1000        # Convert to m^3^
   pressure = pressure * 1000000 # Convert to Pa
-  pressure * volume / (R * kelvin)
+  x = pressure * volume / (R * kelvin)
+  as.double(format(x, digits = 6))
 }
 
 n_15 = calc_n(pressure = 15, volume = 47, temperature = 25)
