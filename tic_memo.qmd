@@ -8,6 +8,9 @@ format:
 reference-location: margin
 citation-location: margin
 bibliography: references.bib
+execute: 
+  cache: false
+  freeze: false
 ---
 
 # 必要なパッケージ
