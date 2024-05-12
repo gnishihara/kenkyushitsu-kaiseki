@@ -5014,5 +5014,27 @@
       "基礎統計学用スライド",
       "| 大数の法則と\n| 中心極限定理"
     ]
+  },
+  {
+    "objectID": "tic_memo.html",
+    "href": "tic_memo.html",
+    "title": "TIC分析機器のメモ",
+    "section": "",
+    "text": "パッケージはここで読み込む。\n\n\nCode\nlibrary(tidyverse)\n\n\n── Attaching core tidyverse packages ──────────────────────── tidyverse 2.0.0 ──\n✔ dplyr     1.1.4     ✔ readr     2.1.5\n✔ forcats   1.0.0     ✔ stringr   1.5.1\n✔ ggplot2   3.5.1     ✔ tibble    3.2.1\n✔ lubridate 1.9.3     ✔ tidyr     1.3.1\n✔ purrr     1.0.2     \n── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──\n✖ purrr::%||%()   masks base::%||%()\n✖ dplyr::filter() masks stats::filter()\n✖ dplyr::lag()    masks stats::lag()\nℹ Use the conflicted package (&lt;http://conflicted.r-lib.org/&gt;) to force all conflicts to become errors\n\n\nCode\n# 作図用補助パッケージ\nlibrary(ggpubr)\nlibrary(patchwork)\n\n# ggplot フォントの設定ようパッケージ\nlibrary(showtext)\n\n\nLoading required package: sysfonts\nLoading required package: showtextdb\n\n\nCode\nlibrary(magick)\n\n\nLinking to ImageMagick 6.9.11.60\nEnabled features: fontconfig, freetype, fftw, heic, lcms, pango, webp, x11\nDisabled features: cairo, ghostscript, raw, rsvg\nUsing 32 threads",
+    "crumbs": [
+      "研究室用",
+      "TIC分析機器のメモ"
+    ]
+  },
+  {
+    "objectID": "tic_memo.html#conversion-factor",
+    "href": "tic_memo.html#conversion-factor",
+    "title": "TIC分析機器のメモ",
+    "section": "Conversion factor",
+    "text": "Conversion factor\n\n1 J is 1 Pa m3.\n1000 L is m3.\n20 &degrees;C is 293.15 K.",
+    "crumbs": [
+      "研究室用",
+      "TIC分析機器のメモ"
+    ]
   }
 ]
