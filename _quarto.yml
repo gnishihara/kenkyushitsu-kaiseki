@@ -49,15 +49,20 @@ website:
         - glm.qmd
       - section: Multivariate
         contents:
-        - pca.qmd
-        - rda.qmd
+        - text: 主成分分析（PCA）
+          href: pca.qmd
+        - text: 冗長性解消（RDA）
+          href: rda.qmd
       - section: 基礎統計学用スライド
         contents:
         - descriptive_statistics-slide.qmd
         - sakuma-drops.qmd
-        - ttest-slides.qmd
-        - nhst-slide.qmd
-        - anova-slides.qmd
+        - text: 大数の法則と中心極限定理 
+          href: nhst-slide.qmd
+        - text: 2群の分析（t 検定）
+          href: ttest-slides.qmd
+        - text: 3群以上の分析（分散分析）
+          href: anova-slides.qmd
       - section: 研究室用
         contents: 
         - openwater_nep_method.qmd
