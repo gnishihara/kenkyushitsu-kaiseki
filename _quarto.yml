@@ -51,7 +51,7 @@ website:
         contents:
         - text: 主成分分析（PCA）
           href: pca.qmd
-        - text: 冗長性解消（RDA）
+        - text: 冗長性分析（RDA）
           href: rda.qmd
       - section: 基礎統計学用スライド
         contents:

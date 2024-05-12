@@ -1591,7 +1591,7 @@
     "text": "What is RDA\n\n\nRedundancy analysis (RDA)1 a canonical ordination2 method and is one type of asymmetric canonical analysis3 that is used to analyze two data tables simultaneously. In RDA we are interested in how the environmental data \\((\\mathbf{X})\\) influences ordination of the observation data \\((\\mathbf{Y})\\). Recall that PCA is an unconstrained ordination4.\n\n\n\n\n\n\n\n\n\n\n\n\n冗長性分析制約付き序列化非対称直接傾度分析制約なし序列化",
     "crumbs": [
       "Multivariate",
-      "冗長性解消（RDA）"
+      "冗長性分析（RDA）"
     ]
   },
   {
@@ -1602,7 +1602,7 @@
     "text": "Asymmetric canonical analysis\n\n\nRDA (Redundancy analysis)\n\nEach canonical axis corresponds to a direction that is most related to linear combinations1 of variables in \\(\\mathbf{X}\\).\nTwo ordinations\n\nLinear combinations of \\(\\mathbf{Y}\\).\nLinear combinations of \\(\\mathbf{\\hat{Y}}\\).\n\nPreserves the Euclidean distance2 among objects.\n\n\nCCA (Canonical correspondence analysis)3\n\nSimlar to RDA, except CCA preserves the \\(\\chi^2\\) distance between objects\n\nLDA (Linear discriminant analysis)4\n\n\\(\\mathbf{Y}\\) is divided in to \\(k\\) groups described by a factor.\nSearches for the linear combinations in \\(\\mathbf{X}\\) that can explain the groups by maximizing the dispersion of the centroids of groups.\n\n\n\n線型結合ユークリッド距離正準対応分析線形判別分析",
     "crumbs": [
       "Multivariate",
-      "冗長性解消（RDA）"
+      "冗長性分析（RDA）"
     ]
   },
   {
@@ -1613,7 +1613,7 @@
     "text": "Approaches to analyze community data\n\nUse DCA to choose RDA or CCA.\n\n\nIf the length of the first DCA axis &gt; 4 use CCA.\nIf the length of the first DCA axis &gt; 3 use RDA.\nIf the length is between 3 and 4, use either CCA or RDA.\n\n\nIf you transform the \\(\\mathbf{Y}\\),\n\n\nDo not apply DCA.\nChoose RDA for the analysis.\n\n\nUse distance-based RDA.",
     "crumbs": [
       "Multivariate",
-      "冗長性解消（RDA）"
+      "冗長性分析（RDA）"
     ]
   },
   {
@@ -1624,7 +1624,7 @@
     "text": "RDA preparation\n\nEach variable in \\(\\mathbf{Y}\\) and \\(\\mathbf{X}\\) should be centered (i.e., have means of zero).\nEach variable in \\(\\mathbf{Y}\\) and \\(\\mathbf{X}\\) should be standardized (i.e., divide by the standard deviation).\nCheck for multi-collinearity among \\(\\mathbf{X}\\).\n\n\n\nIn otherwords, determine the z-score \\((z = (x - \\overline{x}) \\big/ s)\\).",
     "crumbs": [
       "Multivariate",
-      "冗長性解消（RDA）"
+      "冗長性分析（RDA）"
     ]
   },
   {
@@ -1635,7 +1635,7 @@
     "text": "RDA Algorithm\n\nMultiple regression \\(\\mathbf{Y} \\sim \\mathbf{X}\\)\nPCA on the expected value of \\(\\mathbf{Y}\\) determined from the multiple regression (i.e., \\(\\mathbf{\\hat{Y}}\\))\nPCA on the residuals of the multiple regression \\(\\mathbf{Y_{res}} = \\mathbf{Y} - \\mathbf{\\hat{Y}}\\)",
     "crumbs": [
       "Multivariate",
-      "冗長性解消（RDA）"
+      "冗長性分析（RDA）"
     ]
   },
   {
@@ -1646,7 +1646,7 @@
     "text": "Observation data \\((\\mathbf{Y})\\)\nThe presence-absence community matrix1 is a series of zeros and ones to indicate absence and presence, respectively.\nThe dimensions of the matrix (rows and columns).\n\n\nseaweed |&gt; dim() \n\n\n[1] 147 108\n\n\n\nExample of some data points.\n\nseaweed[3:5, 3:5]\n\n# A tibble: 3 × 3\n  `Colpomenia-spp` `Dictyota-spiralis` `Gelidium-spp`\n             &lt;dbl&gt;               &lt;dbl&gt;          &lt;dbl&gt;\n1                0                   1              1\n2                0                   0              1\n3                0                   0              1\n\n\n在不在群集行列",
     "crumbs": [
       "Multivariate",
-      "冗長性解消（RDA）"
+      "冗長性分析（RDA）"
     ]
   },
   {
@@ -1657,7 +1657,7 @@
     "text": "Hellinger transform\nIf we are interested in changes of relative species occurrence, then one good transformation is the Hellinger transform. The Hellinger transform is the square root of each element in a row divided by its row-sum.\n\\[\ny\\prime_{ij} = \\sqrt{\\frac{y_{ij}}{\\sum y_{i}}}\n\\]\n\nY = decostand(seaweed, \"hellinger\")\n\n\nY[3:5, 3:5]\n\n  Colpomenia-spp Dictyota-spiralis Gelidium-spp\n3              0         0.2294157    0.2294157\n4              0         0.0000000    0.2182179\n5              0         0.0000000    0.2182179\n\n\n\nsqrt(seaweed[3:5, 3:5] / rowSums(seaweed)[3:5])\n\n  Colpomenia-spp Dictyota-spiralis Gelidium-spp\n1              0         0.2294157    0.2294157\n2              0         0.0000000    0.2182179\n3              0         0.0000000    0.2182179",
     "crumbs": [
       "Multivariate",
-      "冗長性解消（RDA）"
+      "冗長性分析（RDA）"
     ]
   },
   {
@@ -1668,7 +1668,7 @@
     "text": "Standardize environmental data\nThe environmental variables should be standardized (i.e, find the z-score).\n\\[\nz = \\frac{x - \\bar{x}}{s}\n\\] where \\(x\\) is the value, \\(\\bar{x}\\) is the mean value of \\(x\\), and \\(s\\) is the standard deviation of \\(x\\). This data is already standardized.\n\nenvdata |&gt; print(n = 3)\n\n# A tibble: 147 × 10\n  year  season station month depth_mean pla_10…¹ sed_d…² herbi…³ compe…⁴ temp_…⁵\n  &lt;fct&gt; &lt;fct&gt;  &lt;fct&gt;   &lt;fct&gt;      &lt;dbl&gt;    &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;\n1 2021  WS     St01    4         -0.904   -1.34   -0.904   1.84   -0.372    1.92\n2 2021  WS     St02    4         -0.254   -1.03   -0.783   0.122  -0.673    1.20\n3 2021  WS     St03    4          1.88    -0.151  -0.213   0.837   1.50    -1.32\n# … with 144 more rows, and abbreviated variable names ¹​pla_100g_day_mean,\n#   ²​sed_day_mean, ³​herbivorous_A_mean, ⁴​competing_A_mean, ⁵​temp_range_mean",
     "crumbs": [
       "Multivariate",
-      "冗長性解消（RDA）"
+      "冗長性分析（RDA）"
     ]
   },
   {
@@ -1679,7 +1679,7 @@
     "text": "Check length of first axis\n\n\nIf the length of the first axis is &gt; 4.5, then use CCA not RDA (Leps & Smilauer 2003).\n\n\n&gt; 4 CCA: cca()\n3 ~ 4: rda() or cca()\n&lt; 3 RDA: rda()\n\n\n\n\n\ndecorana(Y)\n\n\n\nCall:\ndecorana(veg = Y) \n\nDetrended correspondence analysis with 26 segments.\nRescaling of axes with 4 iterations.\nTotal inertia (scaled Chi-square): 4.9589 \n\n                       DCA1   DCA2   DCA3   DCA4\nEigenvalues          0.3195 0.2796 0.1848 0.1298\nAdditive Eigenvalues 0.3195 0.2797 0.1825 0.1250\nDecorana values      0.3435 0.2744 0.1757 0.1325\nAxis lengths         3.5600 2.9877 2.8427 2.1297\n\n\n\n\n\n\n\n\n\nNote\n\n\nIf the Hellinger transform is applied, then it is simpler to use rda() and not worry about the dca().",
     "crumbs": [
       "Multivariate",
-      "冗長性解消（RDA）"
+      "冗長性分析（RDA）"
     ]
   },
   {
@@ -1690,7 +1690,7 @@
     "text": "Null Model\nDefine the null model and the full model of the multiple linear regression component.\n\nnullmodel = Y ~ 1\nfullmodel = Y ~ pla_100g_day_mean + \n  temp_range_mean +\n  season + \n  competing_A_mean +\n  herbivorous_A_mean +\n  sed_day_mean +\n  depth_mean",
     "crumbs": [
       "Multivariate",
-      "冗長性解消（RDA）"
+      "冗長性分析（RDA）"
     ]
   },
   {
@@ -1701,7 +1701,7 @@
     "text": "Forward selection\nUse forward selection to eliminate unnecessary environmental variables. Removing variables will affect the scores and loadings.\nFit the null model.\n\nrdamodel0 = rda(formula(nullmodel), data = envdata)\n\nFit the full model.\n\nrdamodelf = rda(formula(fullmodel), data = envdata)\n\nRun the forward selection.\n\nrdamodel = ordiR2step(rdamodel0, # null\n                     scope = formula(fullmodel), # full\n                     R2permutations = 2^15,\n                     trace = FALSE) # change to TRUE to see the selection process!",
     "crumbs": [
       "Multivariate",
-      "冗長性解消（RDA）"
+      "冗長性分析（RDA）"
     ]
   },
   {
@@ -1712,7 +1712,7 @@
     "text": "Results\n\n\n\n\n\n\n(A) RDA model selected by ordiR2step().\n\n\n\n(B) The variance and proportions explained by the constrained and unconstrained parts of the model.\n\n\n\n\n\n\n\n\n(C) The eigenvalues of the constrained components. These are the eigenvalues of the PCA run on the residuals.\n\n\n\n(D) The eigenvalues of the unconstrained components. These are the eigenvalues of the PCA run on the expected values.",
     "crumbs": [
       "Multivariate",
-      "冗長性解消（RDA）"
+      "冗長性分析（RDA）"
     ]
   },
   {
@@ -1723,7 +1723,7 @@
     "text": "Variance inflation factor\nUse the variance inflation factor (VIF)1 to check for multi-collinearity2. If it is larger than 10, then variable is can be removed from the model.\n\nvif.cca(rdamodel)\n\n pla_100g_day_mean           seasonWS       sed_day_mean herbivorous_A_mean \n          2.064950           1.024439           2.455251           3.070272 \n  competing_A_mean         depth_mean \n          3.936895           3.396944 \n\n\n分散拡大係数多重共線性",
     "crumbs": [
       "Multivariate",
-      "冗長性解消（RDA）"
+      "冗長性分析（RDA）"
     ]
   },
   {
@@ -1734,7 +1734,7 @@
     "text": "Redundancy analysis model\nSolve for the eigenvalues \\((\\mathbf{\\lambda_k})\\) and eigenvectors \\((\\mathbf{u_k})\\) of the redundancy analysis model.\n\\[\n\\left(\\mathbf{S_{YX}}\\mathbf{S_{XX}^{-1}}\\mathbf{S_{YX}^\\prime} - \\mathbf{\\lambda_k}\\mathbf{I}\\right)\\mathbf{u_k}=0\n\\]\nwhere, \\(\\mathbf{S_{YX}}\\) is the covariance matrix of \\(\\mathbf{Y}\\) and \\(\\mathbf{Y}\\), \\(\\mathbf{S_{XX}^{-1}}\\) is the covariance matrix of $, and \\(\\mathbf{I}\\) is the identity matrix.",
     "crumbs": [
       "Multivariate",
-      "冗長性解消（RDA）"
+      "冗長性分析（RDA）"
     ]
   },
   {
@@ -1745,7 +1745,7 @@
     "text": "Find the solution\nFirst standardize the Y and X matrices.\n\nY = iris[, 1:2]\nX = iris[, 3:4]\nX = apply(X, 2, scale)\nY = apply(Y, 2, scale)\n\nNext, fit the rda() version for comparison.\n\nrdaout = rda(Y~X)\n\nThen find \\(\\mathbf{\\hat{Y}}\\) multivariate linear regression \\(\\mathbf{Y} \\sim \\mathbf{X}\\).\n\nsxxinv = solve(t(X) %*% X)\nsyx = t(Y) %*% X\nsyxtr = t(syx)\nYhat = X %*% sxxinv %*% syxtr\nYres = Y - Yhat",
     "crumbs": [
       "Multivariate",
-      "冗長性解消（RDA）"
+      "冗長性分析（RDA）"
     ]
   },
   {
@@ -1756,7 +1756,7 @@
     "text": "Confirm the eigenvalues\nCalculate the eigenvalues for the PCA part.\n\n# PCA part\nsvd(Yres)$d^2 / (nrow(Y) -1)\n\n[1] 0.8965380 0.1240973\n\nrdaout$CA$eig\n\n      PC1       PC2 \n0.8965380 0.1240973 \n\n\nCalculate the eigenvalues for the RDA part.\n\n# RDA part\nsvd(Yhat)$d^2 / (nrow(Y) - 1)\n\n[1] 0.96547259 0.01389207\n\nrdaout$CCA$eig\n\n      RDA1       RDA2 \n0.96547259 0.01389207",
     "crumbs": [
       "Multivariate",
-      "冗長性解消（RDA）"
+      "冗長性分析（RDA）"
     ]
   },
   {
@@ -1767,7 +1767,7 @@
     "text": "Confirm the eigenvectors\n\nsvd(Yres)$v\n\n          [,1]       [,2]\n[1,] 0.3767512  0.9263145\n[2,] 0.9263145 -0.3767512\n\nrdaout$CA$v\n\n                   PC1        PC2\nSepal.Length 0.3767512  0.9263145\nSepal.Width  0.9263145 -0.3767512\n\n\n\nsvd(Yhat)$v\n\n           [,1]      [,2]\n[1,]  0.8891863 0.4575454\n[2,] -0.4575454 0.8891863\n\nrdaout$CCA$v\n\n                   RDA1      RDA2\nSepal.Length  0.8891863 0.4575454\nSepal.Width  -0.4575454 0.8891863",
     "crumbs": [
       "Multivariate",
-      "冗長性解消（RDA）"
+      "冗長性分析（RDA）"
     ]
   },
   {
@@ -1778,7 +1778,7 @@
     "text": "Calcualte inertias\n\nn = nrow(Y)\nconstrained = sum(svd(Yhat)$d^2 / (n - 1))\nunconstrained = sum(svd(Yres)$d^2 / (n - 1))\ntotal = constrained + unconstrained\n\ntibble(type = c(\"Total\", \"Constrained\", \"Unconstrained\"),\n       Inertia = c(total, constrained, unconstrained)) |&gt; \n  mutate(Proportion = Inertia / total)\n\n# A tibble: 3 × 3\n  type          Inertia Proportion\n  &lt;chr&gt;           &lt;dbl&gt;      &lt;dbl&gt;\n1 Total           2.00       1    \n2 Constrained     0.979      0.490\n3 Unconstrained   1.02       0.510\n\n\n\nrdaout\n\nCall: rda(formula = Y ~ X)\n\n              Inertia Proportion Rank\nTotal          2.0000     1.0000     \nConstrained    0.9794     0.4897    2\nUnconstrained  1.0206     0.5103    2\nInertia is variance \n\nEigenvalues for constrained axes:\n  RDA1   RDA2 \n0.9655 0.0139 \n\nEigenvalues for unconstrained axes:\n   PC1    PC2 \n0.8965 0.1241",
     "crumbs": [
       "Multivariate",
-      "冗長性解消（RDA）"
+      "冗長性分析（RDA）"
     ]
   },
   {
@@ -1789,7 +1789,7 @@
     "text": "Confirm the site scores\n\nrdascores = scores(rdaout, scaling = 0, display = \"sites\") |&gt; as_tibble()\neigscores = Y %*% svd(Yhat)$v %*% diag(1/svd(Yhat)$d)  |&gt; as_tibble()\nggplot() + \n  geom_point(aes(x = V1, y = V2, color = \"EIG\"), data = eigscores, size = 3) +\n  geom_point(aes(x = RDA1, y = RDA2, color = \"RDA\"), data = rdascores, size = 1) +\n  scale_color_viridis_d(end = 0.8)",
     "crumbs": [
       "Multivariate",
-      "冗長性解消（RDA）"
+      "冗長性分析（RDA）"
     ]
   },
   {
@@ -1800,7 +1800,7 @@
     "text": "Confirm the environmental variables\n\nvariables = str_remove_all(colnames(Y), \"[a-z|\\\\.]\")\nrdavariables = scores(rdaout, scaling = 0, display = \"bp\") |&gt; as_tibble()\ntemp = t(X) %*% svd(Yhat)$u\nsvdvariables = apply(temp, 1, \\(x) x / sqrt(sum(x^2))) |&gt; t() |&gt; as_tibble()\nrdavariables = rdavariables |&gt; mutate(variables = variables, .before = 1)\nsvdvariables = svdvariables |&gt; mutate(variables = variables, .before = 1)\nfull_join(rdavariables, svdvariables, by = \"variables\")\n\n# A tibble: 2 × 5\n  variables  RDA1  RDA2    V1    V2\n  &lt;chr&gt;     &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;\n1 SL        0.988 0.152 0.988 0.152\n2 SW        0.911 0.413 0.911 0.413",
     "crumbs": [
       "Multivariate",
-      "冗長性解消（RDA）"
+      "冗長性分析（RDA）"
     ]
   },
   {
@@ -1811,7 +1811,7 @@
     "text": "Example analysis\nExample data set.\nDune meadow vegetation data.\n\nA1 soil thickness\nMoisture ordered factor of levels 1 &lt; 2 &lt; 4 &lt; 5\nManagement factor of 4 levels\nUse ordered factor Hayfield &lt; Haypastu &lt; Pasture\nManure Ordered factor 0 &lt; 1 &lt; 2 &lt; 3 &lt; 4\n\n\n\n   Achimill Agrostol Airaprae Alopgeni Anthodor Bellpere Bromhord Chenalbu\n1         1        0        0        0        0        0        0        0\n2         1        0        0        1        0        1        1        0\n3         0        1        0        1        0        1        0        0\n4         0        1        0        1        0        1        1        0\n5         1        0        0        0        1        1        1        0\n6         1        0        0        0        1        0        0        0\n7         1        0        0        0        1        0        1        0\n8         0        1        0        1        0        0        0        0\n9         0        1        0        1        0        0        0        0\n10        1        0        0        0        1        1        1        0\n11        0        0        0        0        0        0        0        0\n12        0        1        0        1        0        0        0        0\n13        0        1        0        1        0        0        0        1\n14        0        1        0        0        0        0        0        0\n15        0        1        0        0        0        0        0        0\n16        0        1        0        1        0        0        0        0\n17        1        0        1        0        1        0        0        0\n18        0        0        0        0        0        1        0        0\n19        0        0        1        0        1        0        0        0\n20        0        1        0        0        0        0        0        0\n   Cirsarve Comapalu Eleopalu Elymrepe Empenigr Hyporadi Juncarti Juncbufo\n1         0        0        0        1        0        0        0        0\n2         0        0        0        1        0        0        0        0\n3         0        0        0        1        0        0        0        0\n4         1        0        0        1        0        0        0        0\n5         0        0        0        1        0        0        0        0\n6         0        0        0        0        0        0        0        0\n7         0        0        0        0        0        0        0        1\n8         0        0        1        0        0        0        1        0\n9         0        0        0        1        0        0        1        1\n10        0        0        0        0        0        0        0        0\n11        0        0        0        0        0        1        0        0\n12        0        0        0        0        0        0        0        1\n13        0        0        0        0        0        0        0        1\n14        0        1        1        0        0        0        0        0\n15        0        1        1        0        0        0        1        0\n16        0        0        1        0        0        0        1        0\n17        0        0        0        0        0        1        0        0\n18        0        0        0        0        0        0        0        0\n19        0        0        0        0        1        1        0        0\n20        0        0        1        0        0        0        1        0\n   Lolipere Planlanc Poaprat Poatriv Ranuflam Rumeacet Sagiproc Salirepe\n1         1        0       1       1        0        0        0        0\n2         1        0       1       1        0        0        0        0\n3         1        0       1       1        0        0        0        0\n4         1        0       1       1        0        0        1        0\n5         1        1       1       1        0        1        0        0\n6         1        1       1       1        0        1        0        0\n7         1        1       1       1        0        1        0        0\n8         1        0       1       1        1        0        1        0\n9         1        0       1       1        0        1        1        0\n10        1        1       1       1        0        0        0        0\n11        1        1       1       0        0        0        1        0\n12        0        0       0       1        0        1        1        0\n13        0        0       1       1        1        0        1        0\n14        0        0       0       0        1        0        0        0\n15        0        0       0       0        1        0        0        0\n16        0        0       0       1        1        0        0        0\n17        0        1       1       0        0        0        0        0\n18        1        1       1       0        0        0        0        1\n19        0        0       0       0        0        0        1        1\n20        0        0       0       0        1        0        0        1\n   Scorautu Trifprat Trifrepe Vicilath Bracruta Callcusp\n1         0        0        0        0        0        0\n2         1        0        1        0        0        0\n3         1        0        1        0        1        0\n4         1        0        1        0        1        0\n5         1        1        1        0        1        0\n6         1        1        1        0        1        0\n7         1        1        1        0        1        0\n8         1        0        1        0        1        0\n9         1        0        1        0        1        0\n10        1        0        1        1        1        0\n11        1        0        1        1        1        0\n12        1        0        1        0        1        0\n13        1        0        1        0        0        0\n14        1        0        1        0        0        1\n15        1        0        1        0        1        0\n16        0        0        0        0        1        1\n17        1        0        0        0        0        0\n18        1        0        1        1        1        0\n19        1        0        1        0        1        0\n20        1        0        0        0        1        1\n\n\n\n\n     A1 Moisture Management      Use Manure\n1   2.8        1         SF Haypastu      4\n2   3.5        1         BF Haypastu      2\n3   4.3        2         SF Haypastu      4\n4   4.2        2         SF Haypastu      4\n5   6.3        1         HF Hayfield      2\n6   4.3        1         HF Haypastu      2\n7   2.8        1         HF  Pasture      3\n8   4.2        5         HF  Pasture      3\n9   3.7        4         HF Hayfield      1\n10  3.3        2         BF Hayfield      1\n11  3.5        1         BF  Pasture      1\n12  5.8        4         SF Haypastu      2\n13  6.0        5         SF Haypastu      3\n14  9.3        5         NM  Pasture      0\n15 11.5        5         NM Haypastu      0\n16  5.7        5         SF  Pasture      3\n17  4.0        2         NM Hayfield      0\n18  4.6        1         NM Hayfield      0\n19  3.7        5         NM Hayfield      0\n20  3.5        5         NM Hayfield      0\n\n\n\n\n# A tibble: 20 × 5\n      A1 Moisture Management Use      Manure\n   &lt;dbl&gt; &lt;ord&gt;    &lt;fct&gt;      &lt;ord&gt;    &lt;ord&gt; \n 1   2.8 1        SF         Haypastu 4     \n 2   3.5 1        BF         Haypastu 2     \n 3   4.3 2        SF         Haypastu 4     \n 4   4.2 2        SF         Haypastu 4     \n 5   6.3 1        HF         Hayfield 2     \n 6   4.3 1        HF         Haypastu 2     \n 7   2.8 1        HF         Pasture  3     \n 8   4.2 5        HF         Pasture  3     \n 9   3.7 4        HF         Hayfield 1     \n10   3.3 2        BF         Hayfield 1     \n11   3.5 1        BF         Pasture  1     \n12   5.8 4        SF         Haypastu 2     \n13   6   5        SF         Haypastu 3     \n14   9.3 5        NM         Pasture  0     \n15  11.5 5        NM         Haypastu 0     \n16   5.7 5        SF         Pasture  3     \n17   4   2        NM         Hayfield 0     \n18   4.6 1        NM         Hayfield 0     \n19   3.7 5        NM         Hayfield 0     \n20   3.5 5        NM         Hayfield 0     \n\n\n\n\n\nCall:\nrda(formula = dune ~ A1 + Moisture + Use + Manure, data = dune.env) \n\nPartitioning of variance:\n              Inertia Proportion\nTotal           5.261     1.0000\nConstrained     3.384     0.6432\nUnconstrained   1.877     0.3568\n\nEigenvalues, and their contribution to the variance \n\nImportance of components:\n                        RDA1   RDA2    RDA3    RDA4    RDA5    RDA6    RDA7\nEigenvalue            1.4129 0.7859 0.28559 0.24176 0.17851 0.15076 0.12636\nProportion Explained  0.2686 0.1494 0.05429 0.04596 0.03393 0.02866 0.02402\nCumulative Proportion 0.2686 0.4180 0.47226 0.51822 0.55215 0.58081 0.60483\n                        RDA8    RDA9    RDA10     PC1     PC2     PC3     PC4\nEigenvalue            0.1021 0.06278 0.037263 0.43922 0.43799 0.29683 0.22855\nProportion Explained  0.0194 0.01193 0.007083 0.08349 0.08326 0.05643 0.04345\nCumulative Proportion 0.6242 0.63616 0.643248 0.72674 0.81000 0.86643 0.90988\n                          PC5     PC6     PC7     PC8      PC9\nEigenvalue            0.16015 0.12726 0.09615 0.06368 0.026875\nProportion Explained  0.03044 0.02419 0.01828 0.01210 0.005109\nCumulative Proportion 0.94032 0.96451 0.98279 0.99489 1.000000\n\nAccumulated constrained eigenvalues\nImportance of components:\n                        RDA1   RDA2   RDA3    RDA4    RDA5    RDA6    RDA7\nEigenvalue            1.4129 0.7859 0.2856 0.24176 0.17851 0.15076 0.12636\nProportion Explained  0.4175 0.2322 0.0844 0.07144 0.05275 0.04455 0.03734\nCumulative Proportion 0.4175 0.6498 0.7342 0.80563 0.85838 0.90293 0.94027\n                         RDA8    RDA9   RDA10\nEigenvalue            0.10206 0.06278 0.03726\nProportion Explained  0.03016 0.01855 0.01101\nCumulative Proportion 0.97043 0.98899 1.00000\n\nScaling 2 for species and site scores\n* Species are scaled proportional to eigenvalues\n* Sites are unscaled: weighted dispersion equal on all dimensions\n* General scaling constant of scores:  \n\n\nPermutation test for rda under reduced model\nTerms added sequentially (first to last)\nPermutation: free\nNumber of permutations: 999\n\nModel: rda(formula = dune ~ A1 + Moisture + Use + Manure, data = dune.env)\n         Df Variance      F Pr(&gt;F)   \nA1        1  0.54865 2.6311  0.006 **\nMoisture  3  1.44897 2.3162  0.002 **\nUse       2  0.50253 1.2050  0.257   \nManure    4  0.88368 1.0595  0.406   \nResidual  9  1.87670                 \n---\nSignif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1\n\n\nPermutation test for rda under reduced model\nForward tests for axes\nPermutation: free\nNumber of permutations: 999\n\nModel: rda(formula = dune ~ A1 + Moisture + Use + Manure, data = dune.env)\n         Df Variance      F Pr(&gt;F)   \nRDA1      1  1.41288 6.7757  0.002 **\nRDA2      1  0.78586 3.7687  0.117   \nRDA3      1  0.28559 1.3696  0.996   \nRDA4      1  0.24176 1.1594  1.000   \nRDA5      1  0.17851 0.8561  0.999   \nRDA6      1  0.15076 0.7230  1.000   \nRDA7      1  0.12636 0.6060  1.000   \nRDA8      1  0.10206 0.4894  1.000   \nRDA9      1  0.06278 0.3011  1.000   \nRDA10     1  0.03726 0.1787  0.999   \nResidual  9  1.87670                 \n---\nSignif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1",
     "crumbs": [
       "Multivariate",
-      "冗長性解消（RDA）"
+      "冗長性分析（RDA）"
     ]
   },
   {
@@ -1819,7 +1819,7 @@
     "href": "index.html",
     "title": "研究室と講義の R コード",
     "section": "",
-    "text": "水圏植物生態学研究室 では藻場生態系の機能と保全について研究しています。\nこのサイトは研究室と学部生用の基礎統計学と教育関係共同利用拠点の 水産海洋データ解析演習 のために準備しました。\nマニュアルの更新日：2024年05月13日 08:37:19 JST\n【重要】R コードに自身あるが、日本語は怪しいです。It is easier to explain this stuff in English.\nコードは考えずにコピペしないでください。 コードに使用したデータは研究室のサーバにあるので、公開されていません。\n研究室の皆さん： 研究室用のデータは RStudio の ~/Lab_Data/ に入っています。\nはここ https://cran.r-project.org/ からダウンロードできます。Windows ユーザは Rtools43 もインストールしましょう。ページ内の Rtools42 installer のリンクを探してね。\nRStudio もインストールしましょう。Rのデフォルトの IDE はとても使いにくいです。\n重要: Windows にインストールするとき、OneDrive にインストールされないように注意してください。 詳細は 奥村先生のサイト を参考にしてください。\nSession Information",
+    "text": "水圏植物生態学研究室 では藻場生態系の機能と保全について研究しています。\nこのサイトは研究室と学部生用の基礎統計学と教育関係共同利用拠点の 水産海洋データ解析演習 のために準備しました。\nマニュアルの更新日：2024年05月13日 08:42:59 JST\n【重要】R コードに自身あるが、日本語は怪しいです。It is easier to explain this stuff in English.\nコードは考えずにコピペしないでください。 コードに使用したデータは研究室のサーバにあるので、公開されていません。\n研究室の皆さん： 研究室用のデータは RStudio の ~/Lab_Data/ に入っています。\nはここ https://cran.r-project.org/ からダウンロードできます。Windows ユーザは Rtools43 もインストールしましょう。ページ内の Rtools43 installer のリンクを探してね。\nRStudio もインストールしましょう。Rのデフォルトの IDE はとても使いにくいです。\n重要: Windows にインストールするとき、OneDrive にインストールされないように注意してください。 詳細は 奥村先生のサイト を参考にしてください。\nSession Information",
     "crumbs": [
       "その前に",
       "研究室と講義の R コード"

@@ -30,7 +30,7 @@ z = sessionInfo() |> pluck(1)
 
 **研究室の皆さん：** 研究室用のデータは RStudio の `~/Lab_Data/` に入っています。
 
-[`r fontawesome::fa("r-project", height = "1.5em")`](https://cran.r-project.org/) はここ <https://cran.r-project.org/> からダウンロードできます。Windows ユーザは [Rtools43](https://cran.r-project.org/bin/windows/Rtools/rtools43/rtools.html) もインストールしましょう。ページ内の Rtools42 installer のリンクを探してね。
+[`r fontawesome::fa("r-project", height = "1.5em")`](https://cran.r-project.org/) はここ <https://cran.r-project.org/> からダウンロードできます。Windows ユーザは [Rtools43](https://cran.r-project.org/bin/windows/Rtools/rtools43/rtools.html) もインストールしましょう。ページ内の Rtools43 installer のリンクを探してね。
 
 [RStudio](https://posit.co/download/rstudio-desktop/) もインストールしましょう。Rのデフォルトの IDE はとても使いにくいです。
 
