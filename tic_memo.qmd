@@ -32,21 +32,23 @@ Elementar TIC分析計は, キャリアガスの供給にガスボンベを使�
 ガスボンベは高圧ガスボンベで, ガスは一定の圧力で分析計に供給されます。
 ガスボンベには, ボンベ内の圧力をモニターする圧力計が装備されています。
 
-The Elementar TIC analyzer uses a gas cylinder to supply the carrier gas. The gas cylinder is a high-pressure gas cylinder, and the gas is supplied to the analyzer at a constant pressure. The gas cylinder is equipped with a pressure gauge to monitor the pressure inside the cylinder.
+The Elementar TIC analyzer uses a gas cylinder to supply the carrier gas. 
+The gas cylinder is a high-pressure gas cylinder, and the gas is supplied to the analyzer at a constant pressure. 
+The gas cylinder is equipped with a pressure gauge to monitor the pressure inside the cylinder.
 
 N~2~ ガスボンベの容量は 47 L です。
 ガスボンベの圧力は 15 MPa です。
-温度は 25 &degrees;C と仮定します。
+温度は 25 &deg;C と仮定します。
 
 The volume of the N~2~ gas cylinder is 47 L.
 The pressure is 15 MPa.
-Assume the temperature is 25 &degrees;C.
+Assume the temperature is 25 &deg;C.
 
 :::{.callout-info}
 ## Conversion factor
 * 1 J is 1 Pa m^3^.
 * 1000 L is  m^3^.
-* 20 &degrees;C is 293.15 K.
+* 20 &deg;C is 293.15 K.
 
 :::
 
