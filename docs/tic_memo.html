@@ -434,10 +434,7 @@ window.Quarto = {
 <h1>必要なパッケージ</h1>
 <p>パッケージはここで読み込む。</p>
 <div class="cell">
-<details class="code-fold">
-<summary>Code</summary>
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</details>
 <div class="cell-output cell-output-stderr">
 <pre><code>── Attaching core tidyverse packages ──────────────────────── tidyverse 2.0.0 ──
 ✔ dplyr     1.1.4     ✔ readr     2.1.5
@@ -451,23 +448,17 @@ window.Quarto = {
 ✖ dplyr::lag()    masks stats::lag()
 ℹ Use the conflicted package (&lt;http://conflicted.r-lib.org/&gt;) to force all conflicts to become errors</code></pre>
 </div>
-<details class="code-fold">
-<summary>Code</summary>
 <div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 作図用補助パッケージ</span></span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggpubr)</span>
 <span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(patchwork)</span>
 <span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a><span class="co"># ggplot フォントの設定ようパッケージ</span></span>
 <span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(showtext)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</details>
 <div class="cell-output cell-output-stderr">
 <pre><code>Loading required package: sysfonts
 Loading required package: showtextdb</code></pre>
 </div>
-<details class="code-fold">
-<summary>Code</summary>
 <div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(magick)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</details>
 <div class="cell-output cell-output-stderr">
 <pre><code>Linking to ImageMagick 6.9.11.60
 Enabled features: fontconfig, freetype, fftw, heic, lcms, pango, webp, x11
@@ -507,8 +498,6 @@ PV = nRT
 <section id="ガスボンベの残圧から使用したガスの量を計算しますcalculate-the-amount-of-gas-used-from-the-residual-pressure-in-the-gas-cylinder." class="level1">
 <h1>ガスボンベの残圧から使用したガスの量を計算します。Calculate the amount of gas used from the residual pressure in the gas cylinder.</h1>
 <div class="cell">
-<details class="code-fold">
-<summary>Code</summary>
 <div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>calc_n <span class="ot">=</span> <span class="cf">function</span>(pressure, volume, temperature) {</span>
 <span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>  R <span class="ot">=</span> <span class="fl">8.314</span>                     <span class="co"># J/(mol K)</span></span>
 <span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>  kelvin <span class="ot">=</span> temperature <span class="sc">+</span> <span class="fl">273.15</span> <span class="co"># Convert to Kelvin</span></span>
@@ -519,7 +508,6 @@ PV = nRT
 <span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a>n_15 <span class="ot">=</span> <span class="fu">calc_n</span>(<span class="at">pressure =</span> <span class="dv">15</span>, <span class="at">volume =</span> <span class="dv">47</span>, <span class="at">temperature =</span> <span class="dv">25</span>)</span>
 <span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a>n_10 <span class="ot">=</span> <span class="fu">calc_n</span>(<span class="at">pressure =</span> <span class="dv">10</span>, <span class="at">volume =</span> <span class="dv">47</span>, <span class="at">temperature =</span> <span class="dv">25</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</details>
 </div>
 <p>ガスボンベの初期のモル数は 284.4096207 mol です。 ガスボンベの最終のモル数は 189.6064138 mol です。 消費された N<sub>2</sub> ガスのモル数は 94.8032069 mol です。</p>
 <p>The initial number of moles of N<sub>2</sub> gas in the cylinder is 284.4096207 mol. The final number of moles of N<sub>2</sub> gas in the cylinder is 189.6064138 mol. The number of moles of N<sub>2</sub> gas consumed is 94.8032069 mol.</p>
