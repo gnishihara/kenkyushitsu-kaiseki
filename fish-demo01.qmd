@@ -1,0 +1,60 @@
+---
+title: "有川湾の藻場で観測した魚類"
+subtitle: "t検定の話"
+format: 
+  html:
+    html-math-method: katex
+    code-fold: false
+    df-print: paged
+reference-location: margin
+citation-location: margin
+bibliography: references.bib
+execute: 
+  cache: false
+  freeze: false
+---
+
+# パッケージの読み込み
+
+```{r}
+library(tidyverse)
+```
+
+# データの読み込み
+
+```{r}
+#| include: false
+
+files = dir("~/Lab_Data/sudar/fish_data/", full.names = TRUE)
+dset = 
+  tibble(files) |> 
+  mutate(data = map(files, read_csv)) |> 
+  unnest(data) 
+
+dset |> 
+  mutate(datetime = ymd_hms(str_c(Date, " ", as.character(Time)))) |> 
+  mutate(datetime = floor_date(datetime, "hours")) |>
+  rename(Species = Srecies, Count = count) |> 
+  group_by(datetime, Species) |> 
+  summarise(Count = sum(Count)) |> write_csv("_data/fish_data.csv")
+fish = read_csv("_data/fish_data.csv")
+```
+
+データはこちらからダウンロードできます。
+
+[fish_data - fish_data.csv](https://t.ly/cbugD)
+
+```{r}
+#| eval: false
+filename = "fish_data - fish_data.csv"
+fish = read_csv(filename)
+```
+
+
+```{r}
+fish
+```
+
+
+
+

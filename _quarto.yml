@@ -19,6 +19,7 @@ project:
     - openwater_nep_method.qmd
     - standardize_figures.qmd
     - tic_memo.qmd
+    - fish-demo01.qmd
 
 website:
   title: "データ解析（研究室用）"
@@ -53,7 +54,7 @@ website:
           href: pca.qmd
         - text: 冗長性分析（RDA）
           href: rda.qmd
-      - section: 基礎統計学用スライド
+      - section: 基礎統計学用
         contents:
         - descriptive_statistics-slide.qmd
         - sakuma-drops.qmd
@@ -63,6 +64,8 @@ website:
           href: ttest-slides.qmd
         - text: 3群以上の分析（分散分析）
           href: anova-slides.qmd
+        - text: 藻場にいた魚の解析
+        　href: fish-demo01.qmd
       - section: 研究室用
         contents: 
         - openwater_nep_method.qmd
