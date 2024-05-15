@@ -4,7 +4,44 @@
     "href": "fish-demo01.html",
     "title": "有川湾の藻場で観測した魚類",
     "section": "",
-    "text": "パッケージの読み込み\n\nlibrary(tidyverse)\n\n── Attaching core tidyverse packages ──────────────────────── tidyverse 2.0.0 ──\n✔ dplyr     1.1.4     ✔ readr     2.1.5\n✔ forcats   1.0.0     ✔ stringr   1.5.1\n✔ ggplot2   3.5.1     ✔ tibble    3.2.1\n✔ lubridate 1.9.3     ✔ tidyr     1.3.1\n✔ purrr     1.0.2     \n── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──\n✖ purrr::%||%()   masks base::%||%()\n✖ dplyr::filter() masks stats::filter()\n✖ dplyr::lag()    masks stats::lag()\nℹ Use the conflicted package (&lt;http://conflicted.r-lib.org/&gt;) to force all conflicts to become errors\n\n\n\n\nデータの読み込み\nデータはこちらからダウンロードできます。\nfish_data - fish_data.csv\n\nfilename = \"fish_data - fish_data.csv\"\nfish = read_csv(filename)\n\n\nfish"
+    "text": "library(tidyverse)\n\n── Attaching core tidyverse packages ──────────────────────── tidyverse 2.0.0 ──\n✔ dplyr     1.1.4     ✔ readr     2.1.5\n✔ forcats   1.0.0     ✔ stringr   1.5.1\n✔ ggplot2   3.5.1     ✔ tibble    3.2.1\n✔ lubridate 1.9.3     ✔ tidyr     1.3.1\n✔ purrr     1.0.2     \n── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──\n✖ purrr::%||%()   masks base::%||%()\n✖ dplyr::filter() masks stats::filter()\n✖ dplyr::lag()    masks stats::lag()\nℹ Use the conflicted package (&lt;http://conflicted.r-lib.org/&gt;) to force all conflicts to become errors",
+    "crumbs": [
+      "基礎統計学用",
+      "有川湾の藻場で観測した魚類"
+    ]
+  },
+  {
+    "objectID": "fish-demo01.html#アイゴとイスズミの数の比較",
+    "href": "fish-demo01.html#アイゴとイスズミの数の比較",
+    "title": "有川湾の藻場で観測した魚類",
+    "section": "アイゴとイスズミの数の比較",
+    "text": "アイゴとイスズミの数の比較\n\n帰無仮説 (H_0)：アイゴとイスズミの個体数に違いがない\n対立仮設 (H_A)：アイゴとイスズミの個体数に違いがある\n\n\nt.test(Count ~ Species, data = dset_ai)\n\n\n    Welch Two Sample t-test\n\ndata:  Count by Species\nt = 0.22226, df = 94.657, p-value = 0.8246\nalternative hypothesis: true difference in means between group アイゴ and group イスズミ is not equal to 0\n95 percent confidence interval:\n -3.525656  4.414545\nsample estimates:\n  mean in group アイゴ mean in group イスズミ \n             10.428571               9.984127 \n\n\nアイゴとイスズミの個体数を比較したとき， t値 = 0.2223 でした。 このときの 自由度は 94.66 であり， p値 = 0.8246 でした。 P値は有意水準より高かったため，帰無仮説を棄却できませんでした。",
+    "crumbs": [
+      "基礎統計学用",
+      "有川湾の藻場で観測した魚類"
+    ]
+  },
+  {
+    "objectID": "fish-demo01.html#アイゴとメジナの数の比較",
+    "href": "fish-demo01.html#アイゴとメジナの数の比較",
+    "title": "有川湾の藻場で観測した魚類",
+    "section": "アイゴとメジナの数の比較",
+    "text": "アイゴとメジナの数の比較\n\n帰無仮説 (H_0)：アイゴとメジナの個体数に違いがない\n対立仮設 (H_A)：アイゴとメジナの個体数に違いがある\n\n\nt.test(Count ~ Species, data = dset_am)\n\n\n    Welch Two Sample t-test\n\ndata:  Count by Species\nt = -5.045, df = 89.48, p-value = 2.361e-06\nalternative hypothesis: true difference in means between group アイゴ and group メジナ is not equal to 0\n95 percent confidence interval:\n -37.03593 -16.10692\nsample estimates:\nmean in group アイゴ mean in group メジナ \n            10.42857             37.00000 \n\n\nアイゴとメジナの個体数を比較したとき， t値 = -5.0450 でした。 このときの 自由度は 89.48 であり， p値 = 2.3607e-06 でした。 P値は有意水準より低かったため，帰無仮説を棄却できました。",
+    "crumbs": [
+      "基礎統計学用",
+      "有川湾の藻場で観測した魚類"
+    ]
+  },
+  {
+    "objectID": "fish-demo01.html#イスズミとメジナの数の比較",
+    "href": "fish-demo01.html#イスズミとメジナの数の比較",
+    "title": "有川湾の藻場で観測した魚類",
+    "section": "イスズミとメジナの数の比較",
+    "text": "イスズミとメジナの数の比較\n\n帰無仮説 (H_0)：イスズミとメジナの個体数に違いがない\n対立仮設 (H_A)：イスズミとメジナの個体数に違いがある\n\n\nt.test(Count ~ Species, data = dset_im)\n\n\n    Welch Two Sample t-test\n\ndata:  Count by Species\nt = -5.233, df = 83.577, p-value = 1.218e-06\nalternative hypothesis: true difference in means between group イスズミ and group メジナ is not equal to 0\n95 percent confidence interval:\n -37.28307 -16.74868\nsample estimates:\nmean in group イスズミ   mean in group メジナ \n              9.984127              37.000000 \n\n\nイスズミとメジナの個体数を比較したとき， t値 = -5.2330 でした。 このときの 自由度は 83.58 であり， p値 = 1.2179e-06 でした。 P値は有意水準より低かったため，帰無仮説を棄却できました。",
+    "crumbs": [
+      "基礎統計学用",
+      "有川湾の藻場で観測した魚類"
+    ]
   },
   {
     "objectID": "standardize_figures.html",
@@ -3091,7 +3128,7 @@
     "href": "index.html",
     "title": "研究室と講義の R コード",
     "section": "",
-    "text": "水圏植物生態学研究室 では藻場生態系の機能と保全について研究しています。\nこのサイトは研究室と学部生用の基礎統計学と教育関係共同利用拠点の 水産海洋データ解析演習 のために準備しました。\nマニュアルの更新日：2024年05月15日 10:30:08 JST\n【重要】R コードに自身あるが、日本語は怪しいです。It is easier to explain this stuff in English.\nコードは考えずにコピペしないでください。 コードに使用したデータは研究室のサーバにあるので、公開されていません。\n研究室の皆さん： 研究室用のデータは RStudio の ~/Lab_Data/ に入っています。\nはここ https://cran.r-project.org/ からダウンロードできます。Windows ユーザは Rtools43 もインストールしましょう。ページ内の Rtools43 installer のリンクを探してね。\nRStudio もインストールしましょう。Rのデフォルトの IDE はとても使いにくいです。\n重要: Windows にインストールするとき、OneDrive にインストールされないように注意してください。 詳細は 奥村先生のサイト を参考にしてください。\nSession Information",
+    "text": "水圏植物生態学研究室 では藻場生態系の機能と保全について研究しています。\nこのサイトは研究室と学部生用の基礎統計学と教育関係共同利用拠点の 水産海洋データ解析演習 のために準備しました。\nマニュアルの更新日：2024年05月15日 17:03:45 JST\n【重要】R コードに自身あるが、日本語は怪しいです。It is easier to explain this stuff in English.\nコードは考えずにコピペしないでください。 コードに使用したデータは研究室のサーバにあるので、公開されていません。\n研究室の皆さん： 研究室用のデータは RStudio の ~/Lab_Data/ に入っています。\nはここ https://cran.r-project.org/ からダウンロードできます。Windows ユーザは Rtools43 もインストールしましょう。ページ内の Rtools43 installer のリンクを探してね。\nRStudio もインストールしましょう。Rのデフォルトの IDE はとても使いにくいです。\n重要: Windows にインストールするとき、OneDrive にインストールされないように注意してください。 詳細は 奥村先生のサイト を参考にしてください。\nSession Information",
     "crumbs": [
       "その前に",
       "研究室と講義の R コード"

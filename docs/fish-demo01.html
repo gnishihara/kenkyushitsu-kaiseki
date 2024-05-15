@@ -103,6 +103,49 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <link href="site_libs/pagedtable-1.1/css/pagedtable.css" rel="stylesheet">
 <script src="site_libs/pagedtable-1.1/js/pagedtable.js"></script>
 
+  <script>window.backupDefine = window.define; window.define = undefined;</script><script src="https://cdn.jsdelivr.net/npm/katex@0.15.1/dist/katex.min.js"></script>
+  <script>document.addEventListener("DOMContentLoaded", function () {
+ var mathElements = document.getElementsByClassName("math");
+ var macros = [];
+ for (var i = 0; i < mathElements.length; i++) {
+  var texText = mathElements[i].firstChild;
+  if (mathElements[i].tagName == "SPAN") {
+   katex.render(texText.data, mathElements[i], {
+    displayMode: mathElements[i].classList.contains('display'),
+    throwOnError: false,
+    macros: macros,
+    fleqn: false
+   });
+}}});
+  </script>
+  <script>window.define = window.backupDefine; window.backupDefine = undefined;</script><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.15.1/dist/katex.min.css">
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN") {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
 
 <link rel="stylesheet" href="styles.css">
 </head>
@@ -116,9 +159,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item">
-      データ解析（研究室用）
-      </li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./descriptive_statistics-slide.html">基礎統計学用</a></li><li class="breadcrumb-item"><a href="./fish-demo01.html">有川湾の藻場で観測した魚類</a></li></ol></nav>
         <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
       <button type="button" class="btn quarto-search-button" aria-label="" onclick="window.quartoOpenSearch();">
@@ -317,8 +358,11 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   </div>
 </li>
           <li class="sidebar-item">
- <span class="menu-text">藻場にいた魚の解析</span>
-  </li>
+  <div class="sidebar-item-container"> 
+  <a href="./fish-demo01.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text">有川湾の藻場で観測した魚類</span></a>
+  </div>
+</li>
       </ul>
   </li>
         <li class="sidebar-item sidebar-item-section">
@@ -362,13 +406,21 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <ul>
   <li><a href="#パッケージの読み込み" id="toc-パッケージの読み込み" class="nav-link active" data-scroll-target="#パッケージの読み込み">パッケージの読み込み</a></li>
   <li><a href="#データの読み込み" id="toc-データの読み込み" class="nav-link" data-scroll-target="#データの読み込み">データの読み込み</a></li>
+  <li><a href="#データを抽出する" id="toc-データを抽出する" class="nav-link" data-scroll-target="#データを抽出する">データを抽出する</a></li>
+  <li><a href="#データの可視化" id="toc-データの可視化" class="nav-link" data-scroll-target="#データの可視化">データの可視化</a></li>
+  <li><a href="#t検定" id="toc-t検定" class="nav-link" data-scroll-target="#t検定">t検定</a>
+  <ul class="collapse">
+  <li><a href="#アイゴとイスズミの数の比較" id="toc-アイゴとイスズミの数の比較" class="nav-link" data-scroll-target="#アイゴとイスズミの数の比較">アイゴとイスズミの数の比較</a></li>
+  <li><a href="#アイゴとメジナの数の比較" id="toc-アイゴとメジナの数の比較" class="nav-link" data-scroll-target="#アイゴとメジナの数の比較">アイゴとメジナの数の比較</a></li>
+  <li><a href="#イスズミとメジナの数の比較" id="toc-イスズミとメジナの数の比較" class="nav-link" data-scroll-target="#イスズミとメジナの数の比較">イスズミとメジナの数の比較</a></li>
+  </ul></li>
   </ul>
 </nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
 
-<header id="title-block-header" class="quarto-title-block default">
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./descriptive_statistics-slide.html">基礎統計学用</a></li><li class="breadcrumb-item"><a href="./fish-demo01.html">有川湾の藻場で観測した魚類</a></li></ol></nav>
 <div class="quarto-title">
 <h1 class="title">有川湾の藻場で観測した魚類</h1>
 </div>
@@ -414,6 +466,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>filename <span class="ot">=</span> <span class="st">"fish_data - fish_data.csv"</span></span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>fish <span class="ot">=</span> <span class="fu">read_csv</span>(filename)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
+<p>読み込んだデータの中身を確認しましょう。</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>fish</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
@@ -424,8 +477,206 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 </div>
+<p>線データの記述統計量は次の通りです。 <code>drop_na()</code> は欠損値を除外する関数です。 <code>arrange()</code> はデータを並び替える関数です。 <code>NA</code> は欠損値を表します。</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>fish <span class="sc">|&gt;</span> </span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">drop_na</span>() <span class="sc">|&gt;</span> </span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(Species) <span class="sc">|&gt;</span> </span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">n =</span> <span class="fu">n</span>(), </span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>            <span class="at">mean =</span> <span class="fu">mean</span>(Count),</span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>            <span class="at">sd =</span> <span class="fu">sd</span>(Count),</span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>            <span class="at">min =</span> <span class="fu">min</span>(Count),</span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>            <span class="at">max =</span> <span class="fu">max</span>(Count)) <span class="sc">|&gt;</span> </span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(<span class="fu">desc</span>(n))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div data-pagedtable="false">
+  <script data-pagedtable-source="" type="application/json">
+{"columns":[{"label":["Species"],"name":[1],"type":["chr"],"align":["left"]},{"label":["n"],"name":[2],"type":["int"],"align":["right"]},{"label":["mean"],"name":[3],"type":["dbl"],"align":["right"]},{"label":["sd"],"name":[4],"type":["dbl"],"align":["right"]},{"label":["min"],"name":[5],"type":["dbl"],"align":["right"]},{"label":["max"],"name":[6],"type":["dbl"],"align":["right"]}],"data":[{"1":"メジナ","2":"76","3":"37.000000","4":"43.760561","5":"1","6":"252"},{"1":"イスズミ","2":"63","3":"9.984127","4":"9.575661","5":"1","6":"50"},{"1":"タカノハダイ","2":"59","3":"4.033898","4":"3.084813","5":"1","6":"14"},{"1":"キタマクラ","2":"51","3":"2.882353","4":"2.688100","5":"1","6":"10"},{"1":"アイゴ","2":"49","3":"10.428571","4":"11.163557","5":"1","6":"49"},{"1":"カワハギ","2":"36","3":"1.833333","4":"1.732051","5":"1","6":"10"},{"1":"ボラ","2":"31","3":"8.967742","4":"11.872893","5":"1","6":"42"},{"1":"ニザダイ","2":"5","3":"2.000000","4":"1.000000","5":"1","6":"3"},{"1":"ブダイ","2":"5","3":"1.000000","4":"0.000000","5":"1","6":"1"},{"1":"アオブダイ","2":"2","3":"1.000000","4":"0.000000","5":"1","6":"1"},{"1":"カワハギ","2":"1","3":"1.000000","4":"NA","5":"1","6":"1"},{"1":"ハコフグ","2":"1","3":"2.000000","4":"NA","5":"2","6":"2"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
+</div>
+</div>
+</section>
+<section id="データを抽出する" class="level1">
+<h1>データを抽出する</h1>
+<p>今回は，種ごとにデータを抽出してから解析をします。 まずは，データに含まれる種を確認します。</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>fish <span class="sc">|&gt;</span> <span class="fu">pull</span>(Species) <span class="sc">|&gt;</span> <span class="fu">unique</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code> [1] "メジナ"       "アイゴ"       "イスズミ"     "キタマクラ"   "タカノハダイ"
+ [6] "ニザダイ"     "ブダイ"       "カワハギ"     "ボラ"         "アオブダイ"  
+[11] "ハコフグ"     "カワハギ　"  </code></pre>
+</div>
+</div>
+<p>では，メジナ，アイゴ，イスズミのデータを抽出してみましょう。</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>mejina <span class="ot">=</span>  fish <span class="sc">|&gt;</span> <span class="fu">filter</span>(<span class="fu">str_detect</span>(Species, <span class="st">"メジナ"</span>))</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>aigo <span class="ot">=</span>    fish <span class="sc">|&gt;</span> <span class="fu">filter</span>(<span class="fu">str_detect</span>(Species, <span class="st">"アイゴ"</span>))</span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>isuzumi <span class="ot">=</span> fish <span class="sc">|&gt;</span> <span class="fu">filter</span>(<span class="fu">str_detect</span>(Species, <span class="st">"イスズミ"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>dset_ai <span class="ot">=</span> <span class="fu">bind_rows</span>(aigo, isuzumi)</span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>dset_am <span class="ot">=</span> <span class="fu">bind_rows</span>(aigo, mejina)</span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>dset_im <span class="ot">=</span> <span class="fu">bind_rows</span>(isuzumi, mejina)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="データの可視化" class="level1">
+<h1>データの可視化</h1>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>() <span class="sc">+</span> </span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="fu">geom_boxplot</span>(</span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">aes</span>(<span class="at">x =</span> Species, </span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>      <span class="at">y =</span> Count, </span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>      <span class="at">color =</span> Species), <span class="at">data =</span> dset_ai)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div id="fig-aigo-isuzumi" class="quarto-figure quarto-figure-center quarto-float anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-aigo-isuzumi-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="fish-demo01_files/figure-html/fig-aigo-isuzumi-1.png" class="img-fluid figure-img" width="672">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-aigo-isuzumi-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;1: アイゴとイスズミの数の比較
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>() <span class="sc">+</span> </span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a><span class="fu">geom_boxplot</span>(</span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">aes</span>(<span class="at">x =</span> Species, </span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>      <span class="at">y =</span> Count, </span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>      <span class="at">color =</span> Species), <span class="at">data =</span> dset_am)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: Removed 1 row containing non-finite outside the scale range
+(`stat_boxplot()`).</code></pre>
+</div>
+<div class="cell-output-display">
+<div id="fig-aigo-mejina" class="quarto-figure quarto-figure-center quarto-float anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-aigo-mejina-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="fish-demo01_files/figure-html/fig-aigo-mejina-1.png" class="img-fluid figure-img" width="672">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-aigo-mejina-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;2: アイゴとメジナの数の比較
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>() <span class="sc">+</span> </span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a><span class="fu">geom_boxplot</span>(</span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">aes</span>(<span class="at">x =</span> Species, </span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>      <span class="at">y =</span> Count, </span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a>      <span class="at">color =</span> Species), <span class="at">data =</span> dset_im)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: Removed 1 row containing non-finite outside the scale range
+(`stat_boxplot()`).</code></pre>
+</div>
+<div class="cell-output-display">
+<div id="fig-isuzumi-mejina" class="quarto-figure quarto-figure-center quarto-float anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-isuzumi-mejina-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="fish-demo01_files/figure-html/fig-isuzumi-mejina-1.png" class="img-fluid figure-img" width="672">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-isuzumi-mejina-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;3: イスズミとメジナの数の比較
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="t検定" class="level1">
+<h1>t検定</h1>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Note
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>仮説検定論のとき，有意水準 <span class="math inline">(\alpha)</span> を決める必要があります。 一般的には <span class="math inline">\alpha = 0.05</span> が使われますが， 研究分野や研究目的によっては <span class="math inline">\alpha = 0.01</span> や <span class="math inline">\alpha = 0.10</span> が使われることもあります。</p>
+</div>
+</div>
+<section id="アイゴとイスズミの数の比較" class="level2">
+<h2 class="anchored" data-anchor-id="アイゴとイスズミの数の比較">アイゴとイスズミの数の比較</h2>
+<ul>
+<li>帰無仮説 <span class="math inline">(H_0)</span>：アイゴとイスズミの個体数に違いがない</li>
+<li>対立仮設 <span class="math inline">(H_A)</span>：アイゴとイスズミの個体数に違いがある</li>
+</ul>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="fu">t.test</span>(Count <span class="sc">~</span> Species, <span class="at">data =</span> dset_ai)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+    Welch Two Sample t-test
+
+data:  Count by Species
+t = 0.22226, df = 94.657, p-value = 0.8246
+alternative hypothesis: true difference in means between group アイゴ and group イスズミ is not equal to 0
+95 percent confidence interval:
+ -3.525656  4.414545
+sample estimates:
+  mean in group アイゴ mean in group イスズミ 
+             10.428571               9.984127 </code></pre>
+</div>
+</div>
+<p>アイゴとイスズミの個体数を比較したとき， t値 = 0.2223 でした。 このときの 自由度は 94.66 であり， p値 = 0.8246 でした。 P値は有意水準より高かったため，帰無仮説を棄却できませんでした。</p>
+</section>
+<section id="アイゴとメジナの数の比較" class="level2">
+<h2 class="anchored" data-anchor-id="アイゴとメジナの数の比較">アイゴとメジナの数の比較</h2>
+<ul>
+<li>帰無仮説 <span class="math inline">(H_0)</span>：アイゴとメジナの個体数に違いがない</li>
+<li>対立仮設 <span class="math inline">(H_A)</span>：アイゴとメジナの個体数に違いがある</li>
+</ul>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="fu">t.test</span>(Count <span class="sc">~</span> Species, <span class="at">data =</span> dset_am)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+    Welch Two Sample t-test
+
+data:  Count by Species
+t = -5.045, df = 89.48, p-value = 2.361e-06
+alternative hypothesis: true difference in means between group アイゴ and group メジナ is not equal to 0
+95 percent confidence interval:
+ -37.03593 -16.10692
+sample estimates:
+mean in group アイゴ mean in group メジナ 
+            10.42857             37.00000 </code></pre>
+</div>
+</div>
+<p>アイゴとメジナの個体数を比較したとき， t値 = -5.0450 でした。 このときの 自由度は 89.48 であり， p値 = 2.3607e-06 でした。 P値は有意水準より低かったため，帰無仮説を棄却できました。</p>
+</section>
+<section id="イスズミとメジナの数の比較" class="level2">
+<h2 class="anchored" data-anchor-id="イスズミとメジナの数の比較">イスズミとメジナの数の比較</h2>
+<ul>
+<li>帰無仮説 <span class="math inline">(H_0)</span>：イスズミとメジナの個体数に違いがない</li>
+<li>対立仮設 <span class="math inline">(H_A)</span>：イスズミとメジナの個体数に違いがある</li>
+</ul>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="fu">t.test</span>(Count <span class="sc">~</span> Species, <span class="at">data =</span> dset_im)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+    Welch Two Sample t-test
+
+data:  Count by Species
+t = -5.233, df = 83.577, p-value = 1.218e-06
+alternative hypothesis: true difference in means between group イスズミ and group メジナ is not equal to 0
+95 percent confidence interval:
+ -37.28307 -16.74868
+sample estimates:
+mean in group イスズミ   mean in group メジナ 
+              9.984127              37.000000 </code></pre>
+</div>
+</div>
+<p>イスズミとメジナの個体数を比較したとき， t値 = -5.2330 でした。 このときの 自由度は 83.58 であり， p値 = 1.2179e-06 でした。 P値は有意水準より低かったため，帰無仮説を棄却できました。</p>
 
 
+</section>
 </section>
 
 </main> <!-- /main -->

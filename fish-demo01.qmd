@@ -45,11 +45,146 @@ filename = "fish_data - fish_data.csv"
 fish = read_csv(filename)
 ```
 
+読み込んだデータの中身を確認しましょう。
 
 ```{r}
 fish
 ```
 
+線データの記述統計量は次の通りです。
+`drop_na()` は欠損値を除外する関数です。
+`arrange()` はデータを並び替える関数です。
+`NA` は欠損値を表します。
+
+```{r}
+fish |> 
+  drop_na() |> 
+  group_by(Species) |> 
+  summarise(n = n(), 
+            mean = mean(Count),
+            sd = sd(Count),
+            min = min(Count),
+            max = max(Count)) |> 
+  arrange(desc(n))
+```
 
 
+# データを抽出する
+
+今回は，種ごとにデータを抽出してから解析をします。
+まずは，データに含まれる種を確認します。
+
+```{r}
+fish |> pull(Species) |> unique()
+```
+
+では，メジナ，アイゴ，イスズミのデータを抽出してみましょう。
+
+```{r}
+mejina =  fish |> filter(str_detect(Species, "メジナ"))
+aigo =    fish |> filter(str_detect(Species, "アイゴ"))
+isuzumi = fish |> filter(str_detect(Species, "イスズミ"))
+```
+
+```{r}
+dset_ai = bind_rows(aigo, isuzumi)
+dset_am = bind_rows(aigo, mejina)
+dset_im = bind_rows(isuzumi, mejina)
+```
+
+# データの可視化
+
+```{r}
+#| label: fig-aigo-isuzumi
+#| fig-cap: アイゴとイスズミの数の比較
+ggplot() + 
+geom_boxplot(
+  aes(x = Species, 
+      y = Count, 
+      color = Species), data = dset_ai)
+```
+
+```{r}
+#| label: fig-aigo-mejina
+#| fig-cap: アイゴとメジナの数の比較
+ggplot() + 
+geom_boxplot(
+  aes(x = Species, 
+      y = Count, 
+      color = Species), data = dset_am)
+```
+
+```{r}
+#| label: fig-isuzumi-mejina
+#| fig-cap: イスズミとメジナの数の比較
+ggplot() + 
+geom_boxplot(
+  aes(x = Species, 
+      y = Count, 
+      color = Species), data = dset_im)
+```
+
+# t検定
+
+:::{.callout-note}
+仮説検定論のとき，有意水準 $(\alpha)$ を決める必要があります。
+一般的には $\alpha = 0.05$ が使われますが，
+研究分野や研究目的によっては $\alpha = 0.01$ や $\alpha = 0.10$ が使われることもあります。
+:::
+
+```{r}
+#| include: false
+tai = t.test(Count ~ Species, data = dset_ai) |> broom::tidy()
+tam = t.test(Count ~ Species, data = dset_am) |> broom::tidy()
+tim = t.test(Count ~ Species, data = dset_im) |> broom::tidy()
+```
+
+
+## アイゴとイスズミの数の比較
+
+* 帰無仮説 $(H_0)$：アイゴとイスズミの個体数に違いがない
+* 対立仮設 $(H_A)$：アイゴとイスズミの個体数に違いがある
+
+```{r}
+t.test(Count ~ Species, data = dset_ai)
+```
+
+アイゴとイスズミの個体数を比較したとき，
+`{r} sprintf("t値 = %0.4f", tai$statistic)`
+でした。
+このときの `{r} sprintf("自由度は %0.2f", tai$parameter)` であり，
+`{r} sprintf("p値 = %0.4f", tai$p.value)` でした。
+P値は有意水準より高かったため，帰無仮説を棄却できませんでした。
+
+## アイゴとメジナの数の比較
+
+* 帰無仮説 $(H_0)$：アイゴとメジナの個体数に違いがない
+* 対立仮設 $(H_A)$：アイゴとメジナの個体数に違いがある
+
+```{r}
+t.test(Count ~ Species, data = dset_am)
+```
+
+アイゴとメジナの個体数を比較したとき，
+`{r} sprintf("t値 = %0.4f", tam$statistic)`
+でした。
+このときの `{r} sprintf("自由度は %0.2f", tam$parameter)` であり，
+`{r} sprintf("p値 = %0.4e", tam$p.value)` でした。
+P値は有意水準より低かったため，帰無仮説を棄却できました。
+
+## イスズミとメジナの数の比較
+
+* 帰無仮説 $(H_0)$：イスズミとメジナの個体数に違いがない
+* 対立仮設 $(H_A)$：イスズミとメジナの個体数に違いがある
+
+```{r}
+t.test(Count ~ Species, data = dset_im)
+```
+
+イスズミとメジナの個体数を比較したとき，
+`{r} sprintf("t値 = %0.4f", tim$statistic)`
+でした。
+このときの `{r} sprintf("自由度は %0.2f", tim$parameter)` であり，
+`{r} sprintf("p値 = %0.4e", tim$p.value)` でした。
+P値は有意水準より低かったため，帰無仮説を棄却できました。
 
