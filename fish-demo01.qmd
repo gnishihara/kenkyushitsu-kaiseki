@@ -7,10 +7,6 @@ format:
     df-print: paged
 reference-location: margin
 citation-location: margin
-bibliography: references.bib
-execute: 
-  cache: false
-  freeze: false
 ---
 
 # パッケージの読み込み
@@ -23,7 +19,7 @@ library(tidyverse)
 
 ```{r}
 #| include: false
-
+#| cache: true
 files = dir("~/Lab_Data/sudar/fish_data/", full.names = TRUE)
 dset = 
   tibble(files) |> 

@@ -19,7 +19,7 @@ project:
     - openwater_nep_method.qmd
     - standardize_figures.qmd
     - tic_memo.qmd
-    - fish-demo01.qmd
+    - "fish-demo*.qmd"
 
 website:
   title: "データ解析（研究室用）"
