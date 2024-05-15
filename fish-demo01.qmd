@@ -1,6 +1,5 @@
 ---
 title: "有川湾の藻場で観測した魚類"
-subtitle: "t検定の話"
 format: 
   html:
     html-math-method: katex
