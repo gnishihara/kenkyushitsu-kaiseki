@@ -20,6 +20,7 @@ project:
     - standardize_figures.qmd
     - tic_memo.qmd
     - fish-demo01.qmd
+    - adcp-analysis.qmd
 
 website:
   title: "データ解析（研究室用）"
@@ -70,6 +71,7 @@ website:
         - openwater_nep_method.qmd
         - standardize_figures.qmd
         - tic_memo.qmd
+        - adcp-analysis.qmd
 format:
   html:
     theme: [ cosmo, custom.scss]
